@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Tour } from '../../types';
 import { getAtmosphere } from '../../utils/atmosphere';
+import { formatINR } from '../../utils/currency';
 
 interface DiscoveryMapProps {
   tours: Tour[];
@@ -51,8 +52,10 @@ export default function DiscoveryMap({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<{ [key: string]: L.Marker }>({});
   const markerGroupRef = useRef<L.FeatureGroup | null>(null);
+  const circuitGroupRef = useRef<L.FeatureGroup | null>(null);
   
   const [mounted, setMounted] = useState(false);
+  const [circuitsVisible, setCircuitsVisible] = useState(true);
   const [activeScreenPos, setActiveScreenPos] = useState<{ x: number; y: number } | null>(null);
 
   const activeTour = tours.find(t => t.id === activeTourId);
@@ -99,6 +102,39 @@ export default function DiscoveryMap({
     // Create marker group layer
     const markerGroup = L.featureGroup().addTo(map);
     markerGroupRef.current = markerGroup;
+
+    // ── CIRCUIT ROUTE LINES (Editorial Cartography) ──
+    const circuitGroup = L.featureGroup().addTo(map);
+    circuitGroupRef.current = circuitGroup;
+
+    const circuits = [
+      {
+        name: 'Sacred Circuit',
+        color: '#E07B39',
+        coords: [[25.3176, 82.9739], [15.3350, 76.4600], [25.2800, 91.7200]] as [number, number][],
+      },
+      {
+        name: 'Royal Circuit',
+        color: '#D6A85F',
+        coords: [[26.9157, 70.9083], [24.5854, 73.7125], [34.0837, 74.7973]] as [number, number][],
+      },
+      {
+        name: 'South India Circuit',
+        color: '#00B0FF',
+        coords: [[15.4909, 73.8278], [9.4981, 76.3388], [10.0889, 77.0595], [15.3350, 76.4600], [11.7401, 92.6586]] as [number, number][],
+      },
+    ];
+
+    circuits.forEach((circuit) => {
+      L.polyline(circuit.coords, {
+        color: circuit.color,
+        weight: 1.5,
+        opacity: 0.35,
+        dashArray: '6, 8',
+        lineCap: 'round',
+        lineJoin: 'round',
+      }).addTo(circuitGroup);
+    });
   }, [mounted]);
 
   // 2. Add / update markers when tours list updates
@@ -122,11 +158,11 @@ export default function DiscoveryMap({
 
       marker.bindPopup(`
         <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; min-width: 160px; text-align: left; background-color: #F8F5EE; padding: 2px;">
-          <img src="${tour.bannerImage}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 6px;" />
+          <img src="${tour.bannerImage}" alt="${tour.title}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 6px;" />
           <h5 style="font-family: 'Instrument Serif', serif; font-size: 15px; font-weight: 500; color: #0F172A; margin: 0 0 2px 0; font-style: italic; lowercase;">${tour.title.toLowerCase()}</h5>
           <p style="color: #334155; font-size: 9px; margin: 0 0 6px 0;">📍 ${tour.location.split(',')[0]}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECE6DA; padding-top: 5px; margin-top: 5px;">
-            <span style="font-weight: 700; font-size: 11px; color: #0F172A;">₹${(tour.price * 83).toLocaleString('en-IN')}</span>
+            <span style="font-weight: 700; font-size: 11px; color: #0F172A;">{formatINR(tour.price)}</span>
             <button id="popup-btn-${tour.id}" style="background-color: #0F172A; color: #fff; border: none; font-size: 8px; font-weight: 600; padding: 3px 8px; border-radius: 4px; cursor: pointer;">Inspect</button>
           </div>
         </div>
@@ -155,6 +191,7 @@ export default function DiscoveryMap({
   }, [tours, mapInstanceRef.current]);
 
   // 3. Pan/Zoom to active marker when selected
+  const prevActiveRef = useRef<string | null>(null);
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !activeTourId) {
@@ -162,10 +199,17 @@ export default function DiscoveryMap({
       return;
     }
 
-    // Update icons
-    Object.entries(markersRef.current).forEach(([id, marker]) => {
-      marker.setIcon(createIcon(id === activeTourId));
-    });
+    // Only update icons for old and new active markers, not all
+    if (prevActiveRef.current !== activeTourId) {
+      const prev = prevActiveRef.current;
+      if (prev && markersRef.current[prev]) {
+        markersRef.current[prev].setIcon(createIcon(false));
+      }
+      if (markersRef.current[activeTourId]) {
+        markersRef.current[activeTourId].setIcon(createIcon(true));
+      }
+      prevActiveRef.current = activeTourId;
+    }
 
     const activeMarker = markersRef.current[activeTourId];
     if (activeMarker) {
@@ -213,6 +257,17 @@ export default function DiscoveryMap({
     };
   }, [activeTourId]);
 
+  // 5. Toggle circuit visibility
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !circuitGroupRef.current) return;
+    if (circuitsVisible) {
+      circuitGroupRef.current.addTo(map);
+    } else {
+      circuitGroupRef.current.remove();
+    }
+  }, [circuitsVisible]);
+
   if (!mounted) {
     return (
       <div className="w-full h-full rounded-[24px] bg-cream/40 animate-pulse flex flex-col items-center justify-center border border-cream">
@@ -248,9 +303,21 @@ export default function DiscoveryMap({
         />
       )}
 
-      <div className="absolute bottom-4 left-4 z-10 bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-cream shadow-sm pointer-events-none text-[9px] text-muted/60 font-mono uppercase tracking-widest flex items-center gap-2">
-        <span className="w-1.5 h-1.5 rounded-full bg-saffron inline-block animate-pulse"></span>
-        <span>Living Atlas Cartography</span>
+      <div className="absolute bottom-4 left-4 z-10 flex gap-2">
+        <div className="bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-cream shadow-sm pointer-events-none text-[9px] text-muted/60 font-mono uppercase tracking-widest flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-saffron inline-block animate-pulse"></span>
+          <span>Living Atlas Cartography</span>
+        </div>
+        <button
+          onClick={() => setCircuitsVisible(v => !v)}
+          className={`px-3 py-2 rounded-2xl border text-[9px] font-mono uppercase tracking-widest transition-all cursor-pointer shadow-sm ${
+            circuitsVisible
+              ? 'bg-white/90 border-gold/40 text-gold'
+              : 'bg-white/50 border-cream text-muted/40'
+          }`}
+        >
+          {circuitsVisible ? 'Routes On' : 'Routes Off'}
+        </button>
       </div>
     </div>
   );

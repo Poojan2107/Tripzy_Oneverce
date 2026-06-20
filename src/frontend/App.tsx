@@ -72,13 +72,14 @@ export default function App() {
             location: `${d.city}, ${d.country}`,
             groupSize: d.groupSize || 'Max 6 travelers',
             difficulty: d.difficulty || 'Easy',
-            bannerImage: d.images?.[0] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800',
+            bannerImage: d.images?.[0] || '/images/tours/varanasi-banner.jpg',
             images: d.images || [],
             itinerary: d.metadata?.itinerary || [],
             includedServices: d.metadata?.includedServices || [],
             reviews: d.reviews || [],
             tags: d.tags || [],
             moods: d.moods || [],
+            activities: d.activities || [],
             bestSeason: d.bestSeason || undefined,
             latitude: d.latitude,
             longitude: d.longitude,
@@ -301,6 +302,11 @@ export default function App() {
                   setCurrentTab('explore');
                   window.scrollTo({ top: 0, behavior: 'instant' });
                   window.history.pushState(null, '', '#explore');
+                }}
+                onNavigatePlanner={() => {
+                  setCurrentTab('ai-planner');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                  window.history.pushState(null, '', '#ai-planner');
                 }}
                 onDeleteItinerary={handleDeleteItinerary}
                 onInspectItinerary={(itin) => {

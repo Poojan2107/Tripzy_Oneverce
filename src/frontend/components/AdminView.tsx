@@ -173,7 +173,7 @@ export default function AdminView({
     setDestTravelStyles('Luxury, Cultural');
     setDestActivities('Sightseeing, Local Dining, Museum tours');
     setDestTags('Historic, High-end');
-    setDestBannerImage('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80');
+    setDestBannerImage('/images/tours/varanasi-banner.jpg');
     setIsDestFormOpen(true);
   };
 
@@ -215,7 +215,7 @@ export default function AdminView({
     setExpName('');
     setExpIcon('Sparkles');
     setExpDescription('');
-    setExpFeaturedImage('https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=800&q=80');
+    setExpFeaturedImage('/images/cat-adventure.jpg');
     setExpTravelStyles('Adventure, Luxury');
     setExpEstimatedBudget(3000);
     setExpDurationRange('5-8 days');
@@ -1205,7 +1205,7 @@ export default function AdminView({
                 <input
                   type="url"
                   required
-                  placeholder="https://images.unsplash.com/..."
+                  placeholder="/images/tours/destination-banner.jpg"
                   value={destBannerImage}
                   onChange={(e) => setDestBannerImage(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
@@ -1382,7 +1382,7 @@ export default function AdminView({
                 <input
                   type="url"
                   required
-                  placeholder="https://images.unsplash.com/..."
+                  placeholder="/images/cat-adventure.jpg"
                   value={expFeaturedImage}
                   onChange={(e) => setExpFeaturedImage(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"

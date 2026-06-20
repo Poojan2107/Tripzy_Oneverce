@@ -35,7 +35,7 @@ export default function BottomNavbar({
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className="relative py-1.5 px-3 flex flex-col items-center justify-center transition-all duration-200 rounded-xl cursor-pointer"
+              className="relative py-2 px-3 flex flex-col items-center justify-center transition-all duration-200 rounded-xl cursor-pointer min-h-[44px] min-w-[44px]"
             >
               <Icon
                 className={`w-5 h-5 transition-all duration-200 ${

@@ -5,6 +5,7 @@ import { Tour } from '../types';
 import { CATEGORY_CHIPS } from '../data';
 import ScrollReveal from './ui/ScrollReveal';
 import dynamic from 'next/dynamic';
+import { formatINR } from '../utils/currency';
 
 // Dynamically import the map to avoid Leaflet SSR issues in Next.js
 const DiscoveryMap = dynamic(() => import('./map/DiscoveryMap'), {
@@ -83,7 +84,7 @@ export default function ExploreView({
       }}
     >
       {/* ── MOBILE VIEW TOGGLE BAR ── */}
-      <div className="md:hidden fixed bottom-20 left-1/2 -translate-x-1/2 z-40 bg-night text-white px-4 py-2.5 rounded-full shadow-lg flex gap-4 text-xs font-mono uppercase tracking-wider">
+      <div className="md:hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-night text-white px-4 py-2.5 rounded-full shadow-lg flex gap-4 text-xs font-mono uppercase tracking-wider">
         <button 
           onClick={() => setMobileView('list')}
           className={`flex items-center gap-1.5 ${mobileView === 'list' ? 'text-gold font-bold' : 'opacity-70'}`}
@@ -102,7 +103,7 @@ export default function ExploreView({
       </div>
 
       {/* ── LEFT SIDEBAR PANEL (35% on Desktop) ── */}
-      <div className={`w-full md:w-[35%] flex flex-col border-r border-warm-gray bg-warm-white h-[calc(100vh-4rem)] overflow-hidden shrink-0 ${
+      <div className={`w-full md:w-[35%] flex flex-col border-r border-warm-gray bg-warm-white h-[calc(100dvh-4rem)] overflow-hidden shrink-0 ${
         mobileView === 'list' ? 'block' : 'hidden md:flex'
       }`}>
         {/* Search and Filters Header */}
@@ -121,7 +122,7 @@ export default function ExploreView({
             <Search className="w-4 h-4 text-muted/40 shrink-0" />
             <input
               type="text"
-              placeholder="Search Indian chapters..."
+              placeholder="Search destinations, regions, moods..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="bg-transparent text-xs text-night placeholder:text-muted/30 outline-none w-full font-sans font-light"
@@ -163,7 +164,7 @@ export default function ExploreView({
           ) : filteredTours.length === 0 ? (
             <div className="text-center py-16 space-y-2">
               <Compass className="w-8 h-8 text-muted/20 mx-auto" />
-              <p className="font-display italic text-lg text-muted/50">no chapters found</p>
+              <p className="font-display italic text-lg text-muted/50">no destinations match</p>
               <button
                 onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}
                 className="text-[9px] font-mono uppercase tracking-wider text-saffron hover:underline"
@@ -192,7 +193,7 @@ export default function ExploreView({
                   <div className="w-18 h-18 rounded-xl overflow-hidden shrink-0 bg-cream">
                     <img 
                       src={tour.bannerImage} 
-                      alt="" 
+                      alt={tour.title} 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" 
                       onError={e => { e.currentTarget.style.opacity = '0' }}
                     />
@@ -206,12 +207,12 @@ export default function ExploreView({
                       <h3 className="font-display text-xl text-night leading-tight font-light lowercase truncate mt-1">
                         {tour.title}
                       </h3>
-                      <p className="text-[10px] text-muted/60 font-light truncate mt-0.5">
+                      <p className="text-xs text-muted/60 font-light truncate mt-0.5">
                         {tour.subtitle}
                       </p>
                     </div>
                     <div className="flex items-center justify-between text-[10px] font-bold text-night pt-1">
-                      <span>₹{(tour.price * 83).toLocaleString('en-IN')}</span>
+                      <span>{formatINR(tour.price)}</span>
                       <span className="text-[8px] font-mono font-bold text-saffron bg-saffron/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
                         {tour.moods?.[0]}
                       </span>
@@ -225,22 +226,24 @@ export default function ExploreView({
       </div>
 
       {/* ── RIGHT MAP PANEL (65% on Desktop) ── */}
-      <div className={`flex-1 h-[calc(100vh-4rem)] relative ${
+      <div className={`flex-1 h-[calc(100dvh-4rem)] relative ${
         mobileView === 'map' ? 'block' : 'hidden md:block'
       }`}>
         <DiscoveryMap
-          tours={filteredTours}
+          tours={tours}
           activeTourId={activeTourId}
           onActiveTourChange={setActiveTourId}
           onSelectTour={onTourSelect}
         />
 
+      </div>
+
         {/* ── SLIDE-OUT DRAWER OVERLAY ── */}
         {activeTour && (
-          <div className="absolute top-4 bottom-4 right-4 w-[90%] sm:w-[380px] bg-white border border-warm-gray rounded-3xl shadow-elevated z-30 overflow-hidden flex flex-col animate-page-enter">
+          <div className="fixed md:absolute inset-4 md:inset-auto md:top-4 md:bottom-4 md:right-4 w-[calc(100%-32px)] sm:w-[380px] bg-white border border-warm-gray rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter">
             {/* Header image */}
-            <div className="relative aspect-[16/10] bg-cream shrink-0">
-              <img src={activeTour.bannerImage} alt="" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
+            <div className="relative aspect-[16/10] bg-cream shrink-0 overflow-hidden">
+              <img src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover bg-cream" onError={e => { e.currentTarget.style.opacity = '0' }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               
               <button 
@@ -313,6 +316,23 @@ export default function ExploreView({
 
               <div className="h-px bg-cream" />
 
+              {/* Highlights */}
+              {activeTour.highlights && activeTour.highlights.length > 0 && (
+                <div className="space-y-3">
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block">highlights</span>
+                  <ul className="space-y-2">
+                    {activeTour.highlights.map((h, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-xs text-night font-light">
+                        <span className="w-1.5 h-1.5 rounded-full bg-saffron mt-1.5 shrink-0" />
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="h-px bg-cream" />
+
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4 text-xs">
                 <div className="bg-warm-white p-3 rounded-xl border border-warm-gray/60">
@@ -350,7 +370,6 @@ export default function ExploreView({
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 }

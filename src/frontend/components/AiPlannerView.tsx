@@ -8,6 +8,7 @@ import {
 import dynamic from 'next/dynamic';
 import { saveItineraryAction } from '../../backend/actions/shareActions';
 import { getAtmosphere } from '../utils/atmosphere';
+import { TOURS_DATA } from '../data';
 
 // Dynamically import the Leaflet route map to prevent SSR issues
 const ItineraryMap = dynamic(() => import('./map/ItineraryMap'), {
@@ -50,7 +51,7 @@ const STYLE_OPTIONS = [
 const ENERGY_OPTIONS = [
   { id: 'peaceful', label: 'Slow & Peaceful', desc: 'Highly relaxed, deep immersion, few stops' },
   { id: 'deep_cultural', label: 'Deep Cultural', desc: 'Focus on history, local guilds, and rituals' },
-  { id: 'adventure_packed', label: 'Adventure Packed', desc: 'Active crossings, bouldering, and boat treks' },
+  { id: 'adventure_packed', label: 'High Intensity', desc: 'Active crossings, bouldering, and boat treks' },
   { id: 'photography', label: 'Photography Focused', desc: 'Sunrise vantage spots and golden hour guides' },
   { id: 'food_focused', label: 'Food Focused', desc: 'Local bazaars, cooking steps, and estate tea' },
   { id: 'luxury_escape', label: 'Luxury Escape', desc: 'Bespoke cruisers, private guides, and spas' },
@@ -70,6 +71,66 @@ const LOADING_MESSAGES = [
   "Finalizing your Indian companion journal...",
 ];
 
+const DEST_CUISINE: Record<string, string> = {
+  'varanasi-spiritual': 'Kachori sabzi · Banarasi paan · Malaiyyo · Thandai · Street side chai',
+  'jaisalmer-fort': 'Dal baati churma · Ker sangri · Gatte ki sabzi · Bajra roti · Desert thali',
+  'kerala-houseboats': 'Kerala sadya · Appam with stew · Karimeen pollichathu · Puttu & kadala',
+  'ladakh-passes': 'Thukpa · Momos · Skyu · Butter tea · Apricot jam & Tibetan bread',
+  'kashmir-meadows': 'Wazwan feast · Rogan josh · Yakhni · Kashmiri pulao · Kahwa tea',
+  'udaipur-mewar': 'Dal baati churma · Laal maas · Gatte · Mawa kachori · Rajasthani thali',
+  'munnar-tea': 'Kerala sadya · Appam with vegetable stew · Fresh tea · Banana chips',
+  'goa-beach': 'Fish curry rice · Prawn balchão · Bebinca · Pork vindaloo · Feni',
+  'hampi-ruins': 'South Indian thali · Bisi bele bath · Filter coffee · Holige',
+  'kutch-salt': 'Kutchi dabeli · Bajra roti · Kadhi · Khaman · Chaas',
+  'cherrapunji-roots': 'Jadoh · Doh neiiong · Tungrymbai · Pukhlein · Rice beer',
+  'andaman-reefs': 'Fresh seafood · Coconut prawn curry · Grilled lobster · Banana fritters',
+};
+
+const DEST_TRANSPORT: Record<string, string> = {
+  'varanasi-spiritual': 'Cycle rickshaw · Auto-rickshaw · Boat ghat crossing · Walking the narrow lanes',
+  'jaisalmer-fort': 'Camel safari · Jeep safari · Auto-rickshaw · Private taxi from Jaisalmer station',
+  'kerala-houseboats': 'Houseboat · Local ferry · Autorickshaw · Private cab with driver',
+  'ladakh-passes': 'SUV/taxi hire · Shared jeep · Mountain bike · Local bus (limited)',
+  'kashmir-meadows': 'Shikara on Dal Lake · Gondola at Gulmarg · Private taxi · Local bus',
+  'udaipur-mewar': 'Boat on Lake Pichola · Auto-rickshaw · Cycle rickshaw · Palace on wheels',
+  'munnar-tea': 'Private taxi · Local bus · Jeep safari to tea estates · Walking trails',
+  'goa-beach': 'Scooter/bike rental · Taxi · Local bus · Ferry to islands',
+  'hampi-ruins': 'Auto-rickshaw · Cycle rickshaw · Bicycle · Coracle boat on river',
+  'kutch-salt': '4x4 jeep · Private taxi · Bus to Bhuj · Camel cart in villages',
+  'cherrapunji-roots': 'Private taxi · Local sumo · Walking trails through villages',
+  'andaman-reefs': 'Ferry to islands · Scooter at Havelock · Private cab · Boat taxi',
+};
+
+const DEST_PHOTO: Record<string, string> = {
+  'varanasi-spiritual': 'Dashashwamedh Ghat at dawn · Narrow lanes of old city · Ganga Aarti flames · Silk looms',
+  'jaisalmer-fort': 'Golden Fort at sunset · Sam Sand Dunes · Haveli carvings · Desert night sky',
+  'kerala-houseboats': 'Backwaters at golden hour · Tea gardens in Munnar · Chinese fishing nets · Kathakali performer',
+  'ladakh-passes': 'Pangong Lake blues · Khardung La pass · Hemis Monastery · Starry sky at Nubra',
+  'kashmir-meadows': 'Dal Lake sunrise · Mughal gardens · Gulmarg meadows · Saffron fields in bloom',
+  'udaipur-mewar': 'Lake Pichola sunset · City Palace from water · Jag Mandir · Haveli architecture',
+  'munnar-tea': 'Tea plantation rows · Nilgiri Tahr at Eravikulam · Misty hills · Waterfalls',
+  'goa-beach': 'Anjuna sunset · Portuguese colonial architecture · Dudhsagar Falls · Spice garden flora',
+  'hampi-ruins': 'Stone chariot at sunrise · Matanga Hill panorama · Vijaya Vittala temple · Boulders at Tungabhadra',
+  'kutch-salt': 'White Rann at sunset · Kala Dungar view · Mirror work textiles · Desert wildlife',
+  'cherrapunji-roots': 'Living root bridges · Nohkalikai Falls · Dawki River · Seven Sisters Falls',
+  'andaman-reefs': 'Radhanagar Beach sunset · Coral reefs underwater · Cellular Jail · Mangrove creeks',
+};
+
+const DEST_PACKING: Record<string, string> = {
+  'varanasi-spiritual': 'Light cotton clothes · Walking shoes · Shawl for morning boat ride · Power bank · Reusable water bottle',
+  'jaisalmer-fort': 'Light layers · Scarf for dust · Sunscreen · Sunglasses · Comfortable walking sandals · Power bank',
+  'kerala-houseboats': 'Light cottons · Rain jacket (monsoon) · Insect repellent · Sun hat · Sarong for temples',
+  'ladakh-passes': 'Thermal layers · Windproof jacket · Sunglasses · Lip balm · Sunscreen · Altitude sickness meds',
+  'kashmir-meadows': 'Warm jacket · Waterproof shoes · Merino wool layers · Gloves in winter · Sunglasses',
+  'udaipur-mewar': 'Light cottons · Scarf for temple visits · Sun hat · Camera · Comfortable walking shoes',
+  'munnar-tea': 'Light layers · Rain jacket · Walking shoes · Insect repellent · Reusable water bottle',
+  'goa-beach': 'Swimwear · Light cottons · Flip-flops · Sunscreen · Sunglasses · Beach bag',
+  'hampi-ruins': 'Walking shoes · Sun hat · Sunscreen · Light layers · Water bottle · Comfy backpack',
+  'kutch-salt': 'Light layers · Sun protection · Dust mask · Sunglasses · Scarf · Power bank',
+  'cherrapunji-roots': 'Rain jacket · Waterproof shoes · Quick-dry clothes · Insect repellent · Torch/headlamp',
+  'andaman-reefs': 'Swimwear · Snorkel gear (optional) · Reef-safe sunscreen · Light cottons · Flip-flops · Insect repellent',
+};
+
 export default function AiPlannerView({
   onSaveItinerary,
   loadedItinerary,
@@ -84,6 +145,8 @@ export default function AiPlannerView({
   const [saving, setSaving] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
 
+  const [selectedDestination, setSelectedDestination] = useState<string | null>(null);
+
   // Form selections
   const [travelers, setTravelers] = useState<string | null>(null);
   const [budget, setBudget] = useState<string | null>(null);
@@ -93,7 +156,7 @@ export default function AiPlannerView({
   const [customDuration, setCustomDuration] = useState(5);
   const [notes, setNotes] = useState("");
 
-  const totalSteps = 5;
+  const totalSteps = 6;
 
   // Handle incoming pre-loaded itinerary (from Passport)
   useEffect(() => {
@@ -131,6 +194,7 @@ export default function AiPlannerView({
       setTravelers('solo');
       setMood('Relaxation');
       setSavedId(loadedItinerary.id);
+      setSelectedDestination(loadedItinerary.destination || null);
     }
   }, [loadedItinerary]);
 
@@ -158,11 +222,12 @@ export default function AiPlannerView({
 
   const canProceed = () => {
     switch (step) {
-      case 1: return travelers !== null;
-      case 2: return budget !== null;
-      case 3: return mood !== null;
-      case 4: return energy !== null;
-      case 5: return duration !== null;
+      case 1: return selectedDestination !== null;
+      case 2: return travelers !== null;
+      case 3: return budget !== null;
+      case 4: return mood !== null;
+      case 5: return energy !== null;
+      case 6: return duration !== null;
       default: return false;
     }
   };
@@ -178,11 +243,17 @@ export default function AiPlannerView({
       setLoadingStepIndex(msgIndex);
     }, 1800);
 
+    let timeoutId: ReturnType<typeof setTimeout>;
     try {
+      const destName = selectedDestination ? (TOURS_DATA.find(t => t.id === selectedDestination)?.title || selectedDestination) : 'Unknown';
+      const controller = new AbortController();
+      timeoutId = setTimeout(() => controller.abort(), 30000);
       const res = await fetch('/api/plan-trip', {
+        signal: controller.signal,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          destination: destName,
           guests: travelers === 'solo' ? 1 : travelers === 'couple' ? 2 : travelers === 'family' ? 4 : 6,
           companion: travelers || 'solo',
           budget,
@@ -194,6 +265,7 @@ export default function AiPlannerView({
           experience: '',
         })
       });
+      clearTimeout(timeoutId);
 
       const data = await res.json();
       clearInterval(msgInterval);
@@ -213,6 +285,7 @@ export default function AiPlannerView({
 
       setItineraryResult(data);
     } catch (err: any) {
+      clearTimeout(timeoutId);
       clearInterval(msgInterval);
       setLoading(false);
       console.error("AI Generation failed:", err);
@@ -263,6 +336,7 @@ export default function AiPlannerView({
       }
     } catch (err) {
       console.error("Failed to save:", err);
+      alert("Could not save your journey. Check your connection and try again.");
     } finally {
       setSaving(false);
     }
@@ -270,6 +344,7 @@ export default function AiPlannerView({
 
   const handleReset = () => {
     setStep(1);
+    setSelectedDestination(null);
     setTravelers(null);
     setBudget(null);
     setMood(null);
@@ -285,7 +360,7 @@ export default function AiPlannerView({
   };
 
   const getJourneyPersona = () => {
-    const compLabel = travelers === 'solo' ? 'Nomad' : travelers === 'couple' ? 'Romantic' : travelers === 'family' ? 'Patriarch' : 'Syndicate';
+    const compLabel = travelers === 'solo' ? 'Nomad' : travelers === 'couple' ? 'Romantic' : travelers === 'family' ? 'Family Oriented' : 'Group Explorers';
     let moodLabel = 'Explorer';
     if (mood === 'Adventure') moodLabel = 'Seeker';
     else if (mood === 'Relaxation') moodLabel = 'Restorer';
@@ -326,13 +401,19 @@ export default function AiPlannerView({
         <div className="pt-28 pb-32 px-6 max-w-md mx-auto min-h-screen bg-sand flex items-center justify-center">
           <div className="text-center p-8 bg-white border border-warm-gray rounded-3xl shadow-sm space-y-4">
             <Compass className="w-10 h-10 text-muted/30 mx-auto" />
-            <h2 className="font-display text-2xl font-light text-night lowercase">Connection Failed</h2>
+            <h2 className="font-display text-2xl font-light text-night lowercase">Journey Interrupted</h2>
             <p className="text-xs text-muted/60 font-light leading-relaxed">{itineraryResult.error}</p>
             <button 
-              onClick={handleReset} 
+              onClick={handleGenerate} 
               className="px-6 py-2.5 rounded-xl bg-night text-white text-xs font-bold uppercase tracking-wider hover:bg-saffron transition-colors cursor-pointer"
             >
               Retry
+            </button>
+            <button 
+              onClick={handleReset} 
+              className="px-6 py-2.5 rounded-xl border border-warm-gray bg-white text-xs font-bold uppercase tracking-wider text-muted hover:text-night transition-colors cursor-pointer"
+            >
+              Start Over
             </button>
           </div>
         </div>
@@ -344,6 +425,8 @@ export default function AiPlannerView({
     const weather = itineraryResult.weather || { temperature: 'N/A', conditions: 'Clear' };
     const currentDay = itin[activeDayTab] || {};
     const atmo = getAtmosphere(itineraryResult.destinationId || "");
+    const destId = itineraryResult.destinationId || selectedDestination || '';
+    const tour = TOURS_DATA.find(t => t.id === destId);
 
     return (
       <div className="pt-24 pb-32 px-6 max-w-7xl mx-auto min-h-screen bg-sand select-none text-left">
@@ -352,12 +435,12 @@ export default function AiPlannerView({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 border-b border-warm-gray pb-6">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-saffron font-bold">journey logs</span>
+              <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-saffron font-bold">journey plan</span>
               <span className="h-px w-8 bg-cream" />
               <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted/60 font-bold">{getJourneyPersona()}</span>
             </div>
             <h1 className="font-display text-4.5xl text-night font-light lowercase leading-none">
-              chapter results
+              your indian itinerary
             </h1>
           </div>
           <div className="flex items-center gap-2">
@@ -383,6 +466,43 @@ export default function AiPlannerView({
           </div>
         </div>
 
+        {/* ── PREMIUM JOURNEY SUMMARY ── */}
+        <div className="mb-10 bg-white border border-warm-gray rounded-3xl p-6 shadow-sm">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-saffron font-bold">journey summary</span>
+            <span className="h-px flex-1 bg-cream" />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="bg-warm-white rounded-2xl p-3.5 border border-warm-gray/60 text-center">
+              <span className="font-display text-2xl font-light text-saffron leading-none block">{itineraryResult.recommendationScore || 96}%</span>
+              <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mt-1">match score</span>
+            </div>
+            <div className="bg-warm-white rounded-2xl p-3.5 border border-warm-gray/60 text-center">
+              <span className="font-display text-2xl font-light text-night leading-none block">₹{costs.total.toLocaleString('en-IN')}</span>
+              <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mt-1">estimated total</span>
+            </div>
+            <div className="bg-warm-white rounded-2xl p-3.5 border border-warm-gray/60 text-center">
+              <span className="font-display text-2xl font-light text-gold leading-none block">{tour?.bestSeason || weather.conditions || 'Oct–Mar'}</span>
+              <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mt-1">best season</span>
+            </div>
+            <div className="bg-warm-white rounded-2xl p-3.5 border border-warm-gray/60 text-center">
+              <span className="font-display text-2xl font-light text-night leading-none block">{customDuration} days</span>
+              <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mt-1">duration</span>
+            </div>
+            <div className="bg-warm-white rounded-2xl p-3.5 border border-warm-gray/60 text-center col-span-2 sm:col-span-1">
+              <span className="font-display text-2xl font-light text-night leading-none block lowercase truncate">
+                {itineraryResult.destinationId ? itineraryResult.destinationId.split('-').slice(0, 2).join(' · ') : 'curated route'}
+              </span>
+              <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mt-1">route</span>
+            </div>
+          </div>
+          {itineraryResult.recommendationReasoning && (
+            <p className="text-xs text-muted/60 font-light leading-relaxed mt-4 pt-3 border-t border-warm-gray/50">
+              {itineraryResult.recommendationReasoning}
+            </p>
+          )}
+        </div>
+
         {/* Dynamic two-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
@@ -392,7 +512,7 @@ export default function AiPlannerView({
               <div className="flex justify-between items-start">
                 <div>
                   <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-muted/40 block leading-none mb-1">
-                    destination chapter
+                    destination
                   </span>
                   <h2 className="font-display text-3xl font-light text-night lowercase leading-none">
                     {itineraryResult.destinationId ? itineraryResult.destinationId.split('-')[0] : 'Curated Destination'}
@@ -415,20 +535,20 @@ export default function AiPlannerView({
               {/* Budget Breakdown (INR only) */}
               <div className="space-y-3 pt-3 border-t border-warm-gray">
                 <h4 className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/50 block mb-1 font-bold">
-                  estimated budget (₹ INR)
+                  estimated costs
                 </h4>
                 
                 <div className="space-y-2 text-xs font-sans">
                   <div className="flex justify-between text-muted">
-                    <span className="font-light">Regional Transit & Drivers</span>
+                    <span className="font-light">Transit & transfers</span>
                     <span className="font-bold">₹{costs.transit.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between text-muted">
-                    <span className="font-light">Boutique Accommodations</span>
+                    <span className="font-light">Accommodations</span>
                     <span className="font-bold">₹{costs.stay.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="flex justify-between text-muted">
-                    <span className="font-light">Food, Passes & Guides</span>
+                    <span className="font-light">Food & experiences</span>
                     <span className="font-bold">₹{costs.food.toLocaleString('en-IN')}</span>
                   </div>
                   <div className="h-px bg-cream my-1" />
@@ -464,9 +584,9 @@ export default function AiPlannerView({
             {/* Active Day Logs */}
             <div className="bg-white border border-warm-gray rounded-3xl p-6 shadow-sm space-y-5 animate-fade-in">
               <div>
-                <span className="text-[8px] font-mono uppercase tracking-widest text-saffron block leading-none mb-1 font-bold">
-                  Day {activeDayTab + 1} Logs
-                </span>
+                  <span className="text-[8px] font-mono uppercase tracking-widest text-saffron block leading-none mb-1 font-bold">
+                    Day {activeDayTab + 1}
+                  </span>
                 <h3 className="font-display text-2.5xl font-light text-night lowercase leading-tight">
                   {currentDay.title}
                 </h3>
@@ -479,7 +599,7 @@ export default function AiPlannerView({
               {/* Scheduled Stops */}
               <div className="space-y-3 pt-3 border-t border-warm-gray">
                 <h4 className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/50 block font-bold">
-                  scheduled stops
+                  itinerary
                 </h4>
                 <div className="space-y-3">
                   {currentDay.activities && currentDay.activities.map((act: string, aIdx: number) => {
@@ -510,7 +630,7 @@ export default function AiPlannerView({
                 
                 {/* Weather */}
                 <div className="space-y-1">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">seasonal weather</span>
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">weather</span>
                   <div className="flex items-center gap-2">
                     <Sun className="w-4 h-4 text-gold" />
                     <span className="font-bold text-night">{weather.temperature} · {weather.conditions}</span>
@@ -520,7 +640,7 @@ export default function AiPlannerView({
                 {/* Nearby exploration */}
                 {itineraryResult.nearbyPlaces && itineraryResult.nearbyPlaces.length > 0 && (
                   <div className="space-y-1">
-                    <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">nearby points</span>
+                    <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">nearby explorations</span>
                     <span className="font-bold text-night truncate block">{itineraryResult.nearbyPlaces[0].name} ({itineraryResult.nearbyPlaces[0].distance})</span>
                   </div>
                 )}
@@ -528,25 +648,25 @@ export default function AiPlannerView({
                 {/* Local cuisine */}
                 <div className="space-y-1">
                   <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">local cuisine</span>
-                  <span className="font-bold text-night">Street food walks · Thali experiences · Regional specialties</span>
+                  <span className="font-bold text-night">{DEST_CUISINE[destId] || 'Street food walks · Thali experiences · Regional specialties'}</span>
                 </div>
 
                 {/* Transport */}
                 <div className="space-y-1">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">recommended transport</span>
-                  <span className="font-bold text-night">Private car with driver · Local auto-rickshaw · Shared taxis</span>
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">getting around</span>
+                  <span className="font-bold text-night">{DEST_TRANSPORT[destId] || 'Private car with driver · Local auto-rickshaw · Shared taxis'}</span>
                 </div>
 
                 {/* Photography */}
                 <div className="space-y-1">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">photography spots</span>
-                  <span className="font-bold text-night">Sunrise vantage · Heritage architecture · Local market life · Natural landscapes</span>
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">photo spots</span>
+                  <span className="font-bold text-night">{DEST_PHOTO[destId] || 'Sunrise vantage · Heritage architecture · Local market life · Natural landscapes'}</span>
                 </div>
 
                 {/* Packing */}
                 <div className="space-y-1">
                   <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">packing tips</span>
-                  <span className="font-bold text-night">Light layers · Comfortable walking shoes · Sun protection · Power bank</span>
+                  <span className="font-bold text-night">{DEST_PACKING[destId] || 'Light layers · Comfortable walking shoes · Sun protection · Power bank'}</span>
                 </div>
               </div>
             </div>
@@ -556,7 +676,7 @@ export default function AiPlannerView({
     );
   }
 
-  // ── 5-STEP QUESTIONNAIRE WIZARD ──
+  // ── 6-STEP QUESTIONNAIRE WIZARD ──
   return (
     <div className="pt-24 pb-32 px-6 max-w-3xl mx-auto min-h-screen bg-sand flex flex-col justify-center select-none text-left">
       
@@ -564,7 +684,7 @@ export default function AiPlannerView({
       <div className="mb-10 space-y-4">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-saffron font-bold">
-            Journey Wizard
+            Journey Builder
           </span>
           <span className="font-mono text-[10px] text-muted/60 uppercase tracking-widest font-bold">
             Step {step} of {totalSteps}
@@ -580,14 +700,59 @@ export default function AiPlannerView({
         </div>
       </div>
 
-      {/* ── STEP 1: COMPANION ── */}
+    {/* ── STEP 1: DESTINATION ── */}
       {step === 1 && (
+        <div className="space-y-6 animate-page-enter">
+          <div className="space-y-1">
+            <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
+              where in <span className="font-display italic text-gold">india</span>?
+            </h2>
+            <p className="text-xs text-muted/60 font-light">Each of our handcrafted chapters is built on deep local knowledge. Pick the place that speaks to you and we'll tailor every detail.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[50dvh] overflow-y-auto pr-2 scrollbar-thin">
+            {TOURS_DATA.map((tour) => {
+              const isSelected = selectedDestination === tour.id;
+              return (
+                <div
+                  key={tour.id}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setSelectedDestination(tour.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedDestination(tour.id); } }}
+                  className={`relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 group aspect-[4/3] ${isSelected ? 'border-saffron ring-2 ring-saffron/30 shadow-sm' : 'border-warm-gray hover:border-gold hover:shadow-sm'}`}
+                >
+                  <img
+                    src={tour.bannerImage}
+                    alt={tour.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={e => { e.currentTarget.style.opacity = '0' }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-3">
+                    <span className="text-[8px] font-mono uppercase tracking-wider text-gold block mb-0.5">{tour.chapterName || 'Chapter'}</span>
+                    <h3 className="font-display text-lg text-white font-light lowercase leading-tight">{tour.title}</h3>
+                    <p className="text-[10px] text-white/60 font-light mt-0.5 truncate">{tour.location.split(',')[0]}</p>
+                  </div>
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-saffron flex items-center justify-center">
+                      <CheckCircle2 className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+      {/* ── STEP 2: COMPANION ── */}
+      {step === 2 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
             <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
               who is <span className="font-display italic text-gold">traveling</span>?
             </h2>
-            <p className="text-xs text-muted/60 font-light">Select the companionship structure for this voyage.</p>
+            <p className="text-xs text-muted/60 font-light">Your travel company shapes the itinerary rhythm — solo days move slowly, family trips need variety, couple escapes favor intimate corners.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -597,7 +762,10 @@ export default function AiPlannerView({
               return (
                 <div
                   key={opt.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setTravelers(opt.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTravelers(opt.id); } }}
                   className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-4 items-center ${
                     isSelected 
                       ? 'bg-white border-saffron shadow-sm' 
@@ -622,14 +790,14 @@ export default function AiPlannerView({
         </div>
       )}
 
-      {/* ── STEP 2: BUDGET ── */}
-      {step === 2 && (
+      {/* ── STEP 3: BUDGET ── */}
+      {step === 3 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
             <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
               select your <span className="font-display italic text-gold">budget tier</span>
             </h2>
-            <p className="text-xs text-muted/60 font-light">Choose your preferred lodging and comfort baseline.</p>
+            <p className="text-xs text-muted/60 font-light">This sets your accommodation tier, transport style, and dining range. From local homestays to heritage palaces, every tier unlocks a different India.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -639,7 +807,10 @@ export default function AiPlannerView({
               return (
                 <div
                   key={opt.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setBudget(opt.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setBudget(opt.id); } }}
                   className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-4 text-left ${
                     isSelected 
                       ? 'bg-white border-saffron shadow-sm' 
@@ -664,14 +835,14 @@ export default function AiPlannerView({
         </div>
       )}
 
-      {/* ── STEP 3: STYLE ── */}
-      {step === 3 && (
+      {/* ── STEP 4: STYLE ── */}
+      {step === 4 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
             <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
               your travel <span className="font-display italic text-gold">style</span>
             </h2>
-            <p className="text-xs text-muted/60 font-light">Determine the primary focus of your discovery.</p>
+            <p className="text-xs text-muted/60 font-light">What drives your curiosity? Temples and rituals, mountain trails, street food crawls, or quiet retreats — your focus becomes our blueprint.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -681,7 +852,10 @@ export default function AiPlannerView({
               return (
                 <div
                   key={opt.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setMood(opt.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setMood(opt.id); } }}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-4 items-center ${
                     isSelected 
                       ? 'bg-white border-saffron shadow-sm' 
@@ -706,14 +880,14 @@ export default function AiPlannerView({
         </div>
       )}
 
-      {/* ── STEP 4: TRIP ENERGY ── */}
-      {step === 4 && (
+      {/* ── STEP 5: TRIP ENERGY ── */}
+      {step === 5 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
             <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
               journey <span className="font-display italic text-gold">energy</span>
             </h2>
-            <p className="text-xs text-muted/60 font-light">Select the velocity and flavor of exploration.</p>
+            <p className="text-xs text-muted/60 font-light">Some journeys are about covering ground, others about sitting still. Tell us your pace and we'll calibrate the daily flow.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -722,7 +896,10 @@ export default function AiPlannerView({
               return (
                 <div
                   key={opt.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setEnergy(opt.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEnergy(opt.id); } }}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left ${
                     isSelected 
                       ? 'bg-white border-saffron shadow-sm' 
@@ -740,14 +917,14 @@ export default function AiPlannerView({
         </div>
       )}
 
-      {/* ── STEP 5: DURATION ── */}
-      {step === 5 && (
+      {/* ── STEP 6: DURATION ── */}
+      {step === 6 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
             <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
               duration of <span className="font-display italic text-gold">stay</span>
             </h2>
-            <p className="text-xs text-muted/60 font-light">Choose the length of your travel cycle.</p>
+            <p className="text-xs text-muted/60 font-light">The number of days determines how deep we go. A weekend reveals the surface; two weeks lets us find the hidden corners.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -756,7 +933,10 @@ export default function AiPlannerView({
               return (
                 <div
                   key={opt.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => handleDurationSelect(opt.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleDurationSelect(opt.id); } }}
                   className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left ${
                     isSelected 
                       ? 'bg-white border-saffron shadow-sm' 

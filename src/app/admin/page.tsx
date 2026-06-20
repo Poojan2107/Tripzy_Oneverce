@@ -4,8 +4,11 @@ import AdminView from '../../frontend/components/AdminView';
 import { Tour } from '../../frontend/types';
 import { TOURS_DATA } from '../../frontend/data';
 import { getAllDestinations } from '../../backend/actions/tourActions';
+import { useSession } from 'next-auth/react';
+import { ShieldAlert } from 'lucide-react';
 
 export default function AdminPage() {
+  const { data: session, status } = useSession();
   const [tours, setTours] = useState<Tour[]>([]);
   const [isClient, setIsClient] = useState(false);
 
@@ -28,7 +31,7 @@ export default function AdminPage() {
             location: `${d.city}, ${d.country}`,
             groupSize: d.groupSize || 'Max 6',
             difficulty: d.difficulty || 'Easy',
-            bannerImage: d.images?.[0] || 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800',
+            bannerImage: d.images?.[0] || '/images/tours/varanasi-banner.jpg',
             images: d.images || [],
             itinerary: d.metadata?.itinerary || [],
             includedServices: d.metadata?.includedServices || [],
@@ -46,8 +49,10 @@ export default function AdminPage() {
         setTours(TOURS_DATA);
       }
     };
-    loadTours();
-  }, []);
+    if (session?.user?.role === "ADMIN") {
+      loadTours();
+    }
+  }, [session]);
 
   const handleAddTour = (newTour: Tour) => {
     setTours((prev) => [newTour, ...prev]);
@@ -62,6 +67,34 @@ export default function AdminPage() {
   };
 
   const displayTours = isClient && tours.length > 0 ? tours : TOURS_DATA;
+
+  if (status === "loading") {
+    return (
+      <div className="bg-[#090909] text-white min-h-screen flex flex-col items-center justify-center font-sans">
+        <span className="text-xs uppercase tracking-widest text-slate-500 animate-pulse">Verifying Credentials...</span>
+      </div>
+    );
+  }
+
+  if (!session || session.user.role !== "ADMIN") {
+    return (
+      <div className="bg-[#090909] text-white min-h-screen flex flex-col items-center justify-center p-6 text-center font-sans space-y-6">
+        <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 mx-auto">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <h1 className="text-4xl font-light font-display lowercase">Access Denied</h1>
+        <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
+          The section of Tripzy India you are trying to reach is restricted to administrators.
+        </p>
+        <a
+          href="/"
+          className="px-6 py-2.5 rounded-xl bg-white text-black hover:bg-slate-200 text-xs font-bold uppercase tracking-wider transition-colors inline-block"
+        >
+          Return to Home
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#090909] text-white min-h-screen">

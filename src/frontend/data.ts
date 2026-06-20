@@ -14,10 +14,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Varanasi, Uttar Pradesh, India',
     groupSize: 'Max 8 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/varanasi-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1564507592333-c60657eea523?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/varanasi-gallery-1.jpg',
+      '/images/tours/varanasi-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -42,7 +42,7 @@ export const TOURS_DATA: Tour[] = [
       {
         id: 'rev-v1',
         author: 'Arjun Mehta',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&auto=format&fit=crop',
+        avatar: '/images/avatar-vikram.jpg',
         rating: 5,
         date: 'October 14, 2025',
         comment: 'Deeply spiritual and beautifully organized. Row boat dining was an unforgettable editorial experience.'
@@ -63,6 +63,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'Dashashwamedh Ghat at 5:45 AM during the first incense flame offering.',
     signatureExperience: 'A private evening Bajra boat ride during the Ganga Aarti.',
     budgetRange: '₹25,000 - ₹80,000',
+    highlights: [
+      'Ganga Aarti at Dashashwamedh Ghat',
+      'Morning boat ride on the Ganges',
+      'Silk weaving workshops in the old city',
+      'Vedic chanting sessions with local scholars',
+      'Street food crawl through narrow lanes'
+    ],
     accents: {
       primary: '#E07B39', // Saffron
       secondary: '#1A237E' // Indigo
@@ -81,10 +88,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Jaisalmer, Rajasthan, India',
     groupSize: 'Max 8 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/jaisalmer-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/jaisalmer-gallery-1.jpg',
+      '/images/tours/jaisalmer-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -120,6 +127,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'The sunset silhouette of Vyas Chhatri cenotaphs against the golden dunes.',
     signatureExperience: 'A slow camel caravan trek during twilight in the Thar Desert.',
     budgetRange: '₹30,000 - ₹90,000',
+    highlights: [
+      'Sunset at Sam Sand Dunes',
+      'Camel safari across the Thar Desert',
+      'Walking tour of the Golden Fort',
+      'Rajasthani folk music under the stars',
+      'Desert camping with traditional thali dinner'
+    ],
     accents: {
       primary: '#D84315', // Copper / Terracotta
       secondary: '#ECE6DA' // Sandstone
@@ -138,10 +152,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Alleppey, Kerala, India',
     groupSize: 'Max 4 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/kerala-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/kerala-gallery-1.jpg',
+      '/images/tours/kerala-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -177,6 +191,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'Sunset reflections of palm silhouettes in Vembanad Lake.',
     signatureExperience: 'Overnight backwater cruise on a luxury Kettuvallam.',
     budgetRange: '₹35,000 - ₹1,10,000',
+    highlights: [
+      'Houseboat cruise through the backwaters',
+      'Spice plantation tour in Munnar',
+      'Kathakali dance performance',
+      'Ayurvedic wellness treatment',
+      'Sunset at Varkala cliff beaches'
+    ],
     accents: {
       primary: '#00B0FF', // Turquoise
       secondary: '#2E7D32' // Palm Green
@@ -195,10 +216,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Leh, Ladakh, India',
     groupSize: 'Max 6 travelers',
     difficulty: 'Challenging',
-    bannerImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/ladakh-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/ladakh-gallery-1.jpg',
+      '/images/tours/ladakh-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -234,6 +255,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'First light reflecting on the turquoise waters of Pangong Tso.',
     signatureExperience: 'Motorcycle crossing of the Khardung La Pass.',
     budgetRange: '₹45,000 - ₹1,30,000',
+    highlights: [
+      'Khardung La pass expedition',
+      'Pangong Lake sunset view',
+      'Magnetic Hill gravity-defying experience',
+      'Hemis Monastery & Buddhist festival',
+      'Stargazing at Nubra Valley'
+    ],
     accents: {
       primary: '#B71C1C', // Copper
       secondary: '#D84315' // Sandstone
@@ -252,10 +280,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Srinagar, Jammu & Kashmir, India',
     groupSize: 'Max 6 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1598091383021-15ddea10925d?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/kashmir-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1598091383021-15ddea10925d?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/kashmir-gallery-1.jpg',
+      '/images/tours/kashmir-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -291,6 +319,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'A wooden Shikara floating in Dal Lake during sunset.',
     signatureExperience: 'Gondola ride over Gulmarg\'s snow-capped valleys.',
     budgetRange: '₹40,000 - ₹1,20,000',
+    highlights: [
+      'Shikara ride on Dal Lake',
+      'Gulmarg gondola ride & meadow walks',
+      'Mughal garden tour (Shalimar & Nishat)',
+      'Saffron field walk in Pampore',
+      'Houseboat stay with Kashmiri wazwan'
+    ],
     accents: {
       primary: '#00C853', // Emerald
       secondary: '#1B5E20' // Pine
@@ -309,10 +344,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Udaipur, Rajasthan, India',
     groupSize: 'Max 6 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/udaipur-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1585135497273-1a86b09fe70e?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1597075687490-8f673c6c17f6?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/udaipur-gallery-1.jpg',
+      '/images/tours/udaipur-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -348,6 +383,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'The marble arches of Jag Mandir island reflecting on Lake Pichola.',
     signatureExperience: 'Sunset lake cruise past the floating palaces.',
     budgetRange: '₹35,000 - ₹1,40,000',
+    highlights: [
+      'Lake Pichola sunset boat ride',
+      'City Palace heritage tour',
+      'Bagore Ki Haveli dance show',
+      'Vintage car collection at Garden Hotel',
+      'Puppet show at local bazaar'
+    ],
     accents: {
       primary: '#E0A96D', // Rose Gold
       secondary: '#334155' // Charcoal
@@ -366,10 +408,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Munnar, Kerala, India',
     groupSize: 'Max 6 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/munnar-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/munnar-gallery-1.jpg',
+      '/images/tours/munnar-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -405,6 +447,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'The morning fog lifting over Lockhart Gap.',
     signatureExperience: 'Guided walk through organic spice hills and tea processing.',
     budgetRange: '₹20,000 - ₹65,000',
+    highlights: [
+      'Tea plantation sunrise walk',
+      'Eravikulam National Park & Nilgiri Tahr',
+      'Mattupetty Dam boating',
+      'Spice garden guided tour',
+      ' Kundala Lake cycling trail'
+    ],
     accents: {
       primary: '#00C853', // Emerald
       secondary: '#1B5E20' // Pine
@@ -423,10 +472,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'South Goa, India',
     groupSize: 'Max 8 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/goa-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/goa-gallery-1.jpg',
+      '/images/tours/goa-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -462,6 +511,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'The pastel yellow facades and wooden balconies of Fontainhas.',
     signatureExperience: 'Walking tour of the old Portuguese heritage mansions.',
     budgetRange: '₹25,000 - ₹75,000',
+    highlights: [
+      'Sunset at Anjuna Beach',
+      'Portuguese heritage walk in Old Goa',
+      'Spice plantation & cashew feni tasting',
+      'Dudhsagar waterfall trek',
+      'Water sports at Baga Beach'
+    ],
     accents: {
       primary: '#FF6F59', // Sunset Coral
       secondary: '#01579B' // Ocean Blue
@@ -480,10 +536,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Hampi, Karnataka, India',
     groupSize: 'Max 6 travelers',
     difficulty: 'Moderate',
-    bannerImage: 'https://images.unsplash.com/photo-1616606484004-5ef3cc46e39d?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/hampi-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1616606484004-5ef3cc46e39d?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/hampi-gallery-1.jpg',
+      '/images/tours/hampi-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -519,6 +575,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'Sunset silhouette from the top of Matanga Hill.',
     signatureExperience: 'Crossing the Tungabhadra River in a circular woven coracle boat.',
     budgetRange: '₹20,000 - ₹55,000',
+    highlights: [
+      'Sunrise at Matanga Hill',
+      'Vijaya Vittala temple stone chariot',
+      'Coracle ride on Tungabhadra River',
+      'Hampi bazaar ruins walk',
+      'Hippie Island cafe hopping'
+    ],
     accents: {
       primary: '#B71C1C', // Copper
       secondary: '#D84315' // Sandstone
@@ -537,10 +600,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Kutch, Gujarat, India',
     groupSize: 'Max 8 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/kutch-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1605649487212-47bdab064df7?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/kutch-gallery-1.jpg',
+      '/images/tours/kutch-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -576,6 +639,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'The cracked salt crust reflecting the full moon at midnight.',
     signatureExperience: 'Traditional Kutchi music around a desert campfire.',
     budgetRange: '₹30,000 - ₹85,000',
+    highlights: [
+      'White Rann sunset at the salt desert',
+      'Kala Dungar (Black Hill) panoramic view',
+      'Handloom village & embroidery workshop',
+      'Kutchi folk dance performance',
+      'Wild ass sanctuary safari in Little Rann'
+    ],
     accents: {
       primary: '#E07B39', // Saffron
       secondary: '#D84315' // Sandstone
@@ -594,10 +664,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Sohra, Meghalaya, India',
     groupSize: 'Max 6 travelers',
     difficulty: 'Moderate',
-    bannerImage: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/cherrapunji-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/cherrapunji-gallery-1.jpg',
+      '/images/tours/cherrapunji-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -633,6 +703,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'The double-decker living root bridge at Nongriat.',
     signatureExperience: 'Hike through sacred green forest valleys.',
     budgetRange: '₹22,000 - ₹60,000',
+    highlights: [
+      'Living Root Bridge trek at Mawlynnong',
+      'Nohkalikai Falls viewpoint',
+      'Mawsynram cave exploration',
+      'Dawki River boat ride in crystal-clear water',
+      'Seven Sisters Falls panorama'
+    ],
     accents: {
       primary: '#004D40', // Rainforest Green
       secondary: '#2E7D32' // Palm Green
@@ -651,10 +728,10 @@ export const TOURS_DATA: Tour[] = [
     location: 'Havelock Island, Andaman, India',
     groupSize: 'Max 6 travelers',
     difficulty: 'Easy',
-    bannerImage: 'https://images.unsplash.com/photo-1583212292454-1fe6229603b7?q=80&w=1200&auto=format&fit=crop',
+    bannerImage: '/images/tours/andaman-banner.jpg',
     images: [
-      'https://images.unsplash.com/photo-1583212292454-1fe6229603b7?q=80&w=800&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop'
+      '/images/tours/andaman-gallery-1.jpg',
+      '/images/tours/andaman-gallery-2.jpg'
     ],
     itinerary: [
       {
@@ -690,6 +767,13 @@ export const TOURS_DATA: Tour[] = [
     photographySpot: 'The curved white sands of Radhanagar Beach at sunset.',
     signatureExperience: 'Deep-sea snorkeling through pristine reefs.',
     budgetRange: '₹40,000 - ₹1,30,000',
+    highlights: [
+      'Snorkeling at Havelock Island',
+      'Radhanagar Beach sunset stroll',
+      'Cellular Jail light & sound show',
+      'Sea walking at North Bay Island',
+      'Barren Island volcano boat tour'
+    ],
     accents: {
       primary: '#01579B', // Ocean Blue
       secondary: '#00B0FF' // Turquoise

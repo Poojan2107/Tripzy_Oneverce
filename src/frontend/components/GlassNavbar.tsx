@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Compass, Search, Map, Sparkles, Heart } from 'lucide-react';
+import { Compass, Search, Map, Sparkles, Heart, LogIn, LogOut, Shield } from 'lucide-react';
 import { TabType } from '../types';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 interface GlassNavbarProps {
   currentTab: TabType;
@@ -15,6 +16,8 @@ export default function GlassNavbar({
   onSearchClick,
   wishlistCount
 }: GlassNavbarProps) {
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'ADMIN';
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -49,16 +52,16 @@ export default function GlassNavbar({
         {/* Logo — Brand Signature */}
         <button
           onClick={() => onTabChange('home')}
-          className="flex items-center gap-2.5 cursor-pointer group shrink-0 border-none bg-transparent"
+          className="flex items-center gap-2.5 cursor-pointer group shrink-0 border-none bg-transparent min-h-[44px]"
         >
           <div className="w-9 h-9 rounded-full bg-night flex items-center justify-center text-white transition-all duration-500 group-hover:bg-gold group-hover:scale-110">
             <Compass className="w-4.5 h-4.5 stroke-[1.5] animate-spin-slow" />
           </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-display text-[22px] font-bold text-night tracking-tight lowercase leading-none">
+          <div className="flex flex-col text-left">
+            <span className="font-display text-[22px] font-bold text-night tracking-tight lowercase leading-tight">
               tripzy<span className="text-gold">.ai</span>
             </span>
-            <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-night/35 leading-none mt-0.5">Atlas Vivant</span>
+            <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-night/60 mt-0.5">Atlas Vivant</span>
           </div>
         </button>
 
@@ -71,7 +74,7 @@ export default function GlassNavbar({
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
-                className={`relative px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-[0.12em] transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+                className={`relative px-4 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.12em] transition-all duration-300 flex items-center gap-2 cursor-pointer min-h-[44px] ${
                   isActive
                     ? 'text-gold bg-white shadow-sm border border-warm-gray/60'
                     : 'text-muted hover:text-night hover:bg-white/60'
@@ -95,13 +98,55 @@ export default function GlassNavbar({
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={onSearchClick}
             className="p-2 rounded-lg text-muted hover:text-night hover:bg-sand transition-all cursor-pointer"
           >
             <Search className="w-4 h-4" />
           </button>
+
+          <div className="h-4 w-px bg-warm-gray/60" />
+
+          {session ? (
+            <div className="flex items-center gap-3.5">
+              {isAdmin && (
+                <a
+                  href="/admin"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gold/30 bg-gold/5 text-gold text-[10px] font-bold uppercase tracking-wider hover:bg-gold/15 transition-all animate-fade-in"
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  <span>Admin</span>
+                </a>
+              )}
+              {session.user.image ? (
+                <img
+                  src={session.user.image}
+                  alt={session.user.name || "User"}
+                  className="w-7 h-7 rounded-full object-cover border border-warm-gray"
+                />
+              ) : (
+                <div className="w-7 h-7 rounded-full bg-night flex items-center justify-center text-white text-[11px] font-bold border border-warm-gray">
+                  {session.user.name ? session.user.name[0].toUpperCase() : "U"}
+                </div>
+              )}
+              <button
+                onClick={() => signOut()}
+                className="p-2 rounded-lg text-muted hover:text-rose-500 hover:bg-rose-50 transition-all cursor-pointer flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden lg:inline">Sign Out</span>
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => signIn("google")}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-night text-white hover:bg-saffron text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Sign In</span>
+            </button>
+          )}
         </div>
       </div>
     </nav>

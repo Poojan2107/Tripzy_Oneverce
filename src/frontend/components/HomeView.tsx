@@ -1,47 +1,48 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
-  Sparkles, ArrowRight, MapPin, Heart, Compass, BookOpen, Map, Calendar, Camera
+  Sparkles, ArrowRight, MapPin, Heart, Compass, BookOpen, Map, Calendar, Camera, Clock
 } from "lucide-react";
 import { Tour } from "../types";
 import Hero from "./Hero";
 import ScrollReveal from "./ui/ScrollReveal";
+import SafeImage from "./ui/SafeImage";
 
 const CATEGORIES = [
-  { id: "Spiritual", label: "Sacred India", mood: "Spiritual", image: "https://images.unsplash.com/photo-1561361058-c24e01d68e37?q=80&w=600&auto=format&fit=crop" },
-  { id: "Adventure", label: "Mountain India", mood: "Adventure", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=600&auto=format&fit=crop" },
-  { id: "Luxury", label: "Royal India", mood: "Luxury", image: "https://images.unsplash.com/photo-1562158074-a2b1660d5bfa?q=80&w=600&auto=format&fit=crop" },
-  { id: "Food", label: "Food India", mood: "Food", image: "https://images.unsplash.com/photo-1596797882943-1912443d347b?q=80&w=600&auto=format&fit=crop" },
-  { id: "Nature", label: "Nature India", mood: "Nature", image: "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=600&auto=format&fit=crop" },
-  { id: "Hidden", label: "Hidden India", mood: "Hidden", image: "https://images.unsplash.com/photo-1600100397607-b3ff15bc86d4?q=80&w=600&auto=format&fit=crop" },
+  { id: "Spiritual", label: "Sacred India", mood: "Spiritual", image: "/images/cat-spiritual.jpg" },
+  { id: "Adventure", label: "Mountain India", mood: "Adventure", image: "/images/cat-adventure.jpg" },
+  { id: "Luxury", label: "Royal India", mood: "Luxury", image: "/images/cat-royal.jpg" },
+  { id: "Food", label: "Food India", mood: "Food", image: "/images/cat-food.jpg" },
+  { id: "Nature", label: "Nature India", mood: "Nature", image: "/images/cat-nature.jpg" },
+  { id: "Hidden", label: "Hidden India", mood: "Hidden", image: "/images/cat-hidden.jpg" },
 ];
 
 const STORIES = [
   {
     title: "A Sunrise in Varanasi",
     excerpt: "Watching the stone steps fade from deep indigo to rich saffron as Vedic hymns float across the morning mist is a memory that stays with you forever.",
-    image: "https://images.unsplash.com/photo-1561361058-c24e01d68e37?q=80&w=800&auto=format&fit=crop",
+    image: "/images/story-varanasi.jpg",
     author: "Priya Sharma",
     location: "Varanasi, Uttar Pradesh",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=120&auto=format&fit=crop",
+    avatar: "/images/avatar-priya.jpg",
     readTime: "4 min"
   },
   {
     title: "Three Days on a Kerala Houseboat",
     excerpt: "Drifting slowly along the Alleppey backwaters where palm trees bend to meet their own reflections. The world moves at a different pace here.",
-    image: "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=800&auto=format&fit=crop",
+    image: "/images/story-kerala.jpg",
     author: "Amit Patel",
     location: "Alleppey, Kerala",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&auto=format&fit=crop",
+    avatar: "/images/avatar-amit.jpg",
     readTime: "5 min"
   },
   {
     title: "Riding Through Ladakh",
     excerpt: "Navigating high altitude mountain trails. In the shadow of cliffside monasteries and jagged peaks, we found a silence that felt holy.",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=800&auto=format&fit=crop",
+    image: "/images/story-ladakh.jpg",
     author: "Vikram Rao",
     location: "Leh, Ladakh",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=120&auto=format&fit=crop",
+    avatar: "/images/avatar-vikram.jpg",
     readTime: "6 min"
   },
 ];
@@ -73,6 +74,28 @@ export default function HomeView({
   const featuredIds = ['varanasi-spiritual', 'kerala-houseboats', 'ladakh-passes', 'jaisalmer-fort'];
   const featuredChapters = tours.filter(t => featuredIds.includes(t.id));
 
+  const findTourForStory = (story: typeof dynamicStories[0]) => {
+    return tours.find(t => 
+      story.title.toLowerCase().includes(t.title.toLowerCase()) ||
+      t.location.toLowerCase().includes(typeof story.location === 'string' ? story.location.split(',')[0]?.toLowerCase() || '' : '')
+    );
+  };
+
+  const dynamicStories = useMemo(() => {
+    const allReviews = tours.flatMap((t) =>
+      (t.reviews || []).map((r) => ({
+        title: `Journey through ${t.title}`,
+        excerpt: r.comment,
+        image: t.bannerImage,
+        author: r.author,
+        location: t.location,
+        avatar: r.avatar || "/images/avatar-priya.jpg",
+        readTime: "4 min"
+      }))
+    );
+    return allReviews.length > 0 ? allReviews.slice(0, 3) : STORIES;
+  }, [tours]);
+
   return (
     <div className="bg-sand min-h-screen text-night selection:bg-saffron/20 selection:text-night">
       {/* ── SECTION 01: HERO CAROUSEL ── */}
@@ -99,7 +122,7 @@ export default function HomeView({
           </ScrollReveal>
 
           {/* Horizontal scroll catalog chips */}
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none scroll-snap-x -mx-6 px-6 sm:-mx-12 sm:px-12 md:-mx-16 md:px-16">
+          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-none scroll-snap-x -mx-6 px-6 sm:-mx-12 sm:px-12 md:-mx-16 md:px-16 max-w-[100vw]">
             {CATEGORIES.map((cat, i) => (
               <button
                 key={cat.id}
@@ -193,7 +216,7 @@ export default function HomeView({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
             {(loadingDestinations ? Array(4).fill(null) : featuredChapters).map((tour, idx) => {
               if (!tour) return (
-                <div key={idx} className="aspect-[4/3] rounded-2xl bg-cream animate-pulse" />
+                <div key={idx} className="aspect-[16/9] rounded-2xl bg-cream animate-pulse" />
               );
               
               const isEven = idx % 2 === 0;
@@ -207,7 +230,7 @@ export default function HomeView({
                       !isEven ? 'md:mt-12' : ''
                     }`}
                   >
-                    <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-sm border border-warm-gray bg-cream">
+                    <div className="relative aspect-[16/9] rounded-3xl overflow-hidden shadow-sm border border-warm-gray bg-cream">
                       <img
                         src={tour.bannerImage}
                         alt={tour.title}
@@ -242,27 +265,42 @@ export default function HomeView({
                       </div>
                     </div>
 
-                    <div className="px-1 space-y-2">
+                    <div className="px-1 space-y-2.5">
                       <div className="flex items-center justify-between text-[9px] font-mono text-night/60 uppercase tracking-widest">
                         <span>{tour.chapterName || `Chapter ${idx + 1}`}</span>
                         <span>{tour.location.split(',')[0]}</span>
                       </div>
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        {tour.moods?.[0] && (
+                          <span className="px-2 py-0.5 rounded-full bg-saffron/10 text-saffron text-[8px] font-bold uppercase tracking-wider border border-saffron/20 leading-none">
+                            {tour.moods[0]}
+                          </span>
+                        )}
+                        <span className="text-[9px] font-mono text-night/50 uppercase tracking-wider flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {tour.duration}
+                        </span>
+                      </div>
                       
                       <h3 className="font-display text-3xl text-night font-light leading-none lowercase group-hover:text-saffron transition-colors">
-                        {tour.title} — <span className="font-sans text-lg font-light text-night/60">{tour.subtitle}</span>
+                        {tour.title}
                       </h3>
+                      <p className="text-sm text-night/50 font-sans font-light leading-tight">
+                        {tour.subtitle}
+                      </p>
 
-                      <p className="text-xs text-night/70 leading-relaxed font-light line-clamp-2">
+                      <p className="text-xs text-night/70 leading-relaxed font-light">
                         {tour.description}
                       </p>
 
                       <div className="pt-2 border-t border-warm-gray flex items-center justify-between">
                         <div className="flex items-center gap-1 text-[10px] font-mono text-night/70">
                           <Camera className="w-3.5 h-3.5 text-gold" />
-                          <span className="truncate max-w-[200px]">Secret: {tour.localSecret || 'Ask a local'}</span>
+                          <span className="truncate max-w-[200px]">{tour.localSecret || 'Ask a local'}</span>
                         </div>
                         <span className="text-[10px] font-bold uppercase tracking-wider text-saffron flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                          read stories
+                          Read Chapter
                           <ArrowRight className="w-3 h-3" />
                         </span>
                       </div>
@@ -276,7 +314,7 @@ export default function HomeView({
       </section>
 
       {/* ── SECTION 05: TRAVELER STORIES ── */}
-      <section className="py-20 bg-white border-t border-warm-gray">
+      <section className="py-24 bg-white border-t border-warm-gray">
         <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
           <ScrollReveal>
             <div className="mb-12 text-left">
@@ -290,15 +328,23 @@ export default function HomeView({
           </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {STORIES.map((story, i) => (
-              <ScrollReveal key={story.title} delay={(i % 3) as 0 | 1 | 2}>
-                <div className="flex flex-col space-y-4">
+            {dynamicStories.map((story, i) => (
+              <ScrollReveal key={story.title + "-" + i} delay={(i % 3) as 0 | 1 | 2}>
+                <div 
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    const matched = findTourForStory(story);
+                    if (matched) onSelectTour(matched);
+                  }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const matched = findTourForStory(story); if (matched) onSelectTour(matched); } }}
+                  className="flex flex-col space-y-4 cursor-pointer group"
+                >
                   <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-warm-gray bg-cream">
-                    <img 
+                    <SafeImage 
                       src={story.image} 
                       alt={story.title} 
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-102" 
-                      onError={e => { e.currentTarget.style.opacity = '0' }}
                     />
                     <span className="absolute bottom-3 left-4 text-[8px] font-mono text-white bg-black/45 px-2 py-0.5 rounded-full uppercase tracking-widest">
                       {story.readTime} read
@@ -308,14 +354,14 @@ export default function HomeView({
                     <span className="text-[8px] font-mono text-saffron uppercase tracking-widest block">
                       {story.location}
                     </span>
-                    <h3 className="font-display text-2xl text-night font-light lowercase">
+                    <h3 className="font-display text-2xl text-night font-light lowercase group-hover:text-saffron transition-colors">
                       {story.title}
                     </h3>
                     <p className="text-xs text-night/70 leading-relaxed font-light">
-                      &ldquo;{story.excerpt}&rdquo;
+                      {story.excerpt}
                     </p>
                     <div className="flex items-center gap-3 pt-3 border-t border-warm-gray">
-                      <img src={story.avatar} alt={story.author} className="w-8 h-8 rounded-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                      <SafeImage src={story.avatar} alt={story.author} className="w-8 h-8 rounded-full object-cover" />
                       <span className="text-[10px] font-mono uppercase tracking-wider text-night/70">{story.author}</span>
                     </div>
                   </div>
@@ -338,7 +384,7 @@ export default function HomeView({
               <em className="italic font-light text-gold">indian story</em>
             </h2>
             <p className="text-sm text-night/70 leading-relaxed font-light max-w-md mx-auto">
-              Our AI engine crafts hyper-customized itineraries mapping local secrets, signature food experiences, and coordinates in under a minute.
+              Our journey builder crafts customized itineraries rooted in local secrets, signature food experiences, and real coordinates — in under a minute.
             </p>
             <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button

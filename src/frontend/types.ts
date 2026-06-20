@@ -40,6 +40,7 @@ export interface Tour {
   reviews: TourReview[];
   tags: string[];
   moods: string[];
+  activities?: string[];
   latitude?: number;
   longitude?: number;
   bestSeason?: string;
@@ -49,6 +50,7 @@ export interface Tour {
   chapterTitle?: string;
   storyHeadline?: string;
   storyNarrative?: string;
+  highlights?: string[];
   localSecret?: string;
   photographySpot?: string;
   signatureExperience?: string;

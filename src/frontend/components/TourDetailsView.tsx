@@ -71,7 +71,9 @@ export default function TourDetailsView({
 
   const handleShare = () => {
     setCopiedLink(true);
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(window.location.href).catch((err) => {
+      console.warn("Clipboard copy failed (non-HTTPS or iOS):", err);
+    });
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
@@ -110,7 +112,7 @@ export default function TourDetailsView({
     <div className="pb-32 bg-sand min-h-screen select-none">
 
       {/* ── EDITORIAL HERO ── */}
-      <div className="relative w-full h-[55vh] min-h-[400px] overflow-hidden">
+      <div className="relative w-full h-[40vh] md:h-[55vh] min-h-[280px] md:min-h-[400px] overflow-hidden">
         <img
           src={tour.bannerImage}
           alt={tour.title}
@@ -206,7 +208,7 @@ export default function TourDetailsView({
               </div>
               {tour.bestSeason && (
                 <p className="text-[10px] font-bold text-sage uppercase tracking-wider mt-3">
-                  Optimal Season: {tour.bestSeason}
+                  Best Season: {tour.bestSeason}
                 </p>
               )}
             </div>
@@ -224,7 +226,7 @@ export default function TourDetailsView({
 
             {/* Description */}
             <div className="border-t border-warm-gray/50 pt-6">
-              <h2 className="font-display text-2xl text-night font-bold mb-3">The Narrative Description</h2>
+              <h2 className="font-display text-2xl text-night font-bold mb-3">About This Chapter</h2>
               <p className="text-sm text-muted font-light leading-relaxed">{tour.description}</p>
             </div>
 
@@ -280,7 +282,7 @@ export default function TourDetailsView({
 
             {/* Itinerary */}
             <div className="border-t border-warm-gray/50 pt-6">
-              <h2 className="font-display text-2xl text-night font-bold mb-4">Escape Daily Journal</h2>
+              <h2 className="font-display text-2xl text-night font-bold mb-4">Daily Itinerary</h2>
               <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
                 {tour.itinerary.map((day) => (
                   <button
@@ -316,7 +318,7 @@ export default function TourDetailsView({
 
             {/* Included Services */}
             <div className="border-t border-warm-gray/50 pt-6">
-              <h2 className="font-display text-2xl text-night font-bold mb-4">Expedition Inclusions</h2>
+              <h2 className="font-display text-2xl text-night font-bold mb-4">What's Included</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {tour.includedServices.map((s, i) => (
                   <div key={i} className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border border-warm-gray">
@@ -330,7 +332,7 @@ export default function TourDetailsView({
 
           {/* Sidebar */}
           <div className="space-y-4">
-            <div className="sticky top-24 space-y-4">
+            <div className="max-lg:static lg:sticky lg:top-24 space-y-4">
               
               {/* Booking Actions Card */}
               <div className="p-6 rounded-3xl bg-white border border-warm-gray shadow-card text-center">
@@ -346,7 +348,7 @@ export default function TourDetailsView({
                 </div>
 
                 <div className="py-4 border-y border-warm-gray/40 mb-6">
-                  <span className="text-3xl font-display font-bold text-night">₹{(tour.price * 83).toLocaleString('en-IN')}</span>
+                  <span className="text-3xl font-display font-bold text-night">{formatINR(tour.price)}</span>
                   <span className="text-xs text-muted font-light ml-1">/ person daily</span>
                 </div>
 
@@ -355,14 +357,14 @@ export default function TourDetailsView({
                     onClick={() => setIsBookingOpen(true)}
                     className="w-full py-3 rounded-xl bg-night hover:bg-night/95 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm"
                   >
-                    Book Private Expedition
+                    Reserve Your Journey
                   </button>
                   <button
                     onClick={onPlanClick}
                     className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl border border-warm-gray text-xs font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-sand/40 transition-all cursor-pointer bg-white"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-ocean" />
-                    <span>Plan Retreat with AI</span>
+                    <span>Start Planning</span>
                   </button>
                 </div>
               </div>
@@ -370,12 +372,12 @@ export default function TourDetailsView({
               {/* Reviews Section */}
               {tour.reviews.length > 0 && (
                 <div className="p-5 rounded-3xl bg-white border border-warm-gray shadow-card">
-                  <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-warm-gray/40 pb-2">Guest Testimonials</h3>
+                  <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-warm-gray/40 pb-2">Traveler Notes</h3>
                   <div className="space-y-4">
                     {tour.reviews.slice(0, 2).map((r) => (
                       <div key={r.id} className="space-y-1.5 pb-3 border-b border-warm-gray/20 last:border-0 last:pb-0">
                         <div className="flex items-center gap-2">
-                          <img src={r.avatar} alt="" className="w-7 h-7 rounded-full object-cover border border-warm-gray" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                          <img src={r.avatar} alt={r.author} className="w-7 h-7 rounded-full object-cover border border-warm-gray" onError={e => { e.currentTarget.style.opacity = '0' }} />
                           <div>
                             <p className="text-xs font-bold text-night">{r.author}</p>
                             <div className="flex items-center gap-0.5">
@@ -417,17 +419,19 @@ export default function TourDetailsView({
                 <div className="w-12 h-12 rounded-full bg-sage/20 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-6 h-6 text-sage" />
                 </div>
-                <h3 className="font-display text-2xl font-bold text-night">Voucher Confirmed</h3>
+                <h3 className="font-display text-2xl font-bold text-night">Booking Confirmed</h3>
                 <p className="text-xs text-muted font-light max-w-xs mx-auto leading-relaxed">
-                  Your private boarding pass voucher code has been logged. You can review and print your pass in the Saved ledger.
+                  Your booking has been noted. Review it in your Passport.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleBookSubmit} className="space-y-4">
                 <div>
-                  <span className="text-[9px] font-bold text-ocean uppercase tracking-widest block mb-0.5">Voucher Inquiry</span>
-                  <h3 className="font-display text-2xl font-bold text-night">Book Expedition</h3>
-                  <p className="text-[11px] text-muted font-light mt-0.5">Fill out your travel details to secure a digital voucher code.</p>
+                  <span className="text-[9px] font-bold text-saffron uppercase tracking-widest block mb-0.5 flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-saffron animate-pulse" /> Simulated Booking Demo
+                  </span>
+                  <h3 className="font-display text-2xl font-bold text-night">Book This Journey</h3>
+                  <p className="text-[11px] text-muted font-light mt-0.5">Demo booking flow — no payment is processed.</p>
                 </div>
 
                 <div className="space-y-3">
@@ -461,6 +465,7 @@ export default function TourDetailsView({
                       <input
                         type="date"
                         required
+                        min={new Date().toISOString().split('T')[0]}
                         value={bookingDate}
                         onChange={(e) => setBookingDate(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-warm-gray text-xs text-night outline-none focus:border-ocean/40"
@@ -491,7 +496,7 @@ export default function TourDetailsView({
                   </div>
 
                   <div className="border-t border-warm-gray/45 pt-3.5">
-                    <label className="text-[9px] font-bold uppercase tracking-wider text-night block mb-1">Booking Deposit</label>
+                    <label className="text-[9px] font-bold uppercase tracking-wider text-night block mb-1">Booking Summary</label>
                     <div className="w-full px-3.5 py-3 rounded-xl border border-warm-gray bg-sand/35 flex items-center justify-between text-xs text-ink/80 font-mono relative">
                       <span className="text-muted italic">Demo — payment not processed</span>
                       <span className="text-[8px] font-sans font-bold uppercase text-sage flex items-center gap-1">
@@ -505,7 +510,7 @@ export default function TourDetailsView({
                   type="submit"
                   className="w-full py-3 mt-3 rounded-xl bg-night hover:bg-night/95 text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm text-center"
                 >
-                  Verify and Lock Voucher
+                  Confirm Booking
                 </button>
               </form>
             )}

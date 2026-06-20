@@ -5,7 +5,7 @@ import { rankDestinations } from "../services/recommender";
 import { getGeminiApiKey } from "../lib/gemini";
 import { checkRateLimit } from "../lib/rate-limit";
 
-function getOfflineItinerary(destName: string, lat: number, lng: number, budget: string) {
+function getBaseOfflineItinerary(destName: string, lat: number, lng: number, budget: string) {
   const name = destName.toLowerCase();
   
   if (name.includes("varanasi")) {
@@ -33,6 +33,30 @@ function getOfflineItinerary(destName: string, lat: number, lng: number, budget:
         ],
         latitude: lat + 0.002,
         longitude: lng - 0.003
+      },
+      {
+        day: "Day 3",
+        title: "Sarnath Stupa & Silk Weaving Quarter",
+        description: "Drive to Sarnath for a quiet morning among the ancient Buddhist stupas and deer park where the Buddha first taught. Return to the old city and wander through the silk weaving quarter, watching master weavers at handlooms producing Banarasi silk that has clothed royalty for centuries.",
+        activities: [
+          "Sarnath Buddhist stupa excursion",
+          "Silk weaving guild demonstration",
+          "Evening boat ride with clay lamp offering"
+        ],
+        latitude: lat + 0.034,
+        longitude: lng + 0.015
+      },
+      {
+        day: "Day 4",
+        title: "Ghat Walk & Culinary Farewell",
+        description: "A final morning walk along the entire stretch of the Ganges ghats, passing textile dyers, flower sellers, and yoga practitioners. End at a century-old kitchen for a private cooking lesson in making Banarasi chai, stuffed parathas, and the iconic Malaiyyo dessert.",
+        activities: [
+          "Full ghat walking tour from Assi to Manikarnika",
+          "Street food crawl with local guide",
+          "Private Banarasi cooking class"
+        ],
+        latitude: lat - 0.003,
+        longitude: lng + 0.005
       }
     ];
   }
@@ -62,6 +86,30 @@ function getOfflineItinerary(destName: string, lat: number, lng: number, budget:
         ],
         latitude: lat + 0.004,
         longitude: lng + 0.002
+      },
+      {
+        day: "Day 3",
+        title: "Spice Plantation Walk & Temple Visit",
+        description: "Journey inland to a family-run spice estate where pepper vines, cardamom, and nutmeg grow in dense tropical shade. Walk through the plantation with a farmer, then visit a small riverside temple before returning to the houseboat for a sunset cruise past Chinese fishing nets.",
+        activities: [
+          "Guided spice plantation walk",
+          "Temple visit with local priest",
+          "Sunset cruise past Chinese fishing nets"
+        ],
+        latitude: lat + 0.008,
+        longitude: lng - 0.004
+      },
+      {
+        day: "Day 4",
+        title: "Kumarakom Sanctuary & Village Cycle Tour",
+        description: "Cycle through narrow village lanes lined with coconut trees to the Kumarakom Bird Sanctuary. Spot kingfishers, herons, and egrets. Stop at a local toddy shop for fresh coconut water. End with a traditional Kerala sadya feast served on a banana leaf.",
+        activities: [
+          "Village cycle tour through backwater hamlets",
+          "Birdwatching at Kumarakom sanctuary",
+          "Traditional sadya banana leaf lunch"
+        ],
+        latitude: lat - 0.006,
+        longitude: lng + 0.008
       }
     ];
   }
@@ -120,6 +168,30 @@ function getOfflineItinerary(destName: string, lat: number, lng: number, budget:
         ],
         latitude: lat - 0.08,
         longitude: lng + 0.07
+      },
+      {
+        day: "Day 3",
+        title: "Kuldhara Ghost Village & Desert Hike",
+        description: "Drive to the abandoned medieval village of Kuldhara, an entire settlement deserted overnight 200 years ago. Explore the crumbling sandstone havelis in silence. Then hike a short trail to the Amar Sagar stepwell for a peaceful picnic among ancient architecture.",
+        activities: [
+          "Kuldhara abandoned village exploration",
+          "Amar Sagar stepwell picnic",
+          "Sunset at Vyas Chhatri cenotaphs"
+        ],
+        latitude: lat - 0.025,
+        longitude: lng + 0.012
+      },
+      {
+        day: "Day 4",
+        title: "Bada Bagh & Rajasthani Cooking Class",
+        description: "Morning visit to Bada Bagh, a garden complex with royal cenotaphs where sandstone domes seem to float above the desert floor. Return to the fort for a hands-on Rajasthani cooking class — learn to make dal baati churma and ker sangri in a family kitchen.",
+        activities: [
+          "Bada Bagh cenotaph sunrise visit",
+          "Rajasthani cooking class in family home",
+          "Farewell camel cart ride through the fort"
+        ],
+        latitude: lat + 0.015,
+        longitude: lng - 0.008
       }
     ];
   }
@@ -149,6 +221,30 @@ function getOfflineItinerary(destName: string, lat: number, lng: number, budget:
         ],
         latitude: lat + 0.012,
         longitude: lng + 0.018
+      },
+      {
+        day: "Day 3",
+        title: "Khardung La Pass & Nubra Valley",
+        description: "Drive to the Khardung La Pass, one of the highest motorable passes in the world at 18,380 feet. Descend into the Nubra Valley and ride a double-humped Bactrian camel across the white sand dunes. Visit a Tibetan refugee settlement for handwoven pashmina demonstrations.",
+        activities: [
+          "Khardung La Pass summit stop",
+          "Bactrian camel ride at Nubra sand dunes",
+          "Tibetan refugee settlement walk"
+        ],
+        latitude: lat + 0.065,
+        longitude: lng - 0.032
+      },
+      {
+        day: "Day 4",
+        title: "Pangong Lake Expedition",
+        description: "An early morning drive along the Indus River to the stunning Pangong Tso lake, sitting at 14,270 feet. The lake's turquoise and deep blue waters shift colors through the day. Picnic on the shore, spot migratory birds, and return to Leh along the Chang La pass.",
+        activities: [
+          "Scenic drive along Indus River gorge",
+          "Pangong Tso lakeside picnic",
+          "Chang La pass photo stop on return"
+        ],
+        latitude: lat - 0.042,
+        longitude: lng + 0.088
       }
     ];
   }
@@ -410,8 +506,50 @@ function getOfflineItinerary(destName: string, lat: number, lng: number, budget:
       ],
       latitude: lat + 0.003,
       longitude: lng + 0.005
+    },
+    {
+      day: "Day 3",
+      title: "Hidden Trails & Local Craft Villages",
+      description: `Venture beyond ${destName}'s main quarter to discover quieter trails and artisan workshops. Visit a local craft village to see traditional techniques passed down through generations.`,
+      activities: [
+        "Artisan village walking tour",
+        "Traditional craft demonstration",
+        "Lunch at a family-run homestay"
+      ],
+      latitude: lat - 0.006,
+      longitude: lng + 0.009
+    },
+    {
+      day: "Day 4",
+      title: "Sunrise Vistas & Farewell Feast",
+      description: `Wake early for a sunrise view over ${destName}'s landscape. Return for a final tasting walk through the local market — pickles, sweets, and fresh chai. Depart with handcrafted souvenirs.`,
+      activities: [
+        "Sunrise viewpoint hike or walk",
+        "Local market tasting tour",
+        "Farewell lunch with regional specialties"
+      ],
+      latitude: lat + 0.004,
+      longitude: lng - 0.007
     }
   ];
+}
+
+function getOfflineItinerary(destName: string, lat: number, lng: number, budget: string, duration: number) {
+  const baseDays = getBaseOfflineItinerary(destName, lat, lng, budget);
+  const itinerary = [];
+  for (let i = 0; i < duration; i++) {
+    const baseDay = baseDays[i % baseDays.length];
+    const cycle = Math.floor(i / baseDays.length);
+    itinerary.push({
+      day: `Day ${i + 1}`,
+      title: baseDay.title,
+      description: baseDay.description,
+      activities: baseDay.activities,
+      latitude: baseDay.latitude + (cycle * 0.012),
+      longitude: baseDay.longitude - (cycle * 0.012)
+    });
+  }
+  return itinerary;
 }
 
 export async function POST(req: Request) {
@@ -509,13 +647,21 @@ export async function POST(req: Request) {
       const fallbackLat = finalDest?.latitude || 25.3176;
       const fallbackLng = finalDest?.longitude || 82.9739;
 
+      // Destination-aware cost multipliers
+      const destNameLower = fallbackDestName.toLowerCase();
+      const costMultiplier = destNameLower.includes('ladakh') || destNameLower.includes('kashmir') || destNameLower.includes('andaman') ? 1.4 : destNameLower.includes('jaisalmer') || destNameLower.includes('kerala') || destNameLower.includes('udaipur') ? 1.2 : destNameLower.includes('goa') || destNameLower.includes('munnar') || destNameLower.includes('cherrapunji') ? 0.9 : 1.0;
+      const baseTransit = budget === 'Luxury' ? 25000 : budget === 'Medium' ? 12000 : 5000;
+      const baseStay = budget === 'Luxury' ? 80000 : budget === 'Medium' ? 25000 : 8000;
+      const baseFood = budget === 'Luxury' ? 30000 : budget === 'Medium' ? 15000 : 6000;
+      const totalCost = Math.round((baseTransit + baseStay + baseFood) * costMultiplier);
+
       const offlineResponse = {
-        itinerary: getOfflineItinerary(fallbackDestName, fallbackLat, fallbackLng, budget),
+        itinerary: getOfflineItinerary(fallbackDestName, fallbackLat, fallbackLng, budget, tripDuration),
         costs: {
-          transit: budget === 'Luxury' ? 25000 : budget === 'Medium' ? 12000 : 5000,
-          stay: budget === 'Luxury' ? 80000 : budget === 'Medium' ? 25000 : 8000,
-          food: budget === 'Luxury' ? 30000 : budget === 'Medium' ? 15000 : 6000,
-          total: budget === 'Luxury' ? 135000 : budget === 'Medium' ? 52000 : 19000
+          transit: Math.round(baseTransit * costMultiplier),
+          stay: Math.round(baseStay * costMultiplier),
+          food: Math.round(baseFood * costMultiplier),
+          total: totalCost
         },
         weather: {
           temperature: "22°C - 26°C",
@@ -637,7 +783,8 @@ export async function POST(req: Request) {
     });
   } catch (error: any) {
     console.error("Trip Planning AI Error:", error);
-    return new Response(JSON.stringify({ error: error?.message || "Failed to generate itinerary" }), {
+    const userMessage = "We couldn't complete your itinerary right now. Please try again in a moment.";
+    return new Response(JSON.stringify({ error: userMessage }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

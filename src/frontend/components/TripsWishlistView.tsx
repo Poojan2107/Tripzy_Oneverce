@@ -1,10 +1,11 @@
 "use client";
 import { useState, useMemo } from 'react';
 import { 
-  Heart, Calendar, MapPin, CheckCircle2, Trash2, Printer, 
+  Heart, BookOpen, MapPin, CheckCircle2, Trash2, Printer, 
   ArrowRight, Sparkles, Compass, Clock, Award, Shield, User
 } from 'lucide-react';
 import { Tour } from '../types';
+import { formatINR } from '../utils/currency';
 
 interface BookedItem {
   tourId: string;
@@ -26,6 +27,7 @@ interface TripsWishlistViewProps {
   onRemoveWishlist: (tourId: string) => void;
   onCancelExpedition: (bookingCode: string) => void;
   onNavigateExplore: () => void;
+  onNavigatePlanner?: () => void;
   onDeleteItinerary: (id: string) => void;
   onInspectItinerary?: (itin: any) => void;
 }
@@ -37,7 +39,7 @@ function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove
       className="bg-white p-4 pb-6 rounded-3xl border bg-cream shadow-sm hover:shadow-md hover:border-gold/35 transition-all duration-300 cursor-pointer group flex flex-col justify-between text-left relative"
     >
       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-cream mb-4">
-        <img src={tour.bannerImage} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102" onError={e => { e.currentTarget.style.opacity = '0' }} />
+        <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102" onError={e => { e.currentTarget.style.opacity = '0' }} />
         <button 
           onClick={(e) => { e.stopPropagation(); onRemove(); }}
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center text-slate-400 hover:text-rose-500 shadow-sm border bg-cream cursor-pointer"
@@ -48,9 +50,9 @@ function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove
       <div className="space-y-2">
         <span className="text-[8px] font-mono text-gold uppercase tracking-widest block">{tour.location.split(',')[0]}</span>
         <h3 className="font-display text-2xl text-night font-light leading-none lowercase">{tour.title}</h3>
-        <p className="text-[10px] text-muted/60 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
+        <p className="text-xs text-muted/60 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
         <div className="pt-2 flex justify-between items-center text-xs font-bold text-night">
-          <span>₹{(tour.price * 83).toLocaleString('en-IN')}</span>
+          <span>{formatINR(tour.price)}</span>
           <span className="text-[9px] font-mono font-bold text-saffron bg-saffron/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
             {tour.moods?.[0]}
           </span>
@@ -68,15 +70,77 @@ export default function TripsWishlistView({
   onRemoveWishlist,
   onCancelExpedition,
   onNavigateExplore,
+  onNavigatePlanner,
   onDeleteItinerary,
   onInspectItinerary
 }: TripsWishlistViewProps) {
   const [activeSubTab, setActiveSubTab] = useState<'bookings' | 'wishlist' | 'itineraries'>('bookings');
-  const [mockPrintCode, setMockPrintCode] = useState<string | null>(null);
 
-  const triggerMockPrint = (code: string) => {
-    setMockPrintCode(code);
-    setTimeout(() => setMockPrintCode(null), 2500);
+  const triggerPrint = (booking: BookedItem) => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Boarding Pass - TZ-${booking.bookingCode}</title>
+          <style>
+            body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; color: #1E293B; padding: 40px; margin: 0; }
+            .ticket { border: 2px solid #E2DCD3; border-radius: 20px; padding: 30px; max-width: 600px; margin: 0 auto; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+            .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #E2DCD3; padding-bottom: 20px; margin-bottom: 20px; }
+            .logo { font-size: 24px; font-weight: bold; font-family: 'Georgia', serif; }
+            .badge { background: #004D40; color: #fff; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 10px; text-transform: uppercase; }
+            .details { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; margin-bottom: 20px; }
+            .detail-block { margin-bottom: 15px; }
+            .label { font-size: 9px; text-transform: uppercase; color: #64748B; letter-spacing: 0.1em; font-weight: bold; }
+            .value { font-size: 14px; font-weight: bold; color: #1E293B; margin-top: 4px; }
+            .footer { border-top: 1px solid #E2DCD3; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+            .barcode { font-family: monospace; font-size: 12px; letter-spacing: 0.25em; color: #64748B; }
+          </style>
+        </head>
+        <body>
+          <div class="ticket">
+            <div class="header">
+              <div class="logo">tripzy.ai</div>
+              <div class="badge">Voucher Confirmed</div>
+            </div>
+            <div class="details">
+              <div class="detail-block">
+                <div class="label">Destination Chapter</div>
+                <div class="value">${booking.tourTitle}</div>
+              </div>
+              <div class="detail-block">
+                <div class="label">Voucher Code</div>
+                <div class="value">TZ-${booking.bookingCode}</div>
+              </div>
+              <div class="detail-block">
+                <div class="label">Departure Date</div>
+                <div class="value">${booking.date}</div>
+              </div>
+              <div class="detail-block">
+                <div class="label">Guests</div>
+                <div class="value">${booking.guests} ${booking.guests === 1 ? 'Traveler' : 'Travelers'}</div>
+              </div>
+              <div class="detail-block" style="grid-column: span 2;">
+                <div class="label">Lead Passenger</div>
+                <div class="value">${booking.fullName} (${booking.email})</div>
+              </div>
+            </div>
+            <div class="footer">
+              <div class="barcode">||||| | ||||| | ||| ||||| ${booking.bookingCode}</div>
+              <div style="font-size: 10px; color: #64748B;">tripzy.ai/saved</div>
+            </div>
+          </div>
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() { window.close(); }, 500);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
   };
 
   // List of all destinations booked or saved
@@ -171,7 +235,7 @@ export default function TripsWishlistView({
         {/* Badges Gallery */}
         <div>
           <h3 className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/50 block mb-4 font-bold">
-            unlocked travel badges
+            travel badges
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
             {badgesList.map((badge) => (
@@ -228,7 +292,7 @@ export default function TripsWishlistView({
                 : 'text-muted/60 hover:text-night'
             }`}
           >
-            <span>Saved Stories</span>
+            <span>Wishlist</span>
             {wishlistTours.length > 0 && (
               <span className="h-4.5 min-w-4.5 rounded-full bg-gold text-[8px] font-bold text-white flex items-center justify-center px-1">
                 {wishlistTours.length}
@@ -244,7 +308,7 @@ export default function TripsWishlistView({
                 : 'text-muted/60 hover:text-night'
             }`}
           >
-            <span>Saved Journals</span>
+            <span>Itineraries</span>
             {savedItineraries.length > 0 && (
               <span className="h-4.5 min-w-4.5 rounded-full bg-gold text-[8px] font-bold text-white flex items-center justify-center px-1">
                 {savedItineraries.length}
@@ -275,7 +339,7 @@ export default function TripsWishlistView({
                         />
                         <div>
                           <span className="text-[8px] font-mono text-gold uppercase tracking-widest block mb-0.5">
-                            Boarding Pass Voucher
+                            Confirmed Booking
                           </span>
                           <h3 className="font-display font-light text-xl leading-snug text-night line-clamp-1">
                             {bt.tourTitle}
@@ -285,7 +349,7 @@ export default function TripsWishlistView({
                       </div>
 
                       <span className="px-2.5 py-0.5 bg-[#004D40]/10 text-[9px] font-bold text-[#004D40] rounded-full uppercase tracking-wider border border-[#004D40]/20">
-                        Approved
+                        Confirmed
                       </span>
                     </div>
 
@@ -300,12 +364,12 @@ export default function TripsWishlistView({
                         <p className="font-bold text-night mt-0.5">{bt.guests} {bt.guests === 1 ? 'Guest' : 'Guests'}</p>
                       </div>
                       <div className="mt-2.5">
-                        <p className="text-[8px] text-muted/50 uppercase font-bold tracking-wider">Lead Passenger</p>
-                        <p className="font-bold text-night uppercase mt-0.5 truncate max-w-[125px]">{bt.fullName}</p>
+                        <p className="text-[8px] text-muted/50 uppercase font-bold tracking-wider">Booked by</p>
+                        <p className="font-bold text-night uppercase mt-0.5 truncate max-w-[160px] sm:max-w-[200px]">{bt.fullName}</p>
                       </div>
                       <div className="mt-2.5">
-                        <p className="text-[8px] text-muted/50 uppercase font-bold tracking-wider">Total Charge</p>
-                        <p className="font-bold text-saffron mt-0.5">₹{(bt.price * 83 * bt.guests).toLocaleString('en-IN')}</p>
+                        <p className="text-[8px] text-muted/50 uppercase font-bold tracking-wider">Total</p>
+                        <p className="font-bold text-saffron mt-0.5">{formatINR(bt.price * bt.guests)}</p>
                       </div>
                     </div>
                   </div>
@@ -313,11 +377,11 @@ export default function TripsWishlistView({
                   {/* Actions */}
                   <div className="bg-warm-white border-t bg-cream p-4 px-6 flex items-center justify-between">
                     <button
-                      onClick={() => triggerMockPrint(bt.bookingCode)}
+                      onClick={() => triggerPrint(bt)}
                       className="text-[10px] font-bold uppercase tracking-wider text-muted/60 hover:text-gold flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <Printer className="w-3.5 h-3.5 text-gold" />
-                      <span>Print Pass PDF</span>
+                      <span>Print Voucher</span>
                     </button>
 
                     <button
@@ -325,7 +389,7 @@ export default function TripsWishlistView({
                       className="text-[10px] font-bold uppercase tracking-wider text-rose-500 hover:text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl transition-all cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>Cancel</span>
+                      <span>Cancel Booking</span>
                     </button>
                   </div>
                 </div>
@@ -333,17 +397,17 @@ export default function TripsWishlistView({
             </div>
           ) : (
             <div className="text-center py-20 bg-white border bg-cream rounded-3xl max-w-md mx-auto p-6 shadow-sm">
-              <Calendar className="w-12 h-12 text-muted/30 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold text-night">No Secured Expeditions</h3>
+              <BookOpen className="w-12 h-12 text-muted/30 mx-auto mb-4" />
+              <h3 className="font-display text-xl font-bold text-night">Your Passport Awaits</h3>
               <p className="text-xs text-muted/60 font-light mt-1 max-w-xs mx-auto leading-relaxed">
-                You haven't secured any private luxury retreats. View our catalog of options to book a pass.
+                Start planning your first Indian journey and we'll save it here — your itinerary, wishlist, and travel memories in one place.
               </p>
               <button
-                onClick={onNavigateExplore}
+                onClick={onNavigatePlanner || onNavigateExplore}
                 className="mt-6 px-6 py-2.5 bg-night text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-saffron transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
               >
-                <span>Browse Tour Directory</span>
-                <ArrowRight className="w-3.5 h-3.5 text-gold" />
+                <Sparkles className="w-3.5 h-3.5 text-gold" />
+                <span>Plan My First Journey</span>
               </button>
             </div>
           )}
@@ -366,17 +430,17 @@ export default function TripsWishlistView({
             </div>
           ) : (
             <div className="text-center py-20 bg-white border bg-cream rounded-3xl max-w-md mx-auto p-6 shadow-sm">
-              <Heart className="w-12 h-12 text-muted/30 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold text-night">Wishlist Empty</h3>
+              <BookOpen className="w-12 h-12 text-muted/30 mx-auto mb-4" />
+              <h3 className="font-display text-xl font-bold text-night">Your Passport Awaits</h3>
               <p className="text-xs text-muted/60 font-light mt-1 max-w-xs mx-auto leading-relaxed">
-                As you navigate our directories, bookmark individual chapters to save them in this scrapbook ledger.
+                Start planning your first Indian journey and we'll save it here — your itinerary, wishlist, and travel memories in one place.
               </p>
               <button
-                onClick={onNavigateExplore}
+                onClick={onNavigatePlanner || onNavigateExplore}
                 className="mt-6 px-6 py-2.5 bg-night text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-saffron transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
               >
-                <span>Browse Chapters</span>
-                <ArrowRight className="w-3.5 h-3.5 text-gold" />
+                <Sparkles className="w-3.5 h-3.5 text-gold" />
+                <span>Plan My First Journey</span>
               </button>
             </div>
           )}
@@ -400,7 +464,7 @@ export default function TripsWishlistView({
                   <div className="flex-1 min-w-0 pr-4 pl-4 text-left">
                     <div className="flex items-center gap-2 mb-1.5">
                       <Sparkles className="w-4 h-4 text-gold group-hover:animate-pulse" />
-                      <span className="text-[8px] font-mono text-gold uppercase tracking-widest font-bold">Saved Escape Journal</span>
+                      <span className="text-[8px] font-mono text-gold uppercase tracking-widest font-bold">Saved Itinerary</span>
                     </div>
                     <h3 className="font-display font-light text-2xl text-night group-hover:text-saffron transition-colors leading-tight">
                       {itin.title || 'Untitled Itinerary'}
@@ -431,31 +495,20 @@ export default function TripsWishlistView({
             </div>
           ) : (
             <div className="text-center py-20 bg-white border bg-cream rounded-3xl max-w-md mx-auto p-6 shadow-sm">
-              <Compass className="w-12 h-12 text-muted/30 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold text-night">No Saved Escape Journals</h3>
+              <BookOpen className="w-12 h-12 text-muted/30 mx-auto mb-4" />
+              <h3 className="font-display text-xl font-bold text-night">Your Passport Awaits</h3>
               <p className="text-xs text-muted/60 font-light mt-1 max-w-xs mx-auto leading-relaxed">
-                Use our guided Journey Builder to plan custom daily itineraries, then archive them in this scrapbook.
+                Start planning your first Indian journey and we'll save it here — your itinerary, wishlist, and travel memories in one place.
               </p>
               <button
-                onClick={onNavigateExplore}
+                onClick={onNavigatePlanner || onNavigateExplore}
                 className="mt-6 px-6 py-2.5 bg-night text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-saffron transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
               >
-                <span>Browse Chapters</span>
                 <Sparkles className="w-3.5 h-3.5 text-gold" />
+                <span>Plan My First Journey</span>
               </button>
             </div>
           )}
-        </div>
-      )}
-
-      {/* Floating printing simulator overlay */}
-      {mockPrintCode && (
-        <div className="fixed bottom-8 right-8 z-50 bg-night border border-white/10 text-white p-4.5 rounded-2xl shadow-elevated flex items-center gap-3.5 animate-slide-in-right">
-          <div className="w-2.5 h-2.5 rounded-full bg-gold animate-ping" />
-          <div className="text-[10px]">
-            <p className="font-bold">Printing Pass Voucher...</p>
-            <p className="font-light text-white/60 mt-0.5">Processing code TZ-{mockPrintCode}</p>
-          </div>
         </div>
       )}
 

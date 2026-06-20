@@ -20,7 +20,7 @@ const CHAPTERS = [
     subtitle: "spiritual river heritage",
     category: "Spiritual • Heritage",
     story: "Dawn breaks over the sacred Ghats as priests perform the ancient Ganga Aarti — fire, incense and ten thousand years of devotion.",
-    image: "https://images.unsplash.com/photo-1561361058-c24e01d68e37?q=80&w=1800&auto=format&fit=crop",
+    image: "/images/hero-varanasi.jpg",
     mood: "Spiritual",
     duration: "3 Days",
     temp: "28°C",
@@ -33,7 +33,7 @@ const CHAPTERS = [
     subtitle: "backwater floating silence",
     category: "Nature • Wellness",
     story: "Drift through ancient waterways on a teak houseboat as egrets skim the lotus ponds of God's Own Country.",
-    image: "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?q=80&w=1800&auto=format&fit=crop",
+    image: "/images/hero-kerala.jpg",
     mood: "Nature",
     duration: "4 Days",
     temp: "30°C",
@@ -46,7 +46,7 @@ const CHAPTERS = [
     subtitle: "himalayan high passes",
     category: "Adventure • Nature",
     story: "At 18,380 ft, the world falls silent. Monasteries cling to cliffs above a cold desert that touches the sky.",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1800&auto=format&fit=crop",
+    image: "/images/hero-ladakh.jpg",
     mood: "Adventure",
     duration: "8 Days",
     temp: "12°C",
@@ -59,7 +59,7 @@ const CHAPTERS = [
     subtitle: "alpine meadow walks",
     category: "Luxury • Nature",
     story: "Stay in heritage wooden houseboats on Dal Lake, drift through floating morning flower markets, and discover pine-forested alpine slopes.",
-    image: "https://images.unsplash.com/photo-1598091383021-15ddea10925d?q=80&w=1800&auto=format&fit=crop",
+    image: "/images/hero-kashmir.jpg",
     mood: "Luxury",
     duration: "6 Days",
     temp: "18°C",
@@ -71,8 +71,8 @@ const CHAPTERS = [
     title: "jaisalmer",
     subtitle: "golden desert dunes",
     category: "Culture • Adventure",
-    story: "Live inside an active medieval sandstone fort, traverse golden Thar desert dunes on camelback, and camp under starry nights.",
-    image: "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?q=80&w=1800&auto=format&fit=crop",
+    story: "Sleep inside an active medieval sandstone fort, ride camels across the Thar, and camp under a desert sky.",
+    image: "/images/hero-jaisalmer.jpg",
     mood: "Culture",
     duration: "3 Days",
     temp: "26°C",
@@ -133,7 +133,7 @@ export default function Hero({
       {CHAPTERS.map((ch, idx) => (
         <div
           key={ch.id}
-          className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+          className="absolute inset-0 transition-opacity duration-700 ease-in-out bg-cream"
           style={{ opacity: idx === active ? 1 : 0, zIndex: idx === active ? 1 : 0 }}
         >
           <img
@@ -170,6 +170,12 @@ export default function Hero({
 
         {/* MIDDLE: Big editorial title */}
         <div className="flex-1 flex flex-col justify-center max-w-5xl">
+          <p
+            key={active + "-tagline"}
+            className="font-mono text-[9px] md:text-[10px] uppercase tracking-[0.25em] text-gold/80 mb-2 animate-fade-in"
+          >
+            Discover India Through 12 Handcrafted Chapters
+          </p>
           <div
             key={active + "-title"}
             className={`transition-all duration-700 ${transitioning ? "opacity-0 translate-y-8" : "opacity-100 translate-y-0"}`}
@@ -222,7 +228,7 @@ export default function Hero({
                     : "w-14 h-14 opacity-50 hover:opacity-75"
                 }`}
               >
-                <img src={ch.image} alt="" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                <img src={ch.image} alt={ch.title} className="w-full h-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
                 {idx === active && (
                   <>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

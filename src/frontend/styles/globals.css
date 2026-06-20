@@ -29,7 +29,7 @@
   /* ── Text ── */
   --color-night: #1E293B;
   --color-charcoal: #1E293B;
-  --color-muted: #64748B;
+  --color-muted: #475569;
   --color-stone: #94A3B8;
 
   /* ── Borders & Surfaces ── */
@@ -90,6 +90,13 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .text-balance { text-wrap: balance; }
+  
+  /* Non-standard Tailwind sizes used across components */
+  .scale-103 { transform: scale(1.03); }
+  .scale-102 { transform: scale(1.02); }
+  .text-2\.5xl { font-size: 1.625rem; line-height: 2rem; }
+  .w-4\.5 { width: 1.125rem; }
+  .h-4\.5 { height: 1.125rem; }
   
   .ui-utility-label {
     text-transform: uppercase;

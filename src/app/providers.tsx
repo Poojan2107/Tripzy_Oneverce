@@ -1,11 +1,14 @@
 "use client";
 
 import { AtmosphereProvider } from "../frontend/utils/AtmosphereContext";
+import { SessionProvider } from "next-auth/react";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <AtmosphereProvider>
-      {children}
-    </AtmosphereProvider>
+    <SessionProvider>
+      <AtmosphereProvider>
+        {children}
+      </AtmosphereProvider>
+    </SessionProvider>
   );
 }

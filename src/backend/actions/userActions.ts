@@ -1,6 +1,12 @@
 "use server";
 
 import { db } from "../lib/db";
+import { auth } from "../lib/auth";
+
+async function getUserId() {
+  const session = await auth();
+  return session?.user?.id || "guest-user-id";
+}
 
 async function findDestinationBySlugOrId(slugOrId: string) {
   return db.destination.findFirst({
@@ -12,11 +18,11 @@ async function findDestinationBySlugOrId(slugOrId: string) {
 
 export async function toggleBookmark(destinationId: string) {
   try {
-    const guestId = "guest-user-id";
+    const userId = await getUserId();
     const existing = await db.bookmark.findUnique({
       where: {
         userId_destinationId: {
-          userId: guestId,
+          userId,
           destinationId,
         },
       },
@@ -31,7 +37,7 @@ export async function toggleBookmark(destinationId: string) {
 
     await db.bookmark.create({
       data: {
-        userId: guestId,
+        userId,
         destinationId,
       },
     });
@@ -57,8 +63,9 @@ export async function toggleBookmarkBySlug(slugOrId: string) {
 
 export async function getUserBookmarks() {
   try {
+    const userId = await getUserId();
     const bookmarks = await db.bookmark.findMany({
-      where: { userId: "guest-user-id" },
+      where: { userId },
       include: {
         destination: {
           select: { slug: true, id: true },
@@ -75,8 +82,9 @@ export async function getUserBookmarks() {
 
 export async function getUserSavedItineraries() {
   try {
+    const userId = await getUserId();
     const items = await db.savedItinerary.findMany({
-      where: { userId: "guest-user-id" },
+      where: { userId },
       orderBy: { createdAt: "desc" },
     });
     return {
@@ -98,8 +106,9 @@ export async function getUserSavedItineraries() {
 
 export async function deleteSavedItinerary(id: string) {
   try {
+    const userId = await getUserId();
     const item = await db.savedItinerary.findUnique({ where: { id } });
-    if (!item || item.userId !== "guest-user-id") {
+    if (!item || item.userId !== userId) {
       return { success: false, error: "Not found" };
     }
     await db.savedItinerary.delete({ where: { id } });
@@ -112,8 +121,9 @@ export async function deleteSavedItinerary(id: string) {
 
 export async function getUserTrips() {
   try {
+    const userId = await getUserId();
     const trips = await db.trip.findMany({
-      where: { userId: "guest-user-id" },
+      where: { userId },
       orderBy: { createdAt: "desc" },
     });
     return { success: true, data: trips };

@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "../lib/db";
+import { auth } from "../lib/auth";
 
 export async function saveItineraryAction(data: {
   title: string;
@@ -10,7 +11,8 @@ export async function saveItineraryAction(data: {
   itinerary: any;
 }) {
   try {
-    const userId = "guest-user-id";
+    const session = await auth();
+    const userId = session?.user?.id || "guest-user-id";
 
     // Ensure guest user exists in the database
     await db.user.upsert({
@@ -18,8 +20,8 @@ export async function saveItineraryAction(data: {
       update: {},
       create: {
         id: userId,
-        name: "Guest Traveler",
-        email: "guest@tripzy.ai",
+        name: session?.user?.name || "Guest Traveler",
+        email: session?.user?.email || "guest@tripzy.ai",
       }
     });
 

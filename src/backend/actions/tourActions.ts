@@ -1,6 +1,14 @@
 "use server";
 
 import { db } from "../lib/db";
+import { auth } from "../lib/auth";
+
+async function verifyAdmin() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Access Denied: Admin authorization required.");
+  }
+}
 
 export async function getTrendingDestinations() {
   try {
@@ -81,6 +89,7 @@ export async function getAllExperiences() {
 
 export async function createDestination(data: any) {
   try {
+    await verifyAdmin();
     const destination = await db.destination.create({
       data: {
         name: data.name,
@@ -118,6 +127,7 @@ export async function createDestination(data: any) {
 
 export async function updateDestination(id: string, data: any) {
   try {
+    await verifyAdmin();
     const destination = await db.destination.update({
       where: { id },
       data: {
@@ -156,6 +166,7 @@ export async function updateDestination(id: string, data: any) {
 
 export async function deleteDestination(id: string) {
   try {
+    await verifyAdmin();
     await db.destination.delete({
       where: { id }
     });
@@ -168,6 +179,7 @@ export async function deleteDestination(id: string) {
 
 export async function createExperience(data: any) {
   try {
+    await verifyAdmin();
     const experience = await db.experience.create({
       data: {
         name: data.name,
@@ -192,6 +204,7 @@ export async function createExperience(data: any) {
 
 export async function updateExperience(id: string, data: any) {
   try {
+    await verifyAdmin();
     const experience = await db.experience.update({
       where: { id },
       data: {
@@ -217,6 +230,7 @@ export async function updateExperience(id: string, data: any) {
 
 export async function deleteExperience(id: string) {
   try {
+    await verifyAdmin();
     await db.experience.delete({
       where: { id }
     });

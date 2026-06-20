@@ -140,6 +140,7 @@ export default function Hero({
             src={ch.image}
             alt={ch.title}
             className="w-full h-full object-cover"
+            onError={e => { e.currentTarget.style.opacity = '0' }}
           />
           {/* Heavy gradient: dark bottom for text, subtle top for navbar */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/20" />
@@ -221,7 +222,7 @@ export default function Hero({
                     : "w-14 h-14 opacity-50 hover:opacity-75"
                 }`}
               >
-                <img src={ch.image} alt="" className="w-full h-full object-cover" />
+                <img src={ch.image} alt="" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
                 {idx === active && (
                   <>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

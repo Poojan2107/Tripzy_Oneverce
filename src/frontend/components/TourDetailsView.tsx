@@ -115,6 +115,7 @@ export default function TourDetailsView({
           src={tour.bannerImage}
           alt={tour.title}
           className="w-full h-full object-cover"
+          onError={e => { e.currentTarget.style.opacity = '0' }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
@@ -374,7 +375,7 @@ export default function TourDetailsView({
                     {tour.reviews.slice(0, 2).map((r) => (
                       <div key={r.id} className="space-y-1.5 pb-3 border-b border-warm-gray/20 last:border-0 last:pb-0">
                         <div className="flex items-center gap-2">
-                          <img src={r.avatar} alt="" className="w-7 h-7 rounded-full object-cover border border-warm-gray" />
+                          <img src={r.avatar} alt="" className="w-7 h-7 rounded-full object-cover border border-warm-gray" onError={e => { e.currentTarget.style.opacity = '0' }} />
                           <div>
                             <p className="text-xs font-bold text-night">{r.author}</p>
                             <div className="flex items-center gap-0.5">

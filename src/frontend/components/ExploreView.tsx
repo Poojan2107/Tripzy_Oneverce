@@ -194,6 +194,7 @@ export default function ExploreView({
                       src={tour.bannerImage} 
                       alt="" 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" 
+                      onError={e => { e.currentTarget.style.opacity = '0' }}
                     />
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -239,7 +240,7 @@ export default function ExploreView({
           <div className="absolute top-4 bottom-4 right-4 w-[90%] sm:w-[380px] bg-white border border-warm-gray rounded-3xl shadow-elevated z-30 overflow-hidden flex flex-col animate-page-enter">
             {/* Header image */}
             <div className="relative aspect-[16/10] bg-cream shrink-0">
-              <img src={activeTour.bannerImage} alt="" className="w-full h-full object-cover" />
+              <img src={activeTour.bannerImage} alt="" className="w-full h-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               
               <button 

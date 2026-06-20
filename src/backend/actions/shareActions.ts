@@ -1,7 +1,6 @@
 "use server";
 
 import { db } from "../lib/db";
-import { auth } from "../auth";
 
 export async function saveItineraryAction(data: {
   title: string;
@@ -11,22 +10,16 @@ export async function saveItineraryAction(data: {
   itinerary: any;
 }) {
   try {
-    let userId = "guest-user-id";
+    const userId = "guest-user-id";
 
-    // Try to get authenticated user session
-    const session = await auth();
-    if (session?.user?.id) {
-      userId = session.user.id;
-    }
-
-    // Ensure user exists in the database to satisfy the foreign key constraint
+    // Ensure guest user exists in the database
     await db.user.upsert({
       where: { id: userId },
       update: {},
       create: {
         id: userId,
-        name: userId === "guest-user-id" ? "Guest Traveler" : (session?.user?.name || "Traveler"),
-        email: userId === "guest-user-id" ? "guest@tripzy.ai" : (session?.user?.email || `${userId}@tripzy.ai`),
+        name: "Guest Traveler",
+        email: "guest@tripzy.ai",
       }
     });
 

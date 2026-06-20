@@ -552,6 +552,51 @@ function getOfflineItinerary(destName: string, lat: number, lng: number, budget:
   return itinerary;
 }
 
+function buildOfflineResponse(finalDest: any, destination: string, budget: string, tripDuration: number, matchDetails: any) {
+  const fallbackDestName = finalDest ? finalDest.name : (destination || "Varanasi");
+  const fallbackLat = finalDest?.latitude || 25.3176;
+  const fallbackLng = finalDest?.longitude || 82.9739;
+
+  // Destination-aware cost multipliers
+  const destNameLower = fallbackDestName.toLowerCase();
+  const costMultiplier = destNameLower.includes('ladakh') || destNameLower.includes('kashmir') || destNameLower.includes('andaman') ? 1.4 : destNameLower.includes('jaisalmer') || destNameLower.includes('kerala') || destNameLower.includes('udaipur') ? 1.2 : destNameLower.includes('goa') || destNameLower.includes('munnar') || destNameLower.includes('cherrapunji') ? 0.9 : 1.0;
+  const baseTransit = budget === 'Luxury' ? 25000 : budget === 'Medium' ? 12000 : 5000;
+  const baseStay = budget === 'Luxury' ? 80000 : budget === 'Medium' ? 25000 : 8000;
+  const baseFood = budget === 'Luxury' ? 30000 : budget === 'Medium' ? 15000 : 6000;
+  const totalCost = Math.round((baseTransit + baseStay + baseFood) * costMultiplier);
+
+  return {
+    itinerary: getOfflineItinerary(fallbackDestName, fallbackLat, fallbackLng, budget, tripDuration),
+    costs: {
+      transit: Math.round(baseTransit * costMultiplier),
+      stay: Math.round(baseStay * costMultiplier),
+      food: Math.round(baseFood * costMultiplier),
+      total: totalCost
+    },
+    weather: {
+      temperature: "22°C - 26°C",
+      conditions: "Pleasant & Clear"
+    },
+    nearbyPlaces: [
+      {
+        name: "Historic Heritage Quarter",
+        distance: "2km",
+        description: "An ancient enclave rich in classical vernacular architecture."
+      }
+    ],
+    destinationId: finalDest?.id || undefined,
+    recommendationScore: matchDetails?.score || 85,
+    recommendationReasoning: matchDetails?.reasoning || "Selected based on matching travel styles and budget guides.",
+    matchedFactors: matchDetails?.matchedFactors || {
+      budget: true,
+      style: true,
+      energy: true,
+      season: true,
+      companion: true
+    }
+  };
+}
+
 export async function POST(req: Request) {
   try {
     if (!(await checkRateLimit(req))) {
@@ -643,49 +688,7 @@ export async function POST(req: Request) {
     // 4. Fallback mock response if no Gemini API Key is configured
     const apiKey = getGeminiApiKey();
     if (!apiKey) {
-      const fallbackDestName = finalDest ? finalDest.name : (destination || "Varanasi");
-      const fallbackLat = finalDest?.latitude || 25.3176;
-      const fallbackLng = finalDest?.longitude || 82.9739;
-
-      // Destination-aware cost multipliers
-      const destNameLower = fallbackDestName.toLowerCase();
-      const costMultiplier = destNameLower.includes('ladakh') || destNameLower.includes('kashmir') || destNameLower.includes('andaman') ? 1.4 : destNameLower.includes('jaisalmer') || destNameLower.includes('kerala') || destNameLower.includes('udaipur') ? 1.2 : destNameLower.includes('goa') || destNameLower.includes('munnar') || destNameLower.includes('cherrapunji') ? 0.9 : 1.0;
-      const baseTransit = budget === 'Luxury' ? 25000 : budget === 'Medium' ? 12000 : 5000;
-      const baseStay = budget === 'Luxury' ? 80000 : budget === 'Medium' ? 25000 : 8000;
-      const baseFood = budget === 'Luxury' ? 30000 : budget === 'Medium' ? 15000 : 6000;
-      const totalCost = Math.round((baseTransit + baseStay + baseFood) * costMultiplier);
-
-      const offlineResponse = {
-        itinerary: getOfflineItinerary(fallbackDestName, fallbackLat, fallbackLng, budget, tripDuration),
-        costs: {
-          transit: Math.round(baseTransit * costMultiplier),
-          stay: Math.round(baseStay * costMultiplier),
-          food: Math.round(baseFood * costMultiplier),
-          total: totalCost
-        },
-        weather: {
-          temperature: "22°C - 26°C",
-          conditions: "Pleasant & Clear"
-        },
-        nearbyPlaces: [
-          {
-            name: "Historic Heritage Quarter",
-            distance: "2km",
-            description: "An ancient enclave rich in classical vernacular architecture."
-          }
-        ],
-        destinationId: finalDest?.id || undefined,
-        recommendationScore: matchDetails?.score || 85,
-        recommendationReasoning: matchDetails?.reasoning || "Selected based on matching travel styles and budget guides.",
-        matchedFactors: matchDetails?.matchedFactors || {
-          budget: true,
-          style: true,
-          energy: true,
-          season: true,
-          companion: true
-        }
-      };
-
+      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails);
       return new Response(JSON.stringify(offlineResponse), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -733,56 +736,65 @@ export async function POST(req: Request) {
       5. Suggest nearby places/attractions within a 10km radius.
     `;
 
-    const result = await generateObject({
-      model: google("gemini-1.5-pro-latest"),
-      schema: z.object({
-        itinerary: z.array(z.object({
-          day: z.string().describe("E.g., Day 1, Day 2"),
-          title: z.string().describe("Title for the day's theme"),
-          description: z.string().describe("Detailed description of activities"),
-          activities: z.array(z.string()).describe("List of specific spots or activities"),
-          latitude: z.number().describe("Latitude coordinate for mapping this day's main spot"),
-          longitude: z.number().describe("Longitude coordinate for mapping this day's main spot")
-        })),
-        costs: z.object({
-          transit: z.number().describe("Estimated transit cost in INR"),
-          stay: z.number().describe("Estimated accommodation cost in INR"),
-          food: z.number().describe("Estimated food & activities cost in INR"),
-          total: z.number().describe("Total estimated cost in INR")
+    try {
+      const result = await generateObject({
+        model: google("gemini-1.5-pro-latest"),
+        schema: z.object({
+          itinerary: z.array(z.object({
+            day: z.string().describe("E.g., Day 1, Day 2"),
+            title: z.string().describe("Title for the day's theme"),
+            description: z.string().describe("Detailed description of activities"),
+            activities: z.array(z.string()).describe("List of specific spots or activities"),
+            latitude: z.number().describe("Latitude coordinate for mapping this day's main spot"),
+            longitude: z.number().describe("Longitude coordinate for mapping this day's main spot")
+          })),
+          costs: z.object({
+            transit: z.number().describe("Estimated transit cost in INR"),
+            stay: z.number().describe("Estimated accommodation cost in INR"),
+            food: z.number().describe("Estimated food & activities cost in INR"),
+            total: z.number().describe("Total estimated cost in INR")
+          }),
+          weather: z.object({
+            temperature: z.string().describe("E.g., 24°C - 28°C"),
+            conditions: z.string().describe("E.g., Sunny, Partly Cloudy")
+          }),
+          nearbyPlaces: z.array(z.object({
+            name: z.string(),
+            distance: z.string().describe("Distance from main destination, e.g., 5km"),
+            description: z.string()
+          }))
         }),
-        weather: z.object({
-          temperature: z.string().describe("E.g., 24°C - 28°C"),
-          conditions: z.string().describe("E.g., Sunny, Partly Cloudy")
-        }),
-        nearbyPlaces: z.array(z.object({
-          name: z.string(),
-          distance: z.string().describe("Distance from main destination, e.g., 5km"),
-          description: z.string()
-        }))
-      }),
-      prompt: prompt,
-    });
+        prompt: prompt,
+      });
 
-    const finalResponse = {
-      ...result.object,
-      destinationId: finalDest?.id || undefined,
-      recommendationScore: matchDetails?.score || 85,
-      recommendationReasoning: matchDetails?.reasoning || "Selected based on matching travel styles and budget guides.",
-      matchedFactors: matchDetails?.matchedFactors || {
-        budget: true,
-        style: true,
-        energy: true,
-        season: true,
-        companion: true
-      }
-    };
+      const finalResponse = {
+        ...result.object,
+        destinationId: finalDest?.id || undefined,
+        recommendationScore: matchDetails?.score || 85,
+        recommendationReasoning: matchDetails?.reasoning || "Selected based on matching travel styles and budget guides.",
+        matchedFactors: matchDetails?.matchedFactors || {
+          budget: true,
+          style: true,
+          energy: true,
+          season: true,
+          companion: true
+        }
+      };
 
-    return new Response(JSON.stringify(finalResponse), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+      return new Response(JSON.stringify(finalResponse), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (aiError) {
+      console.warn("Gemini API call failed. Executing offline fallback itinerary:", aiError);
+      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails);
+      return new Response(JSON.stringify(offlineResponse), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
   } catch (error: any) {
-    console.error("Trip Planning AI Error:", error);
+    console.error("Trip Planning Route Error:", error);
     const userMessage = "We couldn't complete your itinerary right now. Please try again in a moment.";
     return new Response(JSON.stringify({ error: userMessage }), {
       status: 500,

@@ -1,0 +1,590 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=La+Belle+Aurore&display=swap');
+@import "tailwindcss";
+
+/* ── TRIPZY V2 — Atmospheric Light ── */
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+  /* Core palette */
+  --color-background: #F8F5EE;
+  --color-surface: #FCFAF6;
+  --color-ink: #1E293B;
+  /* ── Backgrounds ── */
+  --color-sand: #F8F5EE;
+  --color-cream: #EFEAE1;
+  --color-warm-white: #FCFAF6;
+
+  /* ── Primary ── */
+  --color-ocean: #7EB6E6;
+  --color-ocean-dark: #5A92C2;
+  --color-ocean-light: #9CCCF5;
+  --color-sage: #78917A;
+  --color-sage-light: #8DA38F;
+
+  /* ── Accent ── */
+  --color-gold: #D6A85F;
+  --color-gold-light: #E5C082;
+  --color-coral: #E6A27D;
+
+  /* ── Text ── */
+  --color-night: #1E293B;
+  --color-charcoal: #1E293B;
+  --color-muted: #64748B;
+  --color-stone: #94A3B8;
+
+  /* ── Borders & Surfaces ── */
+  --color-warm-gray: #E2DCD3;
+  --color-sand-dark: #E8E0D5;
+  --color-soft-beige: #F0EAE0;
+
+  /* ── Elevation ── */
+  --shadow-soft: 0 2px 8px rgba(36, 50, 61, 0.04);
+  --shadow-card: 0 1px 2px rgba(36, 50, 61, 0.04), 0 4px 12px rgba(36, 50, 61, 0.06);
+  --shadow-card-hover: 0 4px 12px rgba(36, 50, 61, 0.06), 0 20px 40px rgba(36, 50, 61, 0.1);
+  --shadow-elevated: 0 8px 24px rgba(36, 50, 61, 0.06), 0 24px 48px rgba(36, 50, 61, 0.08);
+  --shadow-hero: 0 4px 20px rgba(36, 50, 61, 0.08);
+
+  --transition-theme: all 1200ms linear;
+  --transition-duration-1500: 1500ms;
+  --transition-duration-2000: 2000ms;
+
+  /* ── Indian Palette ── */
+  --color-saffron: #E07B39;
+  --color-marigold: #F4A433;
+  --color-indigo-deep: #2D3A8C;
+  --color-terracotta: #C1573A;
+  --color-lotus: #D4638A;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-background);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-ink);
+    font-family: "Plus Jakarta Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Instrument Serif", ui-serif, Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(95, 168, 211, 0.18);
+    color: var(--color-ink);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .text-balance { text-wrap: balance; }
+  
+  .ui-utility-label {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .transition-theme {
+    transition: all 1200ms linear;
+  }
+
+  .surface-layer {
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-background) 100%);
+  }
+
+  .editorial-gradient {
+    background: linear-gradient(135deg, rgba(95, 168, 211, 0.08) 0%, rgba(159, 184, 165, 0.06) 50%, rgba(217, 183, 106, 0.05) 100%);
+  }
+
+  .glass-soft {
+    background: rgba(251, 248, 244, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .glass-hero {
+    background: rgba(36, 50, 61, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+}
+
+/* ── Motion language ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes kenBurns {
+  from { transform: scale(1.05); }
+  to { transform: scale(1.15); }
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes revealLine {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.animate-fade-up { animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.animate-fade-in { animation: fadeIn 0.7s ease-out forwards; }
+.animate-scale-in { animation: scaleIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.animate-ken-burns { animation: kenBurns 12s ease-out forwards; }
+.animate-shimmer { animation: shimmer 2.5s ease-in-out infinite; }
+
+.duration-1500 { transition-duration: 1500ms; }
+.duration-2000 { transition-duration: 2000ms; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* Leaflet */
+.leaflet-container {
+  filter: sepia(0.18) contrast(1.0) saturate(0.85) hue-rotate(4deg);
+}
+.custom-map-marker { background: transparent !important; border: none !important; }
+
+/* ── TRIPZY Custom Indian Atmospheres & Visual Accents ── */
+/* Dynamic theme variables defaults */
+:root {
+  --color-accent-primary: #D6A85F;
+  --color-accent-secondary: #ECE6DA;
+}
+
+.theme-varanasi {
+  --color-accent-primary: #E07B39;
+  --color-accent-secondary: #1A237E;
+}
+.theme-jaisalmer {
+  --color-accent-primary: #D84315;
+  --color-accent-secondary: #ECE6DA;
+}
+.theme-kerala {
+  --color-accent-primary: #00B0FF;
+  --color-accent-secondary: #2E7D32;
+}
+.theme-ladakh {
+  --color-accent-primary: #B71C1C;
+  --color-accent-secondary: #D84315;
+}
+.theme-kashmir {
+  --color-accent-primary: #00C853;
+  --color-accent-secondary: #1B5E20;
+}
+.theme-goa {
+  --color-accent-primary: #FF6F59;
+  --color-accent-secondary: #01579B;
+}
+.theme-andaman {
+  --color-accent-primary: #01579B;
+  --color-accent-secondary: #00B0FF;
+}
+.theme-meghalaya {
+  --color-accent-primary: #004D40;
+  --color-accent-secondary: #2E7D32;
+}
+
+.text-accent {
+  color: var(--color-accent-primary) !important;
+}
+.bg-accent {
+  background-color: var(--color-accent-primary) !important;
+}
+.border-accent {
+  border-color: var(--color-accent-primary) !important;
+}
+
+/* Pulsing markers for Leaflet */
+.pulsing-marker-varanasi { box-shadow: 0 0 0 0 rgba(224, 123, 57, 0.6); animation: pulseVaranasi 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+.pulsing-marker-kerala { box-shadow: 0 0 0 0 rgba(0, 176, 255, 0.6); animation: pulseKerala 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+.pulsing-marker-ladakh { box-shadow: 0 0 0 0 rgba(183, 28, 28, 0.6); animation: pulseLadakh 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+.pulsing-marker-kashmir { box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.6); animation: pulseKashmir 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+.pulsing-marker-goa { box-shadow: 0 0 0 0 rgba(255, 111, 89, 0.6); animation: pulseGoa 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+.pulsing-marker-andaman { box-shadow: 0 0 0 0 rgba(1, 87, 155, 0.6); animation: pulseAndaman 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+.pulsing-marker-meghalaya { box-shadow: 0 0 0 0 rgba(0, 77, 64, 0.6); animation: pulseMeghalaya 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+
+@keyframes pulseVaranasi { to { box-shadow: 0 0 0 16px rgba(224, 123, 57, 0); } }
+@keyframes pulseKerala { to { box-shadow: 0 0 0 16px rgba(0, 176, 255, 0); } }
+@keyframes pulseLadakh { to { box-shadow: 0 0 0 16px rgba(183, 28, 28, 0); } }
+@keyframes pulseKashmir { to { box-shadow: 0 0 0 16px rgba(0, 200, 83, 0); } }
+@keyframes pulseGoa { to { box-shadow: 0 0 0 16px rgba(255, 111, 89, 0); } }
+@keyframes pulseAndaman { to { box-shadow: 0 0 0 16px rgba(1, 87, 155, 0); } }
+@keyframes pulseMeghalaya { to { box-shadow: 0 0 0 16px rgba(0, 77, 64, 0); } }
+
+/* Background canvas */
+html, body, .bg-background {
+  background-color: var(--color-background);
+}
+
+/* Scoped ink borders */
+.border-ink-bleed {
+  border-color: rgba(30, 41, 59, 0.08) !important;
+}
+
+/* Topographic Contour Lines SVG Pattern */
+.bg-topo-pattern {
+  background-color: #F7F4EE;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cpath d='M10 80c30-20 70-20 100 0s50 40 80 40' fill='none' stroke='rgba(30, 41, 59, 0.035)' stroke-width='1'/%3E%3Cpath d='M30 110c40-10 60-30 100-20s60 10 70 30' fill='none' stroke='rgba(30, 41, 59, 0.035)' stroke-width='1'/%3E%3Cpath d='M0 150c20-20 60-30 90-10s50 30 80 20' fill='none' stroke='rgba(30, 41, 59, 0.035)' stroke-width='1'/%3E%3Cpath d='M50 40c40 10 80-10 110 10s30 40 40 60' fill='none' stroke='rgba(30, 41, 59, 0.035)' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* Stamp Slam animation */
+@keyframes stampSlam {
+  0% {
+    opacity: 0;
+    transform: scale(3.5) rotate(45deg);
+    filter: blur(4px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(0.95) rotate(-3deg);
+    filter: blur(0);
+  }
+  85% {
+    transform: scale(1.05) rotate(1deg);
+  }
+  100% {
+    transform: scale(1) rotate(var(--stamp-rotation, -2deg));
+  }
+}
+
+.animate-stamp-slam {
+  animation: stampSlam 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Clean Scoped Editorial Buttons */
+.editorial-btn {
+  font-family: "Plus Jakarta Sans", var(--font-sans), sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border-bottom: 1.5px solid rgba(30, 41, 59, 0.15);
+  transition: all 300ms cubic-bezier(0.25, 1, 0.5, 1);
+  padding: 0.25rem 0.5rem;
+}
+
+.editorial-btn:hover {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+  background-color: rgba(214, 168, 95, 0.05);
+}
+
+.editorial-btn-active {
+  border-bottom: 2px solid var(--color-gold);
+  color: var(--color-gold);
+}
+
+/* ── ATLAS VIVANT — V10 Visual Overhaul ── */
+
+/* Indian Mandala SVG Background */
+.mandala-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' width='400' height='400'%3E%3Ccircle cx='200' cy='200' r='190' fill='none' stroke='rgba(214,168,95,0.06)' stroke-width='1'/%3E%3Ccircle cx='200' cy='200' r='160' fill='none' stroke='rgba(214,168,95,0.05)' stroke-width='1'/%3E%3Ccircle cx='200' cy='200' r='130' fill='none' stroke='rgba(214,168,95,0.05)' stroke-width='1'/%3E%3Ccircle cx='200' cy='200' r='100' fill='none' stroke='rgba(214,168,95,0.07)' stroke-width='1.5'/%3E%3Ccircle cx='200' cy='200' r='70' fill='none' stroke='rgba(214,168,95,0.07)' stroke-width='1.5'/%3E%3Ccircle cx='200' cy='200' r='40' fill='none' stroke='rgba(214,168,95,0.09)' stroke-width='2'/%3E%3Cpath d='M200 10 L210 190 L200 200 L190 190 Z' fill='rgba(214,168,95,0.04)'/%3E%3Cpath d='M200 10 L210 190 L200 200 L190 190 Z' fill='rgba(214,168,95,0.04)' transform='rotate(45 200 200)'/%3E%3Cpath d='M200 10 L210 190 L200 200 L190 190 Z' fill='rgba(214,168,95,0.04)' transform='rotate(90 200 200)'/%3E%3Cpath d='M200 10 L210 190 L200 200 L190 190 Z' fill='rgba(214,168,95,0.04)' transform='rotate(135 200 200)'/%3E%3Cpath d='M200 10 L210 190 L200 200 L190 190 Z' fill='rgba(214,168,95,0.04)' transform='rotate(180 200 200)'/%3E%3Cpath d='M200 10 L210 190 L200 200 L190 190 Z' fill='rgba(214,168,95,0.04)' transform='rotate(225 200 200)'/%3E%3Cpath d='M200 10 L210 190 L200 200 L190 190 Z' fill='rgba(214,168,95,0.04)' transform='rotate(270 200 200)'/%3E%3Cpath d='M200 10 L210 190 L200 200 L190 190 Z' fill='rgba(214,168,95,0.04)' transform='rotate(315 200 200)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 600px 600px;
+}
+
+/* Saffron/Marigold Washi Tape Variants */
+.washi-tape-saffron {
+  background: rgba(224, 123, 57, 0.18);
+  backdrop-filter: blur(1px);
+  border-left: 2px dashed rgba(224, 123, 57, 0.3);
+  border-right: 2px dashed rgba(224, 123, 57, 0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.washi-tape-sage {
+  background: rgba(120, 145, 122, 0.18);
+  backdrop-filter: blur(1px);
+  border-left: 2px dashed rgba(120, 145, 122, 0.3);
+  border-right: 2px dashed rgba(120, 145, 122, 0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.washi-tape-ocean {
+  background: rgba(95, 168, 211, 0.18);
+  backdrop-filter: blur(1px);
+  border-left: 2px dashed rgba(95, 168, 211, 0.3);
+  border-right: 2px dashed rgba(95, 168, 211, 0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+/* Section density — replaces py-28/36 with compact rhythm */
+.section-dense {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.section-medium {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+/* Gold shimmer text animation */
+@keyframes shimmerGold {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-shimmer-gold {
+  background: linear-gradient(90deg, #D6A85F 0%, #F4C87A 30%, #D6A85F 60%, #E5B96A 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerGold 3s linear infinite;
+}
+
+/* Text reveal animation */
+@keyframes textReveal {
+  from { clip-path: inset(0 100% 0 0); opacity: 0; }
+  to { clip-path: inset(0 0% 0 0); opacity: 1; }
+}
+
+.animate-text-reveal {
+  animation: textReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Parallax float */
+@keyframes parallaxFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+.animate-parallax-float {
+  animation: parallaxFloat 6s ease-in-out infinite;
+}
+
+/* Slow spin */
+.animate-spin-slow {
+  animation: spin 12s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Indian geometric border */
+.border-indian-geo {
+  border-image: repeating-linear-gradient(
+    45deg,
+    rgba(214, 168, 95, 0.4) 0px,
+    rgba(214, 168, 95, 0.4) 4px,
+    transparent 4px,
+    transparent 10px
+  ) 1;
+}
+
+/* Barcode SVG lines (for boarding pass) */
+.barcode-lines {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,0.9) 0px,
+    rgba(255,255,255,0.9) 2px,
+    rgba(255,255,255,0.0) 2px,
+    rgba(255,255,255,0.0) 4px,
+    rgba(255,255,255,0.9) 4px,
+    rgba(255,255,255,0.9) 5px,
+    rgba(255,255,255,0.0) 5px,
+    rgba(255,255,255,0.0) 9px,
+    rgba(255,255,255,0.9) 9px,
+    rgba(255,255,255,0.9) 10px,
+    rgba(255,255,255,0.0) 10px,
+    rgba(255,255,255,0.0) 13px,
+    rgba(255,255,255,0.9) 13px,
+    rgba(255,255,255,0.9) 15px,
+    rgba(255,255,255,0.0) 15px,
+    rgba(255,255,255,0.0) 20px
+  );
+  opacity: 0.12;
+}
+
+/* Filmstrip track */
+.filmstrip-track {
+  background: 
+    repeating-linear-gradient(90deg, transparent 0, transparent 44px, rgba(255,255,255,0.08) 44px, rgba(255,255,255,0.08) 46px) top,
+    repeating-linear-gradient(90deg, transparent 0, transparent 44px, rgba(255,255,255,0.08) 44px, rgba(255,255,255,0.08) 46px) bottom,
+    #111;
+  background-size: auto 12px, auto 12px, 100% 100%;
+  background-repeat: repeat-x, repeat-x, no-repeat;
+}
+
+/* Polaroid film notch corners */
+.polaroid-notch::before,
+.polaroid-notch::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--color-background);
+}
+.polaroid-notch::before { top: 0; left: 0; border-radius: 0 0 100% 0; }
+.polaroid-notch::after { top: 0; right: 0; border-radius: 0 0 0 100%; }
+
+/* Pull-quote editorial style */
+.pull-quote {
+  position: relative;
+}
+.pull-quote::before {
+  content: '\201C';
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 5rem;
+  line-height: 0.7;
+  color: rgba(214, 168, 95, 0.25);
+  position: absolute;
+  top: -0.5rem;
+  left: -1rem;
+}
+
+/* Navbar tab active indicator */
+.nav-tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: var(--color-gold);
+  border-radius: 2px;
+}
+
+/* Page entrance animation */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-page-enter {
+  animation: pageEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Hero progress bar */
+@keyframes progressBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.hero-progress-bar {
+  transform-origin: left center;
+  animation: progressBar 8s linear forwards;
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow: 0 16px 40px rgba(30, 41, 59, 0.12);
+}
+
+/* Mood color overlays */
+.mood-adventure { --mood-color: rgba(59, 130, 246, 0.35); }
+.mood-luxury    { --mood-color: rgba(214, 168, 95, 0.35); }
+.mood-culture   { --mood-color: rgba(168, 85, 247, 0.25); }
+.mood-food      { --mood-color: rgba(239, 68, 68, 0.25); }
+.mood-nature    { --mood-color: rgba(34, 197, 94, 0.25); }
+.mood-wellness  { --mood-color: rgba(20, 184, 166, 0.25); }
+.mood-spiritual { --mood-color: rgba(224, 123, 57, 0.35); }
+.mood-heritage  { --mood-color: rgba(193, 87, 58, 0.3); }
+
+.mood-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--mood-color, transparent);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Horizontal scroll snap */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.snap-card {
+  scroll-snap-align: start;
+}
+
+/* Section eyebrow line */
+.eyebrow-line::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--color-gold);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Chapter divider */
+.chapter-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(30, 41, 59, 0.3);
+  font-family: monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.chapter-divider::before,
+.chapter-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(30, 41, 59, 0.1);
+}
+
+/* Indian lotus SVG background */
+.lotus-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' width='120' height='120'%3E%3Cellipse cx='60' cy='80' rx='12' ry='30' fill='none' stroke='rgba(214,168,95,0.08)' stroke-width='1'/%3E%3Cellipse cx='60' cy='80' rx='12' ry='30' fill='none' stroke='rgba(214,168,95,0.08)' stroke-width='1' transform='rotate(45 60 60)'/%3E%3Cellipse cx='60' cy='80' rx='12' ry='30' fill='none' stroke='rgba(214,168,95,0.08)' stroke-width='1' transform='rotate(90 60 60)'/%3E%3Cellipse cx='60' cy='80' rx='12' ry='30' fill='none' stroke='rgba(214,168,95,0.08)' stroke-width='1' transform='rotate(135 60 60)'/%3E%3Cellipse cx='60' cy='80' rx='12' ry='30' fill='none' stroke='rgba(214,168,95,0.08)' stroke-width='1' transform='rotate(180 60 60)'/%3E%3Cellipse cx='60' cy='80' rx='12' ry='30' fill='none' stroke='rgba(214,168,95,0.08)' stroke-width='1' transform='rotate(225 60 60)'/%3E%3Cellipse cx='60' cy='80' rx='12' ry='30' fill='none' stroke='rgba(214,168,95,0.08)' stroke-width='1' transform='rotate(270 60 60)'/%3E%3Cellipse cx='60' cy='80' rx='12' ry='30' fill='none' stroke='rgba(214,168,95,0.08)' stroke-width='1' transform='rotate(315 60 60)'/%3E%3Ccircle cx='60' cy='60' r='8' fill='none' stroke='rgba(214,168,95,0.1)' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 120px 120px;
+}

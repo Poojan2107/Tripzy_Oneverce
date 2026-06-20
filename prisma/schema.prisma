@@ -1,0 +1,286 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  preferences   Json?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  trips         Trip[]
+  bookmarks     Bookmark[]
+  reviews       Review[]
+  conversations Conversation[]
+  savedItineraries SavedItinerary[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Destination {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  country         String
+  city            String
+  region          String?
+  description     String
+  images          Json
+  metadata        Json?
+  price           Float?
+  duration        String?
+  difficulty      String?
+  groupSize       String?
+  featured        Boolean  @default(false)
+  trending        Boolean  @default(false)
+
+  // Map coordinates
+  latitude        Float?
+  longitude       Float?
+
+  // Best season for travel (e.g., "Spring", "Year-round")
+  bestSeason      String?
+
+  // Mood system — one-to-many relation
+  moods           DestinationMood[]
+
+  // Knowledge System Scores (1-100)
+  adventureScore  Int      @default(0)
+  culturalScore   Int      @default(0)
+  luxuryScore     Int      @default(0)
+  familyScore     Int      @default(0)
+  foodScore       Int      @default(0)
+  hiddenGemScore  Int      @default(0)
+
+  // Curated Travel metadata
+  bestMonths      Json
+  travelStyles    Json
+  activities      Json
+  tags            Json
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  categories      Category[]   @relation("DestinationCategories")
+  experiences     Experience[] @relation("DestinationExperiences")
+  bookmarks       Bookmark[]
+  reviews         Review[]
+  viewEvents      ViewEvent[]
+
+  @@index([slug])
+  @@index([country, city])
+}
+
+model Mood {
+  id            String             @id @default(cuid())
+  name          String             @unique
+  slug          String             @unique
+  description   String?
+  icon          String?
+  featuredImage String?
+  destinations  DestinationMood[]
+
+  @@index([slug])
+}
+
+model DestinationMood {
+  destinationId String
+  moodId        String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+  mood          Mood        @relation(fields: [moodId], references: [id], onDelete: Cascade)
+
+  @@id([destinationId, moodId])
+  @@index([moodId])
+}
+
+model Category {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  destinations Destination[] @relation("DestinationCategories")
+}
+
+model Trip {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  destination String
+  budget      Float?
+  duration    Int?
+  itinerary   Json
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Bookmark {
+  id            String      @id @default(cuid())
+  userId        String
+  destinationId String
+  createdAt     DateTime    @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destination Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, destinationId])
+}
+
+model Review {
+  id            String      @id @default(cuid())
+  userId        String
+  destinationId String
+  rating        Int
+  comment       String?
+  createdAt     DateTime    @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  destination Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  userId    String
+  title     String?
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  role           String
+  content        String
+  createdAt      DateTime     @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model Experience {
+  id              String        @id @default(cuid())
+  name            String        @unique
+  slug            String        @unique
+  description     String?
+  featuredImage   String?
+  icon            String?
+  travelStyles    Json
+  estimatedBudget Float?
+  durationRange   String?
+  difficultyLevel String?
+  tags            Json
+  featured        Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  destinations    Destination[] @relation("DestinationExperiences")
+}
+
+model SavedItinerary {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  destination String
+  budget      Float?
+  duration    Int?
+  itinerary   Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model SearchEvent {
+  id          String   @id @default(cuid())
+  query       String
+  experience  String?
+  userId      String?
+  timestamp   DateTime @default(now())
+}
+
+model ViewEvent {
+  id            String      @id @default(cuid())
+  destinationId String
+  userId        String?
+  timestamp     DateTime    @default(now())
+
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+}
+
+model PlannerEvent {
+  id           String   @id @default(cuid())
+  destination  String
+  budget       String
+  duration     Int
+  travelStyle  String
+  interests    String?
+  userId       String?
+  timestamp    DateTime @default(now())
+}
+
+model RecommendationEvent {
+  id           String   @id @default(cuid())
+  destination  String
+  experience   String?
+  travelStyle  String?
+  userId       String?
+  timestamp    DateTime @default(now())
+}
+
+model RecommendationInteraction {
+  id               String   @id @default(cuid())
+  recommendationId String?
+  destinationId    String
+  action           String
+  userId           String?
+  timestamp        DateTime @default(now())
+}

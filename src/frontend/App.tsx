@@ -1,12 +1,10 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import { TabType, Tour } from './types';
 import { TOURS_DATA } from './data';
 import { getAllDestinations } from '../backend/actions/tourActions';
-import { toggleBookmark } from '../backend/actions/userActions';
 
 import GlassNavbar from './components/GlassNavbar';
 import BottomNavbar from './components/BottomNavbar';
@@ -19,8 +17,6 @@ import HomeView from './components/HomeView';
 import { useAtmosphere } from './utils/AtmosphereContext';
 
 export default function App() {
-  const { data: session, status } = useSession();
-  const isAuthenticated = status === 'authenticated';
   const { setActiveLocation } = useAtmosphere();
 
   // Sort: Indian destinations always surface first
@@ -146,20 +142,13 @@ export default function App() {
     }
   }, [tours, isClient]);
 
-  const handleToggleWishlist = async (tourId: string) => {
+  const handleToggleWishlist = (tourId: string) => {
     setWishlistIds((prev) => {
       const exists = prev.includes(tourId);
       const updated = exists ? prev.filter((id) => id !== tourId) : [...prev, tourId];
       if (isClient) localStorage.setItem('tripzy_wishlist', JSON.stringify(updated));
       return updated;
     });
-
-    if (isAuthenticated) {
-      const tour = displayTours.find(t => t.id === tourId);
-      if (tour && tour.dbId) {
-        toggleBookmark(tour.dbId).catch(err => console.error("DB Toggle bookmark failed:", err));
-      }
-    }
   };
 
   const handleSaveItinerary = (newItin: any) => {
@@ -240,7 +229,6 @@ export default function App() {
         }}
         onSearchClick={() => setSearchModalOpen(true)}
         wishlistCount={wishlistIds.length}
-        isAuthenticated={isAuthenticated}
       />
 
       <main className="w-full">
@@ -340,7 +328,6 @@ export default function App() {
         }}
         wishlistCount={wishlistIds.length}
         visible={true}
-        isAuthenticated={isAuthenticated}
       />
 
       <SearchModal

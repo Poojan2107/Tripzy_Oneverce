@@ -6,15 +6,13 @@ interface BottomNavbarProps {
   onTabChange: (tab: TabType) => void;
   wishlistCount: number;
   visible?: boolean;
-  isAuthenticated?: boolean;
 }
 
 export default function BottomNavbar({
   currentTab,
   onTabChange,
   wishlistCount,
-  visible = true,
-  isAuthenticated = false
+  visible = true
 }: BottomNavbarProps) {
   const tabs = [
     { id: 'home' as TabType, label: 'Home', icon: Compass },

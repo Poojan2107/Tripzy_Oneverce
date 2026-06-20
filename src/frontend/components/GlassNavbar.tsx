@@ -1,7 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { Compass, Search, Map, Sparkles, Heart, User, ArrowRight, LogOut, Shield } from 'lucide-react';
-import Link from 'next/link';
-import { useSession, signOut } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { Compass, Search, Map, Sparkles, Heart } from 'lucide-react';
 import { TabType } from '../types';
 
 interface GlassNavbarProps {
@@ -9,21 +7,16 @@ interface GlassNavbarProps {
   onTabChange: (tab: TabType) => void;
   onSearchClick: () => void;
   wishlistCount: number;
-  isAuthenticated?: boolean;
 }
 
 export default function GlassNavbar({
   currentTab,
   onTabChange,
   onSearchClick,
-  wishlistCount,
-  isAuthenticated = false
+  wishlistCount
 }: GlassNavbarProps) {
   const [scrolled, setScrolled] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { data: session } = useSession();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -31,16 +24,6 @@ export default function GlassNavbar({
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
 
   const tabs = [
@@ -119,47 +102,6 @@ export default function GlassNavbar({
           >
             <Search className="w-4 h-4" />
           </button>
-
-          {session ? (
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-night text-white text-[11px] font-bold uppercase tracking-wide hover:bg-gold transition-all duration-300 cursor-pointer"
-              >
-                <User className="w-3.5 h-3.5" />
-                <span className="hidden lg:block">{session.user?.name?.split(' ')[0] || 'Account'}</span>
-              </button>
-              {dropdownOpen && (
-                <div className="absolute top-full right-0 mt-2 w-44 rounded-xl bg-warm-white border border-warm-gray shadow-[0_8px_24px_rgba(30,41,59,0.1)] overflow-hidden z-50">
-                  {session.user?.email?.endsWith('@tripzy.ai') && (
-                    <Link href="/admin" className="flex items-center gap-2 px-4 py-3 text-[11px] font-medium text-night hover:bg-sand transition-colors">
-                      <Shield className="w-3.5 h-3.5 text-gold" />
-                      Admin Panel
-                    </Link>
-                  )}
-                  <Link href="/profile" className="flex items-center gap-2 px-4 py-3 text-[11px] font-medium text-night hover:bg-sand transition-colors">
-                    <User className="w-3.5 h-3.5" />
-                    My Profile
-                  </Link>
-                  <button
-                    onClick={() => signOut()}
-                    className="w-full flex items-center gap-2 px-4 py-3 text-[11px] font-medium text-red-500 hover:bg-red-50 transition-colors cursor-pointer border-t border-warm-gray"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link
-              href="/login"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-night text-white text-[11px] font-bold uppercase tracking-wide hover:bg-gold transition-all duration-300"
-            >
-              <span>Sign In</span>
-              <ArrowRight className="w-3 h-3" />
-            </Link>
-          )}
         </div>
       </div>
     </nav>

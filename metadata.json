@@ -1,0 +1,6 @@
+{
+  "name": "Tripzy",
+  "description": "A premium, modern travel and tour booking platform featuring highly responsive Netflix-inspired visual carousels, glassmorphic interfaces, and immersive trip planning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

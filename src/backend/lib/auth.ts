@@ -12,13 +12,21 @@ declare module "next-auth" {
   }
 }
 
+if (!process.env.AUTH_SECRET) {
+  throw new Error("Missing AUTH_SECRET environment variable");
+}
+
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  throw new Error("Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET environment variables");
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
-  secret: process.env.AUTH_SECRET || "603cb1a4b51829e2fca9b19e99a81f3d",
+  secret: process.env.AUTH_SECRET,
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID || "mock-client-id",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "mock-client-secret",
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
   callbacks: {

@@ -216,7 +216,7 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-    <div className="w-full min-h-screen bg-transparent text-ink antialiased relative overflow-x-hidden">
+    <div className="w-full min-h-screen flex flex-col bg-transparent text-ink antialiased relative overflow-x-hidden">
       <GlassNavbar
         currentTab={currentTab}
         onTabChange={(tab) => {
@@ -232,7 +232,7 @@ export default function App() {
         wishlistCount={wishlistIds.length}
       />
 
-      <main className="w-full">
+      <main className="w-full flex-grow">
         {selectedTour ? (
           <TourDetailsView
             tour={selectedTour}

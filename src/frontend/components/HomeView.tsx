@@ -110,6 +110,7 @@ export default function HomeView({
                   src={cat.image}
                   alt={cat.label}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onError={e => { e.currentTarget.style.opacity = '0' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
@@ -211,6 +212,7 @@ export default function HomeView({
                         src={tour.bannerImage}
                         alt={tour.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-103"
+                        onError={e => { e.currentTarget.style.opacity = '0' }}
                       />
                       {/* Regional theme color overlay on hover */}
                       <div 
@@ -296,6 +298,7 @@ export default function HomeView({
                       src={story.image} 
                       alt={story.title} 
                       className="w-full h-full object-cover transition-transform duration-500 hover:scale-102" 
+                      onError={e => { e.currentTarget.style.opacity = '0' }}
                     />
                     <span className="absolute bottom-3 left-4 text-[8px] font-mono text-white bg-black/45 px-2 py-0.5 rounded-full uppercase tracking-widest">
                       {story.readTime} read
@@ -312,7 +315,7 @@ export default function HomeView({
                       &ldquo;{story.excerpt}&rdquo;
                     </p>
                     <div className="flex items-center gap-3 pt-3 border-t border-warm-gray">
-                      <img src={story.avatar} alt={story.author} className="w-8 h-8 rounded-full object-cover" />
+                      <img src={story.avatar} alt={story.author} className="w-8 h-8 rounded-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
                       <span className="text-[10px] font-mono uppercase tracking-wider text-night/70">{story.author}</span>
                     </div>
                   </div>

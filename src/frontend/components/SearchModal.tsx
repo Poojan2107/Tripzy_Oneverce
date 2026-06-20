@@ -142,7 +142,7 @@ export default function SearchModal({
                 className="flex gap-3 p-3 rounded-xl hover:bg-warm-mist cursor-pointer group transition-all duration-200"
               >
                 <div className="w-12 h-12 rounded-lg overflow-hidden bg-warm-gray shrink-0">
-                  <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover" />
+                  <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 text-[10px] text-charcoal/50">

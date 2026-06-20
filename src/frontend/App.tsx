@@ -344,11 +344,11 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>&copy; 2026 Tripzy. AI-powered travel discovery journal.</p>
           <div className="flex gap-4">
-            <span className="hover:text-white transition-colors cursor-pointer">Privacy</span>
+            <a href="/privacy" className="hover:text-white transition-colors cursor-pointer">Privacy</a>
             <span className="text-white/20">·</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Terms</span>
+            <a href="/terms" className="hover:text-white transition-colors cursor-pointer">Terms</a>
             <span className="text-white/20">·</span>
-            <span className="hover:text-white transition-colors cursor-pointer">Contact</span>
+            <a href="/contact" className="hover:text-white transition-colors cursor-pointer">Contact</a>
           </div>
         </div>
       </footer>

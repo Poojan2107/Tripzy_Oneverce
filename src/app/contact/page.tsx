@@ -31,8 +31,8 @@ export default function ContactPage() {
               </div>
               <div>
                 <h3 className="text-sm font-bold text-night uppercase tracking-wider">Email</h3>
-                <a href="mailto:support@tripzy.app" className="text-sm text-charcoal hover:text-gold transition-colors">
-                  support@tripzy.app
+                <a href="mailto:tripzy.travell@gmail.com" className="text-sm text-charcoal hover:text-gold transition-colors">
+                  tripzy.travell@gmail.com
                 </a>
               </div>
             </div>
@@ -53,7 +53,7 @@ export default function ContactPage() {
               Have a question, suggestion, or feedback? We'd love to hear from you. Send us an email and we'll get back to you.
             </p>
             <a
-              href="mailto:support@tripzy.app"
+              href="mailto:tripzy.travell@gmail.com"
               className="inline-block px-5 py-2.5 bg-gold text-night font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-gold-light transition-all"
             >
               Email Us

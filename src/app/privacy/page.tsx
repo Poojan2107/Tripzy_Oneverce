@@ -69,7 +69,7 @@ export default function PrivacyPage() {
         <div className="pt-6 border-t border-warm-gray/30">
           <p className="text-xs text-muted">
             For privacy inquiries, contact{" "}
-            <a href="mailto:support@tripzy.app" className="text-gold underline">support@tripzy.app</a>.
+            <a href="mailto:tripzy.travell@gmail.com" className="text-gold underline">tripzy.travell@gmail.com</a>.
           </p>
         </div>
       </main>

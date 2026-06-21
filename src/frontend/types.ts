@@ -78,4 +78,22 @@ export interface WishlistItem {
   location: string;
 }
 
+export interface Hotel {
+  id: string;
+  name: string;
+  description: string;
+  rating: number;
+  reviews: number;
+  priceRange: string;
+  image: string;
+  amenities: string[];
+  location: string;
+  destinationId: string;
+  affiliateLinks: {
+    goibibo?: string;
+    agoda?: string;
+    makemytrip?: string;
+  };
+}
+
 export type TabType = 'home' | 'explore' | 'ai-planner' | 'saved';

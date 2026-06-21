@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import {
   ArrowLeft, Star, Clock, MapPin, Heart, Share2,
-  Sparkles, Utensils, Plane, Home, Compass, User, Calendar, CheckCircle2, X,
+  Sparkles, Utensils, Plane, Home, Compass, User, Calendar, CheckCircle2,
   Leaf, AlertCircle, Zap, BookOpen
 } from 'lucide-react';
 import { Tour } from '../types';
 import { formatINR } from '../utils/currency';
+import { getHotelsByDestination } from '../data/hotels';
+import HotelCard from './HotelCard';
 
 interface TourDetailsViewProps {
   tour: Tour;
@@ -13,17 +15,6 @@ interface TourDetailsViewProps {
   onPlanClick: () => void;
   onToggleWishlist: (tourId: string) => void;
   isWishlisted: boolean;
-  onBookTour?: (bookingDetails: {
-    tourId: string;
-    tourTitle: string;
-    bannerImage: string;
-    price: number;
-    guests: number;
-    date: string;
-    fullName: string;
-    email: string;
-    specialRequests?: string;
-  }) => void;
 }
 
 // Rich per-destination cultural content
@@ -348,22 +339,12 @@ export default function TourDetailsView({
   onBack,
   onPlanClick,
   isWishlisted,
-  onToggleWishlist,
-  onBookTour
+  onToggleWishlist
 }: TourDetailsViewProps) {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [activeDay, setActiveDay] = useState(1);
   const [copiedLink, setCopiedLink] = useState(false);
-  const [activeTab, setActiveTab] = useState<'story' | 'itinerary' | 'local' | 'logistics'>('story');
-
-  // Booking Modal States
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [bookingName, setBookingName] = useState('');
-  const [bookingEmail, setBookingEmail] = useState('');
-  const [bookingDate, setBookingDate] = useState('');
-  const [bookingGuests, setBookingGuests] = useState(2);
-  const [specialRequests, setSpecialRequests] = useState('');
-  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [activeTab, setActiveTab] = useState<'story' | 'itinerary' | 'local' | 'logistics' | 'hotels'>('story');
 
   useEffect(() => {
     if (tour && tour.id) {
@@ -386,36 +367,6 @@ export default function TourDetailsView({
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  const handleBookSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!bookingName || !bookingEmail || !bookingDate) return;
-
-    if (onBookTour) {
-      onBookTour({
-        tourId: tour.id,
-        tourTitle: tour.title,
-        bannerImage: tour.bannerImage,
-        price: tour.price,
-        guests: bookingGuests,
-        date: bookingDate,
-        fullName: bookingName,
-        email: bookingEmail,
-        specialRequests
-      });
-    }
-
-    setBookingSuccess(true);
-    setTimeout(() => {
-      setBookingSuccess(false);
-      setIsBookingOpen(false);
-      setBookingName('');
-      setBookingEmail('');
-      setBookingDate('');
-      setBookingGuests(2);
-      setSpecialRequests('');
-    }, 2500);
-  };
-
   const cultural = CULTURAL_CONTEXT[tour.id];
   const dayTrips = NEARBY_DAYTRIPS[tour.id] || [];
   const accentColor = tour.accents?.primary || '#D6A85F';
@@ -425,6 +376,7 @@ export default function TourDetailsView({
     { id: 'itinerary', label: 'Itinerary' },
     { id: 'local', label: 'Local Intel' },
     { id: 'logistics', label: 'Plan & Book' },
+    { id: 'hotels', label: 'Hotels' },
   ] as const;
 
   return (
@@ -879,13 +831,6 @@ export default function TourDetailsView({
                   </div>
                   <div className="space-y-2.5">
                     <button
-                      onClick={() => setIsBookingOpen(true)}
-                      className="w-full py-4 rounded-xl text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm hover:opacity-90"
-                      style={{ backgroundColor: accentColor }}
-                    >
-                      Reserve Your Journey
-                    </button>
-                    <button
                       onClick={onPlanClick}
                       className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl border border-warm-gray text-xs font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-sand/40 transition-all cursor-pointer bg-white"
                     >
@@ -941,6 +886,27 @@ export default function TourDetailsView({
               </div>
             )}
 
+            {/* ── TAB: HOTELS ── */}
+            {activeTab === 'hotels' && (
+              <div className="space-y-5 animate-fade-in">
+                <div>
+                  <h2 className="font-display text-2xl text-night font-bold mb-1">Where to Stay</h2>
+                  <p className="text-xs text-muted font-light">Curated hotels and stays in {tour.title}. Compare and book via our partner sites.</p>
+                </div>
+                <div className="space-y-4">
+                  {getHotelsByDestination(tour.id).length > 0 ? (
+                    getHotelsByDestination(tour.id).map((hotel) => (
+                      <HotelCard key={hotel.id} hotel={hotel} />
+                    ))
+                  ) : (
+                    <div className="p-8 rounded-2xl bg-white border border-warm-gray text-center">
+                      <p className="text-xs text-muted font-light">Hotels for this destination are being curated. Check back soon.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
           </div>
 
           {/* Sidebar */}
@@ -965,14 +931,7 @@ export default function TourDetailsView({
                   <span className="text-xs text-muted font-light ml-1">/ person daily</span>
                 </div>
 
-                <div className="space-y-2.5">
-                  <button
-                    onClick={() => setIsBookingOpen(true)}
-                    className="w-full py-3 rounded-xl text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm hover:opacity-90"
-                    style={{ backgroundColor: accentColor }}
-                  >
-                    Reserve Your Journey
-                  </button>
+                <div className="flex flex-col gap-2.5">
                   <button
                     onClick={onPlanClick}
                     className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl border border-warm-gray text-xs font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-sand/40 transition-all cursor-pointer bg-white"
@@ -1035,127 +994,6 @@ export default function TourDetailsView({
 
         </div>
       </div>
-
-      {/* Booking Form Dialog Modal */}
-      {isBookingOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Overlay */}
-          <div onClick={() => setIsBookingOpen(false)} className="absolute inset-0 bg-night/35 backdrop-blur-[2px] cursor-pointer" />
-          
-          {/* Modal box */}
-          <div className="relative w-full max-w-md bg-white border border-warm-gray shadow-elevated rounded-3xl p-6 overflow-hidden animate-scale-in z-10 text-left">
-            <button
-              onClick={() => setIsBookingOpen(false)}
-              className="absolute top-4 right-4 w-7 h-7 rounded-full bg-sand/60 flex items-center justify-center text-muted hover:text-night transition-all cursor-pointer"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-
-            {bookingSuccess ? (
-              <div className="text-center py-10 space-y-4">
-                <div className="w-12 h-12 rounded-full bg-sage/20 flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-6 h-6 text-sage" />
-                </div>
-                <h3 className="font-display text-2xl font-bold text-night">Booking Confirmed</h3>
-                <p className="text-xs text-muted font-light max-w-xs mx-auto leading-relaxed">
-                  Your booking has been noted. Review it in your Passport.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleBookSubmit} className="space-y-4">
-                <div>
-                  <span className="text-[9px] font-bold text-saffron uppercase tracking-widest block mb-0.5 flex items-center gap-1">
-                    <Sparkles className="w-3.5 h-3.5 text-saffron animate-pulse" /> Simulated Booking Demo
-                  </span>
-                  <h3 className="font-display text-2xl font-bold text-night">Book This Journey</h3>
-                  <p className="text-[11px] text-muted font-light mt-0.5">Demo booking flow — no payment is processed.</p>
-                </div>
-
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-[9px] font-bold uppercase tracking-wider text-night block mb-1">Full Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={bookingName}
-                      onChange={(e) => setBookingName(e.target.value)}
-                      placeholder="Jane Doe"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-warm-gray text-xs text-night placeholder:text-stone outline-none focus:border-ocean/40"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[9px] font-bold uppercase tracking-wider text-night block mb-1">Email Address</label>
-                    <input
-                      type="email"
-                      required
-                      value={bookingEmail}
-                      onChange={(e) => setBookingEmail(e.target.value)}
-                      placeholder="jane.doe@travel.com"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-warm-gray text-xs text-night placeholder:text-stone outline-none focus:border-ocean/40"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-night block mb-1">Departure Date</label>
-                      <input
-                        type="date"
-                        required
-                        min={new Date().toISOString().split('T')[0]}
-                        value={bookingDate}
-                        onChange={(e) => setBookingDate(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-warm-gray text-xs text-night outline-none focus:border-ocean/40"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[9px] font-bold uppercase tracking-wider text-night block mb-1">Guests Count</label>
-                      <select
-                        value={bookingGuests}
-                        onChange={(e) => setBookingGuests(Number(e.target.value))}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-warm-gray text-xs text-night bg-white outline-none focus:border-ocean/40"
-                      >
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
-                          <option key={n} value={n}>{n} {n === 1 ? 'Guest' : 'Guests'}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[9px] font-bold uppercase tracking-wider text-night block mb-1">Special Requests (Optional)</label>
-                    <textarea
-                      value={specialRequests}
-                      onChange={(e) => setSpecialRequests(e.target.value)}
-                      placeholder="e.g. Dietary preferences, private driver request..."
-                      className="w-full px-3.5 py-2 rounded-xl border border-warm-gray text-xs text-night placeholder:text-stone outline-none focus:border-ocean/40 h-14 resize-none"
-                    />
-                  </div>
-
-                  <div className="border-t border-warm-gray/45 pt-3.5">
-                    <label className="text-[9px] font-bold uppercase tracking-wider text-night block mb-1">Booking Summary</label>
-                    <div className="w-full px-3.5 py-3 rounded-xl border border-warm-gray bg-sand/35 flex items-center justify-between text-xs text-ink/80 font-mono relative">
-                      <span className="text-muted italic">Demo — payment not processed</span>
-                      <span className="text-[8px] font-sans font-bold uppercase text-sage flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-sage" /> SIMULATION
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3 mt-3 rounded-xl text-white text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm text-center hover:opacity-90"
-                  style={{ backgroundColor: accentColor }}
-                >
-                  Confirm Booking
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }

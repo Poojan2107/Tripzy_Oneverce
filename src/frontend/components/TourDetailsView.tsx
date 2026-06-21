@@ -380,7 +380,7 @@ export default function TourDetailsView({
   ] as const;
 
   return (
-    <div className="pb-32 bg-sand min-h-screen select-none">
+    <div className="pb-32 bg-sand min-h-[100dvh] select-none">
 
       {/* ── EDITORIAL HERO ── */}
       <div className="relative w-full h-[45vh] md:h-[60vh] min-h-[300px] md:min-h-[440px] overflow-hidden">

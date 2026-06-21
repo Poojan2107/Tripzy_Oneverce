@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Compass } from "lucide-react";
 
+export const metadata: Metadata = {
+  title: "404 — Page Not Found",
+};
+
 export default function NotFound() {
   return (
-    <div className="w-full min-h-screen bg-background text-ink font-sans flex flex-col items-center justify-center p-6">
+    <div className="w-full min-h-[100dvh] bg-background text-ink font-sans flex flex-col items-center justify-center p-6">
       <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-6">
         <Compass className="w-8 h-8 text-gold" />
       </div>

@@ -23,7 +23,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="w-full min-h-screen bg-background text-ink flex flex-col items-center justify-center p-6">
+        <div className="w-full min-h-[100dvh] bg-background text-ink flex flex-col items-center justify-center p-6">
           <Compass className="w-12 h-12 text-gold mb-4" />
           <h1 className="text-xl font-bold uppercase tracking-wider mb-2">Something went wrong</h1>
           <p className="text-xs text-muted mb-6">Please refresh the page to try again.</p>

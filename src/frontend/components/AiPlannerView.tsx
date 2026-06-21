@@ -437,7 +437,7 @@ export default function AiPlannerView({
   // ── MOCK LOADING PHASE ──
   if (loading) {
     return (
-      <div className="pt-28 pb-32 px-6 max-w-lg mx-auto min-h-screen bg-sand flex flex-col items-center justify-center text-center">
+      <div className="pt-28 pb-32 px-6 max-w-lg mx-auto min-h-[100dvh] bg-sand flex flex-col items-center justify-center text-center">
         <div className="relative w-20 h-20 mb-8 flex items-center justify-center">
           <div className="absolute inset-0 rounded-full border-2 border-warm-gray border-t-saffron animate-spin" />
           <Compass className="w-8 h-8 text-gold animate-pulse" />
@@ -462,7 +462,7 @@ export default function AiPlannerView({
   if (itineraryResult) {
     if (itineraryResult.error) {
       return (
-        <div className="pt-28 pb-32 px-6 max-w-md mx-auto min-h-screen bg-sand flex items-center justify-center">
+        <div className="pt-28 pb-32 px-6 max-w-md mx-auto min-h-[100dvh] bg-sand flex items-center justify-center">
           <div className="text-center p-8 bg-white border border-warm-gray rounded-3xl shadow-sm space-y-4">
             <Compass className="w-10 h-10 text-muted/30 mx-auto" />
             <h2 className="font-display text-2xl font-light text-night lowercase">Journey Interrupted</h2>
@@ -493,7 +493,7 @@ export default function AiPlannerView({
     const tour = TOURS_DATA.find(t => t.id === destId);
 
     return (
-      <div className="pt-10 pb-32 px-6 max-w-7xl mx-auto min-h-screen bg-sand select-none text-left">
+      <div className="pt-10 pb-32 px-6 max-w-7xl mx-auto min-h-[100dvh] bg-sand select-none text-left">
         
         {/* Results Toolbar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 border-b border-warm-gray pb-6">
@@ -765,7 +765,7 @@ export default function AiPlannerView({
 
               {/* Handwritten signature traveler note */}
               <div className="pt-2 text-center border-t border-warm-gray/40">
-                <p className="text-muted/60 text-lg rotate-[-1deg]" style={{ fontFamily: "'La Belle Aurore', cursive" }}>
+                <p className="text-muted/60 text-lg rotate-[-1deg]" style={{ fontFamily: 'var(--font-handwritten)' }}>
                   "live from the field: always keep local cash for auto-rickshaws!"
                 </p>
               </div>

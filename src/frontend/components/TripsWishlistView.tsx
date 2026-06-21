@@ -296,7 +296,7 @@ export default function TripsWishlistView({
   }, [bookedTours, savedItineraries, wishlistTours]);
 
   return (
-    <div className="pt-10 pb-32 px-6 max-w-6xl mx-auto select-none bg-sand min-h-screen text-left animate-page-enter">
+    <div className="pt-10 pb-32 px-6 max-w-6xl mx-auto select-none bg-sand min-h-[100dvh] text-left animate-page-enter">
       
       {/* ── PASSPORT DASHBOARD PANEL ── */}
       <div className="mb-10 p-6 bg-white border bg-cream rounded-3xl shadow-sm space-y-6">

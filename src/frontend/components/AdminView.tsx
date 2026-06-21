@@ -458,7 +458,7 @@ export default function AdminView({
   );
 
   return (
-    <div className="w-full min-h-screen bg-[#090909] text-white pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans animate-[fadeIn_0.4s_ease-out]">
+    <div className="w-full min-h-screen bg-[#090909] text-white pt-10 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans animate-[fadeIn_0.4s_ease-out]">
       
       {/* Premium Obsidian Command Header */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 pb-6 border-b border-white/5">

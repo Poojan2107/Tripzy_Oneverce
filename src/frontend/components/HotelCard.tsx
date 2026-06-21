@@ -1,4 +1,4 @@
-import { ExternalLink, MapPin, Star, BadgeCheck } from 'lucide-react';
+import { ExternalLink, MapPin, Star } from 'lucide-react';
 import { Hotel } from '../types';
 
 interface HotelCardProps {

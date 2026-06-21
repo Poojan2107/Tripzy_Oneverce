@@ -215,7 +215,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/ladakh-banner.jpg',
     amenities: ['Mountain Views', 'Oxygen Enriched Rooms', 'Tibetan Spa', 'Fine Dining', 'Tour Desk'],
     location: 'Sheynam, Leh',
-    destinationId: 'ladakh-adventure',
+    destinationId: 'ladakh-passes',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/grand-dragon-ladakh-hotel-in-leh/',
       agoda: 'https://www.agoda.com/grand-dragon-ladakh/hotel/leh-in.html',
@@ -232,7 +232,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/ladakh-gallery-1.jpg',
     amenities: ['Valley View', 'Boutique Design', 'Organic Garden', 'Bonfire Dinners', 'Library'],
     location: 'Shey Palace Road, Leh',
-    destinationId: 'ladakh-adventure',
+    destinationId: 'ladakh-passes',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/shey-boutique-hotel-in-leh/',
       agoda: 'https://www.agoda.com/shey-boutique-hotel/hotel/leh-in.html',
@@ -249,7 +249,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/ladakh-gallery-2.jpg',
     amenities: ['Home-cooked Meals', 'Rooftop View', 'Garden', 'Hot Water', 'Airport Pickup'],
     location: 'Changspa, Leh',
-    destinationId: 'ladakh-adventure',
+    destinationId: 'ladakh-passes',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/kang-lachen-guest-house-leh/',
       makemytrip: 'https://www.makemytrip.com/hotels/kang_lachen_guest_house-details-leh.html',
@@ -267,7 +267,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/udaipur-banner.jpg',
     amenities: ['Lake Floating', 'Butler Service', 'Royal Suite', 'Jiva Spa', 'Private Boat Transfer'],
     location: 'Lake Pichola, Udaipur',
-    destinationId: 'udaipur-royal',
+    destinationId: 'udaipur-mewar',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/taj-lake-palace-hotel-in-udaipur/',
       agoda: 'https://www.agoda.com/taj-lake-palace/hotel/udaipur-in.html',
@@ -284,7 +284,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/udaipur-gallery-1.jpg',
     amenities: ['Lake View', 'Rooftop Restaurant', 'Heritage Decor', 'Personalized Service', 'Library'],
     location: 'Near Gangaur Ghat, Udaipur',
-    destinationId: 'udaipur-royal',
+    destinationId: 'udaipur-mewar',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/rawai-kothi-hotel-in-udaipur/',
       agoda: 'https://www.agoda.com/rawai-kothi/hotel/udaipur-in.html',
@@ -300,7 +300,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/udaipur-gallery-2.jpg',
     amenities: ['Heritage Building', 'Rooftop Café', 'City Palace View', 'Travel Desk', 'Free Wi-Fi'],
     location: 'Lal Ghat, Udaipur',
-    destinationId: 'udaipur-royal',
+    destinationId: 'udaipur-mewar',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/mewar-haveli-hotel-in-udaipur/',
       makemytrip: 'https://www.makemytrip.com/hotels/mewar_haveli-details-udaipur.html',
@@ -316,7 +316,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/cat-royal.jpg',
     amenities: ['Pool', 'Coworking', 'Dorm & Private Rooms', 'Rooftop Cafe', 'Bike Rentals'],
     location: 'Pratap Nagar, Udaipur',
-    destinationId: 'udaipur-royal',
+    destinationId: 'udaipur-mewar',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/zing-hostel-udaipur/',
       agoda: 'https://www.agoda.com/zing-hostel/hotel/udaipur-in.html',
@@ -334,7 +334,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/kashmir-banner.jpg',
     amenities: ['Lake View', 'Heritage Palace', 'Private Shikara', 'Gardens', 'Fine Dining'],
     location: 'Gupkar Road, Srinagar',
-    destinationId: 'kashmir-dal',
+    destinationId: 'kashmir-meadows',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/karan-mahal-hotel-in-srinagar/',
       agoda: 'https://www.agoda.com/karan-mahal/hotel/srinagar-in.html',
@@ -351,7 +351,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/kashmir-gallery-1.jpg',
     amenities: ['Floating Stay', 'Traditional Kashmiri Food', 'Shikara Rides', 'Garden Deck', 'Heating'],
     location: 'Dal Lake, Nigeen, Srinagar',
-    destinationId: 'kashmir-dal',
+    destinationId: 'kashmir-meadows',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/houseboat-new-nasim-srinagar/',
       makemytrip: 'https://www.makemytrip.com/hotels/houseboat_new_nasim-details-srinagar.html',
@@ -367,7 +367,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/kashmir-gallery-2.jpg',
     amenities: ['Ski-in/Ski-out', 'Heated Pool', 'Mountain Views', 'Spa', 'Gondola Access'],
     location: 'Gulmarg, Baramulla',
-    destinationId: 'kashmir-dal',
+    destinationId: 'kashmir-meadows',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/khyber-himalayan-resort-gulmarg/',
       agoda: 'https://www.agoda.com/khyber-himalayan-resort/hotel/gulmarg-in.html',
@@ -386,7 +386,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/goa-banner.jpg',
     amenities: ['Beachfront', 'Infinity Pool', 'Beach Club', 'Spa', 'Water Sports'],
     location: 'Vagator, North Goa',
-    destinationId: 'goa-beaches',
+    destinationId: 'goa-beach',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/w-goa-hotel-in-goa/',
       agoda: 'https://www.agoda.com/w-goa/hotel/goa-in.html',
@@ -403,7 +403,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/goa-gallery-1.jpg',
     amenities: ['Heritage Fort', 'Private Beach', 'Lagoon Pool', 'Ayurveda Spa', 'Water Sports'],
     location: 'Sinquerim, North Goa',
-    destinationId: 'goa-beaches',
+    destinationId: 'goa-beach',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/taj-fort-aguada-hotel-in-goa/',
       agoda: 'https://www.agoda.com/taj-fort-aguada/hotel/goa-in.html',
@@ -420,7 +420,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/goa-gallery-2.jpg',
     amenities: ['Beach Access', 'Hammock Garden', 'Live Music', 'Dorm & Private Rooms', 'Café'],
     location: 'Anjuna, North Goa',
-    destinationId: 'goa-beaches',
+    destinationId: 'goa-beach',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/boho-hostel-anjuna-goa/',
       makemytrip: 'https://www.makemytrip.com/hotels/boho_hostel_anjuna-details-goa.html',
@@ -540,7 +540,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/kutch-banner.jpg',
     amenities: ['Desert Tents', 'Folk Performances', 'Full Moon Viewing', 'Gujarati Thali', 'Bonfire'],
     location: 'Dhordo, Rann of Kutch',
-    destinationId: 'kutch-rann',
+    destinationId: 'kutch-salt',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/white-rann-resort-kutch/',
       agoda: 'https://www.agoda.com/white-rann-resort/hotel/kutch-in.html',
@@ -557,7 +557,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/kutch-gallery-1.jpg',
     amenities: ['Community Stay', 'Organic Meals', 'Stargazing', 'Camel Cart Rides', 'Kutchi Embroidery Workshop'],
     location: 'Hodka Village, Kutch',
-    destinationId: 'kutch-rann',
+    destinationId: 'kutch-salt',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/shaam-e-sarhad-kutch/',
       makemytrip: 'https://www.makemytrip.com/hotels/shaam_e_sarhad-details-kutch.html',
@@ -573,7 +573,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/kutch-gallery-2.jpg',
     amenities: ['Seasonal Tents', 'Cultural Shows', 'Guided Tours', 'Buffet Meals', 'Bonfire'],
     location: 'Dhordo, Rann of Kutch',
-    destinationId: 'kutch-rann',
+    destinationId: 'kutch-salt',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/rann-utsav-tent-city/',
       agoda: 'https://www.agoda.com/rann-utsav-tent-city/hotel/kutch-in.html',
@@ -591,7 +591,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/cherrapunji-banner.jpg',
     amenities: ['Valley View', 'Khasi Cuisine', 'Root Bridge Treks', 'Campfire', 'Free Wi-Fi'],
     location: 'Laitkynsew, Cherrapunji',
-    destinationId: 'cherrapunji-rainbow',
+    destinationId: 'cherrapunji-roots',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/polo-towers-cherrapunji/',
       makemytrip: 'https://www.makemytrip.com/hotels/polo_towers_cherrapunji-details.html',
@@ -607,7 +607,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/cherrapunji-gallery-1.jpg',
     amenities: ['Homestay', 'Organic Meals', 'Valley Sunset', 'Local Guides', 'Bamboo Architecture'],
     location: 'Sohra, Cherrapunji',
-    destinationId: 'cherrapunji-rainbow',
+    destinationId: 'cherrapunji-roots',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/jais-stay-cherrapunji/',
       makemytrip: 'https://www.makemytrip.com/hotels/jai_stay-details-cherrapunji.html',
@@ -623,7 +623,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/cherrapunji-gallery-2.jpg',
     amenities: ['Hill Views', 'Home-cooked Meals', 'Budget Friendly', 'Hot Water', 'Pickup Service'],
     location: 'Mawsynram Road, Cherrapunji',
-    destinationId: 'cherrapunji-rainbow',
+    destinationId: 'cherrapunji-roots',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/orange-homestay-cherrapunji/',
       agoda: 'https://www.agoda.com/orange-homestay/hotel/cherrapunji-in.html',
@@ -641,7 +641,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/andaman-banner.jpg',
     amenities: ['Beachfront', 'Coconut Grove', 'Private Veranda', 'Water Sports', 'Multi-cuisine Restaurant'],
     location: 'Corbyn\'s Cove, Port Blair',
-    destinationId: 'andaman-islands',
+    destinationId: 'andaman-reefs',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/symphony-palms-andaman/',
       agoda: 'https://www.agoda.com/symphony-palms/hotel/port-blair-in.html',
@@ -658,7 +658,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/andaman-gallery-1.jpg',
     amenities: ['Dive Center', 'Beachside Cottages', 'Open-air Restaurant', 'Kayaking', 'Sunset Deck'],
     location: 'Govind Nagar, Havelock Island',
-    destinationId: 'andaman-islands',
+    destinationId: 'andaman-reefs',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/barefoot-scuba-resort-havelock/',
       agoda: 'https://www.agoda.com/barefoot-scuba-resort/hotel/havelock-island-in.html',
@@ -675,7 +675,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/tours/andaman-gallery-2.jpg',
     amenities: ['Eco Cottages', 'Seafood Barbecue', 'Beach Access', 'Snorkeling', 'Bicycle Rentals'],
     location: 'Beach No. 5, Havelock Island',
-    destinationId: 'andaman-islands',
+    destinationId: 'andaman-reefs',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/sea-shell-beach-resort-havelock/',
       agoda: 'https://www.agoda.com/sea-shell-beach-resort/hotel/havelock-island-in.html',
@@ -691,7 +691,7 @@ export const HOTELS_DATA: Hotel[] = [
     image: '/images/cat-hidden.jpg',
     amenities: ['Backpacker Friendly', 'Bicycle Rentals', 'Bonfire', 'Travel Desk', 'Dorm & Private'],
     location: 'Neil Island, Andaman',
-    destinationId: 'andaman-islands',
+    destinationId: 'andaman-reefs',
     affiliateLinks: {
       goibibo: 'https://www.goibibo.com/hotels/neil-island-backpackers/',
       makemytrip: 'https://www.makemytrip.com/hotels/neil_island_backpackers-details.html',

@@ -63,7 +63,7 @@ export default function TourDetailsView({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           type: 'view',
-          payload: { destinationId: tour.id }
+          payload: { destinationId: tour.dbId || tour.id }
         })
       }).catch(() => {});
     }
@@ -187,8 +187,7 @@ export default function TourDetailsView({
 
             {/* Title & Metadata */}
             <div>
-              <h1 className="font-display text-3xl md:text-4xl text-night font-bold leading-tight">{tour.title}</h1>
-              <p className="text-sm text-muted mt-2 leading-relaxed font-light">{tour.subtitle}</p>
+              <h2 className="font-display text-2.5xl md:text-3xl text-night font-light lowercase leading-tight">{tour.subtitle}</h2>
               
               <div className="flex flex-wrap items-center gap-3 mt-4 text-xs font-bold text-muted uppercase tracking-wider">
                 <span className="flex items-center gap-1.5">

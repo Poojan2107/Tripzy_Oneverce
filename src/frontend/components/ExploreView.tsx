@@ -77,12 +77,12 @@ export default function ExploreView({
     return tours.find(t => t.id === activeTourId) || null;
   }, [tours, activeTourId]);
 
-  // Set the first item as active by default if not set
+  // Desktop only: set first item active on mount for sidebar highlight
   useEffect(() => {
-    if (filteredTours.length > 0 && !activeTourId) {
+    if (typeof window !== 'undefined' && window.innerWidth >= 768 && filteredTours.length > 0 && !activeTourId) {
       setActiveTourId(filteredTours[0].id);
     }
-  }, [filteredTours, activeTourId]);
+  }, []);
 
   const accentPrimary = activeTour?.accents?.primary || '#D6A85F';
   const accentSecondary = activeTour?.accents?.secondary || '#0F172A';
@@ -276,7 +276,7 @@ export default function ExploreView({
       </div>
 
         {/* ── SLIDE-OUT DRAWER OVERLAY ── */}
-        {activeTour && (
+        {activeTour && mobileView === 'list' && (
           <>
           {/* Backdrop */}
           <div className="fixed inset-0 bg-black/30 z-40 md:hidden" onClick={() => setActiveTourId(null)} />
@@ -452,6 +452,12 @@ export default function ExploreView({
 
             {/* Bottom Actions */}
             <div className="p-4 border-t border-warm-gray bg-warm-white flex gap-2 shrink-0 pb-[env(safe-area-inset-bottom,8px)]">
+              <button
+                onClick={() => setActiveTourId(null)}
+                className="md:hidden px-4 py-3.5 rounded-xl border border-warm-gray bg-white text-[10px] font-bold uppercase tracking-wider text-muted hover:text-night transition-all cursor-pointer"
+              >
+                Close
+              </button>
               <button
                 onClick={() => onTourSelect(activeTour)}
                 className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-white text-[10px] font-bold uppercase tracking-[0.15em] transition-all cursor-pointer shadow-sm hover:opacity-90"

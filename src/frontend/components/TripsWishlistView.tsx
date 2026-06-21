@@ -317,7 +317,7 @@ export default function TripsWishlistView({
           </div>
 
           {/* Stats metrics */}
-          <div className="grid grid-cols-3 gap-6 text-center">
+          <div className="grid grid-cols-3 gap-3 md:gap-6 text-center">
             <div className="px-4 py-2 bg-warm-white border bg-cream/60 rounded-2xl">
               <span className="text-[28px] font-display font-light text-saffron leading-none">
                 {journeyScore}

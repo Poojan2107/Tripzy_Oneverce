@@ -338,7 +338,7 @@ export default function App() {
         }}
       />
 
-      <footer className="bg-night border-t border-warm-gray/30 py-12 px-6 text-center text-[10px] text-white/50 font-sans font-light">
+      <footer className="bg-night border-t border-warm-gray/30 py-8 md:py-12 px-6 text-center text-[10px] text-white/50 font-sans font-light">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>&copy; 2026 Tripzy. AI-powered travel discovery journal.</p>
           <div className="flex gap-4">

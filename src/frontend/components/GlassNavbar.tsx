@@ -123,7 +123,7 @@ export default function GlassNavbar({
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={onSearchClick}
-            className={`p-2 rounded-lg transition-all cursor-pointer ${
+            className={`p-3 rounded-lg transition-all cursor-pointer ${
               isTransparent 
                 ? 'text-white/70 hover:text-white hover:bg-white/10' 
                 : 'text-muted hover:text-night hover:bg-sand'
@@ -183,7 +183,7 @@ export default function GlassNavbar({
           ) : (
             <button
               onClick={() => signIn("google")}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`inline-flex items-center gap-1.5 px-5 py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[44px] ${
                 isTransparent
                   ? 'bg-white text-night hover:bg-gold hover:text-white'
                   : 'bg-night text-white hover:bg-saffron'

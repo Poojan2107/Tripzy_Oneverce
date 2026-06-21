@@ -499,7 +499,7 @@ export default function AdminView({
                   setActiveTab(tab.id as any);
                   setSearchTerm('');
                 }}
-                className={`px-3 sm:px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 whitespace-nowrap transition-all duration-300 touch-action-manipulation select-none ${
+                className={`px-3 sm:px-4 py-3 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 whitespace-nowrap transition-all duration-300 touch-action-manipulation select-none min-h-[44px] ${
                   activeTab === tab.id
                     ? 'bg-gold text-white shadow-md shadow-gold/20'
                     : 'text-stone hover:text-ink hover:bg-cream/30'
@@ -767,7 +767,7 @@ export default function AdminView({
                 placeholder="Search destinations by name or country..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 sm:py-2.5 rounded-xl bg-white border border-warm-gray text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
+                className="w-full pl-10 pr-4 py-3 sm:py-3 rounded-xl bg-white border border-warm-gray text-base text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
               />
             </div>
 
@@ -845,14 +845,14 @@ export default function AdminView({
                       <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                         <button
                           onClick={() => openEditDestForm(tour)}
-                          className="p-2 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-warm-gray/60 touch-action-manipulation select-none"
+                          className="p-2.5 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-warm-gray/60 touch-action-manipulation select-none"
                           title="Edit"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteDestClick(tour.id, tour.title)}
-                          className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-red-200 touch-action-manipulation select-none"
+                          className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-red-200 touch-action-manipulation select-none"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -907,14 +907,14 @@ export default function AdminView({
                   <div className="ml-auto flex gap-2">
                     <button
                       onClick={() => openEditDestForm(tour)}
-                      className="p-2 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-warm-gray/60"
+                      className="p-2.5 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-warm-gray/60"
                       title="Edit"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDeleteDestClick(tour.id, tour.title)}
-                      className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-red-200"
+                      className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-red-200"
                       title="Delete"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -938,7 +938,7 @@ export default function AdminView({
                 placeholder="Search experiences..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 sm:py-2.5 rounded-xl bg-white border border-warm-gray text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
+                className="w-full pl-10 pr-4 py-3 sm:py-3 rounded-xl bg-white border border-warm-gray text-base text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
               />
             </div>
 
@@ -1022,9 +1022,9 @@ export default function AdminView({
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={() => handleDeleteExpClick(exp.id, exp.name)}
-                            className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-red-200 touch-action-manipulation select-none"
+                    <button
+                      onClick={() => handleDeleteExpClick(exp.id, exp.name)}
+                      className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-red-200 touch-action-manipulation select-none"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -1078,14 +1078,14 @@ export default function AdminView({
                     <div className="flex gap-2 shrink-0">
                       <button
                         onClick={() => openEditExpForm(exp)}
-                        className="p-2 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-warm-gray/60"
-                        title="Edit"
-                      >
-                        <Edit3 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteExpClick(exp.id, exp.name)}
-                        className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-red-200"
+                      className="p-2.5 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-warm-gray/60"
+                      title="Edit"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteExpClick(exp.id, exp.name)}
+                      className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-red-200"
                         title="Delete"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -1116,7 +1116,7 @@ export default function AdminView({
               </div>
               <button
                 onClick={() => setIsDestFormOpen(false)}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-cream/30 hover:bg-cream text-stone hover:text-ink transition-all cursor-pointer shrink-0 touch-action-manipulation select-none"
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-cream/30 hover:bg-cream text-stone hover:text-ink transition-all cursor-pointer shrink-0 touch-action-manipulation select-none"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1414,7 +1414,7 @@ export default function AdminView({
               </div>
               <button
                 onClick={() => setIsExpFormOpen(false)}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-cream/30 hover:bg-cream text-stone hover:text-ink transition-all cursor-pointer shrink-0 touch-action-manipulation select-none"
+                className="w-11 h-11 flex items-center justify-center rounded-full bg-cream/30 hover:bg-cream text-stone hover:text-ink transition-all cursor-pointer shrink-0 touch-action-manipulation select-none"
               >
                 <X className="w-5 h-5" />
               </button>

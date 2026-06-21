@@ -23,7 +23,7 @@ export default function BottomNavbar({
 
   return (
     <div
-      className={`fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-sm md:hidden select-none transition-all duration-300 ${
+      className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm md:hidden select-none transition-all duration-300 pb-[env(safe-area-inset-bottom,8px)] ${
         visible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'
       }`}
     >
@@ -52,7 +52,7 @@ export default function BottomNavbar({
                 {tab.label === 'Saved' ? 'Saved' : tab.label.split(' ')[0]}
               </span>
               {tab.badge !== undefined && tab.badge > 0 && (
-                <span className="absolute -top-0.5 right-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-ocean px-1 text-[7px] font-bold text-white ring-2 ring-white">
+                <span className="absolute -top-0.5 right-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-ocean px-1 text-[8px] font-bold text-white ring-2 ring-white">
                   {tab.badge}
                 </span>
               )}

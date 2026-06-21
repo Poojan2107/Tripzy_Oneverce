@@ -171,15 +171,6 @@ export default function App() {
     });
   };
 
-  const handleBookTour = (bookingDetails: any) => {
-    const code = Math.random().toString(36).substring(2, 9).toUpperCase();
-    const newBooking = {
-      ...bookingDetails,
-      bookingCode: code
-    };
-    setBookedTours((prev) => [newBooking, ...prev]);
-  };
-
   const handleCancelBooking = (bookingCode: string) => {
     setBookedTours((prev) => prev.filter((b) => b.bookingCode !== bookingCode));
   };
@@ -243,7 +234,6 @@ export default function App() {
             }}
             onToggleWishlist={handleToggleWishlist}
             isWishlisted={wishlistIds.includes(selectedTour.id)}
-            onBookTour={handleBookTour}
           />
         ) : (
           <>

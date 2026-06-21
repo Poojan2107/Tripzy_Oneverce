@@ -21,6 +21,8 @@ const ItineraryMap = dynamic(() => import('./map/ItineraryMap'), {
 });
 
 import { Tour } from '../types';
+import { getHotelsByDestination } from '../data/hotels';
+import HotelCard from './HotelCard';
 
 interface AiPlannerViewProps {
   onSaveItinerary?: (itin: any) => void;
@@ -167,6 +169,9 @@ export default function AiPlannerView({
   const [savedId, setSavedId] = useState<string | null>(null);
 
   const [selectedDestination, setSelectedDestination] = useState<string | null>(null);
+  const [fromLocation, setFromLocation] = useState('');
+
+  const [customBudgetAmount, setCustomBudgetAmount] = useState(10000);
 
   const getDestinationPrettyName = (destId: string | null | undefined): string => {
     if (!destId) return 'Curated Destination';
@@ -309,9 +314,11 @@ export default function AiPlannerView({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           destination: destName,
+          fromLocation: fromLocation || undefined,
           guests: travelers === 'solo' ? 1 : travelers === 'couple' ? 2 : travelers === 'family' ? 4 : 6,
           companion: travelers || 'solo',
           budget,
+          budgetAmount: customBudgetAmount,
           travelStyle: mood,
           fromDate: new Date().toISOString(),
           toDate: new Date(Date.now() + customDuration * 24 * 60 * 60 * 1000).toISOString(),
@@ -763,6 +770,30 @@ export default function AiPlannerView({
                 </p>
               </div>
             </div>
+
+            {/* ── HOTELS ── */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-1 h-5 bg-gold rounded-full" />
+                <h3 className="font-display text-xl text-night font-bold">Where to Stay</h3>
+              </div>
+              <div className="space-y-3">
+                {itineraryResult.destinationId && getHotelsByDestination(itineraryResult.destinationId).length > 0 ? (
+                  getHotelsByDestination(itineraryResult.destinationId).slice(0, 4).map((hotel) => (
+                    <HotelCard key={hotel.id} hotel={hotel} />
+                  ))
+                ) : itineraryResult.destinationDbId && getHotelsByDestination(itineraryResult.destinationDbId).length > 0 ? (
+                  getHotelsByDestination(itineraryResult.destinationDbId).slice(0, 4).map((hotel) => (
+                    <HotelCard key={hotel.id} hotel={hotel} />
+                  ))
+                ) : (
+                  <div className="p-6 rounded-2xl bg-white border border-warm-gray text-center">
+                    <p className="text-xs text-muted font-light">Hotels for this destination are being curated. Check back soon.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -780,6 +811,7 @@ export default function AiPlannerView({
 
   const previewDestTour = selectedDestination ? TOURS_DATA.find(t => t.id === selectedDestination) : null;
   const previewSteps = [
+    { label: 'From', value: fromLocation || null },
     { label: 'Destination', value: previewDestTour?.title || null },
     { label: 'Companion', value: COMPANION_OPTIONS.find(o => o.id === travelers)?.label || null },
     { label: 'Budget', value: BUDGET_OPTIONS.find(o => o.id === budget)?.label || null },
@@ -892,40 +924,90 @@ export default function AiPlannerView({
         </div>
       </div>
 
-    {/* ── STEP 1: DESTINATION ── */}
+    {/* ── STEP 1: FROM → TO ── */}
       {step === 1 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
             <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
-              where in <span className="font-display italic text-gold">india</span>?
+              plan your <span className="font-display italic text-gold">route</span>
             </h2>
-            <p className="text-xs text-muted/60 font-light">Each of our handcrafted chapters is built on deep local knowledge. Pick the place that speaks to you and we'll tailor every detail.</p>
+            <p className="text-xs text-muted/60 font-light">Where are you coming from, and where in India are you heading? We'll factor in your departure point for smarter transit estimates.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[48dvh] overflow-y-auto pr-2 custom-scrollbar">
-            {TOURS_DATA.map((tour) => {
-              const isSelected = selectedDestination === tour.id;
-              return (
-                <div
-                  key={tour.id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => setSelectedDestination(tour.id)}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedDestination(tour.id); } }}
-                  className={`relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-500 ease-out group aspect-[4/3] ${
-                    isSelected 
-                      ? 'border-gold ring-2 ring-gold/30 shadow-elevated scale-[1.01] -translate-y-0.5' 
-                      : 'border-warm-gray hover:border-gold hover:-translate-y-1 hover:shadow-card'
-                  }`}
-                >
-                  <img
-                    src={tour.bannerImage}
-                    alt={tour.title}
-                    className="w-full h-full object-cover transition-transform duration-750 ease-out group-hover:scale-105"
-                    onError={e => { e.currentTarget.style.opacity = '0' }}
+          {/* From / To toggle */}
+          <div className="bg-white rounded-2xl border border-warm-gray p-4 space-y-3">
+            <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <div className="flex-1 w-full">
+                <label className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mb-1.5">From Where?</label>
+                <div className="relative">
+                  <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted/40" />
+                  <input
+                    type="text"
+                    value={fromLocation}
+                    onChange={(e) => setFromLocation(e.target.value)}
+                    placeholder="e.g. Mumbai, Delhi, Bangalore..."
+                    className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-warm-gray text-xs text-night placeholder:text-muted/30 outline-none focus:border-gold transition-colors bg-sand/30"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent transition-opacity duration-500" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 text-left z-10">
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  if (selectedDestination && fromLocation) {
+                    const destName = TOURS_DATA.find(t => t.id === selectedDestination)?.title || '';
+                    setFromLocation(destName);
+                    setSelectedDestination(null);
+                  }
+                }}
+                disabled={!selectedDestination || !fromLocation}
+                className="self-end sm:self-center p-2.5 rounded-xl border border-warm-gray bg-white hover:bg-sand/40 transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                title="Swap from/to"
+              >
+                <svg className="w-4 h-4 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 16l-4-4 4-4" />
+                  <path d="M17 8l4 4-4 4" />
+                  <path d="M3 12h18" />
+                </svg>
+              </button>
+
+              <div className="flex-1 w-full">
+                <label className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mb-1.5">Where To?</label>
+                <div className="relative">
+                  <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold" />
+                  <div className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-dashed border-warm-gray text-xs text-muted/40 bg-sand/20">
+                    {selectedDestination ? getDestinationPrettyName(selectedDestination) : 'Select a destination below'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-mono uppercase tracking-wider text-night/60 block">Choose your destination</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[40dvh] overflow-y-auto pr-2 custom-scrollbar">
+              {TOURS_DATA.map((tour) => {
+                const isSelected = selectedDestination === tour.id;
+                return (
+                  <div
+                    key={tour.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setSelectedDestination(tour.id)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedDestination(tour.id); } }}
+                    className={`relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-500 ease-out group aspect-[4/3] ${
+                      isSelected 
+                        ? 'border-gold ring-2 ring-gold/30 shadow-elevated scale-[1.01] -translate-y-0.5' 
+                        : 'border-warm-gray hover:border-gold hover:-translate-y-1 hover:shadow-card'
+                    }`}
+                  >
+                    <img
+                      src={tour.bannerImage}
+                      alt={tour.title}
+                      className="w-full h-full object-cover transition-transform duration-750 ease-out group-hover:scale-105"
+                      onError={e => { e.currentTarget.style.opacity = '0' }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent transition-opacity duration-500" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 text-left z-10">
                     <span className={`text-[8px] font-mono uppercase tracking-[0.25em] block mb-1 transition-colors duration-350 ${
                       isSelected ? 'text-gold' : 'text-gold/80'
                     }`}>{tour.chapterName || 'Chapter'}</span>
@@ -942,6 +1024,7 @@ export default function AiPlannerView({
                 </div>
               );
             })}
+          </div>
           </div>
         </div>
       )}
@@ -995,11 +1078,12 @@ export default function AiPlannerView({
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
             <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
-              select your <span className="font-display italic text-gold">budget tier</span>
+              your <span className="font-display italic text-gold">budget</span>
             </h2>
-            <p className="text-xs text-muted/60 font-light">This sets your accommodation tier, transport style, and dining range. From local homestays to heritage palaces, every tier unlocks a different India.</p>
+            <p className="text-xs text-muted/60 font-light">Pick a tier, use the slider, or enter a custom amount — whatever works for your trip.</p>
           </div>
 
+          {/* Budget Tier Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {BUDGET_OPTIONS.map((opt) => {
               const Icon = opt.icon;
@@ -1009,7 +1093,11 @@ export default function AiPlannerView({
                   key={opt.id}
                   role="button"
                   tabIndex={0}
-                  onClick={() => setBudget(opt.id)}
+                  onClick={() => {
+                    setBudget(opt.id);
+                    const amounts: Record<string, number> = { Small: 5000, Medium: 15000, Luxury: 35000 };
+                    setCustomBudgetAmount(amounts[opt.id] || 10000);
+                  }}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setBudget(opt.id); } }}
                   className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-4 text-left group ${
                     isSelected 
@@ -1027,10 +1115,76 @@ export default function AiPlannerView({
                       {opt.label}
                     </h3>
                     <p className="text-[10px] text-muted/60 font-light leading-relaxed">{opt.desc}</p>
+                    <div className="mt-2 text-[11px] font-mono text-gold font-bold">
+                      {opt.id === 'Small' ? '₹2,000 – ₹8,000' : opt.id === 'Medium' ? '₹8,000 – ₹25,000' : '₹25,000 – ₹60,000'}
+                    </div>
                   </div>
                 </div>
               );
             })}
+          </div>
+
+          {/* Range Slider */}
+          <div className="bg-white rounded-2xl border border-warm-gray p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-[9px] font-mono uppercase tracking-widest text-muted/50">Per Person / Day</label>
+              <div className="flex items-center gap-2">
+                <span className="text-[18px] font-display text-night font-bold">{customBudgetAmount.toLocaleString('en-IN')}</span>
+                <span className="text-[10px] text-muted font-light">₹</span>
+              </div>
+            </div>
+            <input
+              type="range"
+              min={1000}
+              max={60000}
+              step={500}
+              value={customBudgetAmount}
+              onChange={(e) => {
+                setCustomBudgetAmount(Number(e.target.value));
+                if (Number(e.target.value) <= 8000) setBudget('Small');
+                else if (Number(e.target.value) <= 25000) setBudget('Medium');
+                else setBudget('Luxury');
+              }}
+              className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-gold"
+              style={{
+                background: `linear-gradient(to right, #D6A85F 0%, #D6A85F ${(customBudgetAmount - 1000) / 59000 * 100}%, #E8E0D4 ${(customBudgetAmount - 1000) / 59000 * 100}%, #E8E0D4 100%)`,
+              }}
+            />
+            <div className="flex justify-between text-[9px] text-muted/40 font-mono">
+              <span>₹1k</span>
+              <span>₹15k</span>
+              <span>₹30k</span>
+              <span>₹45k</span>
+              <span>₹60k</span>
+            </div>
+          </div>
+
+          {/* Custom Amount Input */}
+          <div className="bg-sand/30 rounded-2xl border border-warm-gray p-4">
+            <div className="flex items-center justify-between gap-4">
+              <label className="text-[9px] font-mono uppercase tracking-widest text-muted/50 shrink-0">Custom Budget (₹)</label>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted font-light">₹</span>
+                <input
+                  type="number"
+                  min={1000}
+                  max={100000}
+                  step={500}
+                  value={customBudgetAmount}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 1000 && val <= 100000) {
+                      setCustomBudgetAmount(val);
+                      if (val <= 8000) setBudget('Small');
+                      else if (val <= 25000) setBudget('Medium');
+                      else setBudget('Luxury');
+                    }
+                  }}
+                  className="w-28 px-3 py-2 rounded-xl border border-warm-gray text-xs text-night text-right outline-none focus:border-gold bg-white"
+                />
+                <span className="text-[9px] text-muted/40 font-mono">/ day</span>
+              </div>
+            </div>
           </div>
         </div>
       )}

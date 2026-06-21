@@ -552,7 +552,7 @@ function getOfflineItinerary(destName: string, lat: number, lng: number, budget:
   return itinerary;
 }
 
-function buildOfflineResponse(finalDest: any, destination: string, budget: string, tripDuration: number, matchDetails: any) {
+function buildOfflineResponse(finalDest: any, destination: string, budget: string, tripDuration: number, matchDetails: any, budgetAmount?: number) {
   const fallbackDestName = finalDest ? finalDest.name : (destination || "Varanasi");
   const fallbackLat = finalDest?.latitude || 25.3176;
   const fallbackLng = finalDest?.longitude || 82.9739;
@@ -560,9 +560,12 @@ function buildOfflineResponse(finalDest: any, destination: string, budget: strin
   // Destination-aware cost multipliers
   const destNameLower = fallbackDestName.toLowerCase();
   const costMultiplier = destNameLower.includes('ladakh') || destNameLower.includes('kashmir') || destNameLower.includes('andaman') ? 1.4 : destNameLower.includes('jaisalmer') || destNameLower.includes('kerala') || destNameLower.includes('udaipur') ? 1.2 : destNameLower.includes('goa') || destNameLower.includes('munnar') || destNameLower.includes('cherrapunji') ? 0.9 : 1.0;
-  const baseTransit = budget === 'Luxury' ? 25000 : budget === 'Medium' ? 12000 : 5000;
-  const baseStay = budget === 'Luxury' ? 80000 : budget === 'Medium' ? 25000 : 8000;
-  const baseFood = budget === 'Luxury' ? 30000 : budget === 'Medium' ? 15000 : 6000;
+
+  // Use budgetAmount if provided, otherwise fall back to tier defaults
+  const dailyBudget = budgetAmount || (budget === 'Luxury' ? 35000 : budget === 'Medium' ? 15000 : 5000);
+  const baseTransit = Math.round(dailyBudget * 0.35);
+  const baseStay = Math.round(dailyBudget * 0.75);
+  const baseFood = Math.round(dailyBudget * 0.30);
   const totalCost = Math.round((baseTransit + baseStay + baseFood) * costMultiplier);
 
   return {
@@ -613,6 +616,7 @@ export async function POST(req: Request) {
       fromDate, 
       toDate, 
       budget, 
+      budgetAmount,
       journeyMode, 
       travelStyle, 
       interests, 
@@ -689,7 +693,7 @@ export async function POST(req: Request) {
     // 4. Fallback mock response if no Gemini API Key is configured
     const apiKey = getGeminiApiKey();
     if (!apiKey) {
-      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails);
+      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails, budgetAmount);
       return new Response(JSON.stringify(offlineResponse), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -715,6 +719,7 @@ export async function POST(req: Request) {
       - Starting Location: ${fromLocation}
       - Dates: ${fromDate} to ${toDate}
       - Budget Tier: ${budget}
+      - Budget Amount (INR per person per day): ${budgetAmount || 'Not specified'}
       - Travel Style: ${travelStyle}
       - Key Interests: ${interests}
       - Travelers: ${guests}
@@ -789,7 +794,7 @@ export async function POST(req: Request) {
       });
     } catch (aiError) {
       console.warn("Gemini API call failed. Executing offline fallback itinerary:", aiError);
-      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails);
+      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails, budgetAmount);
       return new Response(JSON.stringify(offlineResponse), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

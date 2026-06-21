@@ -96,18 +96,18 @@ export default function ExploreView({
       }}
     >
       {/* ── MOBILE VIEW TOGGLE BAR ── */}
-      <div className="md:hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-[60] bg-night text-white px-4 py-2.5 rounded-full shadow-lg flex gap-4 text-xs font-mono uppercase tracking-wider">
+      <div className="md:hidden fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-night text-white px-5 py-3 rounded-full shadow-lg flex gap-4 text-xs font-mono uppercase tracking-wider">
         <button 
           onClick={() => setMobileView('list')}
-          className={`flex items-center gap-1.5 ${mobileView === 'list' ? 'text-gold font-bold' : 'opacity-70'}`}
+          className={`flex items-center gap-1.5 min-h-[44px] min-w-[44px] justify-center ${mobileView === 'list' ? 'text-gold font-bold' : 'opacity-70'}`}
         >
           <List className="w-4 h-4" />
           List
         </button>
-        <div className="w-px h-4 bg-white/20" />
+        <div className="w-px h-6 bg-white/20 self-center" />
         <button 
           onClick={() => setMobileView('map')}
-          className={`flex items-center gap-1.5 ${mobileView === 'map' ? 'text-gold font-bold' : 'opacity-70'}`}
+          className={`flex items-center gap-1.5 min-h-[44px] min-w-[44px] justify-center ${mobileView === 'map' ? 'text-gold font-bold' : 'opacity-70'}`}
         >
           <Map className="w-4 h-4" />
           Map
@@ -143,10 +143,10 @@ export default function ExploreView({
               placeholder="Search destinations, regions, moods..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="bg-transparent text-xs text-night placeholder:text-muted/30 outline-none w-full font-sans font-light"
+              className="bg-transparent text-base text-night placeholder:text-muted/30 outline-none w-full font-sans font-light"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="shrink-0">
+              <button onClick={() => setSearchQuery('')} className="shrink-0 p-2">
                 <X className="w-3.5 h-3.5 text-muted/45 hover:text-night" />
               </button>
             )}
@@ -161,7 +161,7 @@ export default function ExploreView({
                   setActiveCategory(chip.id);
                   setActiveTourId(null); // Reset active selection
                 }}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[8px] font-mono uppercase tracking-wider transition-all duration-300 border ${
+                className={`flex-shrink-0 px-3 py-2.5 rounded-full text-[8px] font-mono uppercase tracking-wider transition-all duration-300 border min-h-[44px] flex items-center ${
                   activeCategory === chip.id
                     ? 'bg-night text-white border-night'
                     : 'bg-white text-muted/70 border-warm-gray hover:border-gold'
@@ -213,6 +213,8 @@ export default function ExploreView({
                         src={tour.bannerImage} 
                         alt={tour.title} 
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                        loading="lazy"
+                        decoding="async"
                         onError={e => { e.currentTarget.style.opacity = '0' }}
                       />
                     </div>
@@ -239,7 +241,7 @@ export default function ExploreView({
                             <span className="text-[9px] font-bold text-muted">{parseFloat(tour.rating.toFixed(1))}</span>
                           </div>
                           <span 
-                            className="text-[7px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider text-white"
+                            className="text-[8px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider text-white"
                             style={{ backgroundColor: moodColor }}
                           >
                             {tour.moods?.[0]}
@@ -275,25 +277,32 @@ export default function ExploreView({
 
         {/* ── SLIDE-OUT DRAWER OVERLAY ── */}
         {activeTour && (
-          <div className="fixed md:absolute inset-4 md:inset-auto md:top-4 md:bottom-4 md:right-4 w-[calc(100%-32px)] sm:w-[400px] bg-white border border-warm-gray rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter">
+          <>
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/30 z-40 md:hidden" onClick={() => setActiveTourId(null)} />
+          <div className="fixed bottom-0 md:absolute inset-x-0 md:inset-auto md:top-4 md:bottom-4 md:right-4 md:w-[400px] bg-white border border-warm-gray rounded-t-3xl md:rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter md:animate-none max-h-[85dvh] md:max-h-none pb-[env(safe-area-inset-bottom,0px)]">
+            {/* Drag handle for mobile */}
+            <div className="md:hidden flex justify-center pt-2 pb-0 shrink-0">
+              <div className="w-8 h-1 rounded-full bg-warm-gray" />
+            </div>
             {/* Dynamic accent top strip */}
-            <div className="h-1 w-full shrink-0" style={{ background: `linear-gradient(90deg, ${activeTour.accents?.primary || '#D6A85F'}, ${activeTour.accents?.secondary || '#0F172A'})` }} />
+            <div className="h-1 w-full shrink-0 hidden md:block" style={{ background: `linear-gradient(90deg, ${activeTour.accents?.primary || '#D6A85F'}, ${activeTour.accents?.secondary || '#0F172A'})` }} />
             
             {/* Header image */}
             <div className="relative aspect-[16/9] bg-cream shrink-0 overflow-hidden">
-              <img src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover bg-cream transition-transform duration-700 hover:scale-105" onError={e => { e.currentTarget.style.opacity = '0' }} />
+              <img src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover bg-cream transition-transform duration-700 hover:scale-105" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
               
               <button 
                 onClick={() => setActiveTourId(null)}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border border-warm-gray flex items-center justify-center text-night hover:bg-white shadow-sm cursor-pointer z-10"
+                className="absolute top-3 right-3 w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm border border-warm-gray flex items-center justify-center text-night hover:bg-white shadow-sm cursor-pointer z-10"
               >
                 <X className="w-4 h-4" />
               </button>
 
               <button
                 onClick={() => onToggleWishlist(activeTour.id)}
-                className="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border border-warm-gray flex items-center justify-center text-night hover:bg-white shadow-sm cursor-pointer z-10"
+                className="absolute top-3 right-16 w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm border border-warm-gray flex items-center justify-center text-night hover:bg-white shadow-sm cursor-pointer z-10"
               >
                 <Heart className={`w-4 h-4 ${wishlistIds.includes(activeTour.id) ? 'fill-rose-500 text-rose-500' : 'text-slate-400'}`} />
               </button>
@@ -331,14 +340,14 @@ export default function ExploreView({
                   {activeTour.moods?.map(m => (
                     <span 
                       key={m} 
-                      className="text-[7px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider text-white"
+                      className="text-[8px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider text-white"
                       style={{ backgroundColor: MOOD_COLORS[m] || '#D6A85F' }}
                     >
                       {m}
                     </span>
                   ))}
                   {activeTour.tags?.filter(t => !activeTour.moods?.includes(t)).slice(0, 2).map(t => (
-                    <span key={t} className="text-[7px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-cream text-muted border border-warm-gray">
+                    <span key={t} className="text-[8px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-cream text-muted border border-warm-gray">
                       {t}
                     </span>
                   ))}
@@ -442,7 +451,7 @@ export default function ExploreView({
             </div>
 
             {/* Bottom Actions */}
-            <div className="p-4 border-t border-warm-gray bg-warm-white flex gap-2 shrink-0">
+            <div className="p-4 border-t border-warm-gray bg-warm-white flex gap-2 shrink-0 pb-[env(safe-area-inset-bottom,8px)]">
               <button
                 onClick={() => onTourSelect(activeTour)}
                 className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-white text-[10px] font-bold uppercase tracking-[0.15em] transition-all cursor-pointer shadow-sm hover:opacity-90"
@@ -453,6 +462,7 @@ export default function ExploreView({
               </button>
             </div>
           </div>
+          </>
         )}
     </div>
   );

@@ -396,7 +396,7 @@ export default function TourDetailsView({
         {/* Back button */}
         <button
           onClick={onBack}
-          className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-white/25 transition-all cursor-pointer z-20"
+          className="absolute top-6 left-6 flex items-center gap-2 px-5 py-3 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-white/25 transition-all cursor-pointer z-20 min-h-[44px]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back
@@ -406,13 +406,13 @@ export default function TourDetailsView({
         <div className="absolute top-6 right-6 flex items-center gap-2 z-20">
           <button
             onClick={handleShare}
-            className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center text-white hover:bg-white/25 transition-all cursor-pointer"
+            className="w-11 h-11 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center text-white hover:bg-white/25 transition-all cursor-pointer"
           >
             {copiedLink ? <CheckCircle2 className="w-4 h-4 text-green-400" /> : <Share2 className="w-4 h-4" />}
           </button>
           <button
             onClick={() => onToggleWishlist(tour.id)}
-            className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center text-white hover:bg-white/25 transition-all cursor-pointer"
+            className="w-11 h-11 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center text-white hover:bg-white/25 transition-all cursor-pointer"
           >
             <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-rose-400 text-rose-400' : ''}`} />
           </button>
@@ -528,7 +528,7 @@ export default function TourDetailsView({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-200 whitespace-nowrap cursor-pointer border ${
+                  className={`px-5 py-3 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-200 whitespace-nowrap cursor-pointer border min-h-[44px] ${
                     activeTab === tab.id
                       ? 'bg-night text-white border-night'
                       : 'bg-white text-muted border-warm-gray hover:border-gold'
@@ -657,11 +657,11 @@ export default function TourDetailsView({
                     <button
                       key={day.day}
                       onClick={() => setActiveDay(day.day)}
-                      className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-200 border cursor-pointer ${
-                        activeDay === day.day
-                          ? 'bg-night text-white border-night'
-                          : 'bg-white text-muted border-warm-gray hover:border-ocean/30'
-                      }`}
+                  className={`px-4 py-3 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-200 border cursor-pointer min-h-[44px] flex items-center ${
+                    activeDay === day.day
+                      ? 'bg-night text-white border-night'
+                      : 'bg-white text-muted border-warm-gray hover:border-ocean/30'
+                  }`}
                     >
                       Day {day.day}
                     </button>
@@ -788,7 +788,7 @@ export default function TourDetailsView({
                       {tour.reviews.map((r) => (
                         <div key={r.id} className="p-5 rounded-2xl bg-white border border-warm-gray shadow-soft">
                           <div className="flex items-center gap-3 mb-3">
-                            <img src={r.avatar} alt={r.author} className="w-8 h-8 rounded-full object-cover border border-warm-gray" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                            <img src={r.avatar} alt={r.author} className="w-8 h-8 rounded-full object-cover border border-warm-gray" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
                             <div>
                               <p className="text-xs font-bold text-night">{r.author}</p>
                               <div className="flex items-center gap-0.5">
@@ -832,7 +832,7 @@ export default function TourDetailsView({
                   <div className="space-y-2.5">
                     <button
                       onClick={onPlanClick}
-                      className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl border border-warm-gray text-xs font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-sand/40 transition-all cursor-pointer bg-white"
+                      className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl border border-warm-gray text-xs font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-sand/40 transition-all cursor-pointer bg-white min-h-[44px]"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-ocean" />
                       <span>Generate AI Journey Plan</span>
@@ -934,7 +934,7 @@ export default function TourDetailsView({
                 <div className="flex flex-col gap-2.5">
                   <button
                     onClick={onPlanClick}
-                    className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl border border-warm-gray text-xs font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-sand/40 transition-all cursor-pointer bg-white"
+                    className="w-full flex items-center justify-center gap-1.5 py-3 rounded-xl border border-warm-gray text-xs font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-sand/40 transition-all cursor-pointer bg-white min-h-[44px]"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-ocean" />
                     <span>Start AI Planning</span>
@@ -973,7 +973,7 @@ export default function TourDetailsView({
                     {tour.reviews.slice(0, 2).map((r) => (
                       <div key={r.id} className="space-y-1.5 pb-3 border-b border-warm-gray/20 last:border-0 last:pb-0">
                         <div className="flex items-center gap-2">
-                          <img src={r.avatar} alt={r.author} className="w-7 h-7 rounded-full object-cover border border-warm-gray" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                          <img src={r.avatar} alt={r.author} className="w-7 h-7 rounded-full object-cover border border-warm-gray" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
                           <div>
                             <p className="text-xs font-bold text-night">{r.author}</p>
                             <div className="flex items-center gap-0.5">

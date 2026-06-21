@@ -27,8 +27,12 @@ export default function SearchModal({
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+    if (isOpen) document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [onClose, isOpen]);
 
   useEffect(() => {
     if (query || selectedTag) {
@@ -94,7 +98,7 @@ export default function SearchModal({
               placeholder="Search destinations, moods, activities..."
               value={query}
               onChange={handleInputChange}
-              className="w-full pl-10 pr-4 py-3 bg-warm-mist text-deep-navy text-sm rounded-xl border border-warm-gray/40 outline-none focus:border-ocean/40 focus:ring-2 focus:ring-ocean/10 transition-all duration-200 placeholder:text-stone"
+              className="w-full pl-10 pr-4 py-3 bg-warm-mist text-deep-navy text-base rounded-xl border border-warm-gray/40 outline-none focus:border-ocean/40 focus:ring-2 focus:ring-ocean/10 transition-all duration-200 placeholder:text-stone"
             />
           </div>
 
@@ -106,7 +110,7 @@ export default function SearchModal({
                 <button
                   key={tag}
                   onClick={() => handleTagClick(tag)}
-                  className={`px-3 py-1 rounded-full text-[10px] font-medium transition-all duration-200 border ${
+                  className={`px-4 py-2.5 rounded-full text-[10px] font-medium transition-all duration-200 border min-h-[44px] flex items-center ${
                     isActive
                       ? 'bg-ocean text-white border-ocean'
                       : 'bg-white text-charcoal/60 border-warm-gray/40 hover:border-ocean/30 hover:text-ocean'
@@ -142,7 +146,7 @@ export default function SearchModal({
                 className="flex gap-3 p-3 rounded-xl hover:bg-warm-mist cursor-pointer group transition-all duration-200"
               >
                 <div className="w-12 h-12 rounded-lg overflow-hidden bg-warm-gray shrink-0">
-                  <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                  <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 text-[10px] text-charcoal/50">

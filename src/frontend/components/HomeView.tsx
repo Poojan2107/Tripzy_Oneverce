@@ -139,7 +139,7 @@ export default function HomeView({
       />
 
       {/* ── SECTION 02: INDIA THROUGH JOURNEYS ── */}
-      <section className="py-16 bg-sand">
+      <section className="py-12 md:py-16 bg-sand">
         <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
           <ScrollReveal>
             <div className="mb-8 text-left">
@@ -164,6 +164,8 @@ export default function HomeView({
                   src={cat.image}
                   alt={cat.label}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                   onError={e => { e.currentTarget.style.opacity = '0' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
@@ -185,7 +187,7 @@ export default function HomeView({
       </section>
 
       {/* ── SECTION 03: WHY TRIPZY ── */}
-      <section className="py-16 border-y border-warm-gray bg-warm-white">
+      <section className="py-12 md:py-16 border-y border-warm-gray bg-warm-white">
         <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
           <ScrollReveal>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -230,14 +232,14 @@ export default function HomeView({
       </section>
 
       {/* ── SECTION 04: FEATURED CHAPTERS ── */}
-      <section className="py-20 bg-sand">
+      <section className="py-14 md:py-20 bg-sand">
         <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
           <ScrollReveal>
             <div className="mb-14 text-center">
               <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-saffron block mb-2 font-bold">
                 regional profiles
               </span>
-              <h2 className="font-display text-4.5xl sm:text-6xl text-night lowercase font-light tracking-[-0.04em]">
+              <h2 className="font-display text-4xl sm:text-6xl text-night lowercase font-light tracking-[-0.04em]">
                 featured <em className="italic font-light text-gold">chapters</em> of the sub-continent
               </h2>
             </div>
@@ -266,6 +268,8 @@ export default function HomeView({
                         src={tour.bannerImage}
                         alt={tour.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-103"
+                        loading="lazy"
+                        decoding="async"
                         onError={e => { e.currentTarget.style.opacity = '0' }}
                       />
                       {/* Regional theme color overlay on hover */}
@@ -277,7 +281,7 @@ export default function HomeView({
                       <div className="absolute top-4 right-4 flex gap-2">
                         <button
                           onClick={e => { e.stopPropagation(); onToggleWishlist(tour.id); }}
-                          className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm cursor-pointer hover:scale-110 transition-transform"
+                          className="w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm cursor-pointer hover:scale-110 transition-transform"
                         >
                           <Heart 
                             className={`w-4 h-4 ${
@@ -345,7 +349,7 @@ export default function HomeView({
       </section>
 
       {/* ── SECTION 05: TRAVELER STORIES ── */}
-      <section className="py-24 bg-white border-t border-warm-gray">
+      <section className="py-16 md:py-24 bg-white border-t border-warm-gray">
         <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
           <ScrollReveal>
             <div className="mb-12 text-left">
@@ -404,7 +408,7 @@ export default function HomeView({
       </section>
 
       {/* ── SECTION 06: JOURNEY BUILDER CTA ── */}
-      <section className="py-24 bg-cream border-t border-warm-gray">
+      <section className="py-16 md:py-24 bg-cream border-t border-warm-gray">
         <div className="max-w-4xl mx-auto px-6 sm:px-12 md:px-16 text-center">
           <div className="relative border border-gold/30 rounded-[32px] p-8 md:p-14 bg-white/40 backdrop-blur-sm overflow-hidden shadow-soft">
             {/* Background elements */}
@@ -416,7 +420,7 @@ export default function HomeView({
               <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-saffron block mb-4 font-bold">
                 the voyage awaits
               </span>
-              <h2 className="font-display text-4.5xl sm:text-6xl text-night lowercase font-light tracking-[-0.04em] leading-[1.05] mb-6">
+              <h2 className="font-display text-4xl sm:text-6xl text-night lowercase font-light tracking-[-0.04em] leading-[1.05] mb-6">
                 script your own <br />
                 <span className="italic font-light text-gold font-normal">indian odyssey</span>
               </h2>

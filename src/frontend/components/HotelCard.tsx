@@ -90,7 +90,7 @@ export default function HotelCard({ hotel }: HotelCardProps) {
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-wider border transition-all ${AFFILIATE_COLORS[key] || 'bg-sand text-muted border-warm-gray hover:bg-warm-gray'}`}
+                className={`inline-flex items-center gap-1 px-4 py-2.5 rounded-lg text-[9px] font-bold uppercase tracking-wider border transition-all min-h-[44px] ${AFFILIATE_COLORS[key] || 'bg-sand text-muted border-warm-gray hover:bg-warm-gray'}`}
               >
                 <ExternalLink className="w-2.5 h-2.5" />
                 {AFFILIATE_LABELS[key] || key}

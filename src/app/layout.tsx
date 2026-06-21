@@ -68,7 +68,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
   themeColor: "#F8F5EE",
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({
@@ -97,7 +100,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <Providers>{children}</Providers>
       </body>
     </html>

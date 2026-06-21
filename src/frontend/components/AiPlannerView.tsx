@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Sparkles, ArrowLeft, ArrowRight, User, Users, Heart, DollarSign,
   Mountain, Waves, Utensils, BookOpen, Compass, MapPin, Calendar,
@@ -177,17 +177,21 @@ export default function AiPlannerView({
   // Destination-aware budget range: pull from selected tour's budgetRange field
   const selectedTour = selectedDestination ? (allTours.find(t => t.id === selectedDestination || t.dbId === selectedDestination) || TOURS_DATA.find(t => t.id === selectedDestination)) : null;
   const destBudgetRange = selectedTour ? parseBudgetRange(selectedTour.budgetRange) : null;
-  const budgetSliderMin = destBudgetRange?.min || 1000;
+  const budgetSliderMin = Math.max(5000, destBudgetRange?.min || 5000);
   const budgetSliderMax = destBudgetRange?.max || 60000;
+
+  // Derive tier from actual amount using fixed thresholds
+  const derivedBudgetTier = useMemo(() => {
+    if (customBudgetAmount <= 15000) return 'Small';
+    if (customBudgetAmount <= 40000) return 'Medium';
+    return 'Luxury';
+  }, [customBudgetAmount]);
 
   // When destination changes, reset slider to middle of that destination's range
   useEffect(() => {
     if (destBudgetRange) {
       const mid = Math.round((destBudgetRange.min + destBudgetRange.max) / 2 / 500) * 500;
       setCustomBudgetAmount(mid);
-      if (mid <= destBudgetRange.min + (destBudgetRange.max - destBudgetRange.min) / 3) setBudget('Small');
-      else if (mid <= destBudgetRange.min + (destBudgetRange.max - destBudgetRange.min) * 2 / 3) setBudget('Medium');
-      else setBudget('Luxury');
     }
   }, [selectedDestination]);
 
@@ -228,6 +232,7 @@ export default function AiPlannerView({
   // Form selections
   const [travelers, setTravelers] = useState<string | null>(null);
   const [budget, setBudget] = useState<string | null>(null);
+  const [budgetInteracted, setBudgetInteracted] = useState(false);
   const [mood, setMood] = useState<string | null>(null);
   const [energy, setEnergy] = useState<string | null>(null);
   const [duration, setDuration] = useState<string | null>(null);
@@ -267,7 +272,9 @@ export default function AiPlannerView({
         });
         setNotes("");
       }
+      setCustomBudgetAmount(loadedItinerary.budget || 1500);
       setBudget(loadedItinerary.budget >= 5000 ? 'Luxury' : loadedItinerary.budget >= 1500 ? 'Medium' : 'Small');
+      setBudgetInteracted(true);
       setDuration(loadedItinerary.duration <= 3 ? 'weekend' : loadedItinerary.duration <= 7 ? 'week' : 'extended');
       setTravelers('solo');
       setMood('Relaxation');
@@ -302,7 +309,7 @@ export default function AiPlannerView({
     switch (step) {
       case 1: return selectedDestination !== null;
       case 2: return travelers !== null;
-      case 3: return budget !== null;
+      case 3: return budget !== null || budgetInteracted;
       case 4: return mood !== null;
       case 5: return energy !== null;
       case 6: return duration !== null;
@@ -382,7 +389,7 @@ export default function AiPlannerView({
       const result = await saveItineraryAction({
         title: `Journal: Escape to ${destPrettyName}`,
         destination: destId,
-        budget: budget === 'Luxury' ? 5000 : budget === 'Medium' ? 1500 : 500,
+        budget: customBudgetAmount,
         duration: customDuration,
         itinerary: {
           days: itineraryResult.itinerary || [],
@@ -401,7 +408,7 @@ export default function AiPlannerView({
             id: result.id,
             title: `Journal: Escape to ${destPrettyName}`,
             destination: destId,
-            budget: budget === 'Luxury' ? 5000 : budget === 'Medium' ? 1500 : 500,
+            budget: customBudgetAmount,
             duration: customDuration,
             itinerary: {
               days: itineraryResult.itinerary || [],
@@ -867,11 +874,11 @@ export default function AiPlannerView({
                 </div>
 
                 {/* Field Notes Journal Scratchpad */}
-                <div className="bg-[#FFFDF8] border border-warm-gray/80 rounded-3xl overflow-hidden shadow-card relative paper-grain">
-                  {/* Washi tape header */}
+                <div className="relative">
                   <div className="absolute -top-3 right-6 w-28 h-6 washi-tape-saffron rotate-[1.5deg] z-10 flex items-center justify-center font-mono text-[7px] text-saffron uppercase tracking-[0.2em] font-bold">
                     journal scratchpad
                   </div>
+                  <div className="bg-[#FFFDF8] border border-warm-gray/80 rounded-3xl overflow-hidden shadow-card paper-grain">
                   
                   <div className="p-5 pt-8 space-y-3">
                     <div className="flex items-center justify-between border-b border-warm-gray/40 pb-1.5">
@@ -895,6 +902,7 @@ export default function AiPlannerView({
                     </div>
                   </div>
                 </div>
+                </div>
 
               </div>
 
@@ -910,7 +918,7 @@ export default function AiPlannerView({
                   <span className="h-px flex-1 bg-warm-gray/60" />
                   <span className="text-[8px] font-mono text-muted/40">{itin.length} chapters</span>
                 </div>
-                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none" style={{ scrollSnapType: 'x mandatory' }}>
                   {itin.map((dayItem: any, idx: number) => (
                     <button
                       key={idx}
@@ -920,7 +928,7 @@ export default function AiPlannerView({
                           ? 'bg-night text-white border-night shadow-md'
                           : 'bg-white text-muted border-warm-gray hover:border-gold/60 hover:bg-sand/30'
                       }`}
-                      style={{ minWidth: '64px' }}
+                      style={{ minWidth: '64px', scrollSnapAlign: 'start' }}
                     >
                       {activeDayTab === idx && (
                         <div className="absolute top-0 inset-x-0 h-0.5 bg-gold" />
@@ -936,11 +944,11 @@ export default function AiPlannerView({
               </div>
 
               {/* ── ACTIVE DAY: Field Journal Card ── */}
-              <div className="bg-[#FFFDF8] border border-warm-gray/80 rounded-3xl overflow-hidden shadow-card relative animate-fade-in paper-grain">
-                {/* Washi tape */}
+              <div className="relative animate-fade-in">
                 <div className={`absolute -top-3 left-8 w-28 h-6 ${getWashiTapeClass(destId)} rotate-[-1.5deg] z-10 flex items-center justify-center font-mono text-[7px] uppercase tracking-[0.2em] font-bold`}>
                   day {activeDayTab + 1} · field log
                 </div>
+                <div className="bg-[#FFFDF8] border border-warm-gray/80 rounded-3xl overflow-hidden shadow-card paper-grain">
 
                 {/* Day header */}
                 <div className="px-7 pt-10 pb-5 border-b border-warm-gray/40">
@@ -1001,13 +1009,14 @@ export default function AiPlannerView({
                   </div>
                 </div>
               </div>
+              </div>
 
               {/* ── LOCAL INSIGHTS: Field Notes ── */}
-              <div className="bg-[#FAF8F4] border border-warm-gray/60 rounded-3xl overflow-hidden shadow-sm relative paper-grain">
-                {/* Washi tape */}
+              <div className="relative">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-36 h-6 washi-tape-sage rotate-[1deg] z-10 flex items-center justify-center font-mono text-[7px] text-sage uppercase tracking-[0.2em] font-bold">
                   field notes · atlas
                 </div>
+                <div className="bg-[#FAF8F4] border border-warm-gray/60 rounded-3xl overflow-hidden shadow-sm paper-grain">
 
                 {/* Stamp header */}
                 <div className="px-6 pt-10 pb-4 border-b border-warm-gray/40">
@@ -1020,7 +1029,7 @@ export default function AiPlannerView({
                   </div>
                 </div>
 
-                <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div className="p-6 grid grid-cols-1 sm:grid-cols-2 auto-rows-fr gap-4 text-xs">
                   {/* Weather — full width */}
                   <div className="sm:col-span-2 bg-white border border-warm-gray/50 p-4 rounded-2xl shadow-soft flex items-center gap-4">
                     <div className="w-10 h-10 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
@@ -1079,6 +1088,7 @@ export default function AiPlannerView({
                   </p>
                 </div>
               </div>
+              </div>
 
               {/* ── WHERE TO STAY ── */}
               <div>
@@ -1089,7 +1099,7 @@ export default function AiPlannerView({
                     <h3 className="font-display text-xl text-night font-light lowercase leading-tight">where to stay · {getDestinationPrettyName(destId).toLowerCase()}</h3>
                   </div>
                 </div>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {itineraryResult.destinationId && getHotelsByDestination(itineraryResult.destinationId).length > 0 ? (
                     getHotelsByDestination(itineraryResult.destinationId).slice(0, 4).map((hotel) => (
                       <HotelCard key={hotel.id} hotel={hotel} />
@@ -1099,7 +1109,7 @@ export default function AiPlannerView({
                       <HotelCard key={hotel.id} hotel={hotel} />
                     ))
                   ) : (
-                    <div className="p-8 rounded-2xl bg-white border border-warm-gray text-center">
+                    <div className="sm:col-span-2 p-8 rounded-2xl bg-white border border-warm-gray text-center">
                       <Compass className="w-8 h-8 text-muted/20 mx-auto mb-3" />
                       <p className="text-xs text-muted font-light">Hotels for this destination are being curated. Check back soon.</p>
                     </div>
@@ -1135,10 +1145,71 @@ export default function AiPlannerView({
   ];
 
   // ── 6-STEP QUESTIONNAIRE WIZARD ──
+  const [showMobileProfile, setShowMobileProfile] = useState(false);
+
   return (
     <div className="pt-6 pb-32 px-4 md:px-6 max-w-7xl mx-auto min-h-screen bg-sand flex flex-col lg:flex-row gap-8 items-start justify-center select-none">
       
-      {/* ── LEFT LIVE PREVIEW PANEL ── */}
+      {/* ── MOBILE PROFILE ACCORDION ── */}
+      <div className="w-full lg:hidden">
+        <button
+          onClick={() => setShowMobileProfile(!showMobileProfile)}
+          className="w-full flex items-center justify-between px-4 py-3 rounded-2xl bg-white border border-warm-gray shadow-sm text-left"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-night/5 flex items-center justify-center">
+              <User className="w-4 h-4 text-muted/60" />
+            </div>
+            <div>
+              <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block leading-none">Journey Profile</span>
+              <span className="text-xs font-medium text-night">{previewPersona.toLowerCase()}</span>
+            </div>
+          </div>
+          <div className={`transition-transform duration-300 ${showMobileProfile ? 'rotate-180' : ''}`}>
+            <svg className="w-4 h-4 text-muted/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </button>
+        {showMobileProfile && (
+          <div className="mt-2 p-4 rounded-2xl bg-white border border-warm-gray shadow-sm space-y-3 animate-fade-in">
+            {previewDestTour && (
+              <div className="flex items-center gap-3 pb-3 border-b border-warm-gray/40">
+                <img src={previewDestTour.bannerImage} alt={previewDestTour.title} className="w-12 h-12 rounded-xl object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                <div>
+                  <span className="text-[8px] font-mono uppercase tracking-widest text-gold block">{previewDestTour.chapterName || 'Chapter'}</span>
+                  <span className="font-display text-lg text-night font-light lowercase leading-tight">{previewDestTour.title}</span>
+                </div>
+              </div>
+            )}
+            <p className="font-display text-lg text-night font-light lowercase leading-tight">{previewPersona.toLowerCase()}</p>
+            <div className="space-y-1.5">
+              {previewSteps.map((s, i) => (
+                <div key={i} className="flex items-center justify-between text-[10px]">
+                  <span className="font-mono uppercase tracking-wider text-muted/50">{s.label}</span>
+                  {s.value ? (
+                    <span className="font-bold text-night truncate max-w-[120px] text-right">{s.value}</span>
+                  ) : (
+                    <span className="text-muted/30 italic">—</span>
+                  )}
+                </div>
+              ))}
+            </div>
+            {step === totalSteps && duration && (
+              <p className="text-[9px] font-mono text-muted/60 uppercase tracking-widest text-center pt-2 border-t border-warm-gray/40">Ready to generate ✦</p>
+            )}
+            {previewDestTour && (
+              <div className="flex flex-wrap gap-1.5 pt-2 border-t border-warm-gray/40">
+                {previewDestTour.tags?.slice(0, 4).map(tag => (
+                  <span key={tag} className="px-2 py-0.5 rounded-full bg-sand border border-warm-gray text-[7px] font-mono uppercase tracking-wider text-muted/60">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      
+      {/* ── LEFT LIVE PREVIEW PANEL (desktop) ── */}
       <div className="hidden lg:block w-72 xl:w-80 shrink-0 sticky top-24">
         <div className="rounded-3xl border border-warm-gray bg-white shadow-card overflow-hidden">
           {/* Destination Preview Image */}
@@ -1298,7 +1369,7 @@ export default function AiPlannerView({
 
           <div className="space-y-2">
             <label className="text-[10px] font-mono uppercase tracking-wider text-night/60 block">Choose your destination</label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[40dvh] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[50dvh] md:max-h-[40dvh] overflow-y-auto pr-2 custom-scrollbar">
               {TOURS_DATA.map((tour) => {
                 const isSelected = selectedDestination === tour.id;
                 return (
@@ -1406,17 +1477,12 @@ export default function AiPlannerView({
             {BUDGET_OPTIONS.map((opt) => {
               const Icon = opt.icon;
               const isSelected = budget === opt.id;
-              const range = budgetSliderMax - budgetSliderMin;
-              const tierMin = (() => {
-                if (opt.id === 'Small') return budgetSliderMin;
-                if (opt.id === 'Medium') return budgetSliderMin + Math.round(range / 3 / 500) * 500;
-                return budgetSliderMin + Math.round(range * 2 / 3 / 500) * 500;
-              })();
-              const tierMax = (() => {
-                if (opt.id === 'Small') return budgetSliderMin + Math.round(range / 3 / 500) * 500;
-                if (opt.id === 'Medium') return budgetSliderMin + Math.round(range * 2 / 3 / 500) * 500;
-                return budgetSliderMax;
-              })();
+              const tierDisplay = opt.id === 'Small' ? { min: 5000, max: 15000 }
+                : opt.id === 'Medium' ? { min: 15000, max: 40000 }
+                : { min: 40000, max: null };
+              const tierMidpoint = opt.id === 'Small' ? 10000
+                : opt.id === 'Medium' ? 27500
+                : 40000 + Math.round(Math.max(0, budgetSliderMax - 40000) / 2 / 500) * 500;
               return (
                 <div
                   key={opt.id}
@@ -1424,10 +1490,10 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => {
                     setBudget(opt.id);
-                    const mid = Math.round((tierMin + tierMax) / 2 / 500) * 500;
-                    setCustomBudgetAmount(mid);
+                    setBudgetInteracted(true);
+                    setCustomBudgetAmount(tierMidpoint);
                   }}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setBudget(opt.id); } }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setBudget(opt.id); setBudgetInteracted(true); } }}
                   className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-4 text-left group ${
                     isSelected 
                       ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
@@ -1445,7 +1511,9 @@ export default function AiPlannerView({
                     </h3>
                     <p className="text-[10px] text-muted/60 font-light leading-relaxed">{opt.desc}</p>
                     <div className="mt-2 text-[11px] font-mono text-gold font-bold">
-                      ₹{tierMin.toLocaleString('en-IN')} – ₹{tierMax.toLocaleString('en-IN')}
+                      {opt.id === 'Luxury'
+                        ? `₹${tierDisplay.min.toLocaleString('en-IN')}+`
+                        : `₹${tierDisplay.min.toLocaleString('en-IN')} – ₹${tierDisplay.max!.toLocaleString('en-IN')}`}
                     </div>
                   </div>
                 </div>
@@ -1468,13 +1536,10 @@ export default function AiPlannerView({
               max={budgetSliderMax}
               step={500}
               value={customBudgetAmount}
-              onChange={(e) => {
-                setCustomBudgetAmount(Number(e.target.value));
-                const r = budgetSliderMax - budgetSliderMin;
-                if (Number(e.target.value) <= budgetSliderMin + r / 3) setBudget('Small');
-                else if (Number(e.target.value) <= budgetSliderMin + r * 2 / 3) setBudget('Medium');
-                else setBudget('Luxury');
-              }}
+                  onChange={(e) => {
+                    setCustomBudgetAmount(Number(e.target.value));
+                    setBudgetInteracted(true);
+                  }}
               className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-gold
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5
                 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gold [&::-webkit-slider-thumb]:shadow-md
@@ -1488,10 +1553,10 @@ export default function AiPlannerView({
               }}
             />
             <div className="flex justify-between text-[9px] text-muted/40 font-mono">
-              <span>₹{Math.round(budgetSliderMin / 1000)}k</span>
-              <span>₹{Math.round((budgetSliderMin + (budgetSliderMax - budgetSliderMin) / 3) / 1000)}k</span>
-              <span>₹{Math.round((budgetSliderMin + (budgetSliderMax - budgetSliderMin) * 2 / 3) / 1000)}k</span>
-              <span>₹{Math.round(budgetSliderMax / 1000)}k</span>
+              <span>{Math.round(budgetSliderMin / 1000)}k</span>
+              <span>15k</span>
+              <span>40k</span>
+              <span>{Math.round(budgetSliderMax / 1000)}k</span>
             </div>
           </div>
 
@@ -1511,10 +1576,7 @@ export default function AiPlannerView({
                     const val = Number(e.target.value);
                     if (val >= budgetSliderMin && val <= budgetSliderMax) {
                       setCustomBudgetAmount(val);
-                      const r = budgetSliderMax - budgetSliderMin;
-                      if (val <= budgetSliderMin + r / 3) setBudget('Small');
-                      else if (val <= budgetSliderMin + r * 2 / 3) setBudget('Medium');
-                      else setBudget('Luxury');
+                      setBudgetInteracted(true);
                     }
                   }}
                   className="w-28 px-3 py-2 rounded-xl border border-warm-gray text-xs text-night text-right outline-none focus:border-gold bg-white"
@@ -1646,7 +1708,7 @@ export default function AiPlannerView({
       )}
 
       {/* Wizard Bottom Controls */}
-      <div className="mt-12 flex justify-between items-center">
+      <div className="mt-8 md:mt-12 flex justify-between items-center">
         {step > 1 ? (
           <button
             onClick={handleBack}

@@ -32,7 +32,7 @@ export default function SafeImage({ src, alt, className = '', fallbackColor }: S
       alt={alt}
       className={className}
       onError={() => setFailed(true)}
-      loading="lazy"
+      loading="lazy" decoding="async"
     />
   );
 }

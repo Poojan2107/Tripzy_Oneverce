@@ -145,6 +145,8 @@ export default function Hero({
             src={ch.image}
             alt={ch.title}
             className={`w-full h-full object-cover ${ch.position || 'object-center'}`}
+            loading="lazy"
+            decoding="async"
             onError={e => { e.currentTarget.style.opacity = '0' }}
           />
           {/* Heavy gradient: dark bottom for text, subtle top for navbar */}
@@ -187,13 +189,13 @@ export default function Hero({
           >
             <h1
               className="font-display text-white font-light lowercase leading-[0.85] tracking-[-0.03em]"
-              style={{ fontSize: "clamp(72px, 11vw, 160px)" }}
+              style={{ fontSize: "clamp(48px, 11vw, 160px)" }}
             >
               {current.title}
             </h1>
             <h2
               className="font-display font-light lowercase leading-[0.85] tracking-[-0.02em] mt-1 text-gold"
-              style={{ fontSize: "clamp(40px, 6vw, 88px)" }}
+              style={{ fontSize: "clamp(28px, 6vw, 88px)" }}
             >
               {current.subtitle}
             </h2>
@@ -220,24 +222,24 @@ export default function Hero({
         </div>
 
         {/* BOTTOM: Thumbnail strip + progress + nav */}
-        <div className="flex items-end justify-between gap-6">
+        <div className="flex items-end justify-between gap-4 md:gap-6">
           {/* Thumbnail navigation */}
-          <div className="flex gap-3 flex-1 overflow-hidden">
+          <div className="flex gap-2 md:gap-3 flex-1 overflow-x-auto scrollbar-none -mx-2 px-2">
             {CHAPTERS.map((ch, idx) => (
               <button
                 key={ch.id}
                 onClick={() => { if (intervalRef.current) clearInterval(intervalRef.current); goTo(idx); }}
                 className={`relative rounded-xl overflow-hidden flex-shrink-0 cursor-pointer transition-all duration-500 ${
                   idx === active
-                    ? "w-28 h-16 ring-2 ring-gold ring-offset-2 ring-offset-transparent"
-                    : "w-14 h-14 opacity-50 hover:opacity-75"
+                    ? "w-20 md:w-28 h-12 md:h-16 ring-2 ring-gold ring-offset-2 ring-offset-transparent"
+                    : "w-10 md:w-14 h-10 md:h-14 opacity-50 hover:opacity-75"
                 }`}
               >
-                <img src={ch.image} alt={ch.title} className="w-full h-full object-cover" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                <img src={ch.image} alt={ch.title} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
                 {idx === active && (
                   <>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <span className="absolute bottom-1.5 left-2 text-[8px] font-mono text-white uppercase tracking-wider leading-none">
+                    <span className="absolute bottom-1 left-1.5 md:bottom-1.5 md:left-2 text-[6px] md:text-[8px] font-mono text-white uppercase tracking-wider leading-none truncate max-w-[90%]">
                       {ch.title}
                     </span>
                     {/* Progress bar */}
@@ -254,20 +256,20 @@ export default function Hero({
           </div>
 
           {/* Slide counter + arrows */}
-          <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <span className="font-mono text-[11px] text-white/50">
               {String(active + 1).padStart(2, "0")} / {String(CHAPTERS.length).padStart(2, "0")}
             </span>
             <div className="flex gap-2">
               <button
                 onClick={() => { if (intervalRef.current) clearInterval(intervalRef.current); goToPrev(); }}
-                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:border-white/50 hover:bg-white/10 transition-all cursor-pointer"
+                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:border-white/50 hover:bg-white/10 transition-all cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => { if (intervalRef.current) clearInterval(intervalRef.current); next(); }}
-                className="w-9 h-9 rounded-full bg-gold/80 hover:bg-gold flex items-center justify-center text-white transition-all cursor-pointer"
+                className="w-11 h-11 rounded-full bg-gold/80 hover:bg-gold flex items-center justify-center text-white transition-all cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -277,7 +279,7 @@ export default function Hero({
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 animate-bounce opacity-40">
+      <div className="hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex-col items-center gap-2 animate-bounce opacity-40">
         <div className="w-px h-8 bg-white" />
         <span className="text-white text-[8px] font-mono uppercase tracking-[0.3em]">scroll</span>
       </div>

@@ -77,7 +77,7 @@ export default function ExploreView({
 
   return (
     <div 
-      className="min-h-screen bg-sand pt-16 flex flex-col md:flex-row select-none"
+      className="h-[calc(100vh-76px)] min-h-0 bg-sand flex flex-col md:flex-row select-none relative overflow-hidden"
       style={{
         ['--color-accent-primary' as any]: accentPrimary,
         ['--color-accent-secondary' as any]: accentSecondary,
@@ -103,7 +103,7 @@ export default function ExploreView({
       </div>
 
       {/* ── LEFT SIDEBAR PANEL (35% on Desktop) ── */}
-      <div className={`w-full md:w-[35%] flex flex-col border-r border-warm-gray bg-warm-white h-[calc(100dvh-4rem)] overflow-hidden shrink-0 ${
+      <div className={`w-full md:w-[35%] flex flex-col border-r border-warm-gray bg-warm-white h-full overflow-hidden shrink-0 ${
         mobileView === 'list' ? 'block' : 'hidden md:flex'
       }`}>
         {/* Search and Filters Header */}
@@ -226,7 +226,7 @@ export default function ExploreView({
       </div>
 
       {/* ── RIGHT MAP PANEL (65% on Desktop) ── */}
-      <div className={`flex-1 h-[calc(100dvh-4rem)] relative ${
+      <div className={`flex-1 h-full relative ${
         mobileView === 'map' ? 'block' : 'hidden md:block'
       }`}>
         <DiscoveryMap

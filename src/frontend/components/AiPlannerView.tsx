@@ -429,7 +429,7 @@ export default function AiPlannerView({
     const tour = TOURS_DATA.find(t => t.id === destId);
 
     return (
-      <div className="pt-24 pb-32 px-6 max-w-7xl mx-auto min-h-screen bg-sand select-none text-left">
+      <div className="pt-10 pb-32 px-6 max-w-7xl mx-auto min-h-screen bg-sand select-none text-left">
         
         {/* Results Toolbar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 border-b border-warm-gray pb-6">
@@ -678,7 +678,7 @@ export default function AiPlannerView({
 
   // ── 6-STEP QUESTIONNAIRE WIZARD ──
   return (
-    <div className="pt-24 pb-32 px-6 max-w-3xl mx-auto min-h-screen bg-sand flex flex-col justify-center select-none text-left">
+    <div className="pt-10 pb-32 px-6 max-w-3xl mx-auto min-h-screen bg-sand flex flex-col justify-center select-none text-left">
       
       {/* Wizard Progress Header */}
       <div className="mb-10 space-y-4">

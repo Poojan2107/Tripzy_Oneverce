@@ -417,8 +417,8 @@ export default function HomeView({
                 the voyage awaits
               </span>
               <h2 className="font-display text-4.5xl sm:text-6xl text-night lowercase font-light tracking-[-0.04em] leading-[1.05] mb-6">
-                write your own <br />
-                <span className="italic font-light text-gold font-normal">indian story</span>
+                script your own <br />
+                <span className="italic font-light text-gold font-normal">indian odyssey</span>
               </h2>
               <p className="text-xs sm:text-sm text-night/70 leading-relaxed font-light max-w-xl mx-auto mb-8 font-sans">
                 Our journey builder crafts customized itineraries rooted in local secrets, signature food experiences, and real coordinates — in under a minute.

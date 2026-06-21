@@ -156,7 +156,7 @@ export default function Hero({
       ))}
 
       {/* ── CONTENT OVERLAY ── */}
-      <div className="relative z-10 h-full flex flex-col justify-between px-8 md:px-16 lg:px-20 pt-16 md:pt-28 pb-8">
+      <div className="relative z-10 h-full flex flex-col justify-between px-5 md:px-16 lg:px-20 pt-14 md:pt-28 pb-8">
 
         {/* TOP: Location tag */}
         <div

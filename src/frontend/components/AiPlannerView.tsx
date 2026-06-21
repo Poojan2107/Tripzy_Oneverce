@@ -1313,7 +1313,7 @@ export default function AiPlannerView({
       {step === 1 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
-            <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
+            <h2 className="font-display text-3xl md:text-4xl font-light text-night lowercase leading-none">
               plan your <span className="font-display italic text-gold">route</span>
             </h2>
             <p className="text-xs text-muted/60 font-light">Where are you coming from, and where in India are you heading? We'll factor in your departure point for smarter transit estimates.</p>
@@ -1417,7 +1417,7 @@ export default function AiPlannerView({
       {step === 2 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
-            <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
+            <h2 className="font-display text-3xl md:text-4xl font-light text-night lowercase leading-none">
               who is <span className="font-display italic text-gold">traveling</span>?
             </h2>
             <p className="text-xs text-muted/60 font-light">Your travel company shapes the itinerary rhythm — solo days move slowly, family trips need variety, couple escapes favor intimate corners.</p>
@@ -1462,7 +1462,7 @@ export default function AiPlannerView({
       {step === 3 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
-            <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
+            <h2 className="font-display text-3xl md:text-4xl font-light text-night lowercase leading-none">
               your <span className="font-display italic text-gold">budget</span>
             </h2>
             <p className="text-xs text-muted/60 font-light">
@@ -1592,7 +1592,7 @@ export default function AiPlannerView({
       {step === 4 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
-            <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
+            <h2 className="font-display text-3xl md:text-4xl font-light text-night lowercase leading-none">
               your travel <span className="font-display italic text-gold">style</span>
             </h2>
             <p className="text-xs text-muted/60 font-light">What drives your curiosity? Temples and rituals, mountain trails, street food crawls, or quiet retreats — your focus becomes our blueprint.</p>
@@ -1637,7 +1637,7 @@ export default function AiPlannerView({
       {step === 5 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
-            <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
+            <h2 className="font-display text-3xl md:text-4xl font-light text-night lowercase leading-none">
               journey <span className="font-display italic text-gold">energy</span>
             </h2>
             <p className="text-xs text-muted/60 font-light">Some journeys are about covering ground, others about sitting still. Tell us your pace and we'll calibrate the daily flow.</p>
@@ -1674,7 +1674,7 @@ export default function AiPlannerView({
       {step === 6 && (
         <div className="space-y-6 animate-page-enter">
           <div className="space-y-1">
-            <h2 className="font-display text-4xl font-light text-night lowercase leading-none">
+            <h2 className="font-display text-3xl md:text-4xl font-light text-night lowercase leading-none">
               duration of <span className="font-display italic text-gold">stay</span>
             </h2>
             <p className="text-xs text-muted/60 font-light">The number of days determines how deep we go. A weekend reveals the surface; two weeks lets us find the hidden corners.</p>

@@ -133,7 +133,7 @@ export default function Hero({
   };
 
   return (
-    <section className="relative w-full h-[calc(100vh-76px)] overflow-hidden select-none">
+    <section className="relative w-full h-[calc(100vh-76px)] md:h-screen overflow-hidden select-none">
       {/* ── FULL-BLEED BACKGROUND IMAGES ── */}
       {CHAPTERS.map((ch, idx) => (
         <div
@@ -154,7 +154,7 @@ export default function Hero({
       ))}
 
       {/* ── CONTENT OVERLAY ── */}
-      <div className="relative z-10 h-full flex flex-col justify-between px-8 md:px-16 lg:px-20 pt-12 pb-8">
+      <div className="relative z-10 h-full flex flex-col justify-between px-8 md:px-16 lg:px-20 pt-16 md:pt-28 pb-8">
 
         {/* TOP: Location tag */}
         <div

@@ -738,7 +738,7 @@ export async function POST(req: Request) {
 
     try {
       const result = await generateObject({
-        model: google("gemini-1.5-pro-latest"),
+        model: google("gemini-1.5-flash"),
         schema: z.object({
           itinerary: z.array(z.object({
             day: z.string().describe("E.g., Day 1, Day 2"),

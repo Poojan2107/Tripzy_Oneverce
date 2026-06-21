@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo, useEffect } from 'react';
-import { Search, Heart, MapPin, Calendar, Clock, Compass, X, Camera, Sparkles, Map, List, ArrowRight } from 'lucide-react';
+import { Search, Heart, MapPin, Calendar, Clock, Compass, X, Camera, Sparkles, Map, List, ArrowRight, Star, ChevronRight, Zap, Globe } from 'lucide-react';
 import { Tour } from '../types';
 import { CATEGORY_CHIPS } from '../data';
 import ScrollReveal from './ui/ScrollReveal';
@@ -25,6 +25,18 @@ interface ExploreViewProps {
   initialCategoryFilter?: string;
   loading?: boolean;
 }
+
+// Quick tag colors per mood
+const MOOD_COLORS: Record<string, string> = {
+  'Spiritual': '#E07B39',
+  'Adventure': '#B71C1C',
+  'Nature': '#2E7D32',
+  'Culture': '#6A1B9A',
+  'Food': '#E65100',
+  'Luxury': '#D6A85F',
+  'Relaxation': '#0277BD',
+  'Hidden': '#4A4A4A',
+};
 
 export default function ExploreView({
   tours,
@@ -103,18 +115,24 @@ export default function ExploreView({
       </div>
 
       {/* ── LEFT SIDEBAR PANEL (35% on Desktop) ── */}
-      <div className={`w-full md:w-[35%] flex flex-col border-r border-warm-gray bg-warm-white h-full overflow-hidden shrink-0 ${
+      <div className={`w-full md:w-[36%] flex flex-col border-r border-warm-gray bg-warm-white h-full overflow-hidden shrink-0 ${
         mobileView === 'list' ? 'block' : 'hidden md:flex'
       }`}>
         {/* Search and Filters Header */}
         <div className="p-5 border-b border-warm-gray space-y-4">
           <div className="flex items-center justify-between">
-            <h1 className="font-display text-3xl font-light text-night lowercase tracking-tight">
-              explore <span className="font-display italic text-gold">atlas</span>
-            </h1>
-            <span className="font-mono text-[9px] text-muted/60 uppercase tracking-widest">
-              {filteredTours.length} Chapters
-            </span>
+            <div>
+              <h1 className="font-display text-3xl font-light text-night lowercase tracking-tight">
+                explore <span className="font-display italic text-gold">atlas</span>
+              </h1>
+              <p className="text-[10px] font-mono text-muted/50 uppercase tracking-widest mt-0.5">
+                India's living cartography
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="font-display text-2xl font-light text-night">{filteredTours.length}</span>
+              <p className="font-mono text-[8px] text-muted/60 uppercase tracking-widest">Chapters</p>
+            </div>
           </div>
 
           {/* Search bar */}
@@ -156,7 +174,7 @@ export default function ExploreView({
         </div>
 
         {/* Destination Scrollable List */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-3 scrollbar-thin">
+        <div className="flex-1 overflow-y-auto p-4 space-y-2.5 scrollbar-thin">
           {loading ? (
             Array(5).fill(null).map((_, i) => (
               <div key={i} className="h-24 rounded-2xl bg-cream animate-pulse" />
@@ -175,48 +193,65 @@ export default function ExploreView({
           ) : (
             filteredTours.map((tour, idx) => {
               const isActive = tour.id === activeTourId;
+              const moodColor = MOOD_COLORS[tour.moods?.[0]] || '#D6A85F';
               return (
                 <div
                   key={tour.id}
                   onClick={() => {
                     setActiveTourId(tour.id);
-                    if (window.innerWidth < 768) {
-                      // On mobile, keep list but scroll down or open drawer
-                    }
                   }}
-                  className={`group p-3.5 rounded-2xl border transition-all duration-300 cursor-pointer flex gap-4 ${
+                  className={`group p-0 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden ${
                     isActive
-                      ? 'bg-white border-gold shadow-sm'
-                      : 'bg-transparent border-warm-gray/60 hover:bg-white/40 hover:border-warm-gray'
+                      ? 'bg-white border-gold shadow-card'
+                      : 'bg-white/60 border-warm-gray/60 hover:bg-white hover:border-warm-gray hover:shadow-soft'
                   }`}
                 >
-                  <div className="w-18 h-18 rounded-xl overflow-hidden shrink-0 bg-cream">
-                    <img 
-                      src={tour.bannerImage} 
-                      alt={tour.title} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" 
-                      onError={e => { e.currentTarget.style.opacity = '0' }}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between text-[8px] font-mono text-muted/50 uppercase tracking-widest">
-                        <span>{tour.chapterName || `Chapter ${idx + 1}`}</span>
-                        <span>{tour.duration.split(',')[0]}</span>
+                  <div className="flex gap-0">
+                    {/* Image */}
+                    <div className="w-20 h-20 shrink-0 overflow-hidden bg-cream rounded-l-2xl">
+                      <img 
+                        src={tour.bannerImage} 
+                        alt={tour.title} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                        onError={e => { e.currentTarget.style.opacity = '0' }}
+                      />
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 p-3.5 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between text-[8px] font-mono text-muted/50 uppercase tracking-widest mb-1">
+                          <span>{tour.chapterName || `Chapter ${idx + 1}`}</span>
+                          <span>{tour.duration.split(',')[0]}</span>
+                        </div>
+                        <h3 className="font-display text-xl text-night leading-none font-light lowercase truncate">
+                          {tour.title}
+                        </h3>
+                        <p className="text-[10px] text-muted/60 font-light truncate mt-0.5">
+                          {tour.location.split(',')[0]}
+                        </p>
                       </div>
-                      <h3 className="font-display text-xl text-night leading-tight font-light lowercase truncate mt-1">
-                        {tour.title}
-                      </h3>
-                      <p className="text-xs text-muted/60 font-light truncate mt-0.5">
-                        {tour.subtitle}
-                      </p>
+                      <div className="flex items-center justify-between mt-2">
+                        <span className="text-[10px] font-bold text-night">{formatINR(tour.price)}</span>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1">
+                            <Star className="w-3 h-3 fill-gold text-gold" />
+                            <span className="text-[9px] font-bold text-muted">{tour.rating}</span>
+                          </div>
+                          <span 
+                            className="text-[7px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider text-white"
+                            style={{ backgroundColor: moodColor }}
+                          >
+                            {tour.moods?.[0]}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between text-[10px] font-bold text-night pt-1">
-                      <span>{formatINR(tour.price)}</span>
-                      <span className="text-[8px] font-mono font-bold text-saffron bg-saffron/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                        {tour.moods?.[0]}
-                      </span>
-                    </div>
+
+                    {/* Active indicator */}
+                    {isActive && (
+                      <div className="w-1 self-stretch rounded-r-2xl shrink-0" style={{ backgroundColor: moodColor }} />
+                    )}
                   </div>
                 </div>
               );
@@ -225,7 +260,7 @@ export default function ExploreView({
         </div>
       </div>
 
-      {/* ── RIGHT MAP PANEL (65% on Desktop) ── */}
+      {/* ── RIGHT MAP PANEL (64% on Desktop) ── */}
       <div className={`flex-1 h-full relative ${
         mobileView === 'map' ? 'block' : 'hidden md:block'
       }`}>
@@ -240,11 +275,14 @@ export default function ExploreView({
 
         {/* ── SLIDE-OUT DRAWER OVERLAY ── */}
         {activeTour && (
-          <div className="fixed md:absolute inset-4 md:inset-auto md:top-4 md:bottom-4 md:right-4 w-[calc(100%-32px)] sm:w-[380px] bg-white border border-warm-gray rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter">
+          <div className="fixed md:absolute inset-4 md:inset-auto md:top-4 md:bottom-4 md:right-4 w-[calc(100%-32px)] sm:w-[400px] bg-white border border-warm-gray rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter">
+            {/* Dynamic accent top strip */}
+            <div className="h-1 w-full shrink-0" style={{ background: `linear-gradient(90deg, ${activeTour.accents?.primary || '#D6A85F'}, ${activeTour.accents?.secondary || '#0F172A'})` }} />
+            
             {/* Header image */}
-            <div className="relative aspect-[16/10] bg-cream shrink-0 overflow-hidden">
-              <img src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover bg-cream" onError={e => { e.currentTarget.style.opacity = '0' }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="relative aspect-[16/9] bg-cream shrink-0 overflow-hidden">
+              <img src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover bg-cream transition-transform duration-700 hover:scale-105" onError={e => { e.currentTarget.style.opacity = '0' }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
               
               <button 
                 onClick={() => setActiveTourId(null)}
@@ -253,118 +291,164 @@ export default function ExploreView({
                 <X className="w-4 h-4" />
               </button>
 
-              <div className="absolute bottom-3 left-4 right-4">
-                <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-gold block mb-1">
-                  {activeTour.chapterName || 'Featured Chapter'}
+              <button
+                onClick={() => onToggleWishlist(activeTour.id)}
+                className="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border border-warm-gray flex items-center justify-center text-night hover:bg-white shadow-sm cursor-pointer z-10"
+              >
+                <Heart className={`w-4 h-4 ${wishlistIds.includes(activeTour.id) ? 'fill-rose-500 text-rose-500' : 'text-slate-400'}`} />
+              </button>
+
+              <div className="absolute bottom-4 left-4 right-4">
+                <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-gold block mb-1.5">
+                  {activeTour.chapterName || 'Featured Chapter'} · {activeTour.chapterTitle || 'India'}
                 </span>
-                <h2 className="font-display text-2.5xl text-white font-light lowercase leading-none">
+                <h2 className="font-display text-3xl text-white font-light lowercase leading-none">
                   {activeTour.title}
                 </h2>
+                <div className="flex items-center gap-3 mt-2">
+                  <span className="flex items-center gap-1 text-[9px] font-mono text-white/70">
+                    <Star className="w-3 h-3 fill-gold text-gold" />
+                    {activeTour.rating} ({activeTour.reviewsCount})
+                  </span>
+                  <span className="text-white/30">·</span>
+                  <span className="text-[9px] font-mono text-white/70">{activeTour.duration}</span>
+                  <span className="text-white/30">·</span>
+                  <span className="text-[9px] font-mono text-white/70">{activeTour.difficulty}</span>
+                </div>
               </div>
             </div>
 
             {/* Scrollable details */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin text-left">
-              {/* Region and title */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-1 text-[9px] font-mono text-saffron uppercase tracking-wider">
+            <div className="flex-1 overflow-y-auto scrollbar-thin text-left">
+              
+              {/* Mood tags + location */}
+              <div className="px-5 pt-4 pb-3 border-b border-warm-gray/40">
+                <div className="flex items-center gap-1.5 text-[9px] font-mono text-saffron uppercase tracking-wider mb-2">
                   <MapPin className="w-3 h-3" />
                   {activeTour.location}
                 </div>
-                <h3 className="font-display text-xl text-night font-light lowercase">
-                  {activeTour.storyHeadline || activeTour.subtitle}
-                </h3>
-                <p className="text-xs text-muted leading-relaxed font-light font-sans">
-                  {activeTour.storyNarrative || activeTour.description}
-                </p>
-              </div>
-
-              <div className="h-px bg-cream" />
-
-              {/* Secret and Spot */}
-              <div className="space-y-3.5">
-                <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full bg-saffron/10 text-saffron flex items-center justify-center shrink-0">
-                    <Sparkles className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block leading-none mb-1">local secret</span>
-                    <p className="text-xs text-night font-light leading-relaxed">{activeTour.localSecret || 'Available on request'}</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full bg-gold/10 text-gold flex items-center justify-center shrink-0">
-                    <Camera className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block leading-none mb-1">photography spot</span>
-                    <p className="text-xs text-night font-light leading-relaxed">{activeTour.photographySpot || 'Explore the main trails'}</p>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <div className="w-7 h-7 rounded-full bg-night/10 text-night flex items-center justify-center shrink-0">
-                    <Sparkles className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block leading-none mb-1">signature experience</span>
-                    <p className="text-xs text-night font-light leading-relaxed">{activeTour.signatureExperience}</p>
-                  </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {activeTour.moods?.map(m => (
+                    <span 
+                      key={m} 
+                      className="text-[7px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider text-white"
+                      style={{ backgroundColor: MOOD_COLORS[m] || '#D6A85F' }}
+                    >
+                      {m}
+                    </span>
+                  ))}
+                  {activeTour.tags?.filter(t => !activeTour.moods?.includes(t)).slice(0, 2).map(t => (
+                    <span key={t} className="text-[7px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-cream text-muted border border-warm-gray">
+                      {t}
+                    </span>
+                  ))}
                 </div>
               </div>
 
-              <div className="h-px bg-cream" />
+              <div className="p-5 space-y-5">
+                {/* Story */}
+                <div className="space-y-1">
+                  <h3 className="font-display text-xl text-night font-light lowercase">
+                    {activeTour.storyHeadline || activeTour.subtitle}
+                  </h3>
+                  <p className="text-xs text-muted leading-relaxed font-light font-sans">
+                    {activeTour.storyNarrative || activeTour.description}
+                  </p>
+                </div>
 
-              {/* Highlights */}
-              {activeTour.highlights && activeTour.highlights.length > 0 && (
+                <div className="h-px bg-cream" />
+
+                {/* Key Stats Grid */}
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="bg-sand/60 p-3 rounded-xl border border-warm-gray/60">
+                    <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mb-1">Best Season</span>
+                    <span className="text-xs font-bold text-night flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-saffron" />
+                      {activeTour.bestSeason || 'Oct to Mar'}
+                    </span>
+                  </div>
+                  <div className="bg-sand/60 p-3 rounded-xl border border-warm-gray/60">
+                    <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mb-1">Budget Index</span>
+                    <span className="text-xs font-bold text-night">{activeTour.budgetRange || '₹30k-80k'}</span>
+                  </div>
+                  <div className="bg-sand/60 p-3 rounded-xl border border-warm-gray/60">
+                    <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mb-1">Price / Day</span>
+                    <span className="text-xs font-bold text-night">{formatINR(activeTour.price)}</span>
+                  </div>
+                  <div className="bg-sand/60 p-3 rounded-xl border border-warm-gray/60">
+                    <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mb-1">Group Size</span>
+                    <span className="text-xs font-bold text-night">{activeTour.groupSize}</span>
+                  </div>
+                </div>
+
+                <div className="h-px bg-cream" />
+
+                {/* Secret and Spot */}
                 <div className="space-y-3">
-                  <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block">highlights</span>
-                  <ul className="space-y-2">
-                    {activeTour.highlights.map((h, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-xs text-night font-light">
-                        <span className="w-1.5 h-1.5 rounded-full bg-saffron mt-1.5 shrink-0" />
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                  {activeTour.localSecret && (
+                    <div className="flex gap-3">
+                      <div className="w-7 h-7 rounded-full bg-saffron/10 text-saffron flex items-center justify-center shrink-0">
+                        <Sparkles className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block leading-none mb-1">local secret</span>
+                        <p className="text-xs text-night font-light leading-relaxed">{activeTour.localSecret}</p>
+                      </div>
+                    </div>
+                  )}
 
-              <div className="h-px bg-cream" />
+                  {activeTour.photographySpot && (
+                    <div className="flex gap-3">
+                      <div className="w-7 h-7 rounded-full bg-gold/10 text-gold flex items-center justify-center shrink-0">
+                        <Camera className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block leading-none mb-1">photography spot</span>
+                        <p className="text-xs text-night font-light leading-relaxed">{activeTour.photographySpot}</p>
+                      </div>
+                    </div>
+                  )}
 
-              {/* Stats */}
-              <div className="grid grid-cols-2 gap-4 text-xs">
-                <div className="bg-warm-white p-3 rounded-xl border border-warm-gray/60">
-                  <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mb-1">best season</span>
-                  <span className="font-bold text-night flex items-center gap-1">
-                    <Calendar className="w-3.5 h-3.5 text-saffron" />
-                    {activeTour.bestSeason || 'Oct to Mar'}
-                  </span>
+                  {activeTour.signatureExperience && (
+                    <div className="flex gap-3">
+                      <div className="w-7 h-7 rounded-full bg-night/10 text-night flex items-center justify-center shrink-0">
+                        <Zap className="w-3.5 h-3.5" />
+                      </div>
+                      <div>
+                        <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block leading-none mb-1">signature experience</span>
+                        <p className="text-xs text-night font-light leading-relaxed">{activeTour.signatureExperience}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="bg-warm-white p-3 rounded-xl border border-warm-gray/60">
-                  <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mb-1">budget index</span>
-                  <span className="font-bold text-night flex items-center gap-1">
-                    <Compass className="w-3.5 h-3.5 text-gold" />
-                    {activeTour.budgetRange || '₹30k - 80k'}
-                  </span>
-                </div>
+
+                <div className="h-px bg-cream" />
+
+                {/* Highlights */}
+                {activeTour.highlights && activeTour.highlights.length > 0 && (
+                  <div className="space-y-2.5">
+                    <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 block">top highlights</span>
+                    <ul className="space-y-1.5">
+                      {activeTour.highlights.slice(0, 4).map((h, i) => (
+                        <li key={i} className="flex items-start gap-2.5 text-xs text-night font-light">
+                          <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: activeTour.accents?.primary || '#E07B39' }} />
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Bottom Actions */}
             <div className="p-4 border-t border-warm-gray bg-warm-white flex gap-2 shrink-0">
               <button
-                onClick={() => onToggleWishlist(activeTour.id)}
-                className="p-3.5 rounded-xl border border-warm-gray bg-white hover:bg-rose-50 hover:border-rose-200 text-muted transition-colors"
-              >
-                <Heart className={`w-4.5 h-4.5 ${wishlistIds.includes(activeTour.id) ? 'fill-rose-500 text-rose-500' : 'text-slate-400'}`} />
-              </button>
-              <button
                 onClick={() => onTourSelect(activeTour)}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-night text-white text-[10px] font-bold uppercase tracking-[0.15em] hover:bg-saffron transition-all cursor-pointer shadow-sm"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-white text-[10px] font-bold uppercase tracking-[0.15em] transition-all cursor-pointer shadow-sm hover:opacity-90"
+                style={{ backgroundColor: activeTour.accents?.primary || '#E07B39' }}
               >
-                <span>explore chapter</span>
+                <span>Explore Chapter</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>

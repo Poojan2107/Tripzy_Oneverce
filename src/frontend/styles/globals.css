@@ -640,3 +640,50 @@ html, body, .bg-background {
   box-shadow: none !important;
 }
 
+/* Slow pulse animation for wax seal */
+@keyframes pulseSlow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 3s ease-in-out infinite;
+}
+
+/* Journey builder preview image crossfade */
+@keyframes imageFadeIn {
+  from { opacity: 0; transform: scale(1.03); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-image-fade {
+  animation: imageFadeIn 0.6s ease-out forwards;
+}
+
+/* Destination card active flash */
+@keyframes activeFlash {
+  0% { box-shadow: 0 0 0 0 rgba(214, 168, 95, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(214, 168, 95, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(214, 168, 95, 0); }
+}
+
+.animate-active-flash {
+  animation: activeFlash 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Scrollbar thin utility */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(214, 168, 95, 0.2) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(214, 168, 95, 0.3);
+  border-radius: 10px;
+}
+

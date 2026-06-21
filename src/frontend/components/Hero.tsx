@@ -25,6 +25,7 @@ const CHAPTERS = [
     duration: "3 Days",
     temp: "28°C",
     tag: "INDIA",
+    position: "object-[center_35%]",
   },
   {
     id: "kerala",
@@ -38,6 +39,7 @@ const CHAPTERS = [
     duration: "4 Days",
     temp: "30°C",
     tag: "INDIA",
+    position: "object-center",
   },
   {
     id: "ladakh",
@@ -51,6 +53,7 @@ const CHAPTERS = [
     duration: "8 Days",
     temp: "12°C",
     tag: "INDIA",
+    position: "object-[center_40%]",
   },
   {
     id: "kashmir",
@@ -64,6 +67,7 @@ const CHAPTERS = [
     duration: "6 Days",
     temp: "18°C",
     tag: "INDIA",
+    position: "object-center",
   },
   {
     id: "jaisalmer",
@@ -77,6 +81,7 @@ const CHAPTERS = [
     duration: "3 Days",
     temp: "26°C",
     tag: "INDIA",
+    position: "object-[center_35%]",
   },
 ];
 
@@ -139,7 +144,7 @@ export default function Hero({
           <img
             src={ch.image}
             alt={ch.title}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover ${ch.position || 'object-center'}`}
             onError={e => { e.currentTarget.style.opacity = '0' }}
           />
           {/* Heavy gradient: dark bottom for text, subtle top for navbar */}

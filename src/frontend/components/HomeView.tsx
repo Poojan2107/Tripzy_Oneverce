@@ -45,6 +45,33 @@ const STORIES = [
     avatar: "/images/avatar-vikram.jpg",
     readTime: "6 min"
   },
+  {
+    title: "Golden Forts and Desert Dunes",
+    excerpt: "Sipping spiced chai on a sandstone rooftop in Jaisalmer as the sun turns the entire fortress into a mountain of gold. A medieval dream come alive.",
+    image: "/images/tours/jaisalmer-banner.jpg",
+    author: "Karan Johar",
+    location: "Jaisalmer, Rajasthan",
+    avatar: "/images/avatar-amit.jpg",
+    readTime: "5 min"
+  },
+  {
+    title: "Whispers of Vijayanagara",
+    excerpt: "Climbing the giant boulder piles of Hampi at sunset. Below us, the Tungabhadra river wound past ruins that felt as old as time itself.",
+    image: "/images/tours/hampi-banner.jpg",
+    author: "Ananya Sen",
+    location: "Hampi, Karnataka",
+    avatar: "/images/avatar-priya.jpg",
+    readTime: "6 min"
+  },
+  {
+    title: "Trekking the Living Root Bridges",
+    excerpt: "Descending into the misty valleys of Meghalaya. Walking across double-decker bridges grown from the living roots of rubber trees is surreal.",
+    image: "/images/tours/cherrapunji-banner.jpg",
+    author: "Rahul Verma",
+    location: "Cherrapunji, Meghalaya",
+    avatar: "/images/avatar-vikram.jpg",
+    readTime: "7 min"
+  },
 ];
 
 interface HomeViewProps {
@@ -74,7 +101,7 @@ export default function HomeView({
   const featuredIds = ['varanasi-spiritual', 'kerala-houseboats', 'ladakh-passes', 'jaisalmer-fort'];
   const featuredChapters = tours.filter(t => featuredIds.includes(t.id));
 
-  const findTourForStory = (story: typeof dynamicStories[0]) => {
+  const findTourForStory = (story: any) => {
     return tours.find(t => 
       story.title.toLowerCase().includes(t.title.toLowerCase()) ||
       t.location.toLowerCase().includes(typeof story.location === 'string' ? story.location.split(',')[0]?.toLowerCase() || '' : '')
@@ -93,7 +120,11 @@ export default function HomeView({
         readTime: "4 min"
       }))
     );
-    return allReviews.length > 0 ? allReviews.slice(0, 3) : STORIES;
+    const combined = [...allReviews, ...STORIES];
+    const uniqueStories = combined.filter((story, index, self) =>
+      index === self.findIndex((s) => s.title === story.title)
+    );
+    return uniqueStories.slice(0, 6);
   }, [tours]);
 
   return (
@@ -373,36 +404,43 @@ export default function HomeView({
       </section>
 
       {/* ── SECTION 06: JOURNEY BUILDER CTA ── */}
-      <section className="py-24 bg-cream">
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-8">
-          <ScrollReveal>
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-saffron block mb-3 font-bold">
-              the voyage awaits
-            </span>
-            <h2 className="font-display text-5xl sm:text-6xl text-night lowercase font-light tracking-[-0.03em] leading-tight">
-              write your own <br />
-              <em className="italic font-light text-gold">indian story</em>
-            </h2>
-            <p className="text-sm text-night/70 leading-relaxed font-light max-w-md mx-auto">
-              Our journey builder crafts customized itineraries rooted in local secrets, signature food experiences, and real coordinates — in under a minute.
-            </p>
-            <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                onClick={onGoToPlanner}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-night text-white text-[11px] font-bold uppercase tracking-[0.18em] hover:bg-saffron transition-all cursor-pointer shadow-md"
-              >
-                <Sparkles className="w-4 h-4" />
-                Plan Your Journey
-              </button>
-              <button
-                onClick={onGoToExplore}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-night text-night text-[11px] font-bold uppercase tracking-[0.18em] hover:bg-night hover:text-white transition-all cursor-pointer"
-              >
-                <Compass className="w-4 h-4" />
-                Browse Atlas
-              </button>
-            </div>
-          </ScrollReveal>
+      <section className="py-24 bg-cream border-t border-warm-gray">
+        <div className="max-w-4xl mx-auto px-6 sm:px-12 md:px-16 text-center">
+          <div className="relative border border-gold/30 rounded-[32px] p-8 md:p-14 bg-white/40 backdrop-blur-sm overflow-hidden shadow-soft">
+            {/* Background elements */}
+            <div className="absolute inset-0 bg-radial-gradient(circle, rgba(214,168,95,0.05) 0%, transparent 100%) pointer-events-none" />
+            <div className="absolute -top-12 -left-12 w-24 h-24 rounded-full border border-gold/10 pointer-events-none" />
+            <div className="absolute -bottom-12 -right-12 w-24 h-24 rounded-full border border-gold/10 pointer-events-none" />
+            
+            <ScrollReveal>
+              <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-saffron block mb-4 font-bold">
+                the voyage awaits
+              </span>
+              <h2 className="font-display text-4.5xl sm:text-6xl text-night lowercase font-light tracking-[-0.04em] leading-[1.05] mb-6">
+                write your own <br />
+                <span className="italic font-light text-gold font-normal">indian story</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-night/70 leading-relaxed font-light max-w-xl mx-auto mb-8 font-sans">
+                Our journey builder crafts customized itineraries rooted in local secrets, signature food experiences, and real coordinates — in under a minute.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button
+                  onClick={onGoToPlanner}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-night text-white text-[11px] font-bold uppercase tracking-[0.18em] hover:bg-saffron transition-all duration-300 cursor-pointer shadow-md hover:scale-102"
+                >
+                  <Sparkles className="w-4 h-4 text-gold" />
+                  Plan Your Journey
+                </button>
+                <button
+                  onClick={onGoToExplore}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-night text-night text-[11px] font-bold uppercase tracking-[0.18em] hover:bg-night hover:text-white transition-all duration-300 cursor-pointer"
+                >
+                  <Compass className="w-4 h-4" />
+                  Browse Atlas
+                </button>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
     </div>

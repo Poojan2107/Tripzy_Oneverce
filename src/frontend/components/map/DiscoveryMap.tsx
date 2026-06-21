@@ -13,32 +13,48 @@ interface DiscoveryMapProps {
   onSelectTour: (tour: Tour | null) => void;
 }
 
-const createIcon = (isActive: boolean) => {
+const createIcon = (tour: Tour, isActive: boolean) => {
   return L.divIcon({
-    className: 'custom-map-marker-crosshair',
+    className: 'custom-map-marker-jharokha',
     html: `
-      <div class="relative flex items-center justify-center" style="transform: translate(-50%, -50%);">
-        <!-- Outer wireframe pulse -->
-        <div class="absolute w-8 h-8 rounded-full border border-saffron/40 flex items-center justify-center ${isActive ? 'animate-ping scale-110 opacity-75' : 'opacity-0'}"></div>
+      <div class="relative flex flex-col items-center select-none" style="width: 48px; height: 76px;">
+        <!-- Glowing backing circle under active marker -->
+        ${isActive ? `
+          <div class="absolute top-[6px] left-[6px] w-[36px] h-[36px] rounded-full bg-saffron/30 blur-md animate-pulse"></div>
+        ` : ''}
         
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" class="transition-all duration-500 ${isActive ? 'scale-125' : 'hover:scale-110'}">
-          <!-- Crosshair axes -->
-          <line x1="16" y1="2" x2="16" y2="30" stroke="${isActive ? '#E07B39' : '#D6A85F'}" stroke-width="0.8" stroke-dasharray="${isActive ? 'none' : '2,2'}" />
-          <line x1="2" y1="16" x2="30" y2="16" stroke="${isActive ? '#E07B39' : '#D6A85F'}" stroke-width="0.8" stroke-dasharray="${isActive ? 'none' : '2,2'}" />
+        <!-- Jharokha Arch Shape SVG -->
+        <svg width="48" height="60" viewBox="0 0 48 60" class="drop-shadow-md">
+          <defs>
+            <clipPath id="jharokha-clip-${tour.id}">
+              <path d="M24 3C17 11 6 14 6 25C6 37 15 41 24 49C33 41 42 37 42 25C42 14 31 11 24 3Z" />
+            </clipPath>
+          </defs>
           
-          <!-- Outer wireframe circle -->
-          <circle cx="16" cy="16" r="8" stroke="${isActive ? '#E07B39' : '#D6A85F'}" stroke-width="1" fill="${isActive ? 'rgba(224, 123, 57, 0.12)' : 'rgba(214, 168, 95, 0.03)'}" />
+          <!-- Outer border arch -->
+          <path d="M24 2C16 10 4 13 4 25C4 39 14 43 24 52C34 43 44 39 44 25C44 13 32 10 24 2Z" 
+                fill="${isActive ? '#F8F5EE' : '#ECE6DA'}" 
+                stroke="${isActive ? '#E07B39' : '#D6A85F'}" 
+                stroke-width="2.5" />
           
-          <!-- Inner target ring -->
-          <circle cx="16" cy="16" r="4" stroke="${isActive ? '#E07B39' : '#D6A85F'}" stroke-width="1.2" />
-          
-          <!-- Central coordinate dot -->
-          <circle cx="16" cy="16" r="1.5" fill="${isActive ? '#E07B39' : '#D6A85F'}" />
+          <!-- Clipped chapter banner image -->
+          <image href="${tour.bannerImage}" x="2" y="2" width="44" height="48" 
+                 clip-path="url(#jharokha-clip-${tour.id})" 
+                 preserveAspectRatio="xMidYMid slice" />
         </svg>
+
+        <!-- Label Flag -->
+        <div class="absolute top-[54px] left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded shadow-md border font-mono text-[8px] uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${
+          isActive 
+            ? 'bg-saffron text-white border-saffron/30 font-bold scale-105 z-20' 
+            : 'bg-night/95 text-white/90 border-white/5 scale-95 z-10'
+        }">
+          ${tour.title.toLowerCase()}
+        </div>
       </div>
     `,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
+    iconSize: [48, 76],
+    iconAnchor: [24, 52],
   });
 };
 
@@ -153,7 +169,7 @@ export default function DiscoveryMap({
       if (!lat || !lng) return;
 
       const marker = L.marker([lat, lng], { 
-        icon: createIcon(tour.id === activeTourId) 
+        icon: createIcon(tour, tour.id === activeTourId) 
       }).addTo(markerGroup);
 
       marker.bindPopup(`
@@ -162,7 +178,7 @@ export default function DiscoveryMap({
           <h5 style="font-family: 'Instrument Serif', serif; font-size: 15px; font-weight: 500; color: #0F172A; margin: 0 0 2px 0; font-style: italic; lowercase;">${tour.title.toLowerCase()}</h5>
           <p style="color: #334155; font-size: 9px; margin: 0 0 6px 0;">📍 ${tour.location.split(',')[0]}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECE6DA; padding-top: 5px; margin-top: 5px;">
-            <span style="font-weight: 700; font-size: 11px; color: #0F172A;">{formatINR(tour.price)}</span>
+            <span style="font-weight: 700; font-size: 11px; color: #0F172A;">${formatINR(tour.price)}</span>
             <button id="popup-btn-${tour.id}" style="background-color: #0F172A; color: #fff; border: none; font-size: 8px; font-weight: 600; padding: 3px 8px; border-radius: 4px; cursor: pointer;">Inspect</button>
           </div>
         </div>
@@ -203,10 +219,16 @@ export default function DiscoveryMap({
     if (prevActiveRef.current !== activeTourId) {
       const prev = prevActiveRef.current;
       if (prev && markersRef.current[prev]) {
-        markersRef.current[prev].setIcon(createIcon(false));
+        const prevTour = tours.find(t => t.id === prev);
+        if (prevTour) {
+          markersRef.current[prev].setIcon(createIcon(prevTour, false));
+        }
       }
       if (markersRef.current[activeTourId]) {
-        markersRef.current[activeTourId].setIcon(createIcon(true));
+        const activeTourObj = tours.find(t => t.id === activeTourId);
+        if (activeTourObj) {
+          markersRef.current[activeTourId].setIcon(createIcon(activeTourObj, true));
+        }
       }
       prevActiveRef.current = activeTourId;
     }

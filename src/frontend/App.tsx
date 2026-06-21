@@ -286,6 +286,7 @@ export default function App() {
                 onSaveItinerary={handleSaveItinerary}
                 loadedItinerary={loadedItinerary}
                 onClearLoadedItinerary={() => setLoadedItinerary(null)}
+                allTours={tours}
               />
             )}
 
@@ -315,6 +316,7 @@ export default function App() {
                   window.scrollTo({ top: 0, behavior: 'instant' });
                   window.history.pushState(null, '', '#ai-planner');
                 }}
+                allTours={tours}
               />
             )}
           </>

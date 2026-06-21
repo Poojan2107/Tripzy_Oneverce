@@ -20,10 +20,30 @@ const ItineraryMap = dynamic(() => import('./map/ItineraryMap'), {
   )
 });
 
+import { Tour } from '../types';
+
 interface AiPlannerViewProps {
   onSaveItinerary?: (itin: any) => void;
   loadedItinerary?: any;
   onClearLoadedItinerary?: () => void;
+  allTours?: Tour[];
+}
+
+function WaxSeal({ text = "TRIPZY APPROVED", subtext = "ATLAS VIVANT" }) {
+  return (
+    <div className="absolute -bottom-4 -right-4 w-20 h-20 sm:w-24 sm:h-24 select-none pointer-events-none z-30 animate-stamp-slam drop-shadow-md" style={{ '--stamp-rotation': '-6deg' } as any}>
+      {/* Wax outer ring */}
+      <div className="absolute inset-0 rounded-full bg-[#C1573A] border border-[#a0452d] opacity-95 shadow-inner flex items-center justify-center animate-pulse-slow" style={{ transform: 'scale(1.04) rotate(-2deg)' }}>
+        {/* Inner circle with embossed stamp text */}
+        <div className="w-[84%] h-[84%] rounded-full border-2 border-dashed border-white/25 flex flex-col items-center justify-center bg-[#a0452d]/10 text-white text-center font-display relative">
+          <div className="absolute inset-0 flex items-center justify-center rounded-full border-2 border-white/10 scale-95" />
+          <span className="text-[5px] font-mono font-bold uppercase tracking-widest leading-none block mb-0.5 text-white/90">tripzy ai</span>
+          <span className="text-[7.5px] font-bold uppercase tracking-wide leading-none font-sans block text-white/95">{text}</span>
+          <span className="text-[5px] font-mono uppercase tracking-[0.2em] leading-none block mt-1 text-white/60">{subtext}</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 const COMPANION_OPTIONS = [
@@ -134,7 +154,8 @@ const DEST_PACKING: Record<string, string> = {
 export default function AiPlannerView({
   onSaveItinerary,
   loadedItinerary,
-  onClearLoadedItinerary
+  onClearLoadedItinerary,
+  allTours = []
 }: AiPlannerViewProps) {
   const [step, setStep] = useState(1);
   const [loadingStepIndex, setLoadingStepIndex] = useState(0);
@@ -146,6 +167,40 @@ export default function AiPlannerView({
   const [savedId, setSavedId] = useState<string | null>(null);
 
   const [selectedDestination, setSelectedDestination] = useState<string | null>(null);
+
+  const getDestinationPrettyName = (destId: string | null | undefined): string => {
+    if (!destId) return 'Curated Destination';
+    
+    // 1. Try finding in dynamic loaded tours
+    if (allTours && allTours.length > 0) {
+      const tourObj = allTours.find(t => t.id === destId || t.dbId === destId);
+      if (tourObj) return tourObj.title;
+    }
+    
+    // 2. Try static data
+    const staticTour = TOURS_DATA.find(t => t.id === destId || t.dbId === destId);
+    if (staticTour) return staticTour.title;
+    
+    // 3. Fallback: slug
+    if (destId.includes('-')) {
+      const part = destId.split('-')[0];
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    }
+    
+    return destId;
+  };
+
+  const getWashiTapeClass = (tourId: string | null | undefined): string => {
+    if (!tourId) return 'washi-tape-saffron';
+    const lower = tourId.toLowerCase();
+    if (lower.includes('kerala') || lower.includes('munnar') || lower.includes('goa') || lower.includes('andaman')) {
+      return 'washi-tape-ocean';
+    }
+    if (lower.includes('ladakh') || lower.includes('kashmir') || lower.includes('cherrapunji')) {
+      return 'washi-tape-sage';
+    }
+    return 'washi-tape-saffron';
+  };
 
   // Form selections
   const [travelers, setTravelers] = useState<string | null>(null);
@@ -297,9 +352,11 @@ export default function AiPlannerView({
     if (!itineraryResult || itineraryResult.error) return;
     setSaving(true);
     try {
+      const destId = itineraryResult.destinationId || selectedDestination || '';
+      const destPrettyName = getDestinationPrettyName(destId);
       const result = await saveItineraryAction({
-        title: `Journal: Escape to ${itineraryResult.destinationId || 'Unknown'}`,
-        destination: itineraryResult.destinationId || 'Unknown',
+        title: `Journal: Escape to ${destPrettyName}`,
+        destination: destId,
         budget: budget === 'Luxury' ? 5000 : budget === 'Medium' ? 1500 : 500,
         duration: customDuration,
         itinerary: {
@@ -317,8 +374,8 @@ export default function AiPlannerView({
         if (onSaveItinerary) {
           onSaveItinerary({
             id: result.id,
-            title: `Journal: Escape to ${itineraryResult.destinationId || 'Unknown'}`,
-            destination: itineraryResult.destinationId || 'Unknown',
+            title: `Journal: Escape to ${destPrettyName}`,
+            destination: destId,
             budget: budget === 'Luxury' ? 5000 : budget === 'Medium' ? 1500 : 500,
             duration: customDuration,
             itinerary: {
@@ -330,7 +387,7 @@ export default function AiPlannerView({
               recommendationScore: itineraryResult.recommendationScore || 96,
               recommendationReasoning: itineraryResult.recommendationReasoning || "",
             },
-            destinationName: itineraryResult.destinationId,
+            destinationName: destPrettyName,
           });
         }
       }
@@ -440,7 +497,7 @@ export default function AiPlannerView({
               <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-muted/60 font-bold">{getJourneyPersona()}</span>
             </div>
             <h1 className="font-display text-4.5xl text-night font-light lowercase leading-none">
-              your indian itinerary
+              your {getDestinationPrettyName(destId).toLowerCase()} itinerary
             </h1>
           </div>
           <div className="flex items-center gap-2">
@@ -467,7 +524,7 @@ export default function AiPlannerView({
         </div>
 
         {/* ── PREMIUM JOURNEY SUMMARY ── */}
-        <div className="mb-10 bg-white border border-warm-gray rounded-3xl p-6 shadow-sm">
+        <div className="mb-10 bg-white border border-warm-gray rounded-3xl p-6 shadow-sm relative overflow-hidden">
           <div className="flex items-center gap-2 mb-4">
             <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-saffron font-bold">journey summary</span>
             <span className="h-px flex-1 bg-cream" />
@@ -491,31 +548,34 @@ export default function AiPlannerView({
             </div>
             <div className="bg-warm-white rounded-2xl p-3.5 border border-warm-gray/60 text-center col-span-2 sm:col-span-1">
               <span className="font-display text-2xl font-light text-night leading-none block lowercase truncate">
-                {itineraryResult.destinationId ? itineraryResult.destinationId.split('-').slice(0, 2).join(' · ') : 'curated route'}
+                {getDestinationPrettyName(destId).toLowerCase()}
               </span>
               <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mt-1">route</span>
             </div>
           </div>
           {itineraryResult.recommendationReasoning && (
-            <p className="text-xs text-muted/60 font-light leading-relaxed mt-4 pt-3 border-t border-warm-gray/50">
+            <p className="text-xs text-muted/60 font-light leading-relaxed mt-4 pt-3 border-t border-warm-gray/50 pr-24">
               {itineraryResult.recommendationReasoning}
             </p>
           )}
+
+          {/* Wax seal of approval placed dynamically in the summary card */}
+          <WaxSeal text="TRIPZY APPROVED" subtext="ATLAS VIVANT" />
         </div>
 
         {/* Dynamic two-column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
-          {/* LEFT COLUMN: Summary & Budget (col-span-5) */}
+          {/* LEFT COLUMN: Summary & Map (col-span-5) */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white border border-warm-gray rounded-3xl p-6 shadow-sm space-y-5">
+            <div className="bg-white border border-warm-gray rounded-3xl p-6 shadow-sm space-y-5 relative">
               <div className="flex justify-between items-start">
                 <div>
                   <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-muted/40 block leading-none mb-1">
                     destination
                   </span>
                   <h2 className="font-display text-3xl font-light text-night lowercase leading-none">
-                    {itineraryResult.destinationId ? itineraryResult.destinationId.split('-')[0] : 'Curated Destination'}
+                    {getDestinationPrettyName(destId)}
                   </h2>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-saffron/10 text-saffron text-[8px] font-bold uppercase tracking-wider border border-saffron/20">
@@ -524,40 +584,56 @@ export default function AiPlannerView({
               </div>
 
               <p className="text-xs text-muted leading-relaxed font-light font-sans">
-                {itineraryResult.recommendationReasoning || `A personalized ${customDuration}-day itinerary crafted to highlight signature sights, local secrets, and traditional culinary stops.`}
+                A custom-calibrated itinerary reflecting your style, companion preferences, and budget tier. Crafted using local archive insights.
               </p>
 
               {/* Itinerary Map */}
               <div className="h-56 rounded-2xl overflow-hidden border border-warm-gray">
                 <ItineraryMap days={itin} activeDay={activeDayTab} />
               </div>
+            </div>
 
-              {/* Budget Breakdown (INR only) */}
-              <div className="space-y-3 pt-3 border-t border-warm-gray">
-                <h4 className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/50 block mb-1 font-bold">
-                  estimated costs
-                </h4>
-                
-                <div className="space-y-2 text-xs font-sans">
-                  <div className="flex justify-between text-muted">
-                    <span className="font-light">Transit & transfers</span>
-                    <span className="font-bold">₹{costs.transit.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="flex justify-between text-muted">
-                    <span className="font-light">Accommodations</span>
-                    <span className="font-bold">₹{costs.stay.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="flex justify-between text-muted">
-                    <span className="font-light">Food & experiences</span>
-                    <span className="font-bold">₹{costs.food.toLocaleString('en-IN')}</span>
-                  </div>
-                  <div className="h-px bg-cream my-1" />
-                  <div className="flex justify-between text-sm font-bold text-night pt-1">
-                    <span>Total Estimate</span>
-                    <span>₹{costs.total.toLocaleString('en-IN')}</span>
-                  </div>
+            {/* Premium Boarding Pass Cost Summary Card */}
+            <div className="bg-[#FAF8F4] border border-warm-gray/60 rounded-3xl p-6 relative overflow-hidden shadow-card">
+              {/* Ticket stub punch holes */}
+              <div className="absolute top-[55%] -left-3.5 w-7 h-7 bg-sand rounded-full border-r border-warm-gray/60 z-10" />
+              <div className="absolute top-[55%] -right-3.5 w-7 h-7 bg-sand rounded-full border-l border-warm-gray/60 z-10" />
+              
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-saffron font-bold">boarding pass / cost summary</span>
+                <span className="text-[8px] font-mono text-muted/40 uppercase tracking-widest">cls. explorer · gate 1a</span>
+              </div>
+              
+              <div className="space-y-3.5 text-xs font-sans border-b border-dashed border-warm-gray/60 pb-5">
+                <div className="flex justify-between text-muted">
+                  <span className="font-light">Transit & transfers</span>
+                  <span className="font-semibold text-night">₹{costs.transit.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex justify-between text-muted">
+                  <span className="font-light">Accommodations</span>
+                  <span className="font-semibold text-night">₹{costs.stay.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex justify-between text-muted">
+                  <span className="font-light">Food & local experiences</span>
+                  <span className="font-semibold text-night">₹{costs.food.toLocaleString('en-IN')}</span>
                 </div>
               </div>
+              
+              <div className="pt-5 flex justify-between items-center relative">
+                <div>
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-0.5">estimated total</span>
+                  <span className="text-3xl font-display font-light text-night leading-none">₹{costs.total.toLocaleString('en-IN')}</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-1">itinerary tier</span>
+                  <span className="px-3 py-1 rounded bg-gold/15 text-gold text-[9px] font-bold uppercase tracking-wider border border-gold/30">
+                    {budget === 'Luxury' ? 'Heritage' : budget === 'Medium' ? 'Curated' : 'Bespoke'}
+                  </span>
+                </div>
+              </div>
+              
+              {/* Ticket Barcode representation */}
+              <div className="barcode-lines h-10 w-full mt-5 rounded opacity-[0.22]" />
             </div>
           </div>
 
@@ -572,7 +648,7 @@ export default function AiPlannerView({
                   onClick={() => setActiveDayTab(idx)}
                   className={`flex-shrink-0 px-4 py-2.5 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all duration-300 border cursor-pointer ${
                     activeDayTab === idx
-                      ? 'bg-night text-white border-night shadow-sm'
+                      ? 'bg-night text-white border-night shadow-sm scale-102'
                       : 'bg-white text-muted/70 border-warm-gray hover:border-gold'
                   }`}
                 >
@@ -581,27 +657,32 @@ export default function AiPlannerView({
               ))}
             </div>
 
-            {/* Active Day Logs */}
-            <div className="bg-white border border-warm-gray rounded-3xl p-6 shadow-sm space-y-5 animate-fade-in">
+            {/* Active Day Logs Card (Scrapbook Washi Taped) */}
+            <div className="bg-white border border-warm-gray rounded-3xl p-6 pt-10 shadow-sm space-y-5 relative animate-fade-in">
+              {/* Saffron Washi Tape Accent */}
+              <div className={`absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 ${getWashiTapeClass(destId)} rotate-[-1.5deg] z-10 flex items-center justify-center font-mono text-[7.5px] uppercase tracking-[0.25em] font-bold`}>
+                day {activeDayTab + 1} details
+              </div>
+
               <div>
-                  <span className="text-[8px] font-mono uppercase tracking-widest text-saffron block leading-none mb-1 font-bold">
-                    Day {activeDayTab + 1}
-                  </span>
+                <span className="text-[8px] font-mono uppercase tracking-widest text-saffron block leading-none mb-1 font-bold">
+                  Day {activeDayTab + 1} Log
+                </span>
                 <h3 className="font-display text-2.5xl font-light text-night lowercase leading-tight">
                   {currentDay.title}
                 </h3>
               </div>
 
-              <p className="text-xs text-muted leading-relaxed font-light">
+              <p className="text-xs text-muted leading-relaxed font-light font-sans">
                 {currentDay.description}
               </p>
 
               {/* Scheduled Stops */}
-              <div className="space-y-3 pt-3 border-t border-warm-gray">
+              <div className="space-y-3.5 pt-4 border-t border-warm-gray/60">
                 <h4 className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted/50 block font-bold">
-                  itinerary
+                  daily schedule
                 </h4>
-                <div className="space-y-3">
+                <div className="space-y-3.5">
                   {currentDay.activities && currentDay.activities.map((act: string, aIdx: number) => {
                     const times = ["Morning", "Afternoon", "Evening"];
                     const timeLabel = times[aIdx] || "Scheduled stop";
@@ -610,7 +691,7 @@ export default function AiPlannerView({
                         <div className="font-mono text-[9px] uppercase tracking-wider text-saffron font-bold shrink-0 pt-0.5 w-18">
                           {timeLabel}
                         </div>
-                        <div className="flex-1 text-muted font-light leading-relaxed">
+                        <div className="flex-1 text-muted font-light leading-relaxed font-sans">
                           {act}
                         </div>
                       </div>
@@ -620,17 +701,22 @@ export default function AiPlannerView({
               </div>
             </div>
 
-            {/* Local Extras block */}
-            <div className="bg-warm-white border border-warm-gray rounded-3xl p-6 space-y-5">
-              <h3 className="font-display text-2.5xl font-light text-night lowercase leading-none">
+            {/* Local Insights scrapbook card */}
+            <div className="bg-[#FAF8F4] border border-warm-gray/60 rounded-3xl p-6 pt-10 space-y-6 relative shadow-sm">
+              {/* Sage Washi Tape Accent */}
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 washi-tape-sage rotate-[1.5deg] z-10 flex items-center justify-center font-mono text-[7.5px] text-sage uppercase tracking-[0.25em] font-bold">
+                field notes
+              </div>
+
+              <h3 className="font-display text-2.5xl font-light text-night lowercase leading-none mb-2">
                 local insights
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                 
                 {/* Weather */}
-                <div className="space-y-1">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">weather</span>
+                <div className="bg-white border border-warm-gray/50 p-4 rounded-2xl shadow-soft rotate-[-0.5deg]">
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-saffron block font-bold mb-1">weather</span>
                   <div className="flex items-center gap-2">
                     <Sun className="w-4 h-4 text-gold" />
                     <span className="font-bold text-night">{weather.temperature} · {weather.conditions}</span>
@@ -639,35 +725,42 @@ export default function AiPlannerView({
 
                 {/* Nearby exploration */}
                 {itineraryResult.nearbyPlaces && itineraryResult.nearbyPlaces.length > 0 && (
-                  <div className="space-y-1">
-                    <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">nearby explorations</span>
+                  <div className="bg-white border border-warm-gray/50 p-4 rounded-2xl shadow-soft rotate-[0.5deg]">
+                    <span className="text-[8px] font-mono uppercase tracking-wider text-gold block font-bold mb-1">nearby explorations</span>
                     <span className="font-bold text-night truncate block">{itineraryResult.nearbyPlaces[0].name} ({itineraryResult.nearbyPlaces[0].distance})</span>
                   </div>
                 )}
 
                 {/* Local cuisine */}
-                <div className="space-y-1">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">local cuisine</span>
-                  <span className="font-bold text-night">{DEST_CUISINE[destId] || 'Street food walks · Thali experiences · Regional specialties'}</span>
+                <div className="bg-white border border-warm-gray/50 p-4 rounded-2xl shadow-soft rotate-[0.8deg]">
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-sage block font-bold mb-1.5">local cuisine</span>
+                  <span className="font-bold text-night block leading-relaxed">{DEST_CUISINE[destId] || 'Street food walks · Thali experiences · Regional specialties'}</span>
                 </div>
 
                 {/* Transport */}
-                <div className="space-y-1">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">getting around</span>
-                  <span className="font-bold text-night">{DEST_TRANSPORT[destId] || 'Private car with driver · Local auto-rickshaw · Shared taxis'}</span>
+                <div className="bg-white border border-warm-gray/50 p-4 rounded-2xl shadow-soft rotate-[-1deg]">
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-ocean block font-bold mb-1.5">getting around</span>
+                  <span className="font-bold text-night block leading-relaxed">{DEST_TRANSPORT[destId] || 'Private car with driver · Local auto-rickshaw · Shared taxis'}</span>
                 </div>
 
                 {/* Photography */}
-                <div className="space-y-1">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">photo spots</span>
-                  <span className="font-bold text-night">{DEST_PHOTO[destId] || 'Sunrise vantage · Heritage architecture · Local market life · Natural landscapes'}</span>
+                <div className="bg-white border border-warm-gray/50 p-4 rounded-2xl shadow-soft rotate-[-0.6deg]">
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-saffron block font-bold mb-1.5">photo spots</span>
+                  <span className="font-bold text-night block leading-relaxed">{DEST_PHOTO[destId] || 'Sunrise vantage · Heritage architecture · Local market life · Natural landscapes'}</span>
                 </div>
 
                 {/* Packing */}
-                <div className="space-y-1">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block font-bold">packing tips</span>
-                  <span className="font-bold text-night">{DEST_PACKING[destId] || 'Light layers · Comfortable walking shoes · Sun protection · Power bank'}</span>
+                <div className="bg-white border border-warm-gray/50 p-4 rounded-2xl shadow-soft rotate-[0.5deg]">
+                  <span className="text-[8px] font-mono uppercase tracking-wider text-sage block font-bold mb-1.5">packing tips</span>
+                  <span className="font-bold text-night block leading-relaxed">{DEST_PACKING[destId] || 'Light layers · Comfortable walking shoes · Sun protection · Power bank'}</span>
                 </div>
+              </div>
+
+              {/* Handwritten signature traveler note */}
+              <div className="pt-2 text-center border-t border-warm-gray/40">
+                <p className="text-muted/60 text-lg rotate-[-1deg]" style={{ fontFamily: "'La Belle Aurore', cursive" }}>
+                  "live from the field: always keep local cash for auto-rickshaws!"
+                </p>
               </div>
             </div>
           </div>

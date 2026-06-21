@@ -5,6 +5,7 @@ import {
   ArrowRight, Sparkles, Compass, Clock, Award, Shield, User
 } from 'lucide-react';
 import { Tour } from '../types';
+import { TOURS_DATA } from '../data';
 import { formatINR } from '../utils/currency';
 
 interface BookedItem {
@@ -30,6 +31,7 @@ interface TripsWishlistViewProps {
   onNavigatePlanner?: () => void;
   onDeleteItinerary: (id: string) => void;
   onInspectItinerary?: (itin: any) => void;
+  allTours?: Tour[];
 }
 
 function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove: () => void; onInspect: () => void; }) {
@@ -156,9 +158,32 @@ export default function TripsWishlistView({
   onNavigateExplore,
   onNavigatePlanner,
   onDeleteItinerary,
-  onInspectItinerary
+  onInspectItinerary,
+  allTours = []
 }: TripsWishlistViewProps) {
   const [activeSubTab, setActiveSubTab] = useState<'bookings' | 'wishlist' | 'itineraries'>('bookings');
+
+  const getDestinationPrettyName = (destId: string | null | undefined, list?: Tour[]): string => {
+    if (!destId) return 'Curated Destination';
+    
+    // Try finding in list (dynamic database results)
+    if (list && list.length > 0) {
+      const tour = list.find(t => t.id === destId || t.dbId === destId);
+      if (tour) return tour.title;
+    }
+    
+    // Try finding in static TOURS_DATA
+    const staticTour = TOURS_DATA.find(t => t.id === destId || t.dbId === destId);
+    if (staticTour) return staticTour.title;
+    
+    // Try splitting slug
+    if (destId.includes('-')) {
+      const part = destId.split('-')[0];
+      return part.charAt(0).toUpperCase() + part.slice(1);
+    }
+    
+    return destId;
+  };
 
   const triggerPrint = (booking: BookedItem) => {
     const printWindow = window.open('', '_blank');
@@ -531,7 +556,7 @@ export default function TripsWishlistView({
                       {itin.destination && (
                         <span className="flex items-center gap-1 bg-warm-white px-2.5 py-1 rounded-xl border bg-cream">
                           <MapPin className="w-3.5 h-3.5 text-gold" />
-                          {itin.destination.split('-')[0]}
+                          {getDestinationPrettyName(itin.destination, allTours)}
                         </span>
                       )}
                       {itin.duration && (

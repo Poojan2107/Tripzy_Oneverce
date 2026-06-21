@@ -614,3 +614,29 @@ html, body, .bg-background {
   background-repeat: repeat;
   background-size: 120px 120px;
 }
+
+/* ── Jharokha Map Marker Styles ── */
+.custom-map-marker-jharokha {
+  background: transparent !important;
+  border: none !important;
+  width: 48px !important;
+  height: 76px !important;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  overflow: visible !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.custom-map-marker-jharokha:hover {
+  transform: translateY(-6px) scale(1.1) !important;
+  z-index: 1000 !important;
+}
+
+/* Overriding Leaflet wrapper div forced styling */
+.leaflet-marker-icon.custom-map-marker-jharokha {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+

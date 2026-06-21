@@ -584,7 +584,8 @@ function buildOfflineResponse(finalDest: any, destination: string, budget: strin
         description: "An ancient enclave rich in classical vernacular architecture."
       }
     ],
-    destinationId: finalDest?.id || undefined,
+    destinationId: finalDest?.slug || finalDest?.id || undefined,
+    destinationDbId: finalDest?.id || undefined,
     recommendationScore: matchDetails?.score || 85,
     recommendationReasoning: matchDetails?.reasoning || "Selected based on matching travel styles and budget guides.",
     matchedFactors: matchDetails?.matchedFactors || {
@@ -769,7 +770,8 @@ export async function POST(req: Request) {
 
       const finalResponse = {
         ...result.object,
-        destinationId: finalDest?.id || undefined,
+        destinationId: finalDest?.slug || finalDest?.id || undefined,
+        destinationDbId: finalDest?.id || undefined,
         recommendationScore: matchDetails?.score || 85,
         recommendationReasoning: matchDetails?.reasoning || "Selected based on matching travel styles and budget guides.",
         matchedFactors: matchDetails?.matchedFactors || {

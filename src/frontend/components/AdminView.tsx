@@ -845,14 +845,14 @@ export default function AdminView({
                       <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                         <button
                           onClick={() => openEditDestForm(tour)}
-                          className="p-2.5 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-warm-gray/60 touch-action-manipulation select-none"
+                          className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-warm-gray/60 touch-action-manipulation select-none"
                           title="Edit"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteDestClick(tour.id, tour.title)}
-                          className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-red-200 touch-action-manipulation select-none"
+                          className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200 touch-action-manipulation select-none"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -907,14 +907,14 @@ export default function AdminView({
                   <div className="ml-auto flex gap-2">
                     <button
                       onClick={() => openEditDestForm(tour)}
-                      className="p-2.5 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-warm-gray/60"
+                      className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-warm-gray/60"
                       title="Edit"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDeleteDestClick(tour.id, tour.title)}
-                      className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-red-200"
+                      className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200"
                       title="Delete"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -1017,14 +1017,14 @@ export default function AdminView({
                         <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                           <button
                             onClick={() => openEditExpForm(exp)}
-                            className="p-2 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-warm-gray/60 touch-action-manipulation select-none"
+                            className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-warm-gray/60 touch-action-manipulation select-none"
                             title="Edit"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
                     <button
                       onClick={() => handleDeleteExpClick(exp.id, exp.name)}
-                      className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-red-200 touch-action-manipulation select-none"
+                      className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200 touch-action-manipulation select-none"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -1078,14 +1078,14 @@ export default function AdminView({
                     <div className="flex gap-2 shrink-0">
                       <button
                         onClick={() => openEditExpForm(exp)}
-                      className="p-2.5 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-warm-gray/60"
+                      className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-warm-gray/60"
                       title="Edit"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDeleteExpClick(exp.id, exp.name)}
-                      className="p-2.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-red-200"
+                      className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200"
                         title="Delete"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

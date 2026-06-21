@@ -325,14 +325,14 @@ export default function DiscoveryMap({
         />
       )}
 
-      <div className="absolute bottom-4 left-4 z-10 flex gap-2">
+      <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-wrap gap-2">
         <div className="bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-cream shadow-sm pointer-events-none text-[9px] text-muted/60 font-mono uppercase tracking-widest flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-saffron inline-block animate-pulse"></span>
           <span>Living Atlas Cartography</span>
         </div>
         <button
           onClick={() => setCircuitsVisible(v => !v)}
-          className={`px-3 py-2 rounded-2xl border text-[9px] font-mono uppercase tracking-widest transition-all cursor-pointer shadow-sm ${
+          className={`px-3 py-2 rounded-2xl border text-[9px] font-mono uppercase tracking-widest transition-all cursor-pointer shadow-sm min-h-[44px] ${
             circuitsVisible
               ? 'bg-white/90 border-gold/40 text-gold'
               : 'bg-white/50 border-cream text-muted/40'

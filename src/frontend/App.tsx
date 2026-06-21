@@ -207,7 +207,7 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-    <div className="w-full min-h-screen flex flex-col bg-transparent text-ink antialiased relative overflow-x-clip">
+    <div className="w-full min-h-[100dvh] flex flex-col bg-transparent text-ink antialiased relative overflow-x-clip">
       <GlassNavbar
         currentTab={currentTab}
         onTabChange={(tab) => {

@@ -89,14 +89,14 @@ export default function ExploreView({
 
   return (
     <div 
-      className="h-[calc(100vh-76px)] min-h-0 bg-sand flex flex-col md:flex-row select-none relative overflow-hidden"
+      className="h-[calc(100dvh-76px)] min-h-0 bg-sand flex flex-col md:flex-row select-none relative overflow-hidden"
       style={{
         ['--color-accent-primary' as any]: accentPrimary,
         ['--color-accent-secondary' as any]: accentSecondary,
       }}
     >
       {/* ── MOBILE VIEW TOGGLE BAR ── */}
-      <div className="md:hidden fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-night text-white px-5 py-3 rounded-full shadow-lg flex gap-4 text-xs font-mono uppercase tracking-wider">
+      <div className={`md:hidden fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-night text-white px-5 py-3 rounded-full shadow-lg gap-4 text-xs font-mono uppercase tracking-wider ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         <button 
           onClick={() => setMobileView('list')}
           className={`flex items-center gap-1.5 min-h-[44px] min-w-[44px] justify-center ${mobileView === 'list' ? 'text-gold font-bold' : 'opacity-70'}`}
@@ -146,7 +146,7 @@ export default function ExploreView({
               className="bg-transparent text-base text-night placeholder:text-muted/30 outline-none w-full font-sans font-light"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="shrink-0 p-2">
+              <button onClick={() => setSearchQuery('')} className="shrink-0 w-11 h-11 flex items-center justify-center">
                 <X className="w-3.5 h-3.5 text-muted/45 hover:text-night" />
               </button>
             )}
@@ -289,7 +289,7 @@ export default function ExploreView({
             <div className="h-1 w-full shrink-0 hidden md:block" style={{ background: `linear-gradient(90deg, ${activeTour.accents?.primary || '#D6A85F'}, ${activeTour.accents?.secondary || '#0F172A'})` }} />
             
             {/* Header image */}
-            <div className="relative aspect-[4/3] md:aspect-video bg-cream shrink-0 overflow-hidden">
+            <div className="relative aspect-[16/9] bg-cream shrink-0 overflow-hidden">
               <img src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover bg-cream transition-transform duration-700 hover:scale-105" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
               

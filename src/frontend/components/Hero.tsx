@@ -133,7 +133,7 @@ export default function Hero({
   };
 
   return (
-    <section className="relative w-full h-[calc(100vh-76px)] md:h-screen overflow-hidden select-none">
+    <section className="relative w-full h-[calc(100dvh-76px)] md:h-screen overflow-hidden select-none">
       {/* ── FULL-BLEED BACKGROUND IMAGES ── */}
       {CHAPTERS.map((ch, idx) => (
         <div
@@ -202,17 +202,17 @@ export default function Hero({
             <p className="mt-6 text-white/65 font-sans font-light text-base md:text-lg leading-relaxed max-w-xl">
               {current.story}
             </p>
-            <div className="flex items-center gap-6 mt-8">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-6 mt-6 md:mt-8">
               <button
                 onClick={handleCTA}
-                className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-gold text-white text-[11px] font-bold uppercase tracking-[0.18em] hover:bg-gold-light transition-all duration-300 shadow-[0_4px_20px_rgba(214,168,95,0.4)] cursor-pointer"
+                className="inline-flex items-center gap-3 px-6 md:px-7 py-3.5 rounded-full bg-gold text-white text-[10px] md:text-[11px] font-bold uppercase tracking-[0.16em] md:tracking-[0.18em] hover:bg-gold-light transition-all duration-300 shadow-[0_4px_20px_rgba(214,168,95,0.4)] cursor-pointer min-h-[44px]"
               >
                 <Sparkles className="w-4 h-4" />
                 Explore This Journey
               </button>
               <button
                 onClick={onStartExploringClick}
-                className="inline-flex items-center gap-2 text-white/70 text-[11px] font-mono uppercase tracking-[0.2em] hover:text-white transition-colors cursor-pointer group"
+                className="inline-flex items-center gap-2 text-white/70 text-[10px] md:text-[11px] font-mono uppercase tracking-[0.18em] md:tracking-[0.2em] hover:text-white transition-colors cursor-pointer group min-h-[44px]"
               >
                 View All
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />

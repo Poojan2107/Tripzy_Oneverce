@@ -28,7 +28,7 @@ export default async function SharePage(props: PageProps) {
 
   if (!res.success || !res.data) {
     return (
-      <div className="w-full min-h-screen bg-background text-ink flex flex-col items-center justify-center p-6">
+      <div className="w-full min-h-[100dvh] bg-background text-ink flex flex-col items-center justify-center p-6">
         <Compass className="w-12 h-12 text-gold animate-spin mb-4" />
         <h1 className="text-xl font-bold uppercase tracking-wider mb-2">Itinerary Not Found</h1>
         <p className="text-xs text-muted mb-6">This itinerary does not exist or has been deleted.</p>
@@ -50,7 +50,7 @@ export default async function SharePage(props: PageProps) {
   };
 
   return (
-    <div className="w-full min-h-screen bg-background text-ink font-sans flex flex-col">
+    <div className="w-full min-h-[100dvh] bg-background text-ink font-sans flex flex-col">
       <header className="w-full bg-surface border-b border-warm-gray/30 py-4 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-80">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -66,7 +66,7 @@ export default async function SharePage(props: PageProps) {
       </header>
 
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden max-w-7xl mx-auto w-full">
-        <div className="lg:col-span-7 p-6 sm:p-8 space-y-8 overflow-y-auto max-h-[calc(100vh-69px)] no-scrollbar">
+        <div className="lg:col-span-7 p-6 sm:p-8 space-y-8 overflow-y-auto max-h-[calc(100dvh-69px)] no-scrollbar">
           
           <div className="space-y-4">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-[10px] font-bold uppercase tracking-wider">
@@ -170,7 +170,7 @@ export default async function SharePage(props: PageProps) {
 
         </div>
 
-        <div className="lg:col-span-5 h-[400px] lg:h-[calc(100vh-69px)] border-t lg:border-t-0 lg:border-l border-warm-gray/30 bg-surface overflow-hidden sticky bottom-0 lg:top-[69px]">
+        <div className="lg:col-span-5 h-[400px] lg:h-[calc(100dvh-69px)] border-t lg:border-t-0 lg:border-l border-warm-gray/30 bg-surface overflow-hidden sticky bottom-0 lg:top-[69px]">
           <SharedMap itinerary={itineraryDays} />
         </div>
       </div>

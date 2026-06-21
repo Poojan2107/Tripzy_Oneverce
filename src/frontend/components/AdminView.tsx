@@ -485,9 +485,9 @@ export default function AdminView({
         </div>
 
         {/* Editorial tab controller */}
-        <div className="flex bg-white border border-warm-gray p-1 rounded-2xl shadow-soft self-stretch md:self-auto justify-around">
+        <div className="flex bg-white border border-warm-gray p-1 rounded-2xl shadow-soft self-stretch md:self-auto overflow-x-auto no-scrollbar">
           {[
-            { id: 'dashboard', label: 'Intelligence', icon: BarChart2 },
+            { id: 'dashboard', label: 'Analytics', icon: BarChart2 },
             { id: 'destinations', label: 'Destinations', icon: MapPin },
             { id: 'experiences', label: 'Experiences', icon: Sparkles }
           ].map(tab => {
@@ -499,13 +499,13 @@ export default function AdminView({
                   setActiveTab(tab.id as any);
                   setSearchTerm('');
                 }}
-                className={`px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 transition-all duration-300 touch-action-manipulation select-none ${
+                className={`px-3 sm:px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 whitespace-nowrap transition-all duration-300 touch-action-manipulation select-none ${
                   activeTab === tab.id
                     ? 'bg-gold text-white shadow-md shadow-gold/20'
                     : 'text-stone hover:text-ink hover:bg-cream/30'
                 }`}
               >
-                <Icon className="w-4 h-4" />
+                <Icon className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                 {tab.label}
               </button>
             );
@@ -517,65 +517,61 @@ export default function AdminView({
       {activeTab === 'dashboard' && (
         <div className="space-y-8">
           {loadingMetrics ? (
-            <div className="flex flex-col items-center justify-center py-20 text-stone">
-              <div className="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p className="text-[10px] font-mono uppercase tracking-[0.25em]">loading analytics...</p>
+            <div className="flex flex-col items-center justify-center py-16 sm:py-20 text-stone">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 border-4 border-gold border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-[0.25em]">loading analytics...</p>
             </div>
           ) : (
             <>
               {/* Telemetry Counter Cards */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 
-                <div className="bg-white rounded-3xl border border-warm-gray p-5 sm:p-6 shadow-card relative overflow-hidden">
+                <div className="bg-white rounded-2xl sm:rounded-3xl border border-warm-gray p-4 sm:p-6 shadow-card relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Total Searches</span>
-                    <div className="w-8 h-8 rounded-full bg-gold/10 text-gold flex items-center justify-center">
-                      <Search className="w-4 h-4" />
+                    <span className="text-[9px] sm:text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em] truncate max-w-[60%]">Searches</span>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gold/10 text-gold flex items-center justify-center shrink-0">
+                      <Search className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                     </div>
                   </div>
-                  <p className="text-3xl font-light font-display tracking-tight text-ink mt-3">
+                  <p className="text-2xl sm:text-3xl font-light font-display tracking-tight text-ink mt-2 sm:mt-3">
                     {metrics?.totals?.searches?.toLocaleString() || 0}
                   </p>
-                  <p className="text-[10px] text-stone mt-1">user discovery requests</p>
                 </div>
 
-                <div className="bg-white rounded-3xl border border-warm-gray p-5 sm:p-6 shadow-card relative overflow-hidden">
+                <div className="bg-white rounded-2xl sm:rounded-3xl border border-warm-gray p-4 sm:p-6 shadow-card relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Destination Views</span>
-                    <div className="w-8 h-8 rounded-full bg-ocean/10 text-ocean flex items-center justify-center">
-                      <Eye className="w-4 h-4" />
+                    <span className="text-[9px] sm:text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em] truncate max-w-[60%]">Views</span>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-ocean/10 text-ocean flex items-center justify-center shrink-0">
+                      <Eye className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                     </div>
                   </div>
-                  <p className="text-3xl font-light font-display tracking-tight text-ink mt-3">
+                  <p className="text-2xl sm:text-3xl font-light font-display tracking-tight text-ink mt-2 sm:mt-3">
                     {metrics?.totals?.views?.toLocaleString() || 0}
                   </p>
-                  <p className="text-[10px] text-stone mt-1">destination detail views</p>
                 </div>
 
-                <div className="bg-white rounded-3xl border border-warm-gray p-5 sm:p-6 shadow-card relative overflow-hidden">
+                <div className="bg-white rounded-2xl sm:rounded-3xl border border-warm-gray p-4 sm:p-6 shadow-card relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Itinerary Plans</span>
-                    <div className="w-8 h-8 rounded-full bg-sage/10 text-sage flex items-center justify-center">
-                      <Compass className="w-4 h-4" />
+                    <span className="text-[9px] sm:text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em] truncate max-w-[60%]">Plans</span>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sage/10 text-sage flex items-center justify-center shrink-0">
+                      <Compass className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                     </div>
                   </div>
-                  <p className="text-3xl font-light font-display tracking-tight text-ink mt-3">
+                  <p className="text-2xl sm:text-3xl font-light font-display tracking-tight text-ink mt-2 sm:mt-3">
                     {metrics?.totals?.planners?.toLocaleString() || 0}
                   </p>
-                  <p className="text-[10px] text-stone mt-1">custom itineraries generated</p>
                 </div>
 
-                <div className="bg-white rounded-3xl border border-warm-gray p-5 sm:p-6 shadow-card relative overflow-hidden">
+                <div className="bg-white rounded-2xl sm:rounded-3xl border border-warm-gray p-4 sm:p-6 shadow-card relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Recommendations</span>
-                    <div className="w-8 h-8 rounded-full bg-saffron/10 text-saffron flex items-center justify-center">
-                      <Brain className="w-4 h-4" />
+                    <span className="text-[9px] sm:text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em] truncate max-w-[60%]">Recs</span>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-saffron/10 text-saffron flex items-center justify-center shrink-0">
+                      <Brain className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                     </div>
                   </div>
-                  <p className="text-3xl font-light font-display tracking-tight text-ink mt-3">
+                  <p className="text-2xl sm:text-3xl font-light font-display tracking-tight text-ink mt-2 sm:mt-3">
                     {metrics?.totals?.recommendations?.toLocaleString() || 0}
                   </p>
-                  <p className="text-[10px] text-stone mt-1">ai matches from candidates</p>
                 </div>
 
               </div>
@@ -1185,7 +1181,7 @@ export default function AdminView({
                     required
                     value={destPrice}
                     onChange={(e) => setDestPrice(Number(e.target.value))}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
@@ -1194,7 +1190,7 @@ export default function AdminView({
                     type="text"
                     value={destDuration}
                     onChange={(e) => setDestDuration(e.target.value)}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
@@ -1221,7 +1217,7 @@ export default function AdminView({
                     required
                     value={destLatitude}
                     onChange={(e) => setDestLatitude(Number(e.target.value))}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
@@ -1232,7 +1228,7 @@ export default function AdminView({
                     required
                     value={destLongitude}
                     onChange={(e) => setDestLongitude(Number(e.target.value))}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
               </div>
@@ -1294,7 +1290,7 @@ export default function AdminView({
                     type="text"
                     value={destBestMonths}
                     onChange={(e) => setDestBestMonths(e.target.value)}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
@@ -1303,7 +1299,7 @@ export default function AdminView({
                     type="text"
                     value={destTravelStyles}
                     onChange={(e) => setDestTravelStyles(e.target.value)}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
               </div>
@@ -1315,7 +1311,7 @@ export default function AdminView({
                     type="text"
                     value={destActivities}
                     onChange={(e) => setDestActivities(e.target.value)}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
@@ -1324,7 +1320,7 @@ export default function AdminView({
                     type="text"
                     value={destTags}
                     onChange={(e) => setDestTags(e.target.value)}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
               </div>
@@ -1458,7 +1454,7 @@ export default function AdminView({
                     type="number"
                     value={expEstimatedBudget}
                     onChange={(e) => setExpEstimatedBudget(Number(e.target.value))}
-                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">

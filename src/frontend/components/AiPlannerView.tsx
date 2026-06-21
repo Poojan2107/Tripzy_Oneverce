@@ -710,7 +710,7 @@ export default function AiPlannerView({
             <p className="text-xs text-muted/60 font-light">Each of our handcrafted chapters is built on deep local knowledge. Pick the place that speaks to you and we'll tailor every detail.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-[50dvh] overflow-y-auto pr-2 scrollbar-thin">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[48dvh] overflow-y-auto pr-2 custom-scrollbar">
             {TOURS_DATA.map((tour) => {
               const isSelected = selectedDestination === tour.id;
               return (
@@ -720,23 +720,31 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => setSelectedDestination(tour.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedDestination(tour.id); } }}
-                  className={`relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-300 group aspect-[4/3] ${isSelected ? 'border-saffron ring-2 ring-saffron/30 shadow-sm' : 'border-warm-gray hover:border-gold hover:shadow-sm'}`}
+                  className={`relative rounded-2xl overflow-hidden border cursor-pointer transition-all duration-500 ease-out group aspect-[4/3] ${
+                    isSelected 
+                      ? 'border-gold ring-2 ring-gold/30 shadow-elevated scale-[1.01] -translate-y-0.5' 
+                      : 'border-warm-gray hover:border-gold hover:-translate-y-1 hover:shadow-card'
+                  }`}
                 >
                   <img
                     src={tour.bannerImage}
                     alt={tour.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-750 ease-out group-hover:scale-105"
                     onError={e => { e.currentTarget.style.opacity = '0' }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3">
-                    <span className="text-[8px] font-mono uppercase tracking-wider text-gold block mb-0.5">{tour.chapterName || 'Chapter'}</span>
-                    <h3 className="font-display text-lg text-white font-light lowercase leading-tight">{tour.title}</h3>
-                    <p className="text-[10px] text-white/60 font-light mt-0.5 truncate">{tour.location.split(',')[0]}</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent transition-opacity duration-500" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 text-left z-10">
+                    <span className={`text-[8px] font-mono uppercase tracking-[0.25em] block mb-1 transition-colors duration-350 ${
+                      isSelected ? 'text-gold' : 'text-gold/80'
+                    }`}>{tour.chapterName || 'Chapter'}</span>
+                    <h3 className={`font-display text-xl font-light lowercase leading-none transition-colors duration-350 ${
+                      isSelected ? 'text-gold font-normal' : 'text-white'
+                    }`}>{tour.title}</h3>
+                    <p className="text-[9px] text-white/50 font-light mt-1.5 truncate max-w-[90%]">{tour.location.split(',')[0]}</p>
                   </div>
                   {isSelected && (
-                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-saffron flex items-center justify-center">
-                      <CheckCircle2 className="w-4 h-4 text-white" />
+                    <div className="absolute top-3.5 right-3.5 w-6.5 h-6.5 rounded-full bg-gold flex items-center justify-center shadow-elevated animate-scale-in">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                     </div>
                   )}
                 </div>
@@ -766,14 +774,14 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => setTravelers(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTravelers(opt.id); } }}
-                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-4 items-center ${
+                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-4 items-center group ${
                     isSelected 
-                      ? 'bg-white border-saffron shadow-sm' 
-                      : 'bg-warm-white border-warm-gray hover:border-gold hover:bg-white/40'
+                      ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
+                      : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                    isSelected ? 'bg-saffron/10 text-saffron' : 'bg-cream/40 text-muted/50'
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                    isSelected ? 'bg-gold/15 text-gold' : 'bg-cream/50 text-muted/50 group-hover:text-gold/80 group-hover:bg-gold/5'
                   }`}>
                     <Icon className="w-5 h-5 stroke-[1.5]" />
                   </div>
@@ -811,14 +819,14 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => setBudget(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setBudget(opt.id); } }}
-                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-4 text-left ${
+                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-4 text-left group ${
                     isSelected 
-                      ? 'bg-white border-saffron shadow-sm' 
-                      : 'bg-warm-white border-warm-gray hover:border-gold hover:bg-white/40'
+                      ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
+                      : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                    isSelected ? 'bg-saffron/10 text-saffron' : 'bg-cream/40 text-muted/50'
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                    isSelected ? 'bg-gold/15 text-gold' : 'bg-cream/50 text-muted/50 group-hover:text-gold/80 group-hover:bg-gold/5'
                   }`}>
                     <Icon className="w-4.5 h-4.5 stroke-[1.5]" />
                   </div>
@@ -856,14 +864,14 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => setMood(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setMood(opt.id); } }}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-4 items-center ${
+                  className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-4 items-center group ${
                     isSelected 
-                      ? 'bg-white border-saffron shadow-sm' 
-                      : 'bg-warm-white border-warm-gray hover:border-gold hover:bg-white/40'
+                      ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
+                      : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                    isSelected ? 'bg-saffron/10 text-saffron' : 'bg-cream/40 text-muted/50'
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                    isSelected ? 'bg-gold/15 text-gold' : 'bg-cream/50 text-muted/50 group-hover:text-gold/80 group-hover:bg-gold/5'
                   }`}>
                     <Icon className="w-4.5 h-4.5 stroke-[1.5]" />
                   </div>
@@ -900,10 +908,10 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => setEnergy(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEnergy(opt.id); } }}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left ${
+                  className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left group ${
                     isSelected 
-                      ? 'bg-white border-saffron shadow-sm' 
-                      : 'bg-warm-white border-warm-gray hover:border-gold hover:bg-white/40'
+                      ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
+                      : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
                   <h3 className="font-display text-2xl text-night font-light lowercase leading-none mb-0.5">
@@ -937,10 +945,10 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => handleDurationSelect(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleDurationSelect(opt.id); } }}
-                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left ${
+                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left group ${
                     isSelected 
-                      ? 'bg-white border-saffron shadow-sm' 
-                      : 'bg-warm-white border-warm-gray hover:border-gold hover:bg-white/40'
+                      ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
+                      : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
                   <h3 className="font-display text-2xl text-night font-light lowercase leading-none mb-0.5">

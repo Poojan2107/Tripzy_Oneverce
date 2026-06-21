@@ -62,6 +62,90 @@ function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove
   );
 }
 
+function EmptyPassportState({ 
+  onNavigate, 
+  type 
+}: { 
+  onNavigate: () => void; 
+  type: 'bookings' | 'wishlist' | 'itineraries'; 
+}) {
+  const content = {
+    bookings: {
+      tag: "expeditions ledger",
+      title: "no active voyages logged yet",
+      desc: "Your ledger has no registered expeditions. Once you secure a regional booking, your physical travel voucher and boarding pass will manifest here.",
+      btnText: "Plan My First Journey",
+      illustration: (
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="text-gold/25">
+          <path d="M6 16C6 11.5817 9.58172 8 14 8H50C54.4183 8 58 11.5817 58 16V22C55.7909 22 54 23.7909 54 26C54 28.2091 55.7909 30 58 30V48C58 52.4183 54.4183 56 50 56H14C9.58172 56 6 52.4183 6 48V30C8.20914 30 10 28.2091 10 26C10 23.7909 8.20914 22 6 22V16Z" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,3" fill="rgba(214,168,95,0.02)"/>
+          <circle cx="32" cy="32" r="12" stroke="currentColor" stroke-width="1"/>
+          <path d="M32 20V44M20 32H44" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
+        </svg>
+      )
+    },
+    wishlist: {
+      tag: "curated desires",
+      title: "your catalog of desires is empty",
+      desc: "Like an uncollected scrapbook, this space awaits your curated chapters. Browse the atlas and click the heart on destinations that speak to your soul.",
+      btnText: "Explore Atlas",
+      illustration: (
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="text-gold/30">
+          <rect x="6" y="10" width="52" height="44" rx="4" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3,3"/>
+          <rect x="42" y="16" width="10" height="12" stroke="currentColor" stroke-width="1.2" fill="rgba(214,168,95,0.05)"/>
+          <circle cx="28" cy="32" r="10" fill="#D6A85F" fill-opacity="0.1" stroke="#D6A85F" stroke-width="1.5"/>
+          <circle cx="28" cy="32" r="7" stroke="#D6A85F" stroke-width="0.75" stroke-dasharray="2,2"/>
+          <path d="M28 28C28 28 25.5 31.5 28 35.5C30.5 31.5 28 28 28 28Z" fill="#D6A85F" fill-opacity="0.3"/>
+          <path d="M28 30.5C28 30.5 24 32 28 35C32 32 28 30.5 28 30.5Z" fill="#D6A85F" fill-opacity="0.3"/>
+        </svg>
+      )
+    },
+    itineraries: {
+      tag: "custom logs",
+      title: "no custom chapters compiled",
+      desc: "Our intelligent journey builder stands ready to map customized itineraries. Calibrate companions, budget levels, and rhythms to save your first journal map.",
+      btnText: "Launch Journey Builder",
+      illustration: (
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="text-gold/25">
+          <path d="M10 12H30V52H10C8.89543 52 8 51.1046 8 50V14C8 12.8954 8.89543 12 10 12Z" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M54 12H34V52H54C55.1046 52 56 51.1046 56 50V14C56 12.8954 55.1046 12 54 12Z" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M30 16H34M30 24H34M30 32H34M30 40H34M30 48H34" stroke="currentColor" stroke-width="2"/>
+          <circle cx="44" cy="32" r="8" stroke="currentColor" stroke-width="0.75"/>
+          <path d="M44 21V43M33 32H55" stroke="currentColor" stroke-width="0.5" stroke-dasharray="2,2"/>
+        </svg>
+      )
+    }
+  }[type];
+
+  return (
+    <div className="text-center py-20 bg-cream/40 border border-gold/25 rounded-[32px] max-w-lg mx-auto p-8 shadow-soft relative overflow-hidden bg-topo-pattern animate-fade-in w-full">
+      <div className="absolute inset-0 bg-radial-gradient(circle, rgba(214,168,95,0.03) 0%, transparent 100%) pointer-events-none" />
+      
+      {/* Editorial Stamp/Watermark Wrapper */}
+      <div className="relative w-22 h-22 mx-auto mb-6 flex items-center justify-center filter drop-shadow-[0_4px_10px_rgba(30,41,59,0.04)] bg-white rounded-2xl border border-warm-gray/60 transition-transform duration-500 hover:rotate-2">
+        {content.illustration}
+      </div>
+      
+      <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-saffron block mb-2 font-bold animate-pulse">
+        {content.tag}
+      </span>
+      <h3 className="font-display text-2.5xl font-light text-night lowercase leading-none mb-3">
+        {content.title}
+      </h3>
+      <p className="text-[11px] text-night/60 font-light max-w-xs mx-auto leading-relaxed font-sans mb-8">
+        {content.desc}
+      </p>
+      
+      <button
+        onClick={onNavigate}
+        className="px-6 py-3 bg-night text-white text-[9px] font-bold uppercase tracking-[0.18em] rounded-full hover:bg-saffron transition-all duration-300 cursor-pointer inline-flex items-center gap-2 shadow-md hover:scale-102"
+      >
+        <Sparkles className="w-3.5 h-3.5 text-gold" />
+        <span>{content.btnText}</span>
+      </button>
+    </div>
+  );
+}
+
 export default function TripsWishlistView({
   wishlistTours,
   bookedTours,
@@ -187,7 +271,7 @@ export default function TripsWishlistView({
   }, [bookedTours, savedItineraries, wishlistTours]);
 
   return (
-    <div className="pt-24 pb-32 px-6 max-w-6xl mx-auto select-none bg-sand min-h-screen text-left">
+    <div className="pt-24 pb-32 px-6 max-w-6xl mx-auto select-none bg-sand min-h-screen text-left animate-page-enter">
       
       {/* ── PASSPORT DASHBOARD PANEL ── */}
       <div className="mb-10 p-6 bg-white border bg-cream rounded-3xl shadow-sm space-y-6">
@@ -241,14 +325,14 @@ export default function TripsWishlistView({
             {badgesList.map((badge) => (
               <div 
                 key={badge.id}
-                className={`p-3 rounded-2xl border flex flex-col items-center text-center transition-all ${
+                className={`p-3 rounded-2xl border flex flex-col items-center text-center transition-all duration-300 ${
                   badge.unlocked 
-                    ? 'bg-white bg-cream shadow-sm' 
-                    : 'bg-warm-white/60 bg-cream/40 opacity-40'
+                    ? 'bg-white bg-cream shadow-sm hover:shadow-card hover:-translate-y-0.5 hover:rotate-1' 
+                    : 'bg-warm-white/40 bg-cream/20 border-dashed opacity-40'
                 }`}
               >
                 <div 
-                  className="w-10 h-10 rounded-full flex items-center justify-center mb-2.5"
+                  className="w-10 h-10 rounded-full flex items-center justify-center mb-2.5 transition-transform duration-500 group-hover:scale-110"
                   style={{ backgroundColor: badge.unlocked ? `${badge.color}15` : '#ECE6DA40', color: badge.unlocked ? badge.color : '#94A3B8' }}
                 >
                   <Award className="w-5 h-5 stroke-[1.5]" />
@@ -396,20 +480,7 @@ export default function TripsWishlistView({
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-white border bg-cream rounded-3xl max-w-md mx-auto p-6 shadow-sm">
-              <BookOpen className="w-12 h-12 text-muted/30 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold text-night">Your Passport Awaits</h3>
-              <p className="text-xs text-muted/60 font-light mt-1 max-w-xs mx-auto leading-relaxed">
-                Start planning your first Indian journey and we'll save it here — your itinerary, wishlist, and travel memories in one place.
-              </p>
-              <button
-                onClick={onNavigatePlanner || onNavigateExplore}
-                className="mt-6 px-6 py-2.5 bg-night text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-saffron transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-gold" />
-                <span>Plan My First Journey</span>
-              </button>
-            </div>
+            <EmptyPassportState type="bookings" onNavigate={onNavigatePlanner || onNavigateExplore} />
           )}
         </div>
       )}
@@ -429,20 +500,7 @@ export default function TripsWishlistView({
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-white border bg-cream rounded-3xl max-w-md mx-auto p-6 shadow-sm">
-              <BookOpen className="w-12 h-12 text-muted/30 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold text-night">Your Passport Awaits</h3>
-              <p className="text-xs text-muted/60 font-light mt-1 max-w-xs mx-auto leading-relaxed">
-                Start planning your first Indian journey and we'll save it here — your itinerary, wishlist, and travel memories in one place.
-              </p>
-              <button
-                onClick={onNavigatePlanner || onNavigateExplore}
-                className="mt-6 px-6 py-2.5 bg-night text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-saffron transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-gold" />
-                <span>Plan My First Journey</span>
-              </button>
-            </div>
+            <EmptyPassportState type="wishlist" onNavigate={onNavigateExplore} />
           )}
         </div>
       )}
@@ -494,20 +552,7 @@ export default function TripsWishlistView({
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-white border bg-cream rounded-3xl max-w-md mx-auto p-6 shadow-sm">
-              <BookOpen className="w-12 h-12 text-muted/30 mx-auto mb-4" />
-              <h3 className="font-display text-xl font-bold text-night">Your Passport Awaits</h3>
-              <p className="text-xs text-muted/60 font-light mt-1 max-w-xs mx-auto leading-relaxed">
-                Start planning your first Indian journey and we'll save it here — your itinerary, wishlist, and travel memories in one place.
-              </p>
-              <button
-                onClick={onNavigatePlanner || onNavigateExplore}
-                className="mt-6 px-6 py-2.5 bg-night text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-saffron transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-gold" />
-                <span>Plan My First Journey</span>
-              </button>
-            </div>
+            <EmptyPassportState type="itineraries" onNavigate={onNavigatePlanner || onNavigateExplore} />
           )}
         </div>
       )}

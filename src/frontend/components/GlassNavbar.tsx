@@ -170,7 +170,7 @@ export default function GlassNavbar({
               )}
               <button
                 onClick={() => signOut()}
-                className={`p-2 rounded-lg transition-all cursor-pointer flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider ${
+                className={`min-w-[44px] min-h-[44px] px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider ${
                   isTransparent
                     ? 'text-white/70 hover:text-rose-400 hover:bg-white/10'
                     : 'text-muted hover:text-rose-500 hover:bg-rose-50'

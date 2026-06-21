@@ -317,20 +317,20 @@ export default function TripsWishlistView({
           </div>
 
           {/* Stats metrics */}
-          <div className="grid grid-cols-3 gap-3 md:gap-6 text-center">
-            <div className="px-4 py-2 bg-warm-white border bg-cream/60 rounded-2xl">
+          <div className="grid grid-cols-3 gap-2 md:gap-6 text-center">
+            <div className="px-2 md:px-4 py-2 bg-warm-white border bg-cream/60 rounded-2xl">
               <span className="text-[28px] font-display font-light text-saffron leading-none">
                 {journeyScore}
               </span>
               <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mt-1">Journey Score</span>
             </div>
-            <div className="px-4 py-2 bg-warm-white border bg-cream/60 rounded-2xl">
+            <div className="px-2 md:px-4 py-2 bg-warm-white border bg-cream/60 rounded-2xl">
               <span className="text-[28px] font-display font-light text-gold leading-none">
                 {checkedDestinationIds.size}
               </span>
               <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 block mt-1">Chapters</span>
             </div>
-            <div className="px-4 py-2 bg-warm-white border bg-cream/60 rounded-2xl">
+            <div className="px-2 md:px-4 py-2 bg-warm-white border bg-cream/60 rounded-2xl">
               <span className="text-[28px] font-display font-light text-night leading-none">
                 {badgesList.filter(b => b.unlocked).length}
               </span>
@@ -375,11 +375,11 @@ export default function TripsWishlistView({
       </div>
 
       {/* Tab selectors */}
-      <div className="flex justify-start mb-8">
-        <div className="bg-white border bg-cream p-1.5 rounded-2xl flex gap-1 shadow-sm">
+      <div className="flex justify-start mb-8 overflow-x-auto scrollbar-none -mx-4 px-4 md:mx-0 md:px-0">
+        <div className="bg-white border bg-cream p-1.5 rounded-2xl flex gap-1 shadow-sm min-w-max">
           <button
             onClick={() => setActiveSubTab('bookings')}
-            className={`px-5 py-3 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer min-h-[44px] ${
+            className={`px-4 md:px-5 py-3 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer min-h-[44px] shrink-0 ${
               activeSubTab === 'bookings'
                 ? 'bg-night text-white shadow-sm'
                 : 'text-muted/60 hover:text-night'
@@ -395,7 +395,7 @@ export default function TripsWishlistView({
           
           <button
             onClick={() => setActiveSubTab('wishlist')}
-            className={`px-5 py-3 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer min-h-[44px] ${
+            className={`px-4 md:px-5 py-3 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer min-h-[44px] shrink-0 ${
               activeSubTab === 'wishlist'
                 ? 'bg-night text-white shadow-sm'
                 : 'text-muted/60 hover:text-night'
@@ -411,7 +411,7 @@ export default function TripsWishlistView({
 
           <button
             onClick={() => setActiveSubTab('itineraries')}
-            className={`px-5 py-3 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer min-h-[44px] ${
+            className={`px-4 md:px-5 py-3 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer min-h-[44px] shrink-0 ${
               activeSubTab === 'itineraries'
                 ? 'bg-night text-white shadow-sm'
                 : 'text-muted/60 hover:text-night'
@@ -486,10 +486,10 @@ export default function TripsWishlistView({
                   </div>
 
                   {/* Actions */}
-                  <div className="bg-warm-white border-t bg-cream p-4 px-6 flex items-center justify-between">
+                  <div className="bg-warm-white border-t bg-cream p-4 px-4 md:px-6 flex flex-wrap items-center justify-between gap-2">
                     <button
                       onClick={() => triggerPrint(bt)}
-                      className="text-[10px] font-bold uppercase tracking-wider text-muted/60 hover:text-gold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-wider text-muted/60 hover:text-gold flex items-center gap-1.5 transition-colors cursor-pointer min-h-[44px]"
                     >
                       <Printer className="w-3.5 h-3.5 text-gold" />
                       <span>Print Voucher</span>
@@ -497,7 +497,7 @@ export default function TripsWishlistView({
 
                     <button
                       onClick={() => onCancelExpedition(bt.bookingCode)}
-                      className="text-[10px] font-bold uppercase tracking-wider text-rose-500 hover:text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl transition-all cursor-pointer"
+                      className="text-[10px] font-bold uppercase tracking-wider text-rose-500 hover:text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl transition-all cursor-pointer min-h-[44px]"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Cancel Booking</span>

@@ -1,4 +1,5 @@
-import { ExternalLink, MapPin, Star } from 'lucide-react';
+import { useState } from 'react';
+import { ExternalLink, MapPin } from 'lucide-react';
 import { Hotel } from '../types';
 
 interface HotelCardProps {
@@ -12,12 +13,14 @@ const AFFILIATE_LABELS: Record<string, string> = {
 };
 
 const AFFILIATE_COLORS: Record<string, string> = {
-  goibibo: 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100',
-  agoda: 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100',
-  makemytrip: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100',
+  goibibo: 'bg-saffron/10 text-[#C95C1E] border-saffron/20 hover:bg-saffron/20 hover:border-saffron/30',
+  agoda: 'bg-ocean/15 text-[#3575B5] border-ocean/30 hover:bg-ocean/25 hover:border-ocean-dark/40',
+  makemytrip: 'bg-sage/15 text-[#4D6950] border-sage/30 hover:bg-sage/25 hover:border-sage/40',
 };
 
 export default function HotelCard({ hotel }: HotelCardProps) {
+  const [imgFailed, setImgFailed] = useState(false);
+
   const renderStars = (rating: number) => {
     const stars = Math.round(rating / 2);
     return (
@@ -30,15 +33,23 @@ export default function HotelCard({ hotel }: HotelCardProps) {
   return (
     <div className="bg-white rounded-2xl border border-warm-gray overflow-hidden hover:shadow-elevated transition-all duration-300 hover:-translate-y-0.5">
       <div className="flex flex-col sm:flex-row">
-        <div className="sm:w-56 h-40 sm:h-auto shrink-0 relative overflow-hidden">
-          <img
-            src={hotel.image}
-            alt={hotel.name}
-            className="w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-            onError={e => { e.currentTarget.style.opacity = '0.3' }}
-          />
+        <div className="sm:w-56 h-40 sm:h-auto shrink-0 relative overflow-hidden bg-cream">
+          {imgFailed ? (
+            <div className="w-full h-full flex items-center justify-center">
+              <span className="text-lg font-display text-muted/30 font-bold uppercase">
+                {hotel.name.charAt(0)}
+              </span>
+            </div>
+          ) : (
+            <img
+              src={hotel.image}
+              alt={hotel.name}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              onError={() => setImgFailed(true)}
+            />
+          )}
         </div>
         <div className="flex-1 p-5 flex flex-col justify-between gap-3">
           <div>

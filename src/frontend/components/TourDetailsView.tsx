@@ -487,7 +487,7 @@ export default function TourDetailsView({
               <Calendar className="w-4 h-4 text-saffron" />
               <div>
                 <p className="text-[9px] font-mono uppercase tracking-wider text-muted/50">Best Time</p>
-                <p className="text-xs font-bold text-night">{tour.bestSeason}</p>
+                <p className="text-xs font-bold text-night">{tour.bestSeason || 'Oct – Mar'}</p>
               </div>
             </div>
             <div className="w-px h-8 bg-warm-gray" />
@@ -495,7 +495,7 @@ export default function TourDetailsView({
               <Star className="w-4 h-4 fill-gold text-gold" />
               <div>
                 <p className="text-[9px] font-mono uppercase tracking-wider text-muted/50">Rating</p>
-                <p className="text-xs font-bold text-night">{tour.rating} ({tour.reviewsCount} reviews)</p>
+                <p className="text-xs font-bold text-night">{parseFloat(tour.rating.toFixed(1))} ({tour.reviewsCount} reviews)</p>
               </div>
             </div>
             {tour.budgetRange && (
@@ -825,8 +825,8 @@ export default function TourDetailsView({
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Star className="w-4 h-4 text-gold fill-gold" />
-                      <span className="font-bold text-sm text-night">{tour.rating}</span>
-                      <span className="text-xs text-muted font-light">({tour.reviewsCount})</span>
+                      <span className="font-bold text-sm text-night">{parseFloat(tour.rating.toFixed(1))}</span>
+                      <span className="text-xs text-muted font-light">({tour.reviewsCount} reviews)</span>
                     </div>
                   </div>
                   <div className="space-y-2.5">
@@ -846,7 +846,7 @@ export default function TourDetailsView({
                     <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Best Season</span>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-saffron" />
-                      <span className="text-xs font-bold text-night">{tour.bestSeason}</span>
+                      <span className="text-xs font-bold text-night">{tour.bestSeason || 'Oct – Mar'}</span>
                     </div>
                   </div>
                   <div className="p-4 rounded-2xl bg-white border border-warm-gray">
@@ -918,7 +918,7 @@ export default function TourDetailsView({
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-1">
                     <Star className="w-4 h-4 text-gold fill-gold" />
-                    <span className="font-bold text-sm text-night">{tour.rating}</span>
+                    <span className="font-bold text-sm text-night">{parseFloat(tour.rating.toFixed(1))}</span>
                     <span className="text-xs text-muted font-light">({tour.reviewsCount} reviews)</span>
                   </div>
                   <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-sand border border-warm-gray text-night">
@@ -950,7 +950,7 @@ export default function TourDetailsView({
                     <div>
                       <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-1">Best Time</span>
                       <span className="text-xs font-bold text-night flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-saffron" /> {tour.bestSeason}
+                        <Calendar className="w-3.5 h-3.5 text-saffron" /> {tour.bestSeason || 'Oct – Mar'}
                       </span>
                     </div>
                     <div className="border-t border-warm-gray/30 pt-3">

@@ -153,7 +153,7 @@ export default function SearchModal({
                   <div className="flex items-center gap-2 mt-0.5">
                     <div className="flex items-center gap-1">
                       <Star className="w-2.5 h-2.5 text-sunset fill-sunset" />
-                      <span className="text-[10px] text-charcoal/60">{tour.rating}</span>
+                      <span className="text-[10px] text-charcoal/60">{parseFloat(tour.rating.toFixed(1))}</span>
                     </div>
                     {tour.moods && tour.moods.length > 0 && (
                       <span className="text-[9px] text-charcoal/40">{tour.moods.slice(0, 2).join(' · ')}</span>

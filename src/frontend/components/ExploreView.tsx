@@ -236,7 +236,7 @@ export default function ExploreView({
                         <div className="flex items-center gap-2">
                           <div className="flex items-center gap-1">
                             <Star className="w-3 h-3 fill-gold text-gold" />
-                            <span className="text-[9px] font-bold text-muted">{tour.rating}</span>
+                            <span className="text-[9px] font-bold text-muted">{parseFloat(tour.rating.toFixed(1))}</span>
                           </div>
                           <span 
                             className="text-[7px] font-mono font-bold px-2 py-0.5 rounded-full uppercase tracking-wider text-white"
@@ -308,7 +308,7 @@ export default function ExploreView({
                 <div className="flex items-center gap-3 mt-2">
                   <span className="flex items-center gap-1 text-[9px] font-mono text-white/70">
                     <Star className="w-3 h-3 fill-gold text-gold" />
-                    {activeTour.rating} ({activeTour.reviewsCount})
+                    {parseFloat(activeTour.rating.toFixed(1))} ({activeTour.reviewsCount} reviews)
                   </span>
                   <span className="text-white/30">·</span>
                   <span className="text-[9px] font-mono text-white/70">{activeTour.duration}</span>

@@ -7,7 +7,8 @@
     "dev": "next dev --port=3000 --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --port=3000",
-    "lint": "next lint",
+    "lint": "next typegen && tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "postinstall": "prisma generate && prisma db push --accept-data-loss && prisma db seed",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed"

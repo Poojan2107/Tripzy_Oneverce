@@ -280,7 +280,7 @@ export default function ExploreView({
           <>
           {/* Backdrop */}
           <div className="fixed inset-0 bg-black/30 z-40 md:hidden" onClick={() => setActiveTourId(null)} />
-          <div className="fixed bottom-0 md:absolute inset-x-0 md:inset-auto md:top-4 md:bottom-4 md:right-4 md:w-[400px] bg-white border border-warm-gray rounded-t-3xl md:rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter md:animate-none max-h-[85dvh] md:max-h-none pb-[env(safe-area-inset-bottom,0px)]">
+          <div className="fixed bottom-0 md:absolute inset-x-0 md:inset-auto md:top-4 md:bottom-4 md:right-4 md:w-[400px] bg-white border border-warm-gray rounded-t-3xl md:rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter md:animate-none max-h-[70dvh] md:max-h-none pb-[env(safe-area-inset-bottom,0px)]">
             {/* Drag handle for mobile */}
             <div className="md:hidden flex justify-center pt-2 pb-0 shrink-0">
               <div className="w-8 h-1 rounded-full bg-warm-gray" />
@@ -289,7 +289,7 @@ export default function ExploreView({
             <div className="h-1 w-full shrink-0 hidden md:block" style={{ background: `linear-gradient(90deg, ${activeTour.accents?.primary || '#D6A85F'}, ${activeTour.accents?.secondary || '#0F172A'})` }} />
             
             {/* Header image */}
-            <div className="relative aspect-[16/9] bg-cream shrink-0 overflow-hidden">
+            <div className="relative aspect-[4/3] md:aspect-video bg-cream shrink-0 overflow-hidden">
               <img src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover bg-cream transition-transform duration-700 hover:scale-105" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
               

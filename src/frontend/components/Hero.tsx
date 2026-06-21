@@ -222,17 +222,17 @@ export default function Hero({
         </div>
 
         {/* BOTTOM: Thumbnail strip + progress + nav */}
-        <div className="flex items-end justify-between gap-4 md:gap-6">
+        <div className="flex items-end justify-between gap-2 md:gap-6">
           {/* Thumbnail navigation */}
-          <div className="flex gap-2 md:gap-3 flex-1 overflow-x-auto scrollbar-none -mx-2 px-2">
+          <div className="flex gap-1.5 md:gap-3 flex-1 overflow-x-auto scrollbar-none -mx-1 md:-mx-2 px-1 md:px-2">
             {CHAPTERS.map((ch, idx) => (
               <button
                 key={ch.id}
                 onClick={() => { if (intervalRef.current) clearInterval(intervalRef.current); goTo(idx); }}
                 className={`relative rounded-xl overflow-hidden flex-shrink-0 cursor-pointer transition-all duration-500 ${
                   idx === active
-                    ? "w-20 md:w-28 h-12 md:h-16 ring-2 ring-gold ring-offset-2 ring-offset-transparent"
-                    : "w-10 md:w-14 h-10 md:h-14 opacity-50 hover:opacity-75"
+                    ? "w-16 md:w-28 h-10 md:h-16 ring-2 ring-gold ring-offset-2 ring-offset-transparent"
+                    : "w-8 md:w-14 h-8 md:h-14 opacity-50 hover:opacity-75"
                 }`}
               >
                 <img src={ch.image} alt={ch.title} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
@@ -256,22 +256,22 @@ export default function Hero({
           </div>
 
           {/* Slide counter + arrows */}
-          <div className="flex items-center gap-2 md:gap-4 shrink-0">
-            <span className="font-mono text-[11px] text-white/50">
+          <div className="flex items-center gap-1.5 md:gap-4 shrink-0">
+            <span className="hidden md:inline font-mono text-[11px] text-white/50">
               {String(active + 1).padStart(2, "0")} / {String(CHAPTERS.length).padStart(2, "0")}
             </span>
-            <div className="flex gap-2">
+            <div className="flex gap-1 md:gap-2">
               <button
                 onClick={() => { if (intervalRef.current) clearInterval(intervalRef.current); goToPrev(); }}
-                className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:border-white/50 hover:bg-white/10 transition-all cursor-pointer"
+                className="w-10 md:w-11 h-10 md:h-11 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:border-white/50 hover:bg-white/10 transition-all cursor-pointer"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3.5 md:w-4 h-3.5 md:h-4" />
               </button>
               <button
                 onClick={() => { if (intervalRef.current) clearInterval(intervalRef.current); next(); }}
-                className="w-11 h-11 rounded-full bg-gold/80 hover:bg-gold flex items-center justify-center text-white transition-all cursor-pointer"
+                className="w-10 md:w-11 h-10 md:h-11 rounded-full bg-gold/80 hover:bg-gold flex items-center justify-center text-white transition-all cursor-pointer"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3.5 md:w-4 h-3.5 md:h-4" />
               </button>
             </div>
           </div>

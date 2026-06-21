@@ -1280,10 +1280,10 @@ export default function AiPlannerView({
       </div>
 
       {/* ── RIGHT WIZARD PANEL ── */}
-      <div className="flex-1 min-w-0 pt-4 pb-4 flex flex-col justify-center text-left">
+      <div className="flex-1 min-w-0 pt-4 pb-4 flex flex-col text-left">
 
       {/* Wizard Progress Header */}
-      <div className="mb-8 space-y-4">
+      <div className="mb-6 md:mb-8 space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-saffron font-bold block">Journey Builder</span>
@@ -1434,22 +1434,22 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => setTravelers(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTravelers(opt.id); } }}
-                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-4 items-center group ${
+                  className={`p-4 md:p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-3 md:gap-4 items-center group ${
                     isSelected 
                       ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
                       : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                  <div className={`w-9 md:w-10 h-9 md:h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
                     isSelected ? 'bg-gold/15 text-gold' : 'bg-cream/50 text-muted/50 group-hover:text-gold/80 group-hover:bg-gold/5'
                   }`}>
-                    <Icon className="w-5 h-5 stroke-[1.5]" />
+                    <Icon className="w-4 md:w-5 h-4 md:h-5 stroke-[1.5]" />
                   </div>
                   <div>
-                    <h3 className="font-display text-2xl text-night font-light lowercase leading-none mb-1">
+                    <h3 className="font-display text-xl md:text-2xl text-night font-light lowercase leading-none mb-1">
                       {opt.label}
                     </h3>
-                    <p className="text-[10px] text-muted/60 font-light font-sans leading-relaxed">{opt.desc}</p>
+                    <p className="text-[9px] md:text-[10px] text-muted/60 font-light font-sans leading-relaxed">{opt.desc}</p>
                   </div>
                 </div>
               );
@@ -1494,13 +1494,13 @@ export default function AiPlannerView({
                     setCustomBudgetAmount(tierMidpoint);
                   }}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setBudget(opt.id); setBudgetInteracted(true); } }}
-                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-4 text-left group ${
+                  className={`p-4 md:p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-3 md:gap-4 text-left group ${
                     isSelected 
                       ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
                       : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                  <div className={`w-8 md:w-9 h-8 md:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
                     isSelected ? 'bg-gold/15 text-gold' : 'bg-cream/50 text-muted/50 group-hover:text-gold/80 group-hover:bg-gold/5'
                   }`}>
                     <Icon className="w-4.5 h-4.5 stroke-[1.5]" />
@@ -1510,7 +1510,7 @@ export default function AiPlannerView({
                       {opt.label}
                     </h3>
                     <p className="text-[10px] text-muted/60 font-light leading-relaxed">{opt.desc}</p>
-                    <div className="mt-2 text-[11px] font-mono text-gold font-bold">
+                    <div className="mt-1 md:mt-2 text-[10px] md:text-[11px] font-mono text-gold font-bold">
                       {opt.id === 'Luxury'
                         ? `₹${tierDisplay.min.toLocaleString('en-IN')}+`
                         : `₹${tierDisplay.min.toLocaleString('en-IN')} – ₹${tierDisplay.max!.toLocaleString('en-IN')}`}
@@ -1609,22 +1609,22 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => setMood(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setMood(opt.id); } }}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-4 items-center group ${
+                  className={`p-3 md:p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex gap-3 md:gap-4 items-center group ${
                     isSelected 
                       ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
                       : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                  <div className={`w-8 md:w-9 h-8 md:h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
                     isSelected ? 'bg-gold/15 text-gold' : 'bg-cream/50 text-muted/50 group-hover:text-gold/80 group-hover:bg-gold/5'
                   }`}>
-                    <Icon className="w-4.5 h-4.5 stroke-[1.5]" />
+                    <Icon className="w-4 md:w-4.5 h-4 md:h-4.5 stroke-[1.5]" />
                   </div>
                   <div>
-                    <h3 className="font-display text-2xl text-night font-light lowercase leading-none mb-0.5">
+                    <h3 className="font-display text-xl md:text-2xl text-night font-light lowercase leading-none mb-0.5">
                       {opt.label}
                     </h3>
-                    <p className="text-[10px] text-muted/60 font-light leading-relaxed">{opt.desc}</p>
+                    <p className="text-[9px] md:text-[10px] text-muted/60 font-light leading-relaxed">{opt.desc}</p>
                   </div>
                 </div>
               );
@@ -1653,16 +1653,16 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => setEnergy(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setEnergy(opt.id); } }}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left group ${
+                  className={`p-3 md:p-4 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left group ${
                     isSelected 
                       ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
                       : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
-                  <h3 className="font-display text-2xl text-night font-light lowercase leading-none mb-0.5">
+                  <h3 className="font-display text-xl md:text-2xl text-night font-light lowercase leading-none mb-0.5">
                     {opt.label}
                   </h3>
-                  <p className="text-[10px] text-muted/60 font-light leading-relaxed">{opt.desc}</p>
+                  <p className="text-[9px] md:text-[10px] text-muted/60 font-light leading-relaxed">{opt.desc}</p>
                 </div>
               );
             })}
@@ -1690,16 +1690,16 @@ export default function AiPlannerView({
                   tabIndex={0}
                   onClick={() => handleDurationSelect(opt.id)}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleDurationSelect(opt.id); } }}
-                  className={`p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left group ${
+                  className={`p-4 md:p-5 rounded-2xl border cursor-pointer transition-all duration-300 flex flex-col gap-1 text-left group ${
                     isSelected 
                       ? 'bg-white border-gold shadow-md ring-1 ring-gold/20 scale-[1.01] -translate-y-0.5' 
                       : 'bg-warm-white/70 border-warm-gray/60 hover:border-gold hover:bg-white/50 hover:shadow-soft hover:-translate-y-0.5'
                   }`}
                 >
-                  <h3 className="font-display text-2xl text-night font-light lowercase leading-none mb-0.5">
+                  <h3 className="font-display text-xl md:text-2xl text-night font-light lowercase leading-none mb-0.5">
                     {opt.label}
                   </h3>
-                  <p className="text-[10px] text-muted/60 font-light">{opt.desc}</p>
+                  <p className="text-[9px] md:text-[10px] text-muted/60 font-light">{opt.desc}</p>
                 </div>
               );
             })}

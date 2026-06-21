@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     }
 
     const result = streamText({
-      model: google("gemini-1.5-pro-latest"),
+      model: google("gemini-1.5-flash"),
       messages,
       system:
         "You are the Tripzy AI Travel Assistant. Your job is to help users discover, plan, and optimize their travel itineraries. Be helpful, concise, and prioritize recommending our featured and trending destinations. Provide budget breakdowns when asked.",

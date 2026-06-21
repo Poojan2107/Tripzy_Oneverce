@@ -145,6 +145,16 @@ export default function AdminView({
     }
   };
 
+  // Lock body scroll when slide-overs are open
+  useEffect(() => {
+    if (isDestFormOpen || isExpFormOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isDestFormOpen, isExpFormOpen]);
+
   useEffect(() => {
     loadData();
   }, []);
@@ -458,24 +468,24 @@ export default function AdminView({
   );
 
   return (
-    <div className="w-full min-h-screen bg-[#090909] text-white pt-10 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans animate-[fadeIn_0.4s_ease-out]">
+    <div className="w-full min-h-dvh bg-sand pt-10 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans antialiased [-webkit-tap-highlight-color]:transparent selection:bg-gold/20 selection:text-ink">
       
-      {/* Premium Obsidian Command Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 pb-6 border-b border-white/5">
+      {/* Tripzy Editorial Header */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 pb-6 border-b border-warm-gray">
         <div>
-          <span className="text-[10px] font-bold text-[#A3E635] uppercase tracking-widest bg-[#A3E635]/10 px-3 py-1 rounded-md border border-[#A3E635]/20">
-            Luxury Intelligence Dashboard
+          <span className="text-[10px] font-mono font-bold text-gold uppercase tracking-[0.25em] bg-gold/10 px-3 py-1.5 rounded-full border border-gold/20">
+            admin panel
           </span>
-          <h1 className="text-3xl font-black uppercase tracking-tight text-white mt-2">
-            Tripzy Command Console
+          <h1 className="text-3xl font-light font-display lowercase tracking-tight text-ink mt-3">
+            tripzy admin
           </h1>
-          <p className="text-xs text-neutral-400 mt-1">
-            Real-time travel telemetry, RAG discovery insights, and destination repository CRUD.
+          <p className="text-xs text-stone mt-1">
+            Manage destinations, experiences, and view analytics
           </p>
         </div>
 
-        {/* High-tech glass tab controllers */}
-        <div className="flex bg-[#121212] border border-white/5 p-1 rounded-2xl shadow-2xl self-stretch md:self-auto justify-around">
+        {/* Editorial tab controller */}
+        <div className="flex bg-white border border-warm-gray p-1 rounded-2xl shadow-soft self-stretch md:self-auto justify-around">
           {[
             { id: 'dashboard', label: 'Intelligence', icon: BarChart2 },
             { id: 'destinations', label: 'Destinations', icon: MapPin },
@@ -489,10 +499,10 @@ export default function AdminView({
                   setActiveTab(tab.id as any);
                   setSearchTerm('');
                 }}
-                className={`px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
+                className={`px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 transition-all duration-300 touch-action-manipulation select-none ${
                   activeTab === tab.id
-                    ? 'bg-[#A3E635] text-black shadow-md shadow-[#A3E635]/20'
-                    : 'text-neutral-450 hover:text-white hover:bg-white/5'
+                    ? 'bg-gold text-white shadow-md shadow-gold/20'
+                    : 'text-stone hover:text-ink hover:bg-cream/30'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -507,69 +517,65 @@ export default function AdminView({
       {activeTab === 'dashboard' && (
         <div className="space-y-8">
           {loadingMetrics ? (
-            <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
-              <div className="w-10 h-10 border-4 border-[#A3E635] border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p className="text-xs uppercase tracking-wider">Aggregating database analytics...</p>
+            <div className="flex flex-col items-center justify-center py-20 text-stone">
+              <div className="w-10 h-10 border-4 border-gold border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-[10px] font-mono uppercase tracking-[0.25em]">loading analytics...</p>
             </div>
           ) : (
             <>
               {/* Telemetry Counter Cards */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 
-                <div className="bg-[#121212]/90 rounded-3xl border border-white/5 p-6 shadow-xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#A3E635]/5 rounded-full blur-2xl"></div>
+                <div className="bg-white rounded-3xl border border-warm-gray p-5 sm:p-6 shadow-card relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Total Searches</span>
-                    <div className="w-8 h-8 rounded-full bg-[#A3E635]/10 text-[#A3E635] flex items-center justify-center border border-[#A3E635]/20">
+                    <span className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Total Searches</span>
+                    <div className="w-8 h-8 rounded-full bg-gold/10 text-gold flex items-center justify-center">
                       <Search className="w-4 h-4" />
                     </div>
                   </div>
-                  <p className="text-3xl font-black tracking-tight text-white mt-3">
+                  <p className="text-3xl font-light font-display tracking-tight text-ink mt-3">
                     {metrics?.totals?.searches?.toLocaleString() || 0}
                   </p>
-                  <p className="text-[10px] text-neutral-500 mt-1">Real-time user discovery requests</p>
+                  <p className="text-[10px] text-stone mt-1">user discovery requests</p>
                 </div>
 
-                <div className="bg-[#121212]/90 rounded-3xl border border-white/5 p-6 shadow-xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl"></div>
+                <div className="bg-white rounded-3xl border border-warm-gray p-5 sm:p-6 shadow-card relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Destination Views</span>
-                    <div className="w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
+                    <span className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Destination Views</span>
+                    <div className="w-8 h-8 rounded-full bg-ocean/10 text-ocean flex items-center justify-center">
                       <Eye className="w-4 h-4" />
                     </div>
                   </div>
-                  <p className="text-3xl font-black tracking-tight text-white mt-3">
+                  <p className="text-3xl font-light font-display tracking-tight text-ink mt-3">
                     {metrics?.totals?.views?.toLocaleString() || 0}
                   </p>
-                  <p className="text-[10px] text-neutral-500 mt-1">Destination catalog detail clicks</p>
+                  <p className="text-[10px] text-stone mt-1">destination detail views</p>
                 </div>
 
-                <div className="bg-[#121212]/90 rounded-3xl border border-white/5 p-6 shadow-xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl"></div>
+                <div className="bg-white rounded-3xl border border-warm-gray p-5 sm:p-6 shadow-card relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Itinerary Plans</span>
-                    <div className="w-8 h-8 rounded-full bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20">
+                    <span className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Itinerary Plans</span>
+                    <div className="w-8 h-8 rounded-full bg-sage/10 text-sage flex items-center justify-center">
                       <Compass className="w-4 h-4" />
                     </div>
                   </div>
-                  <p className="text-3xl font-black tracking-tight text-white mt-3">
+                  <p className="text-3xl font-light font-display tracking-tight text-ink mt-3">
                     {metrics?.totals?.planners?.toLocaleString() || 0}
                   </p>
-                  <p className="text-[10px] text-neutral-500 mt-1">Generated custom itineraries</p>
+                  <p className="text-[10px] text-stone mt-1">custom itineraries generated</p>
                 </div>
 
-                <div className="bg-[#121212]/90 rounded-3xl border border-white/5 p-6 shadow-xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl"></div>
+                <div className="bg-white rounded-3xl border border-warm-gray p-5 sm:p-6 shadow-card relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">RAG Recommendations</span>
-                    <div className="w-8 h-8 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+                    <span className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Recommendations</span>
+                    <div className="w-8 h-8 rounded-full bg-saffron/10 text-saffron flex items-center justify-center">
                       <Brain className="w-4 h-4" />
                     </div>
                   </div>
-                  <p className="text-3xl font-black tracking-tight text-white mt-3">
+                  <p className="text-3xl font-light font-display tracking-tight text-ink mt-3">
                     {metrics?.totals?.recommendations?.toLocaleString() || 0}
                   </p>
-                  <p className="text-[10px] text-neutral-500 mt-1">AI matches from db candidates</p>
+                  <p className="text-[10px] text-stone mt-1">ai matches from candidates</p>
                 </div>
 
               </div>
@@ -578,21 +584,21 @@ export default function AdminView({
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Search query trend card */}
-                <div className="bg-[#121212]/95 border border-white/5 rounded-3xl p-6 shadow-2xl">
-                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-350">
+                <div className="bg-white border border-warm-gray rounded-3xl p-5 sm:p-6 shadow-card">
+                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-warm-gray">
+                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-stone">
                       Top Search Queries
                     </h3>
-                    <Search className="w-4 h-4 text-[#A3E635]" />
+                    <Search className="w-4 h-4 text-gold" />
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {!metrics?.searchTrends || metrics.searchTrends.length === 0 ? (
-                      <p className="text-xs text-neutral-500 py-6 text-center">No searches tracked yet.</p>
+                      <p className="text-xs text-stone py-6 text-center">No searches tracked yet.</p>
                     ) : (
                       metrics.searchTrends.map((s: any, idx: number) => (
-                        <div key={idx} className="flex items-center justify-between text-xs bg-white/2 px-3 py-2.5 rounded-xl border border-white/5">
-                          <span className="font-semibold text-white">"{s.query}"</span>
-                          <span className="font-bold text-[#A3E635] bg-[#A3E635]/10 px-2 py-0.5 rounded-md text-[10px]">
+                        <div key={idx} className="flex items-center justify-between text-xs bg-cream/30 px-3 py-2.5 rounded-xl border border-warm-gray/60">
+                          <span className="font-medium text-ink">"{s.query}"</span>
+                          <span className="font-bold text-gold bg-gold/10 px-2 py-0.5 rounded-md text-[10px] font-mono">
                             {s.count} hits
                           </span>
                         </div>
@@ -602,21 +608,21 @@ export default function AdminView({
                 </div>
 
                 {/* Destination views card */}
-                <div className="bg-[#121212]/95 border border-white/5 rounded-3xl p-6 shadow-2xl">
-                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-350">
-                      Most Viewed Escapes
+                <div className="bg-white border border-warm-gray rounded-3xl p-5 sm:p-6 shadow-card">
+                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-warm-gray">
+                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-stone">
+                      Most Viewed Destinations
                     </h3>
-                    <Eye className="w-4 h-4 text-blue-400" />
+                    <Eye className="w-4 h-4 text-ocean" />
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {!metrics?.destinationPopularity || metrics.destinationPopularity.length === 0 ? (
-                      <p className="text-xs text-neutral-500 py-6 text-center">No views logged yet.</p>
+                      <p className="text-xs text-stone py-6 text-center">No views logged yet.</p>
                     ) : (
                       metrics.destinationPopularity.map((d: any, idx: number) => (
-                        <div key={idx} className="flex items-center justify-between text-xs bg-white/2 px-3 py-2.5 rounded-xl border border-white/5">
-                          <span className="font-semibold text-white">{d.name}</span>
-                          <span className="font-bold text-blue-400 bg-blue-450/10 px-2 py-0.5 rounded-md text-[10px]">
+                        <div key={idx} className="flex items-center justify-between text-xs bg-cream/30 px-3 py-2.5 rounded-xl border border-warm-gray/60">
+                          <span className="font-medium text-ink">{d.name}</span>
+                          <span className="font-bold text-ocean bg-ocean/10 px-2 py-0.5 rounded-md text-[10px] font-mono">
                             {d.count} views
                           </span>
                         </div>
@@ -626,21 +632,21 @@ export default function AdminView({
                 </div>
 
                 {/* Rec engine hits card */}
-                <div className="bg-[#121212]/95 border border-white/5 rounded-3xl p-6 shadow-2xl">
-                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-350">
+                <div className="bg-white border border-warm-gray rounded-3xl p-5 sm:p-6 shadow-card">
+                  <div className="flex items-center justify-between mb-4 pb-3 border-b border-warm-gray">
+                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-stone">
                       AI Recommendation Favorites
                     </h3>
-                    <Brain className="w-4 h-4 text-purple-400" />
+                    <Brain className="w-4 h-4 text-sage" />
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {!metrics?.recommendationPopularity || metrics.recommendationPopularity.length === 0 ? (
-                      <p className="text-xs text-neutral-500 py-6 text-center">No recommendations tracked yet.</p>
+                      <p className="text-xs text-stone py-6 text-center">No recommendations tracked yet.</p>
                     ) : (
                       metrics.recommendationPopularity.map((r: any, idx: number) => (
-                        <div key={idx} className="flex items-center justify-between text-xs bg-white/2 px-3 py-2.5 rounded-xl border border-white/5">
-                          <span className="font-semibold text-white">{r.name}</span>
-                          <span className="font-bold text-purple-400 bg-purple-450/10 px-2 py-0.5 rounded-md text-[10px]">
+                        <div key={idx} className="flex items-center justify-between text-xs bg-cream/30 px-3 py-2.5 rounded-xl border border-warm-gray/60">
+                          <span className="font-medium text-ink">{r.name}</span>
+                          <span className="font-bold text-sage bg-sage/10 px-2 py-0.5 rounded-md text-[10px] font-mono">
                             {r.count} times
                           </span>
                         </div>
@@ -652,12 +658,12 @@ export default function AdminView({
               </div>
 
               {/* Persona Discovery insights */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-[#121212]/50 border border-white/5 p-6 rounded-3xl">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-warm-white/70 border border-warm-gray p-5 sm:p-6 rounded-3xl">
                 
                 {/* Budget Distribution */}
                 <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-300 mb-4 flex items-center gap-1.5">
-                    <DollarSign className="w-4 h-4 text-[#A3E635]" />
+                  <h3 className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-ink mb-4 flex items-center gap-1.5">
+                    <DollarSign className="w-4 h-4 text-gold" />
                     Budget Selections Breakdown
                   </h3>
                   
@@ -671,12 +677,12 @@ export default function AdminView({
                       return (
                         <div key={tier} className="space-y-1">
                           <div className="flex justify-between text-xs">
-                            <span className="text-neutral-405 font-medium">{tier} Tier</span>
-                            <span className="font-bold text-white">{count} planners</span>
+                            <span className="text-stone font-medium">{tier} Tier</span>
+                            <span className="font-bold text-ink">{count} planners</span>
                           </div>
-                          <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                          <div className="w-full h-2 bg-cream rounded-full overflow-hidden">
                             <div 
-                              className={`h-full rounded-full transition-all duration-1000 ease-out bg-[#A3E635]`}
+                              className={`h-full rounded-full transition-all duration-1000 ease-out bg-gold`}
                               style={{ width: `${Math.max(5, percentage)}%` }}
                             />
                           </div>
@@ -689,27 +695,27 @@ export default function AdminView({
                 {/* Duration & Styles */}
                 <div className="space-y-5">
                   <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-300 mb-3 flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4 text-[#A3E635]" />
+                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-ink mb-3 flex items-center gap-1.5">
+                      <Calendar className="w-4 h-4 text-gold" />
                       Average Travel Duration
                     </h3>
-                    <p className="text-3xl font-black text-white">
-                      {metrics?.planning?.averageDuration || 0} <span className="text-sm font-normal text-neutral-400">days planned per itinerary</span>
+                    <p className="text-3xl font-light font-display text-ink">
+                      {metrics?.planning?.averageDuration || 0} <span className="text-sm font-sans text-stone">days planned per itinerary</span>
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2.5">
+                    <h3 className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-stone mb-2.5">
                       Top Requested Travel Styles
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {!metrics?.planning?.travelStyles || metrics.planning.travelStyles.length === 0 ? (
-                        <span className="text-xs text-neutral-500">None yet</span>
+                        <span className="text-xs text-stone">None yet</span>
                       ) : (
                         metrics.planning.travelStyles.map((ts: any, idx: number) => (
-                          <span key={idx} className="bg-white/5 border border-white/10 px-3 py-1 rounded-full text-xs font-semibold text-[#A3E635] flex items-center gap-1">
+                          <span key={idx} className="bg-cream/30 border border-warm-gray/60 px-3 py-1 rounded-full text-xs font-medium text-ink flex items-center gap-1">
                             {ts.style}
-                            <span className="text-[10px] text-neutral-400">({ts.count})</span>
+                            <span className="text-[10px] text-stone">({ts.count})</span>
                           </span>
                         ))
                       )}
@@ -717,33 +723,33 @@ export default function AdminView({
                   </div>
                 </div>
 
-                {/* Recommendation Feedback Loops */}
+                {/* Recommendation Feedback */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-neutral-300 flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-[#A3E635]" />
+                  <h3 className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-ink flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-gold" />
                     AI Recommendation Feedback
                   </h3>
                   
                   <div className="space-y-3 pt-2 text-xs">
-                    <div className="flex justify-between items-center bg-white/2 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-neutral-400">Recommendation CTR</span>
-                      <span className="font-bold text-[#A3E635] text-sm">{metrics?.feedback?.ctr || 0}%</span>
+                    <div className="flex justify-between items-center bg-cream/30 p-2.5 rounded-xl border border-warm-gray/60">
+                      <span className="text-stone">Recommendation CTR</span>
+                      <span className="font-bold text-gold">{metrics?.feedback?.ctr || 0}%</span>
                     </div>
-                    <div className="flex justify-between items-center bg-white/2 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-neutral-400">Helpful Rating (👍)</span>
-                      <span className="font-bold text-white">{metrics?.feedback?.helpful || 0}</span>
+                    <div className="flex justify-between items-center bg-cream/30 p-2.5 rounded-xl border border-warm-gray/60">
+                      <span className="text-stone">Helpful Rating (👍)</span>
+                      <span className="font-bold text-ink">{metrics?.feedback?.helpful || 0}</span>
                     </div>
-                    <div className="flex justify-between items-center bg-white/2 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-neutral-400">Not Relevant Rating (👎)</span>
-                      <span className="font-bold text-red-400">{metrics?.feedback?.notRelevant || 0}</span>
+                    <div className="flex justify-between items-center bg-cream/30 p-2.5 rounded-xl border border-warm-gray/60">
+                      <span className="text-stone">Not Relevant Rating (👎)</span>
+                      <span className="font-bold text-red-500">{metrics?.feedback?.notRelevant || 0}</span>
                     </div>
-                    <div className="flex justify-between items-center bg-white/2 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-neutral-400">Saves from Recs</span>
-                      <span className="font-bold text-purple-400">{metrics?.feedback?.saved || 0}</span>
+                    <div className="flex justify-between items-center bg-cream/30 p-2.5 rounded-xl border border-warm-gray/60">
+                      <span className="text-stone">Saves from Recs</span>
+                      <span className="font-bold text-sage">{metrics?.feedback?.saved || 0}</span>
                     </div>
-                    <div className="flex justify-between items-center bg-white/2 p-2.5 rounded-xl border border-white/5">
-                      <span className="text-neutral-400">Plans from Recs</span>
-                      <span className="font-bold text-blue-400">{metrics?.feedback?.plans || 0}</span>
+                    <div className="flex justify-between items-center bg-cream/30 p-2.5 rounded-xl border border-warm-gray/60">
+                      <span className="text-stone">Plans from Recs</span>
+                      <span className="font-bold text-ocean">{metrics?.feedback?.plans || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -759,65 +765,67 @@ export default function AdminView({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3.5 top-3 w-4 h-4 text-neutral-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone" />
               <input
                 type="text"
                 placeholder="Search destinations by name or country..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#121212] border border-white/5 text-xs text-white shadow-inner focus:outline-none focus:border-[#A3E635]"
+                className="w-full pl-10 pr-4 py-3 sm:py-2.5 rounded-xl bg-white border border-warm-gray text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
               />
             </div>
 
             <button
               onClick={openCreateDestForm}
-              className="px-5 py-2.5 rounded-2xl bg-[#A3E635] text-black hover:bg-lime-400 text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 shadow-lg active:scale-95 cursor-pointer"
+              className="px-5 py-3 sm:py-2.5 rounded-xl bg-night text-white hover:bg-ink text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer touch-action-manipulation select-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
               <span>Add Destination</span>
             </button>
           </div>
 
-          {/* Destinations Table */}
-          <div className="bg-[#121212]/85 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+          {/* Destinations Table (desktop) */}
+          <div className="hidden sm:block bg-white border border-warm-gray rounded-3xl overflow-hidden shadow-card">
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-left text-xs">
                 <thead>
-                  <tr className="bg-white/2 text-neutral-400 uppercase font-bold tracking-wider border-b border-white/5">
-                    <th className="py-4 px-6">Destination</th>
-                    <th className="py-4 px-6">Location</th>
-                    <th className="py-4 px-6">Coordinates</th>
-                    <th className="py-4 px-6">Attributes</th>
-                    <th className="py-4 px-6 text-right">Budget Guide</th>
-                    <th className="py-4 px-6 text-right">Actions</th>
+                  <tr className="bg-sand text-stone uppercase font-bold tracking-wider border-b border-warm-gray">
+                    <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Destination</th>
+                    <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Location</th>
+                    <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Coordinates</th>
+                    <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Attributes</th>
+                    <th className="py-4 px-6 text-right text-[10px] font-mono tracking-[0.25em]">Budget Guide</th>
+                    <th className="py-4 px-6 text-right text-[10px] font-mono tracking-[0.25em]">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-warm-gray/60">
                   {filteredTours.map((tour) => (
-                    <tr key={tour.id} className="hover:bg-white/2 transition-colors">
+                    <tr key={tour.id} className="hover:bg-cream/30 transition-colors">
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
                           <img
                             src={tour.bannerImage}
                             alt={tour.title}
-                            className="w-12 h-12 rounded-xl object-cover border border-white/5 shrink-0"
+                            loading="lazy"
+                            decoding="async"
+                            className="w-12 h-12 rounded-xl object-cover border border-warm-gray shrink-0"
                           />
                           <div>
-                            <p className="font-bold text-white text-sm">{tour.title}</p>
-                            <p className="text-[10px] text-neutral-400 mt-0.5">{tour.duration}</p>
+                            <p className="font-medium text-ink text-sm">{tour.title}</p>
+                            <p className="text-[10px] text-stone mt-0.5">{tour.duration}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 px-6 font-semibold text-neutral-300">
+                      <td className="py-4 px-6 font-medium text-muted">
                         <div className="flex items-center gap-1.5">
-                          <MapPin className="w-3.5 h-3.5 text-neutral-500" />
+                          <MapPin className="w-3.5 h-3.5 text-stone" />
                           <span>{tour.location}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-6 font-mono text-[10px] text-neutral-400">
+                      <td className="py-4 px-6 font-mono text-[10px] text-stone">
                         {tour.latitude && tour.longitude ? (
                           <div className="flex items-center gap-1">
-                            <Navigation className="w-3 h-3 text-[#A3E635]" />
+                            <Navigation className="w-3 h-3 text-gold" />
                             <span>{tour.latitude.toFixed(4)}, {tour.longitude.toFixed(4)}</span>
                           </div>
                         ) : (
@@ -827,28 +835,28 @@ export default function AdminView({
                       <td className="py-4 px-6">
                         <div className="flex gap-1.5 flex-wrap">
                           {tour.category === 'trending' && (
-                            <span className="bg-[#A3E635]/10 text-[#A3E635] border border-[#A3E635]/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Trending</span>
+                            <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Trending</span>
                           )}
                           {tour.category === 'popular' && (
-                            <span className="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Featured</span>
+                            <span className="bg-ocean/10 text-ocean border border-ocean/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Featured</span>
                           )}
-                          <span className="bg-white/5 text-neutral-300 px-2 py-0.5 rounded text-[9px] font-semibold">{tour.difficulty}</span>
+                          <span className="bg-cream/30 text-stone px-2 py-0.5 rounded text-[9px] font-medium">{tour.difficulty}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-right font-bold text-[#A3E635]">
+                      <td className="py-4 px-6 text-right font-semibold text-ink">
                         ${tour.price.toLocaleString()}
                       </td>
                       <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                         <button
                           onClick={() => openEditDestForm(tour)}
-                          className="p-2 rounded-lg bg-white/5 text-neutral-300 hover:bg-[#A3E635] hover:text-black active:scale-95 transition-all cursor-pointer inline-flex border border-white/5"
+                          className="p-2 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-warm-gray/60 touch-action-manipulation select-none"
                           title="Edit"
                         >
                           <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteDestClick(tour.id, tour.title)}
-                          className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-650 hover:text-white active:scale-95 transition-all cursor-pointer inline-flex border border-red-500/20"
+                          className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-red-200 touch-action-manipulation select-none"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -860,6 +868,66 @@ export default function AdminView({
               </table>
             </div>
           </div>
+
+          {/* Destinations Card List (mobile) */}
+          <div className="sm:hidden space-y-3">
+            {filteredTours.map((tour) => (
+              <div key={tour.id} className="bg-white border border-warm-gray rounded-2xl p-4 shadow-card">
+                <div className="flex items-start gap-3">
+                  <img
+                    src={tour.bannerImage}
+                    alt={tour.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-16 h-16 rounded-xl object-cover border border-warm-gray shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-ink text-sm truncate">{tour.title}</p>
+                    <p className="text-[10px] text-stone mt-0.5 truncate">{tour.location}</p>
+                    <div className="flex gap-1.5 mt-2 flex-wrap">
+                      {tour.category === 'trending' && (
+                        <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Trending</span>
+                      )}
+                      {tour.category === 'popular' && (
+                        <span className="bg-ocean/10 text-ocean border border-ocean/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Featured</span>
+                      )}
+                      <span className="bg-cream/30 text-stone px-2 py-0.5 rounded text-[9px] font-medium">{tour.difficulty}</span>
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="font-semibold text-ink text-sm">${tour.price.toLocaleString()}</p>
+                    <p className="text-[10px] text-stone mt-0.5">{tour.duration}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3 pt-3 border-t border-warm-gray/60">
+                  {tour.latitude && tour.longitude ? (
+                    <span className="text-[10px] text-stone font-mono flex items-center gap-1">
+                      <Navigation className="w-3 h-3 text-gold" />
+                      {tour.latitude.toFixed(2)}, {tour.longitude.toFixed(2)}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-red-400">No coords</span>
+                  )}
+                  <div className="ml-auto flex gap-2">
+                    <button
+                      onClick={() => openEditDestForm(tour)}
+                      className="p-2 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-warm-gray/60"
+                      title="Edit"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteDestClick(tour.id, tour.title)}
+                      className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-red-200"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -868,97 +936,99 @@ export default function AdminView({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3.5 top-3 w-4 h-4 text-neutral-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone" />
               <input
                 type="text"
                 placeholder="Search experiences..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-[#121212] border border-white/5 text-xs text-white shadow-inner focus:outline-none focus:border-[#A3E635]"
+                className="w-full pl-10 pr-4 py-3 sm:py-2.5 rounded-xl bg-white border border-warm-gray text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
               />
             </div>
 
             <button
               onClick={openCreateExpForm}
-              className="px-5 py-2.5 rounded-2xl bg-[#A3E635] text-black hover:bg-lime-400 text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-1.5 shadow-lg active:scale-95 cursor-pointer"
+              className="px-5 py-3 sm:py-2.5 rounded-xl bg-night text-white hover:bg-ink text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer touch-action-manipulation select-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
               <span>Create Experience</span>
             </button>
           </div>
 
-          {/* Experiences Table */}
-          <div className="bg-[#121212]/85 border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+          {/* Experiences Table (desktop) */}
+          <div className="hidden sm:block bg-white border border-warm-gray rounded-3xl overflow-hidden shadow-card">
             {loadingExperiences ? (
-              <div className="text-center py-12 text-neutral-400">Loading experiences...</div>
+              <div className="text-center py-12 text-stone text-xs">Loading experiences...</div>
             ) : filteredExperiences.length === 0 ? (
-              <div className="text-center py-16 text-neutral-400">
-                <Sparkles className="w-12 h-12 mx-auto stroke-[1.2] mb-3 text-neutral-600" />
-                <p className="text-sm font-semibold">No experiences registered</p>
+              <div className="text-center py-16 text-stone">
+                <Sparkles className="w-12 h-12 mx-auto stroke-[1.2] mb-3 text-stone/40" />
+                <p className="text-sm font-medium text-ink">No experiences registered</p>
                 <p className="text-xs mt-1">Create experience nodes to enrich your AI recommendations.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-left text-xs">
                   <thead>
-                    <tr className="bg-white/2 text-neutral-400 uppercase font-bold tracking-wider border-b border-white/5">
-                      <th className="py-4 px-6">Experience Node</th>
-                      <th className="py-4 px-6">Icon Name</th>
-                      <th className="py-4 px-6">Budget Target</th>
-                      <th className="py-4 px-6">Duration Range</th>
-                      <th className="py-4 px-6 text-center">Featured</th>
-                      <th className="py-4 px-6 text-right">Actions</th>
+                    <tr className="bg-sand text-stone uppercase font-bold tracking-wider border-b border-warm-gray">
+                      <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Experience Node</th>
+                      <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Icon</th>
+                      <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Budget Target</th>
+                      <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Duration</th>
+                      <th className="py-4 px-6 text-center text-[10px] font-mono tracking-[0.25em]">Featured</th>
+                      <th className="py-4 px-6 text-right text-[10px] font-mono tracking-[0.25em]">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-warm-gray/60">
                     {filteredExperiences.map((exp) => (
-                      <tr key={exp.id} className="hover:bg-white/2 transition-colors">
+                      <tr key={exp.id} className="hover:bg-cream/30 transition-colors">
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
                             {exp.featuredImage ? (
                               <img
                                 src={exp.featuredImage}
                                 alt={exp.name}
-                                className="w-10 h-10 rounded-lg object-cover border border-white/5 shrink-0"
+                                loading="lazy"
+                                decoding="async"
+                                className="w-10 h-10 rounded-lg object-cover border border-warm-gray shrink-0"
                               />
                             ) : (
-                              <div className="w-10 h-10 rounded-lg bg-neutral-800 flex items-center justify-center shrink-0 border border-white/5">
-                                <Sparkles className="w-4 h-4 text-neutral-500" />
+                              <div className="w-10 h-10 rounded-lg bg-cream flex items-center justify-center shrink-0 border border-warm-gray">
+                                <Sparkles className="w-4 h-4 text-stone" />
                               </div>
                             )}
                             <div>
-                              <p className="font-bold text-white text-sm">{exp.name}</p>
-                              <p className="text-[10px] text-neutral-400 mt-0.5 font-mono">{exp.slug}</p>
+                              <p className="font-medium text-ink text-sm">{exp.name}</p>
+                              <p className="text-[10px] text-stone mt-0.5 font-mono">{exp.slug}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="py-4 px-6 font-mono text-[#A3E635] text-xs">
+                        <td className="py-4 px-6 font-mono text-gold text-xs">
                           {exp.icon || 'Sparkles'}
                         </td>
-                        <td className="py-4 px-6 font-semibold text-neutral-300">
+                        <td className="py-4 px-6 font-medium text-muted">
                           ${exp.estimatedBudget?.toLocaleString() || 'Flexible'}
                         </td>
-                        <td className="py-4 px-6 text-neutral-400 font-medium">
+                        <td className="py-4 px-6 text-stone">
                           {exp.durationRange || 'N/A'}
                         </td>
                         <td className="py-4 px-6 text-center">
                           {exp.featured ? (
-                            <span className="bg-[#A3E635]/15 text-[#A3E635] border border-[#A3E635]/30 px-2 py-0.5 rounded-full text-[9px] font-bold">YES</span>
+                            <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded-full text-[9px] font-bold">YES</span>
                           ) : (
-                            <span className="text-neutral-500">—</span>
+                            <span className="text-stone/40">—</span>
                           )}
                         </td>
                         <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                           <button
                             onClick={() => openEditExpForm(exp)}
-                            className="p-2 rounded-lg bg-white/5 text-neutral-300 hover:bg-[#A3E635] hover:text-black active:scale-95 transition-all cursor-pointer inline-flex border border-white/5"
+                            className="p-2 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-warm-gray/60 touch-action-manipulation select-none"
                             title="Edit"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteExpClick(exp.id, exp.name)}
-                            className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-650 hover:text-white active:scale-95 transition-all cursor-pointer inline-flex border border-red-500/20"
+                            className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex border border-red-200 touch-action-manipulation select-none"
                             title="Delete"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -971,109 +1041,168 @@ export default function AdminView({
               </div>
             )}
           </div>
+
+          {/* Experiences Card List (mobile) */}
+          <div className="sm:hidden space-y-3">
+            {loadingExperiences ? (
+              <div className="text-center py-12 text-stone text-xs">Loading experiences...</div>
+            ) : filteredExperiences.length === 0 ? (
+              <div className="text-center py-12 text-stone">
+                <Sparkles className="w-10 h-10 mx-auto stroke-[1.2] mb-2 text-stone/40" />
+                <p className="text-sm font-medium text-ink">No experiences registered</p>
+              </div>
+            ) : (
+              filteredExperiences.map((exp) => (
+                <div key={exp.id} className="bg-white border border-warm-gray rounded-2xl p-4 shadow-card">
+                  <div className="flex items-start gap-3">
+                    {exp.featuredImage ? (
+                      <img
+                        src={exp.featuredImage}
+                        alt={exp.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-14 h-14 rounded-xl object-cover border border-warm-gray shrink-0"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-cream flex items-center justify-center shrink-0 border border-warm-gray">
+                        <Sparkles className="w-5 h-5 text-stone" />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-ink text-sm truncate">{exp.name}</p>
+                      <p className="text-[10px] text-stone mt-0.5 font-mono truncate">{exp.slug}</p>
+                      <div className="flex gap-2 mt-2 flex-wrap">
+                        <span className="text-[10px] text-muted">${exp.estimatedBudget?.toLocaleString() || 'Flexible'}</span>
+                        <span className="text-[10px] text-stone">{exp.durationRange || ''}</span>
+                        {exp.featured && (
+                          <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded-full text-[9px] font-bold">Featured</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                      <button
+                        onClick={() => openEditExpForm(exp)}
+                        className="p-2 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-warm-gray/60"
+                        title="Edit"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteExpClick(exp.id, exp.name)}
+                        className="p-2 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer border border-red-200"
+                        title="Delete"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       )}
 
       {/* Destination Form Slider Overlay */}
       {isDestFormOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-md animate-[fadeIn_0.2s_ease-out]">
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/30 backdrop-blur-sm">
           <div onClick={() => setIsDestFormOpen(false)} className="absolute inset-0" />
-          <div className="relative w-full max-w-2xl bg-[#0d0d0d] border-l border-white/10 shadow-2xl h-full flex flex-col p-6 overflow-y-auto animate-[slideLeft_0.3s_cubic-bezier(0.16,1,0.3,1)] text-white">
+          <div className="relative w-full sm:max-w-2xl bg-warm-white border-l border-warm-gray shadow-elevated h-full flex flex-col p-4 sm:p-6 overflow-y-auto overscroll-behavior-contain [-webkit-overflow-scrolling]:touch">
             
-            <div className="flex items-center justify-between pb-4 border-b border-white/5 mb-6">
+            <div className="flex items-start justify-between pb-4 border-b border-warm-gray mb-6">
               <div>
-                <h3 className="text-lg font-black uppercase tracking-tight text-[#A3E635]">
-                  {editingDest ? 'Edit Luxury Destination' : 'Register New Destination'}
+                <h3 className="text-xl font-light font-display lowercase tracking-tight text-gold">
+                  {editingDest ? 'edit destination' : 'new destination'}
                 </h3>
-                <p className="text-[10px] text-neutral-400 uppercase tracking-widest mt-0.5">
-                  RAG Database Content Model
+                <p className="text-[10px] text-stone font-mono uppercase tracking-[0.25em] mt-1">
+                  destination content model
                 </p>
               </div>
               <button
                 onClick={() => setIsDestFormOpen(false)}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-all cursor-pointer"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-cream/30 hover:bg-cream text-stone hover:text-ink transition-all cursor-pointer shrink-0 touch-action-manipulation select-none"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveDest} className="space-y-5 flex-1 pb-10">
+            <form onSubmit={handleSaveDest} className="space-y-4 sm:space-y-5 flex-1 pb-10">
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Destination Name *</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Destination Name *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Maldives Luxury Atoll"
+                    placeholder="e.g. Varanasi"
                     value={destName}
                     onChange={(e) => setDestName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Region / Category</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Region / Category</label>
                   <input
                     type="text"
                     placeholder="e.g. South Asia"
                     value={destRegion}
                     onChange={(e) => setDestRegion(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">City *</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">City *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Male"
+                    placeholder="e.g. Varanasi"
                     value={destCity}
                     onChange={(e) => setDestCity(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Country *</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Country *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Maldives"
+                    placeholder="e.g. India"
                     value={destCountry}
                     onChange={(e) => setDestCountry(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Budget Guide ($) *</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Budget Guide ($) *</label>
                   <input
                     type="number"
                     required
                     value={destPrice}
                     onChange={(e) => setDestPrice(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Duration Guide</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Duration Guide</label>
                   <input
                     type="text"
                     value={destDuration}
                     onChange={(e) => setDestDuration(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Difficulty Level</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Difficulty Level</label>
                   <select
                     value={destDifficulty}
                     onChange={(e) => setDestDifficulty(e.target.value as any)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors appearance-none"
                   >
                     <option value="Easy">Easy</option>
                     <option value="Moderate">Moderate</option>
@@ -1083,159 +1212,159 @@ export default function AdminView({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Latitude * (Leaflet Map)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Latitude *</label>
                   <input
                     type="number"
                     step="0.000001"
                     required
                     value={destLatitude}
                     onChange={(e) => setDestLatitude(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Longitude * (Leaflet Map)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Longitude *</label>
                   <input
                     type="number"
                     step="0.000001"
                     required
                     value={destLongitude}
                     onChange={(e) => setDestLongitude(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="p-4 bg-white/2 rounded-2xl border border-white/5 space-y-4">
-                <span className="text-[10px] font-black uppercase text-[#A3E635] tracking-widest block">RAG Scoring Coefficients (0-100)</span>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="p-4 bg-cream/30 rounded-2xl border border-warm-gray space-y-4">
+                <span className="text-[10px] font-mono font-bold text-gold uppercase tracking-[0.25em] block">Scores (0-100)</span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="space-y-1">
-                    <label className="text-[9px] font-semibold text-neutral-400">Adventure</label>
+                    <label className="text-[9px] font-medium text-stone">Adventure</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={destAdventureScore}
                       onChange={(e) => setDestAdventureScore(Number(e.target.value))}
-                      className="w-full px-3 py-2 bg-[#121212] border border-white/10 rounded-lg text-xs focus:outline-none focus:border-[#A3E635] text-white text-center font-bold"
+                      className="w-full px-3 py-3 sm:py-2 bg-white border border-warm-gray rounded-lg text-xs text-ink text-center font-medium focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[9px] font-semibold text-neutral-400">Culture</label>
+                    <label className="text-[9px] font-medium text-stone">Culture</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={destCulturalScore}
                       onChange={(e) => setDestCulturalScore(Number(e.target.value))}
-                      className="w-full px-3 py-2 bg-[#121212] border border-white/10 rounded-lg text-xs focus:outline-none focus:border-[#A3E635] text-white text-center font-bold"
+                      className="w-full px-3 py-3 sm:py-2 bg-white border border-warm-gray rounded-lg text-xs text-ink text-center font-medium focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[9px] font-semibold text-neutral-400">Luxury</label>
+                    <label className="text-[9px] font-medium text-stone">Luxury</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={destLuxuryScore}
                       onChange={(e) => setDestLuxuryScore(Number(e.target.value))}
-                      className="w-full px-3 py-2 bg-[#121212] border border-white/10 rounded-lg text-xs focus:outline-none focus:border-[#A3E635] text-white text-center font-bold"
+                      className="w-full px-3 py-3 sm:py-2 bg-white border border-warm-gray rounded-lg text-xs text-ink text-center font-medium focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[9px] font-semibold text-neutral-400">Family</label>
+                    <label className="text-[9px] font-medium text-stone">Family</label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={destFamilyScore}
                       onChange={(e) => setDestFamilyScore(Number(e.target.value))}
-                      className="w-full px-3 py-2 bg-[#121212] border border-white/10 rounded-lg text-xs focus:outline-none focus:border-[#A3E635] text-white text-center font-bold"
+                      className="w-full px-3 py-3 sm:py-2 bg-white border border-warm-gray rounded-lg text-xs text-ink text-center font-medium focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Best Months (commas)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Best Months (commas)</label>
                   <input
                     type="text"
                     value={destBestMonths}
                     onChange={(e) => setDestBestMonths(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Travel Styles (commas)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Travel Styles (commas)</label>
                   <input
                     type="text"
                     value={destTravelStyles}
                     onChange={(e) => setDestTravelStyles(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Activities (commas)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Activities (commas)</label>
                   <input
                     type="text"
                     value={destActivities}
                     onChange={(e) => setDestActivities(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Tags (commas)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Tags (commas)</label>
                   <input
                     type="text"
                     value={destTags}
                     onChange={(e) => setDestTags(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Banner Image URL *</label>
+                <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Banner Image URL *</label>
                 <input
                   type="url"
                   required
                   placeholder="/images/tours/destination-banner.jpg"
                   value={destBannerImage}
                   onChange={(e) => setDestBannerImage(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                  className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Description *</label>
+                <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Description *</label>
                 <textarea
                   required
                   rows={4}
-                  placeholder="Premium description of the escape sanctuary..."
+                  placeholder="Destination description..."
                   value={destDescription}
                   onChange={(e) => setDestDescription(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white resize-none"
+                  className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none"
                 />
               </div>
 
-              <div className="flex gap-4 pt-4">
+              <div className="flex gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => {
                     setDestFeatured(!destFeatured);
                     if (destFeatured) setDestTrending(false);
                   }}
-                  className={`flex-1 py-3.5 rounded-xl border text-xs font-bold uppercase tracking-wider text-center transition-all cursor-pointer ${
-                    destFeatured ? 'bg-blue-500/10 border-blue-500 text-blue-450' : 'bg-transparent border-white/10 text-neutral-400'
+                  className={`flex-1 py-3.5 rounded-xl border text-[10px] font-bold uppercase tracking-[0.18em] text-center transition-all cursor-pointer touch-action-manipulation select-none ${
+                    destFeatured ? 'bg-ocean/10 border-ocean text-ocean' : 'bg-white border-warm-gray text-stone'
                   }`}
                 >
-                  Featured escape
+                  featured
                 </button>
                 <button
                   type="button"
@@ -1243,11 +1372,11 @@ export default function AdminView({
                     setDestTrending(!destTrending);
                     if (destTrending) setDestFeatured(false);
                   }}
-                  className={`flex-1 py-3.5 rounded-xl border text-xs font-bold uppercase tracking-wider text-center transition-all cursor-pointer ${
-                    destTrending ? 'bg-[#A3E635]/10 border-[#A3E635] text-[#A3E635]' : 'bg-transparent border-white/10 text-neutral-400'
+                  className={`flex-1 py-3.5 rounded-xl border text-[10px] font-bold uppercase tracking-[0.18em] text-center transition-all cursor-pointer touch-action-manipulation select-none ${
+                    destTrending ? 'bg-gold/10 border-gold text-gold' : 'bg-white border-warm-gray text-stone'
                   }`}
                 >
-                  Trending escape
+                  trending
                 </button>
               </div>
 
@@ -1255,15 +1384,15 @@ export default function AdminView({
                 <button
                   type="button"
                   onClick={() => setIsDestFormOpen(false)}
-                  className="flex-1 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold uppercase tracking-wider text-neutral-350 transition-all cursor-pointer text-center border border-white/5"
+                  className="flex-1 py-3.5 rounded-xl bg-white border border-warm-gray text-stone hover:bg-cream/30 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center touch-action-manipulation select-none"
                 >
-                  Cancel
+                  cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3.5 rounded-xl bg-[#A3E635] text-black hover:bg-lime-400 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer text-center shadow-lg"
+                  className="flex-1 py-3.5 rounded-xl bg-gold text-white hover:bg-gold-light text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center shadow-md"
                 >
-                  Save to DB
+                  save destination
                 </button>
               </div>
 
@@ -1274,129 +1403,129 @@ export default function AdminView({
 
       {/* Experience Form Slider Overlay */}
       {isExpFormOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-md animate-[fadeIn_0.2s_ease-out]">
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/30 backdrop-blur-sm">
           <div onClick={() => setIsExpFormOpen(false)} className="absolute inset-0" />
-          <div className="relative w-full max-w-xl bg-[#0d0d0d] border-l border-white/10 shadow-2xl h-full flex flex-col p-6 overflow-y-auto animate-[slideLeft_0.3s_cubic-bezier(0.16,1,0.3,1)] text-white">
+          <div className="relative w-full sm:max-w-xl bg-warm-white border-l border-warm-gray shadow-elevated h-full flex flex-col p-4 sm:p-6 overflow-y-auto overscroll-behavior-contain [-webkit-overflow-scrolling]:touch">
             
-            <div className="flex items-center justify-between pb-4 border-b border-white/5 mb-6">
+            <div className="flex items-start justify-between pb-4 border-b border-warm-gray mb-6">
               <div>
-                <h3 className="text-lg font-black uppercase tracking-tight text-[#A3E635]">
-                  {editingExp ? 'Edit Travel Experience' : 'Create Custom Experience'}
+                <h3 className="text-xl font-light font-display lowercase tracking-tight text-gold">
+                  {editingExp ? 'edit experience' : 'new experience'}
                 </h3>
-                <p className="text-[10px] text-neutral-400 uppercase tracking-widest mt-0.5">
-                  RAG Database Content Model
+                <p className="text-[10px] text-stone font-mono uppercase tracking-[0.25em] mt-1">
+                  experience content model
                 </p>
               </div>
               <button
                 onClick={() => setIsExpFormOpen(false)}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white transition-all cursor-pointer"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-cream/30 hover:bg-cream text-stone hover:text-ink transition-all cursor-pointer shrink-0 touch-action-manipulation select-none"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveExp} className="space-y-5 flex-1">
+            <form onSubmit={handleSaveExp} className="space-y-4 sm:space-y-5 flex-1">
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Experience Name *</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Experience Name *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Alpine Heli-Skiing"
+                    placeholder="e.g. Himalayan Trek"
                     value={expName}
                     onChange={(e) => setExpName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Lucide Icon name *</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Icon Name *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Mountain, Award, Sparkles"
+                    placeholder="e.g. Mountain, Compass"
                     value={expIcon}
                     onChange={(e) => setExpIcon(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Target Budget ($)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Target Budget ($)</label>
                   <input
                     type="number"
                     value={expEstimatedBudget}
                     onChange={(e) => setExpEstimatedBudget(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink focus:outline-none focus:border-gold transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Duration Range</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Duration Range</label>
                   <input
                     type="text"
                     placeholder="e.g. 3-5 days"
                     value={expDurationRange}
                     onChange={(e) => setExpDurationRange(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Difficulty Level</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Difficulty Level</label>
                   <input
                     type="text"
                     placeholder="e.g. Advanced"
                     value={expDifficultyLevel}
                     onChange={(e) => setExpDifficultyLevel(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Connected Styles (commas)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Connected Styles (commas)</label>
                   <input
                     type="text"
                     placeholder="Adventure, Wildlife"
                     value={expTravelStyles}
                     onChange={(e) => setExpTravelStyles(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Search Tags (commas)</label>
+                  <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Search Tags (commas)</label>
                   <input
                     type="text"
                     placeholder="Winter, Sports"
                     value={expTags}
                     onChange={(e) => setExpTags(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                    className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                   />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Featured Image URL *</label>
+                <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Featured Image URL *</label>
                 <input
                   type="url"
                   required
                   placeholder="/images/cat-adventure.jpg"
                   value={expFeaturedImage}
                   onChange={(e) => setExpFeaturedImage(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white"
+                  className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider">Description</label>
+                <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Description</label>
                 <textarea
                   rows={4}
-                  placeholder="Luxury description of the adventure experience node..."
+                  placeholder="Experience description..."
                   value={expDescription}
                   onChange={(e) => setExpDescription(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[#121212] border border-white/10 rounded-xl text-xs focus:outline-none focus:border-[#A3E635] text-white resize-none"
+                  className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-warm-gray rounded-xl text-xs text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none"
                 />
               </div>
 
@@ -1406,9 +1535,9 @@ export default function AdminView({
                   id="expFeatured"
                   checked={expFeatured}
                   onChange={(e) => setExpFeatured(e.target.checked)}
-                  className="w-4.5 h-4.5 border border-white/10 rounded bg-[#121212] text-[#A3E635] focus:ring-0 cursor-pointer"
+                  className="w-4 h-4 border border-warm-gray rounded bg-white text-gold focus:ring-0 cursor-pointer"
                 />
-                <label htmlFor="expFeatured" className="text-xs text-neutral-300 font-bold select-none cursor-pointer">
+                <label htmlFor="expFeatured" className="text-xs text-ink font-medium select-none cursor-pointer">
                   Feature this experience on the landing page
                 </label>
               </div>
@@ -1417,15 +1546,15 @@ export default function AdminView({
                 <button
                   type="button"
                   onClick={() => setIsExpFormOpen(false)}
-                  className="flex-1 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold uppercase tracking-wider text-neutral-350 transition-all cursor-pointer text-center border border-white/5"
+                  className="flex-1 py-3.5 rounded-xl bg-white border border-warm-gray text-stone hover:bg-cream/30 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center touch-action-manipulation select-none"
                 >
-                  Cancel
+                  cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3.5 rounded-xl bg-[#A3E635] text-black hover:bg-lime-400 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer text-center shadow-lg"
+                  className="flex-1 py-3.5 rounded-xl bg-gold text-white hover:bg-gold-light text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center shadow-md"
                 >
-                  Save Experience
+                  save experience
                 </button>
               </div>
 

@@ -769,27 +769,126 @@ export default function AiPlannerView({
     );
   }
 
+  // Derive preview persona label
+  const previewPersona = travelers && mood
+    ? `${travelers === 'solo' ? 'Solo' : travelers === 'couple' ? 'Couple' : travelers === 'family' ? 'Family' : 'Group'} ${mood} Journey`
+    : travelers
+    ? `${travelers === 'solo' ? 'Solo Explorer' : travelers === 'couple' ? 'Couple Escape' : travelers === 'family' ? 'Family Journey' : 'Group Adventure'}`
+    : selectedDestination
+    ? 'Building your journey...'
+    : 'Select a destination to begin';
+
+  const previewDestTour = selectedDestination ? TOURS_DATA.find(t => t.id === selectedDestination) : null;
+  const previewSteps = [
+    { label: 'Destination', value: previewDestTour?.title || null },
+    { label: 'Companion', value: COMPANION_OPTIONS.find(o => o.id === travelers)?.label || null },
+    { label: 'Budget', value: BUDGET_OPTIONS.find(o => o.id === budget)?.label || null },
+    { label: 'Style', value: STYLE_OPTIONS.find(o => o.id === mood)?.label || null },
+    { label: 'Energy', value: ENERGY_OPTIONS.find(o => o.id === energy)?.label || null },
+    { label: 'Duration', value: DURATION_OPTIONS.find(o => o.id === duration)?.desc || null },
+  ];
+
   // ── 6-STEP QUESTIONNAIRE WIZARD ──
   return (
-    <div className="pt-10 pb-32 px-6 max-w-3xl mx-auto min-h-screen bg-sand flex flex-col justify-center select-none text-left">
+    <div className="pt-6 pb-32 px-4 md:px-6 max-w-7xl mx-auto min-h-screen bg-sand flex flex-col lg:flex-row gap-8 items-start justify-center select-none">
       
-      {/* Wizard Progress Header */}
-      <div className="mb-10 space-y-4">
-        <div className="flex items-center justify-between">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-saffron font-bold">
-            Journey Builder
-          </span>
-          <span className="font-mono text-[10px] text-muted/60 uppercase tracking-widest font-bold">
-            Step {step} of {totalSteps}
-          </span>
+      {/* ── LEFT LIVE PREVIEW PANEL ── */}
+      <div className="hidden lg:block w-72 xl:w-80 shrink-0 sticky top-24">
+        <div className="rounded-3xl border border-warm-gray bg-white shadow-card overflow-hidden">
+          {/* Destination Preview Image */}
+          <div className="relative aspect-[4/3] bg-cream overflow-hidden">
+            {previewDestTour ? (
+              <>
+                <img
+                  src={previewDestTour.bannerImage}
+                  alt={previewDestTour.title}
+                  className="w-full h-full object-cover transition-all duration-700 ease-out"
+                  onError={e => { e.currentTarget.style.opacity = '0' }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-gold block mb-1">{previewDestTour.chapterName}</span>
+                  <h3 className="font-display text-2xl text-white font-light lowercase leading-none">{previewDestTour.title}</h3>
+                  <p className="text-[9px] text-white/60 mt-1">{previewDestTour.location.split(',')[0]}</p>
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center bg-cream/60">
+                <Compass className="w-10 h-10 text-muted/20 mb-2" />
+                <span className="text-[10px] font-mono uppercase tracking-wider text-muted/40">No destination yet</span>
+              </div>
+            )}
+          </div>
+
+          {/* Journey Profile Being Built */}
+          <div className="p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 font-bold">Your Journey Profile</span>
+              <Sparkles className="w-3 h-3 text-gold animate-pulse" />
+            </div>
+            
+            <p className="font-display text-lg text-night font-light lowercase leading-tight">{previewPersona.toLowerCase()}</p>
+
+            <div className="space-y-2 pt-2 border-t border-warm-gray/40">
+              {previewSteps.map((s, i) => (
+                <div key={i} className="flex items-center justify-between text-[10px]">
+                  <span className="font-mono uppercase tracking-wider text-muted/50">{s.label}</span>
+                  {s.value ? (
+                    <span className="font-bold text-night truncate max-w-[130px] text-right">{s.value}</span>
+                  ) : (
+                    <span className="text-muted/30 italic">—</span>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {step === totalSteps && duration && (
+              <div className="pt-3 border-t border-warm-gray/40">
+                <p className="text-[9px] font-mono text-muted/60 uppercase tracking-widest text-center">Ready to generate ✦</p>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Progress Line */}
-        <div className="w-full bg-cream h-1 rounded-full overflow-hidden">
-          <div 
-            className="bg-saffron h-full transition-all duration-500 ease-out" 
-            style={{ width: `${(step / totalSteps) * 100}%` }}
-          />
+        {/* Journey theme chips if destination selected */}
+        {previewDestTour && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {previewDestTour.tags?.map(tag => (
+              <span key={tag} className="px-2.5 py-1 rounded-full bg-white border border-warm-gray text-[8px] font-mono uppercase tracking-wider text-muted/70">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── RIGHT WIZARD PANEL ── */}
+      <div className="flex-1 min-w-0 pt-4 pb-4 flex flex-col justify-center text-left">
+
+      {/* Wizard Progress Header */}
+      <div className="mb-8 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-saffron font-bold block">Journey Builder</span>
+            <span className="font-mono text-[10px] text-muted/50 uppercase tracking-widest">Craft your Indian story</span>
+          </div>
+          <div className="text-right">
+            <span className="font-display text-2xl font-light text-night">{step}</span>
+            <span className="text-muted/50 font-mono text-sm">/{totalSteps}</span>
+          </div>
+        </div>
+
+        {/* Progress Steps */}
+        <div className="flex items-center gap-1.5">
+          {Array.from({ length: totalSteps }).map((_, i) => (
+            <div
+              key={i}
+              className={`h-1 rounded-full transition-all duration-500 ease-out ${
+                i < step ? 'bg-saffron' : i === step - 1 ? 'bg-saffron/80' : 'bg-cream'
+              }`}
+              style={{ flex: i < step ? '2 1 0' : '1 1 0' }}
+            />
+          ))}
         </div>
       </div>
 
@@ -1088,6 +1187,7 @@ export default function AiPlannerView({
         </button>
       </div>
 
+    </div>
     </div>
   );
 }

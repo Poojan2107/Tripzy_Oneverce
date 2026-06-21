@@ -70,34 +70,34 @@ export default function AdminPage() {
 
   if (status === "loading") {
     return (
-      <div className="bg-[#090909] text-white min-h-screen flex flex-col items-center justify-center font-sans">
-        <span className="text-xs uppercase tracking-widest text-slate-500 animate-pulse">Verifying Credentials...</span>
+      <div className="bg-sand min-h-screen flex flex-col items-center justify-center font-sans">
+        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-stone animate-pulse">Verifying credentials...</span>
       </div>
     );
   }
 
   if (!session || session.user.role !== "ADMIN") {
     return (
-      <div className="bg-[#090909] text-white min-h-screen flex flex-col items-center justify-center p-6 text-center font-sans space-y-6">
-        <div className="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500 mx-auto">
+      <div className="bg-sand min-h-screen flex flex-col items-center justify-center p-6 text-center font-sans space-y-6">
+        <div className="w-16 h-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mx-auto border border-rose-200">
           <ShieldAlert className="w-8 h-8" />
         </div>
-        <h1 className="text-4xl font-light font-display lowercase">Access Denied</h1>
-        <p className="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
+        <h1 className="text-4xl font-light font-display lowercase">access denied</h1>
+        <p className="text-xs text-stone max-w-xs mx-auto leading-relaxed">
           The section of Tripzy India you are trying to reach is restricted to administrators.
         </p>
         <a
           href="/"
-          className="px-6 py-2.5 rounded-xl bg-white text-black hover:bg-slate-200 text-xs font-bold uppercase tracking-wider transition-colors inline-block"
+          className="px-7 py-3 rounded-full bg-night text-white hover:bg-ink text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 inline-block"
         >
-          Return to Home
+          return to home
         </a>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#090909] text-white min-h-screen">
+    <div className="bg-sand min-h-screen">
       <AdminView
         tours={displayTours}
         wishlistCount={0}

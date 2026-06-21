@@ -1,11 +1,25 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getSharedItineraryAction } from '../../../backend/actions/shareActions';
 import { Compass, Calendar, MapPin, Sparkles, Navigation, DollarSign } from 'lucide-react';
 import SharedMap from './SharedMap';
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const res = await getSharedItineraryAction(id);
+  const title = res.success && res.data
+    ? `Shared Itinerary — ${res.data.title || 'Tripzy Journey'}`
+    : 'Itinerary Not Found — Tripzy';
+  return {
+    title,
+    openGraph: { title },
+    twitter: { title },
+  };
 }
 
 export default async function SharePage(props: PageProps) {

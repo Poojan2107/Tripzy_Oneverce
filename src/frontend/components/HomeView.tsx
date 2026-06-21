@@ -128,7 +128,7 @@ export default function HomeView({
   }, [tours]);
 
   return (
-    <div className="bg-sand min-h-screen text-night selection:bg-saffron/20 selection:text-night">
+    <div className="bg-sand min-h-[100dvh] text-night selection:bg-saffron/20 selection:text-night">
       {/* ── SECTION 01: HERO CAROUSEL ── */}
       <Hero
         tours={tours}

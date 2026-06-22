@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Instrument_Serif, La_Belle_Aurore } from "next/font/google";
 import "../frontend/styles/globals.css";
 import Providers from "./providers";
+import Footer from "../frontend/components/Footer";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -101,7 +102,12 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="flex flex-col min-h-[100dvh]">
+            {children}
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   );

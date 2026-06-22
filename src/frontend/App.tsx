@@ -33,7 +33,6 @@ export default function App() {
   const [tours, setTours] = useState<Tour[]>([]);
   const [wishlistIds, setWishlistIds] = useState<string[]>(['varanasi-spiritual', 'kerala-houseboats']);
   const [savedItineraries, setSavedItineraries] = useState<any[]>([]);
-  const [bookedTours, setBookedTours] = useState<any[]>([]);
   const [isClient, setIsClient] = useState(false);
   const [loadingDestinations, setLoadingDestinations] = useState(true);
   const [loadedItinerary, setLoadedItinerary] = useState<any | null>(null);
@@ -47,8 +46,6 @@ export default function App() {
       const savedItins = localStorage.getItem('tripzy_itineraries');
       if (savedItins) setSavedItineraries(JSON.parse(savedItins));
 
-      const savedBookings = localStorage.getItem('tripzy_bookings');
-      if (savedBookings) setBookedTours(JSON.parse(savedBookings));
     } catch (e) {
       console.error("Failed to parse local storage", e);
     }
@@ -129,12 +126,6 @@ export default function App() {
     }
   }, [savedItineraries, isClient]);
 
-  useEffect(() => {
-    if (isClient) {
-      localStorage.setItem('tripzy_bookings', JSON.stringify(bookedTours));
-    }
-  }, [bookedTours, isClient]);
-
   const displayTours = sortToursIndiaFirst(isClient && tours.length > 0 ? tours : TOURS_DATA);
 
   useEffect(() => {
@@ -169,10 +160,6 @@ export default function App() {
       if (isClient) localStorage.setItem('tripzy_itineraries', JSON.stringify(updated));
       return updated;
     });
-  };
-
-  const handleCancelBooking = (bookingCode: string) => {
-    setBookedTours((prev) => prev.filter((b) => b.bookingCode !== bookingCode));
   };
 
   const handleQuickCategoryClick = (categoryTag: string) => {
@@ -283,11 +270,9 @@ export default function App() {
             {currentTab === 'saved' && (
               <TripsWishlistView
                 wishlistTours={wishlistTours}
-                bookedTours={bookedTours}
                 savedItineraries={savedItineraries}
                 onTourSelect={handleSelectTour}
                 onRemoveWishlist={handleToggleWishlist}
-                onCancelExpedition={handleCancelBooking}
                 onNavigateExplore={() => {
                   setExploreCategoryFilter('all');
                   setCurrentTab('explore');

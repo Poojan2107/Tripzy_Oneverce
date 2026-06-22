@@ -1,32 +1,18 @@
 "use client";
 import { useState, useMemo } from 'react';
 import { 
-  Heart, BookOpen, MapPin, CheckCircle2, Trash2, Printer, 
-  ArrowRight, Sparkles, Compass, Clock, Award, Shield, User
+  MapPin, Trash2, 
+  Sparkles, Clock, Award, User
 } from 'lucide-react';
 import { Tour } from '../types';
 import { TOURS_DATA } from '../data';
 import { formatINR } from '../utils/currency';
 
-interface BookedItem {
-  tourId: string;
-  tourTitle: string;
-  bannerImage: string;
-  price: number;
-  guests: number;
-  date: string;
-  fullName: string;
-  email: string;
-  bookingCode: string;
-}
-
 interface TripsWishlistViewProps {
   wishlistTours: Tour[];
-  bookedTours: BookedItem[];
   savedItineraries: any[];
   onTourSelect: (tour: Tour) => void;
   onRemoveWishlist: (tourId: string) => void;
-  onCancelExpedition: (bookingCode: string) => void;
   onNavigateExplore: () => void;
   onNavigatePlanner?: () => void;
   onDeleteItinerary: (id: string) => void;
@@ -69,22 +55,9 @@ function EmptyPassportState({
   type 
 }: { 
   onNavigate: () => void; 
-  type: 'bookings' | 'wishlist' | 'itineraries'; 
+  type: 'wishlist' | 'itineraries'; 
 }) {
   const content = {
-    bookings: {
-      tag: "expeditions ledger",
-      title: "no active voyages logged yet",
-      desc: "Your ledger has no registered expeditions. Once you secure a regional booking, your physical travel voucher and boarding pass will manifest here.",
-      btnText: "Plan My First Journey",
-      illustration: (
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="text-gold/25">
-          <path d="M6 16C6 11.5817 9.58172 8 14 8H50C54.4183 8 58 11.5817 58 16V22C55.7909 22 54 23.7909 54 26C54 28.2091 55.7909 30 58 30V48C58 52.4183 54.4183 56 50 56H14C9.58172 56 6 52.4183 6 48V30C8.20914 30 10 28.2091 10 26C10 23.7909 8.20914 22 6 22V16Z" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,3" fill="rgba(214,168,95,0.02)"/>
-          <circle cx="32" cy="32" r="12" stroke="currentColor" stroke-width="1"/>
-          <path d="M32 20V44M20 32H44" stroke="currentColor" stroke-width="0.75" stroke-dasharray="2,2"/>
-        </svg>
-      )
-    },
     wishlist: {
       tag: "curated desires",
       title: "your catalog of desires is empty",
@@ -150,18 +123,16 @@ function EmptyPassportState({
 
 export default function TripsWishlistView({
   wishlistTours,
-  bookedTours,
   savedItineraries = [],
   onTourSelect,
   onRemoveWishlist,
-  onCancelExpedition,
   onNavigateExplore,
   onNavigatePlanner,
   onDeleteItinerary,
   onInspectItinerary,
   allTours = []
 }: TripsWishlistViewProps) {
-  const [activeSubTab, setActiveSubTab] = useState<'bookings' | 'wishlist' | 'itineraries'>('bookings');
+  const [activeSubTab, setActiveSubTab] = useState<'wishlist' | 'itineraries'>('wishlist');
 
   const getDestinationPrettyName = (destId: string | null | undefined, list?: Tour[]): string => {
     if (!destId) return 'Curated Destination';
@@ -185,77 +156,9 @@ export default function TripsWishlistView({
     return destId;
   };
 
-  const triggerPrint = (booking: BookedItem) => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Boarding Pass - TZ-${booking.bookingCode}</title>
-          <style>
-            body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fff; color: #1E293B; padding: 40px; margin: 0; }
-            .ticket { border: 2px solid #E2DCD3; border-radius: 20px; padding: 30px; max-width: 600px; margin: 0 auto; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-            .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #E2DCD3; padding-bottom: 20px; margin-bottom: 20px; }
-            .logo { font-size: 24px; font-weight: bold; font-family: 'Georgia', serif; }
-            .badge { background: #004D40; color: #fff; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 10px; text-transform: uppercase; }
-            .details { display: grid; gap: 20px; grid-template-columns: 1fr 1fr; margin-bottom: 20px; }
-            .detail-block { margin-bottom: 15px; }
-            .label { font-size: 9px; text-transform: uppercase; color: #64748B; letter-spacing: 0.1em; font-weight: bold; }
-            .value { font-size: 14px; font-weight: bold; color: #1E293B; margin-top: 4px; }
-            .footer { border-top: 1px solid #E2DCD3; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; }
-            .barcode { font-family: monospace; font-size: 12px; letter-spacing: 0.25em; color: #64748B; }
-          </style>
-        </head>
-        <body>
-          <div class="ticket">
-            <div class="header">
-              <div class="logo">tripzy.ai</div>
-              <div class="badge">Voucher Confirmed</div>
-            </div>
-            <div class="details">
-              <div class="detail-block">
-                <div class="label">Destination Chapter</div>
-                <div class="value">${booking.tourTitle}</div>
-              </div>
-              <div class="detail-block">
-                <div class="label">Voucher Code</div>
-                <div class="value">TZ-${booking.bookingCode}</div>
-              </div>
-              <div class="detail-block">
-                <div class="label">Departure Date</div>
-                <div class="value">${booking.date}</div>
-              </div>
-              <div class="detail-block">
-                <div class="label">Guests</div>
-                <div class="value">${booking.guests} ${booking.guests === 1 ? 'Traveler' : 'Travelers'}</div>
-              </div>
-              <div class="detail-block" style="grid-column: span 2;">
-                <div class="label">Lead Passenger</div>
-                <div class="value">${booking.fullName} (${booking.email})</div>
-              </div>
-            </div>
-            <div class="footer">
-              <div class="barcode">||||| | ||||| | ||| ||||| ${booking.bookingCode}</div>
-              <div style="font-size: 10px; color: #64748B;">tripzy.ai/saved</div>
-            </div>
-          </div>
-          <script>
-            window.onload = function() {
-              window.print();
-              setTimeout(function() { window.close(); }, 500);
-            };
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-  };
-
-  // List of all destinations booked or saved
+  // List of all destinations saved
   const checkedDestinationIds = useMemo(() => {
     const ids = new Set<string>();
-    bookedTours.forEach(b => ids.add(b.tourId));
     savedItineraries.forEach(i => {
       if (i.destination) {
         // Find matching tour id
@@ -274,7 +177,7 @@ export default function TripsWishlistView({
       }
     });
     return ids;
-  }, [bookedTours, savedItineraries]);
+  }, [savedItineraries]);
 
   // Dynamic Badge Checklist
   const badgesList = useMemo(() => {
@@ -291,9 +194,9 @@ export default function TripsWishlistView({
 
   // Journey Score calculation (max 100 for basic MVP)
   const journeyScore = useMemo(() => {
-    const score = (bookedTours.length * 25) + (savedItineraries.length * 15) + (wishlistTours.length * 5);
+    const score = (savedItineraries.length * 15) + (wishlistTours.length * 5);
     return Math.min(score, 100) || 10; // Default baseline score
-  }, [bookedTours, savedItineraries, wishlistTours]);
+  }, [savedItineraries, wishlistTours]);
 
   return (
     <div className="pt-8 md:pt-10 pb-32 px-4 md:px-6 max-w-6xl mx-auto select-none bg-sand min-h-[100dvh] text-left animate-page-enter">
@@ -378,22 +281,6 @@ export default function TripsWishlistView({
       <div className="flex justify-start mb-8 overflow-x-auto scrollbar-none -mx-4 px-4 md:mx-0 md:px-0">
         <div className="bg-white border bg-cream p-1.5 rounded-2xl flex gap-1 shadow-sm min-w-max">
           <button
-            onClick={() => setActiveSubTab('bookings')}
-            className={`px-4 md:px-5 py-3 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer min-h-[44px] shrink-0 ${
-              activeSubTab === 'bookings'
-                ? 'bg-night text-white shadow-sm'
-                : 'text-muted/60 hover:text-night'
-            }`}
-          >
-            <span>Expeditions</span>
-            {bookedTours.length > 0 && (
-              <span className="h-4.5 min-w-4.5 rounded-full bg-gold text-[8px] font-bold text-white flex items-center justify-center px-1">
-                {bookedTours.length}
-              </span>
-            )}
-          </button>
-          
-          <button
             onClick={() => setActiveSubTab('wishlist')}
             className={`px-4 md:px-5 py-3 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer min-h-[44px] shrink-0 ${
               activeSubTab === 'wishlist'
@@ -426,91 +313,6 @@ export default function TripsWishlistView({
           </button>
         </div>
       </div>
-
-      {/* Booked Expeditions Panel */}
-      {activeSubTab === 'bookings' && (
-        <div className="space-y-6">
-          {bookedTours.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {bookedTours.map((bt) => (
-                <div 
-                  key={bt.bookingCode}
-                  className="bg-white rounded-[28px] border bg-cream shadow-sm overflow-hidden flex flex-col justify-between"
-                >
-                  <div className="p-6 text-left">
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <div className="flex gap-4">
-                        <img 
-                          src={bt.bannerImage} 
-                          alt={bt.tourTitle}
-                          className="w-16 h-16 rounded-2xl object-cover border bg-cream bg-sand"
-                          loading="lazy"
-                          decoding="async"
-                          onError={e => { e.currentTarget.style.opacity = '0' }}
-                        />
-                        <div>
-                          <span className="text-[8px] font-mono text-gold uppercase tracking-widest block mb-0.5">
-                            Confirmed Booking
-                          </span>
-                          <h3 className="font-display font-light text-xl leading-snug text-night line-clamp-1">
-                            {bt.tourTitle}
-                          </h3>
-                          <p className="text-[9px] text-muted/60 mt-0.5 font-mono">TZ-{bt.bookingCode}</p>
-                        </div>
-                      </div>
-
-                      <span className="px-2.5 py-0.5 bg-[#004D40]/10 text-[9px] font-bold text-[#004D40] rounded-full uppercase tracking-wider border border-[#004D40]/20">
-                        Confirmed
-                      </span>
-                    </div>
-
-                    {/* Voucher Specs */}
-                    <div className="grid grid-cols-2 gap-3 bg-warm-white p-4 rounded-2xl border bg-cream/60 text-[10px]">
-                      <div>
-                        <p className="text-[8px] text-muted/50 uppercase font-bold tracking-wider">Departure Date</p>
-                        <p className="font-bold text-night mt-0.5">{bt.date}</p>
-                      </div>
-                      <div>
-                        <p className="text-[8px] text-muted/50 uppercase font-bold tracking-wider">Travelers</p>
-                        <p className="font-bold text-night mt-0.5">{bt.guests} {bt.guests === 1 ? 'Guest' : 'Guests'}</p>
-                      </div>
-                      <div className="mt-2.5">
-                        <p className="text-[8px] text-muted/50 uppercase font-bold tracking-wider">Booked by</p>
-                        <p className="font-bold text-night uppercase mt-0.5 truncate max-w-[160px] sm:max-w-[200px]">{bt.fullName}</p>
-                      </div>
-                      <div className="mt-2.5">
-                        <p className="text-[8px] text-muted/50 uppercase font-bold tracking-wider">Total</p>
-                        <p className="font-bold text-saffron mt-0.5">{formatINR(bt.price * bt.guests)}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="bg-warm-white border-t bg-cream p-4 px-4 md:px-6 flex flex-wrap items-center justify-between gap-2">
-                    <button
-                      onClick={() => triggerPrint(bt)}
-                      className="text-[10px] font-bold uppercase tracking-wider text-muted/60 hover:text-gold flex items-center gap-1.5 transition-colors cursor-pointer min-h-[44px]"
-                    >
-                      <Printer className="w-3.5 h-3.5 text-gold" />
-                      <span>Print Voucher</span>
-                    </button>
-
-                    <button
-                      onClick={() => onCancelExpedition(bt.bookingCode)}
-                      className="text-[10px] font-bold uppercase tracking-wider text-rose-500 hover:text-rose-600 hover:bg-rose-50 px-3 py-2 rounded-xl transition-all cursor-pointer min-h-[44px]"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Cancel Booking</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyPassportState type="bookings" onNavigate={onNavigatePlanner || onNavigateExplore} />
-          )}
-        </div>
-      )}
 
       {/* Curated Wishlist Panel */}
       {activeSubTab === 'wishlist' && (

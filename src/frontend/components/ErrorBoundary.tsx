@@ -4,6 +4,8 @@ import { Compass } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
+  fallback?: ReactNode;
+  onError?: () => void;
 }
 
 interface State {
@@ -20,8 +22,16 @@ export default class ErrorBoundary extends Component<Props, State> {
     return { hasError: true };
   }
 
+  componentDidCatch(error: Error) {
+    console.error("ErrorBoundary caught:", error);
+    this.props.onError?.();
+  }
+
   render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
       return (
         <div className="w-full min-h-[100dvh] bg-background text-ink flex flex-col items-center justify-center p-6">
           <Compass className="w-12 h-12 text-gold mb-4" />

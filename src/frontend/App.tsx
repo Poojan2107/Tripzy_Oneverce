@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { Compass } from 'lucide-react';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import { TabType, Tour } from './types';
@@ -213,6 +214,22 @@ export default function App() {
 
       <main className="w-full flex-grow">
         {selectedTour ? (
+          <ErrorBoundary
+            onError={() => handleSelectTour(null)}
+            fallback={
+              <div className="w-full min-h-[60dvh] flex flex-col items-center justify-center p-6">
+                <Compass className="w-10 h-10 text-gold mb-3" />
+                <h2 className="font-display text-xl text-night font-light lowercase mb-1">could not load chapter</h2>
+                <p className="text-xs text-muted/60 font-light mb-4">This destination details are temporarily unavailable.</p>
+                <button
+                  onClick={() => handleSelectTour(null)}
+                  className="px-5 py-2.5 bg-night text-white text-[10px] font-bold uppercase tracking-wider rounded-xl hover:opacity-90 transition-all"
+                >
+                  Back to Explore
+                </button>
+              </div>
+            }
+          >
           <TourDetailsView
             tour={selectedTour}
             onBack={() => handleSelectTour(null)}
@@ -223,6 +240,7 @@ export default function App() {
             onToggleWishlist={handleToggleWishlist}
             isWishlisted={wishlistIds.includes(selectedTour.id)}
           />
+          </ErrorBoundary>
         ) : (
           <>
             {currentTab === 'home' && (

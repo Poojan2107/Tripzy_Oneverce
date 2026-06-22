@@ -7,7 +7,7 @@ const nextConfig = {
     "127.0.0.1:3000",
     "127.0.0.1",
   ],
-  serverExternalPackages: ["@ai-sdk/google", "ai"],
+  serverExternalPackages: ["@google/genai"],
 };
 
 export default nextConfig;

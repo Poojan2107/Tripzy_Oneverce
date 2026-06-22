@@ -1,6 +1,7 @@
 import { rankDestinations } from "../services/recommender";
 import { getGeminiApiKey } from "../lib/gemini";
 import { checkRateLimit } from "../lib/rate-limit";
+import { GoogleGenAI } from "@google/genai";
 
 function getBaseOfflineItinerary(destName: string, lat: number, lng: number, budget: string) {
   const name = destName.toLowerCase();
@@ -746,49 +747,70 @@ export async function POST(req: Request) {
     `;
 
     try {
-      // Dynamic import of AI packages to avoid runtime failures
-      const [{ google }, { generateObject }, { z }] = await Promise.all([
-        import("@ai-sdk/google").catch(() => null),
-        import("ai").catch(() => null),
-        import("zod").catch(() => { return { z: null } })
-      ]);
-
-      if (!google || !generateObject || !z) {
-        throw new Error("AI packages not available");
-      }
-
-      const result = await generateObject({
-        model: google("gemini-2.0-flash"),
-        schema: z.object({
-          itinerary: z.array(z.object({
-            day: z.string().describe("E.g., Day 1, Day 2"),
-            title: z.string().describe("Title for the day's theme"),
-            description: z.string().describe("Detailed description of activities"),
-            activities: z.array(z.string()).describe("List of specific spots or activities"),
-            latitude: z.number().describe("Latitude coordinate for mapping this day's main spot"),
-            longitude: z.number().describe("Longitude coordinate for mapping this day's main spot")
-          })),
-          costs: z.object({
-            transit: z.number().describe("Estimated transit cost in INR"),
-            stay: z.number().describe("Estimated accommodation cost in INR"),
-            food: z.number().describe("Estimated food & activities cost in INR"),
-            total: z.number().describe("Total estimated cost in INR")
-          }),
-          weather: z.object({
-            temperature: z.string().describe("E.g., 24°C - 28°C"),
-            conditions: z.string().describe("E.g., Sunny, Partly Cloudy")
-          }),
-          nearbyPlaces: z.array(z.object({
-            name: z.string(),
-            distance: z.string().describe("Distance from main destination, e.g., 5km"),
-            description: z.string()
-          }))
-        }),
-        prompt: prompt,
+      const genAI = new GoogleGenAI({ apiKey });
+      const response = await genAI.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "object",
+            properties: {
+              itinerary: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    day: { type: "string" },
+                    title: { type: "string" },
+                    description: { type: "string" },
+                    activities: { type: "array", items: { type: "string" } },
+                    latitude: { type: "number" },
+                    longitude: { type: "number" }
+                  },
+                  required: ["day", "title", "description", "activities", "latitude", "longitude"]
+                }
+              },
+              costs: {
+                type: "object",
+                properties: {
+                  transit: { type: "number" },
+                  stay: { type: "number" },
+                  food: { type: "number" },
+                  total: { type: "number" }
+                },
+                required: ["transit", "stay", "food", "total"]
+              },
+              weather: {
+                type: "object",
+                properties: {
+                  temperature: { type: "string" },
+                  conditions: { type: "string" }
+                },
+                required: ["temperature", "conditions"]
+              },
+              nearbyPlaces: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string" },
+                    distance: { type: "string" },
+                    description: { type: "string" }
+                  },
+                  required: ["name", "distance", "description"]
+                }
+              }
+            },
+            required: ["itinerary", "costs", "weather", "nearbyPlaces"]
+          }
+        }
       });
 
+      const data = JSON.parse(response.text);
+
       const finalResponse = {
-        ...result.object,
+        ...data,
         destinationId: finalDest?.slug || finalDest?.id || undefined,
         destinationDbId: finalDest?.id || undefined,
         recommendationScore: matchDetails?.score || 85,

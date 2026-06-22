@@ -14,12 +14,20 @@ export async function GET() {
       });
     }
 
-    const user = await db.user.findUnique({ where: { id: session.user.id } });
+    let user = await db.user.findUnique({ where: { id: session.user.id } });
 
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found." }), {
         status: 404,
         headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // TESTING_MODE: auto-promote any signed-in user to ADMIN for easy testing
+    if (process.env.TESTING_MODE === "true" && user.role !== "ADMIN") {
+      user = await db.user.update({
+        where: { id: session.user.id },
+        data: { role: "ADMIN" },
       });
     }
 

@@ -13,37 +13,45 @@ interface DiscoveryMapProps {
   onSelectTour: (tour: Tour | null) => void;
 }
 
-const createIcon = (tour: Tour, isActive: boolean) => {
+const createIcon = (tour: Tour, isActive: boolean, simple: boolean) => {
+  if (simple) {
+    return L.divIcon({
+      className: 'custom-map-marker-simple',
+      html: `
+        <div class="relative flex flex-col items-center select-none" style="width: 40px; height: 44px;">
+          <div style="width: 24px; height: 24px; border-radius: 50%; background: ${isActive ? '#E07B39' : '#1E293B'}; border: 3px solid ${isActive ? '#F8F5EE' : '#D6A85F'}; box-shadow: 0 2px 8px rgba(0,0,0,0.25);${isActive ? ' animation: pulse 1.5s infinite;' : ''}"></div>
+          <div style="width: 2px; height: 14px; background: ${isActive ? '#E07B39' : '#1E293B'}; border-radius: 1px;"></div>
+          <div style="position: absolute; top: 28px; left: 50%; transform: translateX(-50%); padding: 2px 8px; border-radius: 4px; background: ${isActive ? '#E07B39' : 'rgba(30,41,59,0.95)'}; color: white; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; border: 1px solid ${isActive ? 'rgba(224,123,57,0.3)' : 'rgba(255,255,255,0.05)'}; max-width: 80px; overflow: hidden; text-overflow: ellipsis;">
+            ${tour.title.toLowerCase().slice(0, 12)}
+          </div>
+        </div>
+      `,
+      iconSize: [40, 44],
+      iconAnchor: [20, 40],
+    });
+  }
+
   return L.divIcon({
     className: 'custom-map-marker-jharokha',
     html: `
       <div class="relative flex flex-col items-center select-none" style="width: 48px; height: 76px;">
-        <!-- Glowing backing circle under active marker -->
         ${isActive ? `
           <div class="absolute top-[6px] left-[6px] w-[36px] h-[36px] rounded-full bg-saffron/30 blur-md animate-pulse"></div>
         ` : ''}
-        
-        <!-- Jharokha Arch Shape SVG -->
         <svg width="48" height="60" viewBox="0 0 48 60" class="drop-shadow-md">
           <defs>
             <clipPath id="jharokha-clip-${tour.id}">
               <path d="M24 3C17 11 6 14 6 25C6 37 15 41 24 49C33 41 42 37 42 25C42 14 31 11 24 3Z" />
             </clipPath>
           </defs>
-          
-          <!-- Outer border arch -->
           <path d="M24 2C16 10 4 13 4 25C4 39 14 43 24 52C34 43 44 39 44 25C44 13 32 10 24 2Z" 
                 fill="${isActive ? '#F8F5EE' : '#ECE6DA'}" 
                 stroke="${isActive ? '#E07B39' : '#D6A85F'}" 
                 stroke-width="2.5" />
-          
-          <!-- Clipped chapter banner image -->
           <image href="${tour.bannerImage}" x="2" y="2" width="44" height="48" 
                  clip-path="url(#jharokha-clip-${tour.id})" 
                  preserveAspectRatio="xMidYMid slice" />
         </svg>
-
-        <!-- Label Flag -->
         <div class="absolute top-[54px] left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded shadow-md border font-mono text-[8px] uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${
           isActive 
             ? 'bg-saffron text-white border-saffron/30 font-bold scale-105 z-20' 
@@ -71,11 +79,10 @@ export default function DiscoveryMap({
   const circuitGroupRef = useRef<L.FeatureGroup | null>(null);
   
   const [mounted, setMounted] = useState(false);
-  const [circuitsVisible, setCircuitsVisible] = useState(true);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [circuitsVisible, setCircuitsVisible] = useState(!isMobile);
   const [activeScreenPos, setActiveScreenPos] = useState<{ x: number; y: number } | null>(null);
   const [showTapHint, setShowTapHint] = useState(true);
-
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const activeTour = tours.find(t => t.id === activeTourId);
 
@@ -163,8 +170,8 @@ export default function DiscoveryMap({
     circuits.forEach((circuit) => {
       L.polyline(circuit.coords, {
         color: circuit.color,
-        weight: 1.5,
-        opacity: 0.35,
+        weight: isMobile ? 1 : 1.5,
+        opacity: isMobile ? 0.15 : 0.35,
         dashArray: '6, 8',
         lineCap: 'round',
         lineJoin: 'round',
@@ -188,7 +195,7 @@ export default function DiscoveryMap({
       if (!lat || !lng) return;
 
       const marker = L.marker([lat, lng], { 
-        icon: createIcon(tour, tour.id === activeTourId) 
+        icon: createIcon(tour, tour.id === activeTourId, isMobile) 
       }).addTo(markerGroup);
 
       marker.bindPopup(`
@@ -223,7 +230,7 @@ export default function DiscoveryMap({
     });
 
     markersRef.current = tempMarkers;
-  }, [tours, mapInstanceRef.current]);
+  }, [tours, mapInstanceRef.current, isMobile]);
 
   // 3. Pan/Zoom to active marker when selected
   const prevActiveRef = useRef<string | null>(null);
@@ -240,13 +247,13 @@ export default function DiscoveryMap({
       if (prev && markersRef.current[prev]) {
         const prevTour = tours.find(t => t.id === prev);
         if (prevTour) {
-          markersRef.current[prev].setIcon(createIcon(prevTour, false));
+          markersRef.current[prev].setIcon(createIcon(prevTour, false, isMobile));
         }
       }
       if (markersRef.current[activeTourId]) {
         const activeTourObj = tours.find(t => t.id === activeTourId);
         if (activeTourObj) {
-          markersRef.current[activeTourId].setIcon(createIcon(activeTourObj, true));
+          markersRef.current[activeTourId].setIcon(createIcon(activeTourObj, true, isMobile));
         }
       }
       prevActiveRef.current = activeTourId;
@@ -266,8 +273,9 @@ export default function DiscoveryMap({
     }
   }, [activeTourId]);
 
-  // 4. Track marker position for radial background wash overlay
+  // 4. Track marker position for radial background wash overlay (desktop only)
   useEffect(() => {
+    if (isMobile) return;
     const map = mapInstanceRef.current;
     if (!map || !activeTourId) {
       setActiveScreenPos(null);
@@ -296,7 +304,7 @@ export default function DiscoveryMap({
       map.off('zoom', updatePosition);
       map.off('viewreset', updatePosition);
     };
-  }, [activeTourId]);
+  }, [activeTourId, isMobile]);
 
   // 5. Toggle circuit visibility
   useEffect(() => {
@@ -358,16 +366,18 @@ export default function DiscoveryMap({
           <span className="w-1.5 h-1.5 rounded-full bg-saffron inline-block animate-pulse"></span>
           <span>Living Atlas</span>
         </div>
-        <button
-          onClick={() => setCircuitsVisible(v => !v)}
-          className={`px-3 py-2 rounded-2xl border text-[9px] font-mono uppercase tracking-widest transition-all cursor-pointer shadow-sm min-h-[44px] ${
-            circuitsVisible
-              ? 'bg-white/90 border-gold/40 text-gold'
-              : 'bg-white/50 border-cream text-muted/40'
-          }`}
-        >
-          {circuitsVisible ? 'Routes On' : 'Routes Off'}
-        </button>
+        {!isMobile && (
+          <button
+            onClick={() => setCircuitsVisible(v => !v)}
+            className={`px-3 py-2 rounded-2xl border text-[9px] font-mono uppercase tracking-widest transition-all cursor-pointer shadow-sm min-h-[44px] ${
+              circuitsVisible
+                ? 'bg-white/90 border-gold/40 text-gold'
+                : 'bg-white/50 border-cream text-muted/40'
+            }`}
+          >
+            {circuitsVisible ? 'Routes On' : 'Routes Off'}
+          </button>
+        )}
       </div>
     </div>
   );

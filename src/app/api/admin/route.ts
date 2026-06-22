@@ -8,44 +8,32 @@ export async function GET() {
     const session = await auth();
     
     if (!session?.user?.id) {
-      return new Response(JSON.stringify({ error: "Not authenticated. Sign in with Google first." }), {
+      return new Response(JSON.stringify({ error: "Not authenticated." }), {
         status: 401,
         headers: { "Content-Type": "application/json" },
       });
     }
 
     const user = await db.user.findUnique({ where: { id: session.user.id } });
-    
+
     if (!user) {
-      return new Response(JSON.stringify({ error: "User not found in database." }), {
+      return new Response(JSON.stringify({ error: "User not found." }), {
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    if (user.role === "ADMIN") {
-      return new Response(JSON.stringify({ message: "You are already an admin.", email: user.email }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    await db.user.update({
-      where: { id: session.user.id },
-      data: { role: "ADMIN" },
-    });
-
     return new Response(JSON.stringify({ 
-      message: "Admin access granted!", 
+      isAdmin: user.role === "ADMIN",
       email: user.email,
-      role: "ADMIN"
+      role: user.role
     }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Admin setup error:", error);
-    return new Response(JSON.stringify({ error: "Failed to set up admin access." }), {
+    console.error("Admin check error:", error);
+    return new Response(JSON.stringify({ error: "Failed to check admin status." }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
@@ -78,21 +66,18 @@ export async function POST(request: Request) {
       });
     }
 
-    const user = await db.user.findUnique({ where: { email } });
-
-    if (!user) {
-      return new Response(JSON.stringify({ error: "User not found. Sign in with Google first to create the account." }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    await db.user.update({
+    // Upsert: creates the user if they don't exist, or promotes existing user
+    const user = await db.user.upsert({
       where: { email },
-      data: { role: "ADMIN" },
+      update: { role: "ADMIN" },
+      create: {
+        email,
+        name: email.split('@')[0],
+        role: "ADMIN",
+      },
     });
 
-    return new Response(JSON.stringify({ message: "Admin access granted!", email, role: "ADMIN" }), {
+    return new Response(JSON.stringify({ message: "Admin access granted!", email, role: user.role }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

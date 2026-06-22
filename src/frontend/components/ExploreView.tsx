@@ -96,18 +96,17 @@ export default function ExploreView({
       }}
     >
       {/* ── MOBILE VIEW TOGGLE BAR ── */}
-      <div className={`md:hidden fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-night text-white px-5 py-3 rounded-full shadow-lg gap-4 text-xs font-mono uppercase tracking-wider ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
+      <div className={`md:hidden fixed bottom-[calc(68px+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-night/95 backdrop-blur-md text-white px-4 py-2.5 rounded-full shadow-lg gap-3 text-xs font-mono uppercase tracking-wider border border-white/10 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         <button 
           onClick={() => setMobileView('list')}
-          className={`flex items-center gap-1.5 min-h-[44px] min-w-[44px] justify-center ${mobileView === 'list' ? 'text-gold font-bold' : 'opacity-70'}`}
+          className={`flex items-center gap-1.5 min-h-[44px] min-w-[52px] justify-center rounded-full px-3 transition-all ${mobileView === 'list' ? 'bg-white/15 text-gold font-bold' : 'opacity-60 hover:opacity-100'}`}
         >
           <List className="w-4 h-4" />
           List
         </button>
-        <div className="w-px h-6 bg-white/20 self-center" />
         <button 
           onClick={() => setMobileView('map')}
-          className={`flex items-center gap-1.5 min-h-[44px] min-w-[44px] justify-center ${mobileView === 'map' ? 'text-gold font-bold' : 'opacity-70'}`}
+          className={`flex items-center gap-1.5 min-h-[44px] min-w-[52px] justify-center rounded-full px-3 transition-all ${mobileView === 'map' ? 'bg-white/15 text-gold font-bold' : 'opacity-60 hover:opacity-100'}`}
         >
           <Map className="w-4 h-4" />
           Map
@@ -279,17 +278,18 @@ export default function ExploreView({
         {activeTour && mobileView === 'list' && (
           <>
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-black/30 z-40 md:hidden" onClick={() => setActiveTourId(null)} />
-          <div className="fixed bottom-0 md:absolute inset-x-0 md:inset-auto md:top-4 md:bottom-4 md:right-4 md:w-[400px] bg-white border border-warm-gray rounded-t-3xl md:rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter md:animate-none max-h-[70dvh] md:max-h-none pb-[env(safe-area-inset-bottom,0px)]">
+          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden" onClick={() => setActiveTourId(null)} />
+          <div className="fixed bottom-0 md:absolute inset-x-0 md:inset-auto md:top-4 md:bottom-4 md:right-4 md:w-[400px] bg-white border border-warm-gray rounded-t-3xl md:rounded-3xl shadow-elevated z-50 overflow-hidden flex flex-col animate-page-enter md:animate-none max-h-[75dvh] md:max-h-none pb-[env(safe-area-inset-bottom,0px)]">
             {/* Drag handle for mobile */}
-            <div className="md:hidden flex justify-center pt-2 pb-0 shrink-0">
-              <div className="w-8 h-1 rounded-full bg-warm-gray" />
+            <div className="md:hidden flex justify-center pt-3 pb-1 shrink-0">
+              <div className="w-10 h-1 rounded-full bg-warm-gray/60" />
+              <span className="sr-only">Tap backdrop to close</span>
             </div>
             {/* Dynamic accent top strip */}
             <div className="h-1 w-full shrink-0 hidden md:block" style={{ background: `linear-gradient(90deg, ${activeTour.accents?.primary || '#D6A85F'}, ${activeTour.accents?.secondary || '#0F172A'})` }} />
             
             {/* Header image */}
-            <div className="relative aspect-[16/9] bg-cream shrink-0 overflow-hidden">
+            <div className="relative aspect-[16/9] md:aspect-[16/9] bg-cream shrink-0 overflow-hidden">
               <img src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover bg-cream transition-transform duration-700 hover:scale-105" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
               
@@ -451,20 +451,20 @@ export default function ExploreView({
             </div>
 
             {/* Bottom Actions */}
-            <div className="p-4 border-t border-warm-gray bg-warm-white flex gap-2 shrink-0 pb-[env(safe-area-inset-bottom,8px)]">
+            <div className="p-4 border-t border-warm-gray bg-warm-white flex gap-2.5 shrink-0 pb-[max(12px,env(safe-area-inset-bottom,8px))]">
               <button
                 onClick={() => setActiveTourId(null)}
-                className="md:hidden px-4 py-3.5 rounded-xl border border-warm-gray bg-white text-[10px] font-bold uppercase tracking-wider text-muted hover:text-night transition-all cursor-pointer"
+                className="md:hidden px-5 py-3.5 rounded-xl border border-warm-gray bg-white text-[10px] font-bold uppercase tracking-wider text-muted hover:text-night transition-all cursor-pointer min-w-[80px]"
               >
                 Close
               </button>
               <button
                 onClick={() => onTourSelect(activeTour)}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-white text-[10px] font-bold uppercase tracking-[0.15em] transition-all cursor-pointer shadow-sm hover:opacity-90"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-white text-[10px] font-bold uppercase tracking-[0.15em] transition-all cursor-pointer shadow-sm hover:opacity-90 min-h-[48px]"
                 style={{ backgroundColor: activeTour.accents?.primary || '#E07B39' }}
               >
                 <span>Explore Chapter</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>

@@ -1,4 +1,5 @@
-import { Compass, Search, Map, Sparkles, Heart } from 'lucide-react';
+import { Compass, Search, Map, Sparkles, Heart, Shield } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { TabType } from '../types';
 
 interface BottomNavbarProps {
@@ -14,11 +15,15 @@ export default function BottomNavbar({
   wishlistCount,
   visible = true
 }: BottomNavbarProps) {
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'ADMIN';
+
   const tabs = [
     { id: 'home' as TabType, label: 'Home', icon: Compass },
     { id: 'explore' as TabType, label: 'Explore', icon: Search },
     { id: 'ai-planner' as TabType, label: 'Planner', icon: Sparkles },
     { id: 'saved' as TabType, label: 'Passport', icon: Heart, badge: wishlistCount },
+    ...(isAdmin ? [{ id: 'admin' as TabType, label: 'Admin', icon: Shield, href: '/admin' }] : []),
   ];
 
   return (
@@ -34,7 +39,7 @@ export default function BottomNavbar({
           return (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id)}
+              onClick={() => tab.href ? window.location.href = tab.href : onTabChange(tab.id)}
               className="relative py-2 px-3 flex flex-col items-center justify-center transition-all duration-200 rounded-xl cursor-pointer min-h-[44px] min-w-[44px]"
             >
               <Icon

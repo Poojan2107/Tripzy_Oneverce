@@ -182,7 +182,7 @@ export default function GlassNavbar({
             </div>
           ) : (
             <button
-              onClick={() => signIn("google")}
+              onClick={() => signIn("google", { callbackUrl: window.location.href })}
               className={`inline-flex items-center gap-1.5 px-5 py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[44px] ${
                 isTransparent
                   ? 'bg-white text-night hover:bg-gold hover:text-white'

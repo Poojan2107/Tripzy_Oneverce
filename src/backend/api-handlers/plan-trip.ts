@@ -1,6 +1,3 @@
-import { google } from "@ai-sdk/google";
-import { generateObject } from "ai";
-import { z } from "zod";
 import { rankDestinations } from "../services/recommender";
 import { getGeminiApiKey } from "../lib/gemini";
 import { checkRateLimit } from "../lib/rate-limit";
@@ -602,6 +599,7 @@ function buildOfflineResponse(finalDest: any, destination: string, budget: strin
 }
 
 export async function POST(req: Request) {
+  let body: any = {};
   try {
     if (!(await checkRateLimit(req))) {
       return new Response(JSON.stringify({ error: "Too many requests. Please try again shortly." }), {
@@ -610,6 +608,11 @@ export async function POST(req: Request) {
       });
     }
 
+    try {
+      body = await req.json();
+    } catch {
+      body = {};
+    }
     const {
       destination, 
       fromLocation, 
@@ -624,7 +627,7 @@ export async function POST(req: Request) {
       companion,
       travelPace,
       experience 
-    } = await req.json();
+    } = body;
 
     // 1. Calculate trip duration in days
     let tripDuration = 5;
@@ -743,8 +746,19 @@ export async function POST(req: Request) {
     `;
 
     try {
+      // Dynamic import of AI packages to avoid runtime failures
+      const [{ google }, { generateObject }, { z }] = await Promise.all([
+        import("@ai-sdk/google").catch(() => null),
+        import("ai").catch(() => null),
+        import("zod").catch(() => { return { z: null } })
+      ]);
+
+      if (!google || !generateObject || !z) {
+        throw new Error("AI packages not available");
+      }
+
       const result = await generateObject({
-        model: google("gemini-1.5-flash"),
+        model: google("gemini-2.0-flash"),
         schema: z.object({
           itinerary: z.array(z.object({
             day: z.string().describe("E.g., Day 1, Day 2"),
@@ -793,7 +807,7 @@ export async function POST(req: Request) {
         headers: { 'Content-Type': 'application/json' },
       });
     } catch (aiError) {
-      console.warn("Gemini API call failed. Executing offline fallback itinerary:", aiError);
+      console.warn("Gemini API call failed, using offline fallback:", aiError);
       const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails, budgetAmount);
       return new Response(JSON.stringify(offlineResponse), {
         status: 200,
@@ -802,10 +816,22 @@ export async function POST(req: Request) {
     }
   } catch (error: any) {
     console.error("Trip Planning Route Error:", error);
-    const userMessage = "We couldn't complete your itinerary right now. Please try again in a moment.";
-    return new Response(JSON.stringify({ error: userMessage }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    // Ultimate fallback: return offline itinerary even on unexpected errors
+    try {
+      const fallbackDest = (body as any)?.destination || "India";
+      const fallbackBudget = (body as any)?.budget || 'Medium';
+      const offlineResponse = buildOfflineResponse(null, fallbackDest, fallbackBudget, 4, null, undefined);
+      return new Response(JSON.stringify(offlineResponse), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (fallbackErr) {
+      console.error("Even offline fallback failed:", fallbackErr);
+      const userMessage = "We couldn't complete your itinerary right now. Please try again in a moment.";
+      return new Response(JSON.stringify({ error: userMessage }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
   }
 }

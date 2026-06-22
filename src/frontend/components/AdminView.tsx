@@ -185,7 +185,7 @@ export default function AdminView({
     setDestName('');
     setDestCountry('');
     setDestCity('');
-    setDestRegion('Europe');
+    setDestRegion('North India');
     setDestDescription('');
     setDestPrice(1500);
     setDestDuration('7 Days, 6 Nights');
@@ -193,8 +193,8 @@ export default function AdminView({
     setDestGroupSize('Max 6 travelers');
     setDestFeatured(false);
     setDestTrending(false);
-    setDestLatitude(48.8566);
-    setDestLongitude(2.3522);
+    setDestLatitude(20.5937);
+    setDestLongitude(78.9629);
     setDestAdventureScore(70);
     setDestCulturalScore(80);
     setDestLuxuryScore(90);
@@ -226,16 +226,15 @@ export default function AdminView({
     setDestLatitude(tour.latitude || 0);
     setDestLongitude(tour.longitude || 0);
     
-    // Set scores if available or guess
-    setDestAdventureScore(50);
-    setDestCulturalScore(60);
-    setDestLuxuryScore(80);
+    setDestAdventureScore(70);
+    setDestCulturalScore(75);
+    setDestLuxuryScore(60);
     setDestFamilyScore(50);
     
-    setDestBestMonths(tour.tags?.slice(0, 3).join(', ') || 'June, July');
-    setDestTravelStyles(tour.tags?.join(', ') || 'Luxury');
-    setDestActivities('Guided walks, Dining');
-    setDestTags(tour.tags?.join(', ') || 'Premium');
+    setDestBestMonths('October, November, December');
+    setDestTravelStyles('Cultural, Adventure');
+    setDestActivities('Guided walks, Local dining, Photography');
+    setDestTags('Historic, Scenic');
     setDestBannerImage(tour.bannerImage);
     setIsDestFormOpen(true);
   };

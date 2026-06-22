@@ -2,8 +2,9 @@
 import { useState, useMemo } from 'react';
 import { 
   MapPin, Trash2, 
-  Sparkles, Clock, Award, User
+  Sparkles, Clock, Award, User, LogIn
 } from 'lucide-react';
+import { useSession, signIn } from 'next-auth/react';
 import { Tour } from '../types';
 import { TOURS_DATA } from '../data';
 import { formatINR } from '../utils/currency';
@@ -132,6 +133,7 @@ export default function TripsWishlistView({
   onInspectItinerary,
   allTours = []
 }: TripsWishlistViewProps) {
+  const { data: session } = useSession();
   const [activeSubTab, setActiveSubTab] = useState<'wishlist' | 'itineraries'>('wishlist');
 
   const getDestinationPrettyName = (destId: string | null | undefined, list?: Tour[]): string => {
@@ -200,6 +202,21 @@ export default function TripsWishlistView({
 
   return (
     <div className="pt-8 md:pt-10 pb-32 px-4 md:px-6 max-w-6xl mx-auto select-none bg-sand min-h-[100dvh] text-left animate-page-enter">
+
+      {!session && (
+        <div className="mb-6 p-3 rounded-2xl bg-gold/5 border border-gold/20 flex items-center justify-between gap-3">
+          <p className="text-[10px] text-muted/70 font-light leading-relaxed">
+            Sign in to sync your wishlist and itineraries across devices.
+          </p>
+          <button
+            onClick={() => signIn('google', { callbackUrl: window.location.href })}
+            className="shrink-0 px-3.5 py-2 rounded-lg bg-night text-white text-[8px] font-bold uppercase tracking-wider hover:bg-saffron transition-all cursor-pointer inline-flex items-center gap-1.5 min-h-[44px]"
+          >
+            <LogIn className="w-3 h-3" />
+            Sign In
+          </button>
+        </div>
+      )}
       
       {/* ── PASSPORT DASHBOARD PANEL ── */}
       <div className="mb-8 md:mb-10 p-4 md:p-6 bg-white border bg-cream rounded-3xl shadow-sm space-y-4 md:space-y-6">

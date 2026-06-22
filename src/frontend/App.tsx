@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { useSession, signIn } from 'next-auth/react';
-import { LogIn, Sparkles, Heart as HeartIcon } from 'lucide-react';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import { TabType, Tour } from './types';
@@ -21,7 +19,6 @@ import { useAtmosphere } from './utils/AtmosphereContext';
 
 export default function App() {
   const { setActiveLocation } = useAtmosphere();
-  const { data: session } = useSession();
 
   // Sort: Indian destinations always surface first
   const INDIA_IDS = ['varanasi-spiritual','udaipur-mewar','kerala-houseboats','ladakh-passes','jaisalmer-fort','goa-beach','hampi-ruins','kashmir-meadows','munnar-tea','kutch-salt','cherrapunji-roots','andaman-reefs'];
@@ -263,78 +260,40 @@ export default function App() {
             )}
 
             {currentTab === 'ai-planner' && (
-              !session ? (
-                <div className="pt-8 md:pt-10 pb-32 px-4 md:px-6 max-w-6xl mx-auto select-none bg-sand min-h-[100dvh] text-left animate-page-enter flex flex-col items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-6">
-                    <Sparkles className="w-7 h-7 text-gold" />
-                  </div>
-                  <h2 className="font-display text-3xl font-light text-night lowercase mb-2">sign in to plan</h2>
-                  <p className="text-[11px] text-muted/60 font-light max-w-xs text-center leading-relaxed mb-8">
-                    Sign in to unlock the Journey Builder — create custom itineraries, save your travel journals, and track your exploration.
-                  </p>
-                  <button
-                    onClick={() => signIn('google')}
-                    className="px-6 py-3 bg-night text-white text-[9px] font-bold uppercase tracking-[0.18em] rounded-full hover:bg-saffron transition-all duration-300 cursor-pointer inline-flex items-center gap-2 shadow-md"
-                  >
-                    <LogIn className="w-3.5 h-3.5 text-gold" />
-                    <span>Sign in with Google</span>
-                  </button>
-                </div>
-              ) : (
-                <AiPlannerView
-                  onSaveItinerary={handleSaveItinerary}
-                  loadedItinerary={loadedItinerary}
-                  onClearLoadedItinerary={() => setLoadedItinerary(null)}
-                  allTours={tours}
-                />
-              )
+              <AiPlannerView
+                onSaveItinerary={handleSaveItinerary}
+                loadedItinerary={loadedItinerary}
+                onClearLoadedItinerary={() => setLoadedItinerary(null)}
+                allTours={tours}
+              />
             )}
 
             {currentTab === 'saved' && (
-              !session ? (
-                <div className="pt-8 md:pt-10 pb-32 px-4 md:px-6 max-w-6xl mx-auto select-none bg-sand min-h-[100dvh] text-left animate-page-enter flex flex-col items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-6">
-                    <HeartIcon className="w-7 h-7 text-gold" />
-                  </div>
-                  <h2 className="font-display text-3xl font-light text-night lowercase mb-2">your passport awaits</h2>
-                  <p className="text-[11px] text-muted/60 font-light max-w-xs text-center leading-relaxed mb-8">
-                    Sign in to access your Passport — save wishlisted destinations, store custom itineraries, and earn travel badges as you explore India.
-                  </p>
-                  <button
-                    onClick={() => signIn('google')}
-                    className="px-6 py-3 bg-night text-white text-[9px] font-bold uppercase tracking-[0.18em] rounded-full hover:bg-saffron transition-all duration-300 cursor-pointer inline-flex items-center gap-2 shadow-md"
-                  >
-                    <LogIn className="w-3.5 h-3.5 text-gold" />
-                    <span>Sign in with Google</span>
-                  </button>
-                </div>
-              ) : (
-                <TripsWishlistView
-                  wishlistTours={wishlistTours}
-                  savedItineraries={savedItineraries}
-                  onTourSelect={handleSelectTour}
-                  onRemoveWishlist={handleToggleWishlist}
-                  onNavigateExplore={() => {
-                    setExploreCategoryFilter('all');
-                    setCurrentTab('explore');
-                    window.scrollTo({ top: 0, behavior: 'instant' });
-                    window.history.pushState(null, '', '#explore');
-                  }}
-                  onNavigatePlanner={() => {
-                    setCurrentTab('ai-planner');
-                    window.scrollTo({ top: 0, behavior: 'instant' });
-                    window.history.pushState(null, '', '#ai-planner');
-                  }}
-                  onDeleteItinerary={handleDeleteItinerary}
-                  onInspectItinerary={(itin) => {
-                    setLoadedItinerary(itin);
-                    setCurrentTab('ai-planner');
-                    window.scrollTo({ top: 0, behavior: 'instant' });
-                    window.history.pushState(null, '', '#ai-planner');
-                  }}
-                  allTours={tours}
-                />
-              )
+              <TripsWishlistView
+                wishlistTours={wishlistTours}
+                savedItineraries={savedItineraries}
+                onTourSelect={handleSelectTour}
+                onRemoveWishlist={handleToggleWishlist}
+                onNavigateExplore={() => {
+                  setExploreCategoryFilter('all');
+                  setCurrentTab('explore');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                  window.history.pushState(null, '', '#explore');
+                }}
+                onNavigatePlanner={() => {
+                  setCurrentTab('ai-planner');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                  window.history.pushState(null, '', '#ai-planner');
+                }}
+                onDeleteItinerary={handleDeleteItinerary}
+                onInspectItinerary={(itin) => {
+                  setLoadedItinerary(itin);
+                  setCurrentTab('ai-planner');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                  window.history.pushState(null, '', '#ai-planner');
+                }}
+                allTours={tours}
+              />
             )}
           </>
         )}

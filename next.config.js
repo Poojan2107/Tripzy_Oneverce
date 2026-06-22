@@ -7,10 +7,7 @@ const nextConfig = {
     "127.0.0.1:3000",
     "127.0.0.1",
   ],
-  env: {
-    GOOGLE_GENERATIVE_AI_API_KEY:
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY,
-  },
+  serverExternalPackages: ["@ai-sdk/google", "ai"],
 };
 
 export default nextConfig;

@@ -994,6 +994,21 @@ export default function TourDetailsView({
 
         </div>
       </div>
+
+      {/* Mobile sticky CTA */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-warm-gray shadow-elevated px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom,8px))] flex items-center gap-3">
+        <div className="flex-1 min-w-0">
+          <span className="text-lg font-display font-bold text-night">{formatINR(tour.price)}</span>
+          <span className="text-[10px] text-muted font-light ml-1">/ person</span>
+        </div>
+        <button
+          onClick={onPlanClick}
+          className="shrink-0 inline-flex items-center gap-1.5 px-6 py-3 rounded-xl bg-night text-white text-[10px] font-bold uppercase tracking-wider hover:bg-saffron transition-all cursor-pointer min-h-[44px] min-w-[44px]"
+        >
+          <Sparkles className="w-3.5 h-3.5 text-gold" />
+          <span>AI Plan</span>
+        </button>
+      </div>
     </div>
   );
 }

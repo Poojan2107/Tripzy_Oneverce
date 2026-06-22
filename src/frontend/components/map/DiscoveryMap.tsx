@@ -73,8 +73,22 @@ export default function DiscoveryMap({
   const [mounted, setMounted] = useState(false);
   const [circuitsVisible, setCircuitsVisible] = useState(true);
   const [activeScreenPos, setActiveScreenPos] = useState<{ x: number; y: number } | null>(null);
+  const [showTapHint, setShowTapHint] = useState(true);
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const activeTour = tours.find(t => t.id === activeTourId);
+
+  // Auto-dismiss tap hint after 3.5s
+  useEffect(() => {
+    if (!showTapHint) return;
+    if (activeTourId || tours.length === 0) {
+      setShowTapHint(false);
+      return;
+    }
+    const t = setTimeout(() => setShowTapHint(false), 3500);
+    return () => clearTimeout(t);
+  }, [showTapHint, activeTourId, tours.length]);
 
   useEffect(() => {
     setMounted(true);
@@ -98,15 +112,20 @@ export default function DiscoveryMap({
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
     });
 
+    const isMobile = mapContainerRef.current.clientWidth < 768;
+
     // Center map on India by default
     const map = L.map(mapContainerRef.current, {
       center: [20.5937, 78.9629],
       zoom: 5,
-      zoomControl: true,
+      zoomControl: false,
       attributionControl: true,
     });
 
     mapInstanceRef.current = map;
+
+    // Add zoom control to bottom-right for thumb reach on mobile
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
 
     // Light map tiles
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -175,11 +194,11 @@ export default function DiscoveryMap({
       marker.bindPopup(`
         <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; min-width: 160px; text-align: left; background-color: #F8F5EE; padding: 2px;">
           <img src="${tour.bannerImage}" alt="${tour.title}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 6px;" />
-          <h5 style="font-family: 'Instrument Serif', serif; font-size: 15px; font-weight: 500; color: #0F172A; margin: 0 0 2px 0; font-style: italic; lowercase;">${tour.title.toLowerCase()}</h5>
+          <h5 style="font-family: 'Instrument Serif', serif; font-size: 15px; font-weight: 500; color: #0F172A; margin: 0 0 2px 0; font-style: italic;">${tour.title.toLowerCase()}</h5>
           <p style="color: #334155; font-size: 9px; margin: 0 0 6px 0;">📍 ${tour.location.split(',')[0]}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECE6DA; padding-top: 5px; margin-top: 5px;">
             <span style="font-weight: 700; font-size: 11px; color: #0F172A;">${formatINR(tour.price)}</span>
-            <button id="popup-btn-${tour.id}" style="background-color: #0F172A; color: #fff; border: none; font-size: 8px; font-weight: 600; padding: 3px 8px; border-radius: 4px; cursor: pointer;">Inspect</button>
+            <button id="popup-btn-${tour.id}" style="background-color: #0F172A; color: #fff; border: none; font-size: 10px; font-weight: 700; padding: 8px 16px; border-radius: 8px; cursor: pointer; min-width: 70px;">Inspect</button>
           </div>
         </div>
       `, {
@@ -325,10 +344,19 @@ export default function DiscoveryMap({
         />
       )}
 
-      <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-wrap gap-2">
+      {/* Mobile tap hint — auto-dismisses */}
+      {showTapHint && !activeTour && isMobile && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 animate-pulse pointer-events-none">
+          <div className="bg-night/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/10 shadow-lg">
+            <span className="text-[9px] font-mono uppercase tracking-wider text-white/80">Tap a marker</span>
+          </div>
+        </div>
+      )}
+
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center gap-2 p-3 pb-[max(12px,env(safe-area-inset-bottom,8px))]">
         <div className="bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-cream shadow-sm pointer-events-none text-[9px] text-muted/60 font-mono uppercase tracking-widest flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-saffron inline-block animate-pulse"></span>
-          <span>Living Atlas Cartography</span>
+          <span>Living Atlas</span>
         </div>
         <button
           onClick={() => setCircuitsVisible(v => !v)}

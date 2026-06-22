@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect, useMemo } from 'react';
 import {
-  Sparkles, ArrowLeft, ArrowRight, User, Users, Heart, DollarSign,
+  Sparkles, ArrowLeft, ArrowRight, User, Users, Heart, DollarSign, LogIn,
   Mountain, Waves, Utensils, BookOpen, Compass, MapPin, Calendar,
   CheckCircle2, Clock, Sun, Camera, Compass as ShipIcon, Shield, Sparkle
 } from 'lucide-react';
+import { useSession, signIn } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { saveItineraryAction } from '../../backend/actions/shareActions';
 import { getAtmosphere } from '../utils/atmosphere';
@@ -168,6 +169,7 @@ export default function AiPlannerView({
   const [activeDayTab, setActiveDayTab] = useState(0);
   const [saving, setSaving] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
+  const { data: session } = useSession();
 
   const [selectedDestination, setSelectedDestination] = useState<string | null>(null);
   const [fromLocation, setFromLocation] = useState('');
@@ -332,7 +334,7 @@ export default function AiPlannerView({
     try {
       const destName = selectedDestination ? (TOURS_DATA.find(t => t.id === selectedDestination)?.title || selectedDestination) : 'Unknown';
       const controller = new AbortController();
-      timeoutId = setTimeout(() => controller.abort(), 30000);
+      timeoutId = setTimeout(() => controller.abort(), 90000);
       const res = await fetch('/api/plan-trip', {
         signal: controller.signal,
         method: 'POST',
@@ -376,12 +378,19 @@ export default function AiPlannerView({
       clearInterval(msgInterval);
       setLoading(false);
       console.error("AI Generation failed:", err);
-      setItineraryResult({ error: err.message });
+      const friendlyMsg = err.name === 'AbortError'
+        ? 'The journey is taking longer than expected. Please try again.'
+        : 'Something went wrong while planning your trip. Please try again.';
+      setItineraryResult({ error: friendlyMsg });
     }
   };
 
   const handleSave = async () => {
     if (!itineraryResult || itineraryResult.error) return;
+    if (!session) {
+      signIn('google', { callbackUrl: window.location.href });
+      return;
+    }
     setSaving(true);
     try {
       const destId = itineraryResult.destinationId || selectedDestination || '';

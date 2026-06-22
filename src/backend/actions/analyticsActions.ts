@@ -9,6 +9,11 @@ export async function getDashboardMetrics() {
     const totalViews = await db.viewEvent.count();
     const totalPlannerRuns = await db.plannerEvent.count();
     const totalRecommendations = await db.recommendationEvent.count();
+    const totalUsers = await db.user.count();
+    const totalDestinations = await db.destination.count();
+    const totalExperiences = await db.experience.count();
+    const totalSavedItineraries = await db.savedItinerary.count();
+    const totalAdmins = await db.user.count({ where: { role: "ADMIN" } });
 
     // 2. Search trends
     const rawSearchTrends = await db.searchEvent.groupBy({
@@ -103,6 +108,11 @@ export async function getDashboardMetrics() {
           views: totalViews,
           planners: totalPlannerRuns,
           recommendations: totalRecommendations,
+          users: totalUsers,
+          destinations: totalDestinations,
+          experiences: totalExperiences,
+          savedItineraries: totalSavedItineraries,
+          admins: totalAdmins,
         },
         searchTrends,
         destinationPopularity,

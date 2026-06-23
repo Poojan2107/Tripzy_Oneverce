@@ -24,25 +24,25 @@ export async function POST(req: Request) {
         break;
 
       case "view":
-        // Verify destination exists first
-        const dest = await db.destination.findUnique({
-          where: { id: payload.destinationId }
-        });
-        if (dest) {
-          result = await db.viewEvent.create({
-            data: {
-              destinationId: payload.destinationId,
-              userId: payload.userId || null,
-            },
-          });
+      case "page_view": {
+        const destId = payload.destinationId || payload.page || null;
+        if (destId) {
+          const dest = await db.destination.findUnique({ where: { id: destId } });
+          if (dest) {
+            result = await db.viewEvent.create({
+              data: { destinationId: destId, userId: payload.userId || null },
+            });
+          }
         }
         break;
+      }
 
       case "planner":
+      case "planner_completion":
         result = await db.plannerEvent.create({
           data: {
             destination: payload.destination || "",
-            budget: payload.budget || "Medium",
+            budget: payload.budget || payload.budgetTier || "Medium",
             duration: parseInt(payload.duration) || 3,
             travelStyle: payload.travelStyle || "Relaxed",
             interests: payload.interests || null,
@@ -63,11 +63,13 @@ export async function POST(req: Request) {
         break;
 
       case "interaction":
+      case "destination_click":
+      case "affiliate_click":
+      case "wishlist_save":
         result = await db.recommendationInteraction.create({
           data: {
-            recommendationId: payload.recommendationId || null,
-            destinationId: payload.destinationId,
-            action: payload.action,
+            destinationId: payload.destinationId || payload.tourId || null,
+            action: payload.action || type,
             userId: payload.userId || null,
           },
         });

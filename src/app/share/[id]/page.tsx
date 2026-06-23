@@ -15,10 +15,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = res.success && res.data
     ? `Shared Itinerary — ${res.data.title || 'Tripzy Journey'}`
     : 'Itinerary Not Found — Tripzy';
+  const description = res.success && res.data
+    ? `Explore this AI-crafted ${res.data.duration}-day itinerary for ${res.data.destination} — planned with Tripzy.`
+    : 'This itinerary could not be found.';
   return {
     title,
-    openGraph: { title },
-    twitter: { title },
+    description,
+    openGraph: { title, description },
+    twitter: { title, description },
+    robots: { index: false },
   };
 }
 
@@ -102,9 +107,11 @@ export default async function SharePage(props: PageProps) {
                 key={idx} 
                 className="bg-cream border border-warm-gray/30 rounded-2xl p-5 hover:border-warm-gray/50 transition-all duration-300 relative group"
               >
-                <div className="absolute top-5 right-5 text-[9px] font-mono text-muted font-bold">
-                  {day.latitude && day.longitude ? 'MAP POINT' : 'MOCK'}
-                </div>
+                {day.latitude && day.longitude && (
+                  <div className="absolute top-5 right-5 text-[9px] font-mono text-muted font-bold">
+                    MAP POINT
+                  </div>
+                )}
                 <h3 className="font-bold text-night text-base mb-2 flex items-center gap-2">
                   <span className="w-6 h-6 rounded-md bg-gold/10 border border-gold/20 text-gold text-xs flex items-center justify-center font-mono">
                     {idx + 1}

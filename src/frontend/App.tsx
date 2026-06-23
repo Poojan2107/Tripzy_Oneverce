@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { Compass } from 'lucide-react';
+import { Compass, Search, LogIn, LogOut } from 'lucide-react';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { trackPageView, trackWishlistSave, trackDestinationClick } from './utils/analytics';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import { TabType, Tour } from './types';
@@ -20,6 +22,7 @@ import { useAtmosphere } from './utils/AtmosphereContext';
 
 export default function App() {
   const { setActiveLocation } = useAtmosphere();
+  const { data: session } = useSession();
 
   // Sort: Indian destinations always surface first
   const INDIA_IDS = ['varanasi-spiritual','udaipur-mewar','kerala-houseboats','ladakh-passes','jaisalmer-fort','goa-beach','hampi-ruins','kashmir-meadows','munnar-tea','kutch-salt','cherrapunji-roots','andaman-reefs'];
@@ -38,6 +41,12 @@ export default function App() {
   const [isClient, setIsClient] = useState(false);
   const [loadingDestinations, setLoadingDestinations] = useState(true);
   const [loadedItinerary, setLoadedItinerary] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (isClient) {
+      trackPageView(currentTab);
+    }
+  }, [currentTab, isClient]);
 
   useEffect(() => {
     setIsClient(true);
@@ -140,7 +149,10 @@ export default function App() {
     setWishlistIds((prev) => {
       const exists = prev.includes(tourId);
       const updated = exists ? prev.filter((id) => id !== tourId) : [...prev, tourId];
-      if (isClient) localStorage.setItem('tripzy_wishlist', JSON.stringify(updated));
+      if (isClient) {
+        localStorage.setItem('tripzy_wishlist', JSON.stringify(updated));
+        trackWishlistSave(tourId, !exists);
+      }
       return updated;
     });
   };
@@ -176,6 +188,7 @@ export default function App() {
     setSelectedTour(tour);
     if (tour) {
       setActiveLocation(tour.location);
+      trackDestinationClick(tour.id, tour.title);
     }
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
@@ -211,6 +224,83 @@ export default function App() {
         onSearchClick={() => setSearchModalOpen(true)}
         wishlistCount={wishlistIds.length}
       />
+
+      {/* Mobile Top Header */}
+      <header className={`md:hidden w-full sticky top-0 z-50 px-4 py-2.5 flex items-center justify-between border-b select-none transition-all duration-300 ${
+        currentTab === 'home' && selectedTour === null
+          ? 'bg-sand/90 backdrop-blur-md border-warm-gray/25 text-night'
+          : 'bg-[#081A24]/90 backdrop-blur-md border-white/5 text-white'
+      }`}>
+        <button
+          onClick={() => {
+            setSelectedTour(null);
+            setCurrentTab('home');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.history.pushState(null, '', '#home');
+          }}
+          className="flex items-center gap-2 border-none bg-transparent cursor-pointer text-left min-h-[40px]"
+        >
+          <Compass className="w-5 h-5 text-gold animate-spin-slow" />
+          <span className={`font-display text-lg font-bold tracking-tight lowercase ${
+            currentTab === 'home' && selectedTour === null ? 'text-night' : 'text-white'
+          }`}>
+            tripzy<span className="text-gold">.ai</span>
+          </span>
+        </button>
+
+        <div className="flex items-center gap-3">
+          {/* Search Button */}
+          <button
+            onClick={() => setSearchModalOpen(true)}
+            className={`p-2 rounded-xl transition-all cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center ${
+              currentTab === 'home' && selectedTour === null
+                ? 'text-muted hover:text-night hover:bg-sand'
+                : 'text-white/60 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Search className="w-4 h-4" />
+          </button>
+
+          {/* User Sign In / Profile Info */}
+          {session ? (
+            <div className="flex items-center gap-2">
+              {session.user?.image ? (
+                <img
+                  src={session.user.image}
+                  alt={session.user.name || "User"}
+                  className="w-6 h-6 rounded-full object-cover border border-warm-gray/50"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gold text-[#0B1720] flex items-center justify-center text-[10px] font-bold">
+                  {session.user?.name ? session.user.name[0].toUpperCase() : "U"}
+                </div>
+              )}
+              <button
+                onClick={() => signOut()}
+                className={`p-1.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[32px] ${
+                  currentTab === 'home' && selectedTour === null
+                    ? 'text-muted hover:text-rose-500 hover:bg-rose-50'
+                    : 'text-white/60 hover:text-rose-400 hover:bg-white/5'
+                }`}
+              >
+                <LogOut className="w-3 h-3 inline mr-1" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => signIn("google", { callbackUrl: window.location.href })}
+              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[8px] font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[32px] ${
+                currentTab === 'home' && selectedTour === null
+                  ? 'bg-night text-white hover:bg-coral'
+                  : 'bg-white text-night hover:bg-gold'
+              }`}
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Sign In</span>
+            </button>
+          )}
+        </div>
+      </header>
 
       <main className="w-full flex-grow">
         {selectedTour ? (
@@ -329,7 +419,7 @@ export default function App() {
           window.history.pushState(null, '', `#${tab}`);
         }}
         wishlistCount={wishlistIds.length}
-        visible={true}
+        visible={selectedTour === null}
       />
 
       <SearchModal

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Compass, Search, Map, Sparkles, Heart, LogIn, LogOut, Shield } from 'lucide-react';
+import { Compass, Search, Sparkles, Heart, LogIn, LogOut, Shield } from 'lucide-react';
 import { TabType } from '../types';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
@@ -29,13 +29,14 @@ export default function GlassNavbar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const isDarkPage = currentTab !== 'home';
   const isTransparent = currentTab === 'home' && !scrolled;
 
   const tabs = [
     { id: 'home' as TabType, label: 'Home', icon: Compass },
-    { id: 'explore' as TabType, label: 'Explore Atlas', icon: Search },
-    { id: 'ai-planner' as TabType, label: 'Journey Builder', icon: Sparkles },
-    { id: 'saved' as TabType, label: 'Passport', icon: Heart, badge: wishlistCount },
+    { id: 'explore' as TabType, label: 'Explore', icon: Search },
+    { id: 'saved' as TabType, label: 'Discover', icon: Heart, badge: wishlistCount },
+    { id: 'ai-planner' as TabType, label: 'AI Planner', icon: Sparkles },
   ];
 
   return (
@@ -44,8 +45,12 @@ export default function GlassNavbar({
         isTransparent 
           ? 'absolute top-0 left-0 w-full z-50 bg-transparent py-3 px-6' 
           : scrolled
-            ? 'sticky top-0 z-50 bg-sand/85 backdrop-blur-md border-b border-warm-gray/25 py-2 px-6 shadow-sm'
-            : 'relative z-50 bg-transparent py-2 px-6'
+            ? isDarkPage
+              ? 'sticky top-0 z-50 bg-[#081A24]/90 backdrop-blur-md border-b border-white/5 py-2 px-6 shadow-sm'
+              : 'sticky top-0 z-50 bg-sand/85 backdrop-blur-md border-b border-warm-gray/25 py-2 px-6 shadow-sm'
+            : isDarkPage
+              ? 'relative z-50 bg-[#081A24] py-2 px-6'
+              : 'relative z-50 bg-transparent py-2 px-6'
       } hidden md:block select-none transition-all duration-500 ${
         mounted ? 'animate-page-enter' : 'opacity-0'
       }`}
@@ -55,8 +60,12 @@ export default function GlassNavbar({
           isTransparent
             ? 'bg-black/15 backdrop-blur-md border-white/20 text-white py-3'
             : scrolled
-              ? 'bg-warm-white border-warm-gray/80 shadow-card text-night py-2'
-              : 'bg-warm-white/95 border-warm-gray/40 shadow-soft text-night py-2'
+              ? isDarkPage
+                ? 'bg-[#0C2533]/90 border-white/10 shadow-card text-white py-2'
+                : 'bg-warm-white border-warm-gray/80 shadow-card text-night py-2'
+              : isDarkPage
+                ? 'bg-[#0C2533] border-white/10 shadow-soft text-white py-2'
+                : 'bg-warm-white/95 border-warm-gray/40 shadow-soft text-night py-2'
         } rounded-2xl border`}
       >
         {/* Logo — Brand Signature */}
@@ -69,12 +78,12 @@ export default function GlassNavbar({
           </div>
           <div className="flex flex-col text-left">
             <span className={`font-display text-[22px] font-bold tracking-tight lowercase leading-tight transition-colors duration-300 ${
-              isTransparent ? 'text-white' : 'text-night'
+              isTransparent || isDarkPage ? 'text-white' : 'text-night'
             }`}>
               tripzy<span className="text-gold">.ai</span>
             </span>
             <span className={`text-[8px] font-mono uppercase tracking-[0.2em] mt-0.5 transition-colors duration-300 ${
-              isTransparent ? 'text-white/60' : 'text-night/60'
+              isTransparent || isDarkPage ? 'text-white/60' : 'text-night/60'
             }`}>Atlas Vivant</span>
           </div>
         </button>
@@ -83,7 +92,9 @@ export default function GlassNavbar({
         <div className={`flex items-center gap-0.5 rounded-xl px-1.5 py-1.5 border transition-all duration-300 ${
           isTransparent 
             ? 'bg-white/10 border-white/15' 
-            : 'bg-sand/60 border-warm-gray/50'
+            : isDarkPage
+              ? 'bg-[#081A24] border-white/10'
+              : 'bg-sand/60 border-warm-gray/50'
         }`}>
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -96,10 +107,14 @@ export default function GlassNavbar({
                   isActive
                     ? isTransparent
                       ? 'text-gold bg-white shadow-sm border border-white/20'
-                      : 'text-gold bg-white shadow-sm border border-warm-gray/60'
+                      : isDarkPage
+                        ? 'text-gold bg-[#0E4B6B] shadow-sm border border-white/15'
+                        : 'text-gold bg-white shadow-sm border border-warm-gray/60'
                     : isTransparent
                       ? 'text-white/70 hover:text-white hover:bg-white/10'
-                      : 'text-muted hover:text-night hover:bg-white/60'
+                      : isDarkPage
+                        ? 'text-white/60 hover:text-white hover:bg-white/5'
+                        : 'text-muted hover:text-night hover:bg-white/60'
                 }`}
               >
                 <Icon className={`w-3.5 h-3.5 transition-transform duration-300 ${
@@ -126,14 +141,16 @@ export default function GlassNavbar({
             className={`p-3 rounded-lg transition-all cursor-pointer ${
               isTransparent 
                 ? 'text-white/70 hover:text-white hover:bg-white/10' 
-                : 'text-muted hover:text-night hover:bg-sand'
+                : isDarkPage
+                  ? 'text-white/60 hover:text-white hover:bg-white/5'
+                  : 'text-muted hover:text-night hover:bg-sand'
             }`}
           >
             <Search className="w-4 h-4" />
           </button>
 
           <div className={`h-4 w-px transition-colors duration-300 ${
-            isTransparent ? 'bg-white/20' : 'bg-warm-gray/60'
+            isTransparent || isDarkPage ? 'bg-white/20' : 'bg-white/10'
           }`} />
 
           {session ? (
@@ -144,7 +161,9 @@ export default function GlassNavbar({
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all animate-fade-in ${
                     isTransparent
                       ? 'border-gold/50 bg-gold/10 text-gold hover:bg-gold/20'
-                      : 'border-gold/30 bg-gold/5 text-gold hover:bg-gold/15'
+                      : isDarkPage
+                        ? 'border-gold/30 bg-gold/5 text-gold hover:bg-gold/15'
+                        : 'border-gold/30 bg-gold/5 text-gold hover:bg-gold/15'
                   }`}
                 >
                   <Shield className="w-3.5 h-3.5" />
@@ -156,12 +175,12 @@ export default function GlassNavbar({
                   src={session.user.image}
                   alt={session.user.name || "User"}
                   className={`w-7 h-7 rounded-full object-cover border ${
-                    isTransparent ? 'border-white/30' : 'border-warm-gray'
+                    isTransparent || isDarkPage ? 'border-white/30' : 'border-warm-gray'
                   }`}
                 />
               ) : (
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border ${
-                  isTransparent 
+                  isTransparent || isDarkPage
                     ? 'bg-white/20 text-white border-white/30' 
                     : 'bg-night text-white border-warm-gray'
                 }`}>
@@ -171,7 +190,7 @@ export default function GlassNavbar({
               <button
                 onClick={() => signOut()}
                 className={`min-w-[44px] min-h-[44px] px-2 rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider ${
-                  isTransparent
+                  isTransparent || isDarkPage
                     ? 'text-white/70 hover:text-rose-400 hover:bg-white/10'
                     : 'text-muted hover:text-rose-500 hover:bg-rose-50'
                 }`}
@@ -184,9 +203,9 @@ export default function GlassNavbar({
             <button
               onClick={() => signIn("google", { callbackUrl: window.location.href })}
               className={`inline-flex items-center gap-1.5 px-5 py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[44px] ${
-                isTransparent
+                isTransparent || isDarkPage
                   ? 'bg-white text-night hover:bg-gold hover:text-white'
-                  : 'bg-night text-white hover:bg-saffron'
+                  : 'bg-night text-white hover:bg-coral'
               }`}
             >
               <LogIn className="w-3.5 h-3.5" />

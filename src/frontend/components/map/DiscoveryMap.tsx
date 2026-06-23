@@ -3,8 +3,20 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Tour } from '../../types';
-import { getAtmosphere } from '../../utils/atmosphere';
 import { formatINR } from '../../utils/currency';
+
+const TOUR_TO_CIRCUIT: Record<string, string> = {
+  'varanasi-spiritual': 'Sacred Circuit',
+  'hampi-ruins': 'Sacred Circuit',
+  'cherrapunji-roots': 'Sacred Circuit',
+  'jaisalmer-fort': 'Royal Circuit',
+  'udaipur-mewar': 'Royal Circuit',
+  'kashmir-meadows': 'Royal Circuit',
+  'goa-beach': 'South India Circuit',
+  'kerala-houseboats': 'South India Circuit',
+  'munnar-tea': 'South India Circuit',
+  'andaman-reefs': 'South India Circuit',
+};
 
 interface DiscoveryMapProps {
   tours: Tour[];
@@ -14,55 +26,31 @@ interface DiscoveryMapProps {
 }
 
 const createIcon = (tour: Tour, isActive: boolean, simple: boolean) => {
-  if (simple) {
-    return L.divIcon({
-      className: 'custom-map-marker-simple',
-      html: `
-        <div class="relative flex flex-col items-center select-none" style="width: 40px; height: 44px;">
-          <div style="width: 24px; height: 24px; border-radius: 50%; background: ${isActive ? '#E07B39' : '#1E293B'}; border: 3px solid ${isActive ? '#F8F5EE' : '#D6A85F'}; box-shadow: 0 2px 8px rgba(0,0,0,0.25);${isActive ? ' animation: pulse 1.5s infinite;' : ''}"></div>
-          <div style="width: 2px; height: 14px; background: ${isActive ? '#E07B39' : '#1E293B'}; border-radius: 1px;"></div>
-          <div style="position: absolute; top: 28px; left: 50%; transform: translateX(-50%); padding: 2px 8px; border-radius: 4px; background: ${isActive ? '#E07B39' : 'rgba(30,41,59,0.95)'}; color: white; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; border: 1px solid ${isActive ? 'rgba(224,123,57,0.3)' : 'rgba(255,255,255,0.05)'}; max-width: 80px; overflow: hidden; text-overflow: ellipsis;">
-            ${tour.title.toLowerCase().slice(0, 12)}
-          </div>
-        </div>
-      `,
-      iconSize: [40, 44],
-      iconAnchor: [20, 40],
-    });
-  }
+  let count = '10';
+  const id = tour.id.toLowerCase();
+  if (id.includes('kashmir')) count = '12';
+  else if (id.includes('jaisalmer') || id.includes('udaipur')) count = '18';
+  else if (id.includes('varanasi')) count = '14';
+  else if (id.includes('kerala') || id.includes('munnar')) count = '16';
+  else if (id.includes('andaman')) count = '08';
+  else if (id.includes('ladakh')) count = '12';
+  else if (id.includes('cherrapunji')) count = '11';
+  else if (id.includes('hampi')) count = '09';
+  else if (id.includes('goa')) count = '08';
+  else if (id.includes('kutch')) count = '10';
 
   return L.divIcon({
-    className: 'custom-map-marker-jharokha',
+    className: `glowing-marker-cyan ${isActive ? 'active' : ''}`,
     html: `
-      <div class="relative flex flex-col items-center select-none" style="width: 48px; height: 76px;">
-        ${isActive ? `
-          <div class="absolute top-[6px] left-[6px] w-[36px] h-[36px] rounded-full bg-saffron/30 blur-md animate-pulse"></div>
-        ` : ''}
-        <svg width="48" height="60" viewBox="0 0 48 60" class="drop-shadow-md">
-          <defs>
-            <clipPath id="jharokha-clip-${tour.id}">
-              <path d="M24 3C17 11 6 14 6 25C6 37 15 41 24 49C33 41 42 37 42 25C42 14 31 11 24 3Z" />
-            </clipPath>
-          </defs>
-          <path d="M24 2C16 10 4 13 4 25C4 39 14 43 24 52C34 43 44 39 44 25C44 13 32 10 24 2Z" 
-                fill="${isActive ? '#F8F5EE' : '#ECE6DA'}" 
-                stroke="${isActive ? '#E07B39' : '#D6A85F'}" 
-                stroke-width="2.5" />
-          <image href="${tour.bannerImage}" x="2" y="2" width="44" height="48" 
-                 clip-path="url(#jharokha-clip-${tour.id})" 
-                 preserveAspectRatio="xMidYMid slice" />
-        </svg>
-        <div class="absolute top-[54px] left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded shadow-md border font-mono text-[8px] uppercase tracking-widest whitespace-nowrap transition-all duration-300 ${
-          isActive 
-            ? 'bg-saffron text-white border-saffron/30 font-bold scale-105 z-20' 
-            : 'bg-night/95 text-white/90 border-white/5 scale-95 z-10'
-        }">
-          ${tour.title.toLowerCase()}
+      <div class="relative flex items-center justify-center select-none" style="width: 32px; height: 32px;">
+        <span class="text-[10px] font-bold font-sans">${count}</span>
+        <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-navy text-white font-mono text-[7px] uppercase tracking-wider whitespace-nowrap border border-white/10">
+          ${tour.title.toLowerCase().slice(0, 10)}
         </div>
       </div>
     `,
-    iconSize: [48, 76],
-    iconAnchor: [24, 52],
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
   });
 };
 
@@ -77,6 +65,7 @@ export default function DiscoveryMap({
   const markersRef = useRef<{ [key: string]: L.Marker }>({});
   const markerGroupRef = useRef<L.FeatureGroup | null>(null);
   const circuitGroupRef = useRef<L.FeatureGroup | null>(null);
+  const polylinesRef = useRef<{ [name: string]: L.Polyline }>({});
   
   const [mounted, setMounted] = useState(false);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -134,8 +123,8 @@ export default function DiscoveryMap({
     // Add zoom control to bottom-right for thumb reach on mobile
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // Light map tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // Dark map tiles
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 20
@@ -145,30 +134,30 @@ export default function DiscoveryMap({
     const markerGroup = L.featureGroup().addTo(map);
     markerGroupRef.current = markerGroup;
 
-    // ── CIRCUIT ROUTE LINES (Editorial Cartography) ──
+    // ── CIRCUIT ROUTE LINES (V2 Vibrant Colors) ──
     const circuitGroup = L.featureGroup().addTo(map);
     circuitGroupRef.current = circuitGroup;
 
     const circuits = [
       {
         name: 'Sacred Circuit',
-        color: '#E07B39',
+        color: '#E6355A',
         coords: [[25.3176, 82.9739], [15.3350, 76.4600], [25.2800, 91.7200]] as [number, number][],
       },
       {
         name: 'Royal Circuit',
-        color: '#D6A85F',
+        color: '#FDB62F',
         coords: [[26.9157, 70.9083], [24.5854, 73.7125], [34.0837, 74.7973]] as [number, number][],
       },
       {
         name: 'South India Circuit',
-        color: '#00B0FF',
+        color: '#148596',
         coords: [[15.4909, 73.8278], [9.4981, 76.3388], [10.0889, 77.0595], [15.3350, 76.4600], [11.7401, 92.6586]] as [number, number][],
       },
     ];
 
     circuits.forEach((circuit) => {
-      L.polyline(circuit.coords, {
+      const pl = L.polyline(circuit.coords, {
         color: circuit.color,
         weight: isMobile ? 1 : 1.5,
         opacity: isMobile ? 0.15 : 0.35,
@@ -176,6 +165,7 @@ export default function DiscoveryMap({
         lineCap: 'round',
         lineJoin: 'round',
       }).addTo(circuitGroup);
+      polylinesRef.current[circuit.name] = pl;
     });
   }, [mounted]);
 
@@ -199,13 +189,13 @@ export default function DiscoveryMap({
       }).addTo(markerGroup);
 
       marker.bindPopup(`
-        <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; min-width: 160px; text-align: left; background-color: #F8F5EE; padding: 2px;">
-          <img src="${tour.bannerImage}" alt="${tour.title}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 8px; margin-bottom: 6px;" />
-          <h5 style="font-family: 'Instrument Serif', serif; font-size: 15px; font-weight: 500; color: #0F172A; margin: 0 0 2px 0; font-style: italic;">${tour.title.toLowerCase()}</h5>
-          <p style="color: #334155; font-size: 9px; margin: 0 0 6px 0;">📍 ${tour.location.split(',')[0]}</p>
-          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ECE6DA; padding-top: 5px; margin-top: 5px;">
-            <span style="font-weight: 700; font-size: 11px; color: #0F172A;">${formatINR(tour.price)}</span>
-            <button id="popup-btn-${tour.id}" style="background-color: #0F172A; color: #fff; border: none; font-size: 10px; font-weight: 700; padding: 8px 16px; border-radius: 8px; cursor: pointer; min-width: 70px;">Inspect</button>
+        <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; min-width: 170px; text-align: left; background-color: transparent; padding: 2px; color: #fff;">
+          <img src="${tour.bannerImage}" alt="${tour.title}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05);" />
+          <h5 style="font-family: 'Instrument Serif', serif; font-size: 16px; font-weight: 400; color: #fff; margin: 0 0 2px 0;">${tour.title.toLowerCase()}</h5>
+          <p style="color: #8FA0AB; font-size: 9px; margin: 0 0 8px 0; font-family: monospace;">📍 ${tour.location.split(',')[0].toUpperCase()}</p>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 8px; margin-top: 5px;">
+            <span style="font-weight: 700; font-size: 12px; color: #FDB62F;">${formatINR(tour.price)}</span>
+            <button id="popup-btn-${tour.id}" style="background: linear-gradient(135deg, #148596 0%, #286F98 100%); color: #fff; border: none; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 7px 12px; border-radius: 8px; cursor: pointer; min-width: 70px; box-shadow: 0 2px 6px rgba(20, 133, 150, 0.2); transition: all 0.2s;">Inspect</button>
           </div>
         </div>
       `, {
@@ -273,6 +263,26 @@ export default function DiscoveryMap({
     }
   }, [activeTourId]);
 
+  // 3.5. Dynamic polyline solid/glow highlights on active tour change
+  useEffect(() => {
+    Object.entries(polylinesRef.current).forEach(([name, polyline]) => {
+      const isCircuitActive = activeTourId ? TOUR_TO_CIRCUIT[activeTourId] === name : false;
+      if (isCircuitActive) {
+        polyline.setStyle({
+          weight: isMobile ? 3 : 4,
+          opacity: 0.95,
+          dashArray: undefined,
+        });
+      } else {
+        polyline.setStyle({
+          weight: isMobile ? 1 : 1.5,
+          opacity: isMobile ? 0.15 : 0.35,
+          dashArray: '6, 8',
+        });
+      }
+    });
+  }, [activeTourId, circuitsVisible, isMobile]);
+
   // 4. Track marker position for radial background wash overlay (desktop only)
   useEffect(() => {
     if (isMobile) return;
@@ -319,8 +329,8 @@ export default function DiscoveryMap({
 
   if (!mounted) {
     return (
-      <div className="w-full h-full rounded-[24px] bg-cream/40 animate-pulse flex flex-col items-center justify-center border border-cream">
-        <span className="text-[10px] font-bold text-muted tracking-widest uppercase">Initializing Living Atlas...</span>
+      <div className="w-full h-full rounded-[24px] bg-[#081A24] animate-pulse flex flex-col items-center justify-center border border-white/5">
+        <span className="text-[10px] font-bold text-white/40 tracking-widest uppercase">Initializing Living Atlas...</span>
       </div>
     );
   }
@@ -330,10 +340,7 @@ export default function DiscoveryMap({
       {/* Map Container */}
       <div 
         ref={mapContainerRef} 
-        className="w-full h-full z-0" 
-        style={{
-          filter: 'sepia(0.20) contrast(0.96) saturate(0.85) hue-rotate(4deg)'
-        }}
+        className="w-full h-full z-0 dark-map" 
       />
       
       {/* Dynamic regional radial wash color overlay */}
@@ -362,8 +369,8 @@ export default function DiscoveryMap({
       )}
 
       <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center gap-2 p-3 pb-[max(12px,env(safe-area-inset-bottom,8px))]">
-        <div className="bg-white/80 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-cream shadow-sm pointer-events-none text-[9px] text-muted/60 font-mono uppercase tracking-widest flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-saffron inline-block animate-pulse"></span>
+        <div className="bg-[#0C2533]/80 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/10 shadow-sm pointer-events-none text-[9px] text-white/50 font-mono uppercase tracking-widest flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#E6355A] inline-block animate-pulse"></span>
           <span>Living Atlas</span>
         </div>
         {!isMobile && (

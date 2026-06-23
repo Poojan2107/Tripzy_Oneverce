@@ -42,8 +42,8 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
     mapInstanceRef.current = map;
 
-    // Light map tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // Dark map tiles
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 20
@@ -61,7 +61,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
         className: 'itinerary-day-marker',
         html: `
           <div class="relative flex items-center justify-center w-6 h-6 rounded-full ${
-            isActive ? 'bg-ocean text-white' : 'bg-white text-deep-navy border border-ocean/30'
+            isActive ? 'bg-[#148596] text-white' : 'bg-[#0C2533] text-white border border-white/30'
           } font-bold text-[10px] shadow-md">
             ${index + 1}
           </div>
@@ -81,8 +81,8 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
     if (latlngs.length > 1) {
       const routeLine = L.polyline(latlngs, {
-        color: '#6FB6FF',
-        weight: 3,
+        color: '#FDB62F',
+        weight: 2,
         dashArray: '6, 8',
         lineCap: 'round',
         lineJoin: 'round'
@@ -98,8 +98,8 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
   if (!mounted) {
     return (
-      <div className="w-full h-full bg-cream/40 animate-pulse flex flex-col items-center justify-center border border-warm-gray/30">
-        <span className="text-[10px] font-bold text-muted tracking-widest uppercase">Plotting Route Map...</span>
+      <div className="w-full h-full bg-[#081A24] animate-pulse flex flex-col items-center justify-center border border-white/5">
+        <span className="text-[10px] font-bold text-white/40 tracking-widest uppercase">Plotting Route Map...</span>
       </div>
     );
   }
@@ -107,7 +107,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
   return (
     <div className="w-full h-full relative">
       <div ref={mapContainerRef} className="w-full h-full z-0" />
-      <div className="absolute top-3 left-3 z-10 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-warm-gray/30 shadow-card pointer-events-none text-[9px] font-medium text-charcoal/60">
+      <div className="absolute top-3 left-3 z-10 bg-[#0C2533]/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 shadow-card pointer-events-none text-[9px] font-medium text-white/50">
         ROUTE MAP
       </div>
     </div>

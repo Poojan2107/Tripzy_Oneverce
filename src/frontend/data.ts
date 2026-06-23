@@ -111,7 +111,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Sandstone Fort Suite', iconName: 'Home' },
       { name: 'Thar Glamping Canvas', iconName: 'Sparkles' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-j1',
+        author: 'Kabir Dev',
+        avatar: '/images/avatar-amit.jpg',
+        rating: 4.8,
+        date: 'December 20, 2025',
+        comment: 'Sipping hot tea as the golden fort glows under the setting sun is a core memory.'
+      }
+    ],
     tags: ['Culture', 'Adventure', 'Royal'],
     moods: ['Culture', 'Adventure'],
     bestSeason: 'October to March',
@@ -175,7 +184,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Private Luxury Houseboat', iconName: 'Home' },
       { name: 'Personal Backwater Chef', iconName: 'Utensils' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-k1',
+        author: 'Meera Nair',
+        avatar: '/images/avatar-priya.jpg',
+        rating: 5,
+        date: 'November 12, 2025',
+        comment: 'Floating along the backwaters with fresh Karimeen fry served on board was a dream.'
+      }
+    ],
     tags: ['Nature', 'Luxury', 'Food'],
     moods: ['Nature', 'Luxury'],
     bestSeason: 'September to March',
@@ -239,7 +257,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'High-Altitude Domes', iconName: 'Home' },
       { name: 'All-Terrain Cruiser Transit', iconName: 'Plane' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-l1',
+        author: 'Tenzing Norgay',
+        avatar: '/images/avatar-vikram.jpg',
+        rating: 5,
+        date: 'September 5, 2025',
+        comment: 'The passes are challenging but the clear sky and cliffside monasteries are incredibly beautiful.'
+      }
+    ],
     tags: ['Adventure', 'Nature', 'Hidden'],
     moods: ['Adventure', 'Nature'],
     bestSeason: 'June to September',
@@ -303,7 +330,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Heritage Dal Lake Houseboat', iconName: 'Home' },
       { name: 'Private Shikara Access', iconName: 'Compass' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-ks1',
+        author: 'Zoya Khan',
+        avatar: '/images/avatar-priya.jpg',
+        rating: 5,
+        date: 'December 4, 2025',
+        comment: 'Drifting in a Shikara past floating flower markets in the morning mist was sheer magic.'
+      }
+    ],
     tags: ['Luxury', 'Nature', 'Food'],
     moods: ['Luxury', 'Nature'],
     bestSeason: 'April to October',
@@ -367,7 +403,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Floating Palace Stay', iconName: 'Home' },
       { name: 'Private Lake Canopy Cruiser', iconName: 'Compass' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-u1',
+        author: 'Pranab Rathore',
+        avatar: '/images/avatar-amit.jpg',
+        rating: 5,
+        date: 'November 28, 2025',
+        comment: 'The Mewar chapter is royal storytelling at its finest. Spectacular views of Pichola.'
+      }
+    ],
     tags: ['Luxury', 'Royal', 'Culture'],
     moods: ['Luxury', 'Culture'],
     bestSeason: 'October to March',
@@ -431,7 +476,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Colonial Tea Bungalow', iconName: 'Home' },
       { name: 'Organic Spice Guide', iconName: 'Sparkles' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-m1',
+        author: 'Rishi Varma',
+        avatar: '/images/avatar-amit.jpg',
+        rating: 4.8,
+        date: 'October 18, 2025',
+        comment: 'Waking up to tea gardens covered in morning fog is absolutely peaceful.'
+      }
+    ],
     tags: ['Nature', 'Food', 'Relaxation'],
     moods: ['Nature', 'Food'],
     bestSeason: 'September to May',
@@ -495,7 +549,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Eco beachfront villa', iconName: 'Home' },
       { name: 'Portuguese heritage guide', iconName: 'Sparkles' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-g1',
+        author: 'Siddharth Rao',
+        avatar: '/images/avatar-vikram.jpg',
+        rating: 4.9,
+        date: 'January 10, 2026',
+        comment: 'Loved the secret beach path and the Portuguese heritage walks.'
+      }
+    ],
     tags: ['Beach', 'Culture', 'Relaxation'],
     moods: ['Relaxation', 'Food'],
     bestSeason: 'November to February',
@@ -559,7 +622,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Heritage Eco Lodge', iconName: 'Home' },
       { name: 'Vijayanagara Historian Guide', iconName: 'Sparkles' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-h1',
+        author: 'Ananya Sen',
+        avatar: '/images/avatar-priya.jpg',
+        rating: 5,
+        date: 'October 28, 2025',
+        comment: 'Climbing the giant boulders at sunset felt like walking through history.'
+      }
+    ],
     tags: ['Culture', 'Adventure', 'Heritage'],
     moods: ['Culture', 'Adventure'],
     bestSeason: 'October to February',
@@ -623,7 +695,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Premium Canopy glamping tent', iconName: 'Home' },
       { name: 'Artisan Guild Liaison guide', iconName: 'Sparkles' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-ku1',
+        author: 'Devendra Joshi',
+        avatar: '/images/avatar-vikram.jpg',
+        rating: 4.9,
+        date: 'January 15, 2026',
+        comment: 'The endless white desert under the full moon was out of this world.'
+      }
+    ],
     tags: ['Culture', 'Hidden', 'Heritage'],
     moods: ['Culture', 'Hidden'],
     bestSeason: 'November to February',
@@ -687,7 +768,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Eco Jungle Forest Dome', iconName: 'Home' },
       { name: 'Indigenous Khasi Guide', iconName: 'Sparkles' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-c1',
+        author: 'Lalrinhlua Roy',
+        avatar: '/images/avatar-amit.jpg',
+        rating: 5,
+        date: 'September 22, 2025',
+        comment: 'Walking the double-decker living root bridges felt like stepping into an ancient fairytale.'
+      }
+    ],
     tags: ['Nature', 'Adventure', 'Hidden'],
     moods: ['Nature', 'Adventure'],
     bestSeason: 'October to May',
@@ -751,7 +841,16 @@ export const TOURS_DATA: Tour[] = [
       { name: 'Ocean beachfront cottage', iconName: 'Home' },
       { name: 'PADI Marine Scuba Team', iconName: 'Compass' }
     ],
-    reviews: [],
+    reviews: [
+      {
+        id: 'rev-a1',
+        author: 'Pooja Bhatia',
+        avatar: '/images/avatar-priya.jpg',
+        rating: 4.9,
+        date: 'February 5, 2026',
+        comment: 'Snorkeling with sea turtles in the electric blue water was breathtaking.'
+      }
+    ],
     tags: ['Beach', 'Nature', 'Relaxation'],
     moods: ['Relaxation', 'Nature'],
     bestSeason: 'November to May',

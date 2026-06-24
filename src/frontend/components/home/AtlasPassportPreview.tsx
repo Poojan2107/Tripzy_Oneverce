@@ -4,7 +4,7 @@ import { Compass, BookOpen, MapPin, Sparkles, Award } from 'lucide-react';
 
 export default function AtlasPassportPreview() {
   return (
-    <section className="py-12 md:py-16 border-y border-warm-gray/30 bg-white">
+    <section className="py-16 md:py-20 border-y border-warm-gray/30 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Atlas Stats */}

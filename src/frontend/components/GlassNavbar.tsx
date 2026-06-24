@@ -129,16 +129,21 @@ export default function GlassNavbar({
                   <span>Admin</span>
                 </motion.a>
               )}
-              {session.user.image ? (
-                <img src={session.user.image} alt={session.user.name || "User"}
-                  className={`w-7 h-7 rounded-full object-cover border ${isTransparent ? 'border-white/30' : 'border-warm-gray/50'}`} />
-              ) : (
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border ${
-                  isTransparent ? 'bg-white/20 text-white border-white/30' : 'bg-night text-white border-warm-gray/50'
-                }`}>
-                  {session.user.name ? session.user.name[0].toUpperCase() : "U"}
+              <motion.div className="relative group"
+                initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }}>
+                <div className="flex items-center gap-2 cursor-pointer">
+                  {session.user.image ? (
+                    <img src={session.user.image} alt={session.user.name || "User"}
+                      className={`w-7 h-7 rounded-full object-cover border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${isTransparent ? 'border-white/30' : 'border-warm-gray/50'}`} />
+                  ) : (
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${
+                      isTransparent ? 'bg-white/20 text-white border-white/30' : 'bg-night text-white border-warm-gray/50'
+                    }`}>
+                      {session.user.name ? session.user.name[0].toUpperCase() : "U"}
+                    </div>
+                  )}
                 </div>
-              )}
+              </motion.div>
               <motion.button onClick={() => signOut()}
                 className={`min-w-[44px] min-h-[44px] px-2 rounded-lg cursor-pointer flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider ${
                   isTransparent ? 'text-white/70 hover:text-rose-400 hover:bg-white/10'

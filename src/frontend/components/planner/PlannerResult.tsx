@@ -392,6 +392,28 @@ export default function PlannerResult({
                 </div>
               </div>
 
+              {/* Cost distribution bar */}
+              {(() => {
+                const total = costs.transit + costs.stay + costs.food || 1;
+                const transitPct = (costs.transit / total) * 100;
+                const stayPct = (costs.stay / total) * 100;
+                const foodPct = (costs.food / total) * 100;
+                return (
+                  <div className="space-y-1.5">
+                    <div className="flex h-2 rounded-full overflow-hidden bg-[#1A3142]">
+                      <motion.div className="bg-teal/70 h-full" initial={{ width: 0 }} animate={{ width: `${transitPct}%` }} transition={{ duration: 0.8, delay: 0.2 }} />
+                      <motion.div className="bg-gold/70 h-full" initial={{ width: 0 }} animate={{ width: `${stayPct}%` }} transition={{ duration: 0.8, delay: 0.4 }} />
+                      <motion.div className="bg-coral/70 h-full" initial={{ width: 0 }} animate={{ width: `${foodPct}%` }} transition={{ duration: 0.8, delay: 0.6 }} />
+                    </div>
+                    <div className="flex justify-between text-[7px] font-mono text-[#8FA0AB]">
+                      <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-teal/70 inline-block" />Transit</span>
+                      <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-gold/70 inline-block" />Stay</span>
+                      <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-coral/70 inline-block" />Food</span>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Total / Tier */}
               <div className="border-t border-dashed border-[#1A3142] pt-4 flex justify-between items-end text-left">
                 <div>

@@ -34,17 +34,17 @@ export default function GlassNavbar({
     { id: 'home' as TabType, label: 'Home', icon: Compass },
     { id: 'explore' as TabType, label: 'Explore', icon: Search },
     { id: 'saved' as TabType, label: 'Discover', icon: Heart, badge: wishlistCount },
-    { id: 'ai-planner' as TabType, label: 'AI Planner', icon: Sparkles },
+    { id: 'ai-planner' as TabType, label: 'Companion', icon: Sparkles },
   ];
 
   const getNavContainerClass = () => {
     if (isTransparent) return 'absolute top-0 left-0 w-full z-50 bg-transparent py-3 px-6';
-    return 'sticky top-0 z-50 bg-[#F8F4EE]/80 backdrop-blur-md border-b border-warm-gray/50 py-2 px-6 shadow-sm';
+    return 'sticky top-0 z-50 bg-[#F8F4EE]/80 backdrop-blur-lg border-b border-warm-gray/30 py-2 px-6';
   };
 
   const getInnerClass = () => {
-    if (isTransparent) return 'bg-black/15 backdrop-blur-md border-white/20 text-white py-3';
-    return 'bg-white/90 border-warm-gray/50 shadow-card text-night py-2';
+    if (isTransparent) return 'bg-white/[0.07] backdrop-blur-[12px] border-white/10 text-white py-2.5';
+    return 'bg-white/95 border-warm-gray/40 shadow-sm text-night py-2';
   };
 
   return (
@@ -74,8 +74,8 @@ export default function GlassNavbar({
           </div>
         </motion.button>
 
-        <motion.div className={`flex items-center gap-0.5 rounded-xl px-1.5 py-1.5 border ${
-          isTransparent ? 'bg-white/10 border-white/15' : 'bg-[#F8F4EE]/80 border-warm-gray/40'
+        <motion.div className={`flex items-center gap-0.5 rounded-lg px-1 py-1 border ${
+          isTransparent ? 'bg-white/[0.06] border-white/10' : 'bg-[#F2ECE3]/60 border-warm-gray/30'
         }`} layout>
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -151,8 +151,8 @@ export default function GlassNavbar({
             </div>
           ) : (
             <motion.button onClick={() => signIn("google", { callbackUrl: window.location.href })}
-              className={`inline-flex items-center gap-1.5 px-5 py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider cursor-pointer min-h-[44px] ${
-                isTransparent ? 'bg-white text-night hover:bg-gold hover:text-white' : 'bg-night text-white hover:bg-gold'
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider cursor-pointer min-h-[38px] ${
+                isTransparent ? 'bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm' : 'bg-night text-white hover:bg-gold hover:text-night'
               }`}
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
               <LogIn className="w-3.5 h-3.5" />

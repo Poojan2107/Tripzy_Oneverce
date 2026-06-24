@@ -1,6 +1,9 @@
-# Tripzy — Final Client Handover Package (V9.1)
+# Tripzy — Final Client Handover Package (V10)
 
 Welcome to the official handover package for **Tripzy**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform.
+
+* **Production URL**: [https://tripzy-oneverce.vercel.app](https://tripzy-oneverce.vercel.app)
+* **Local Development**: `http://localhost:3000`
 
 ---
 
@@ -116,18 +119,18 @@ Tripzy features a secure admin dashboard where operators can inspect platform te
 
 ### Creating an Admin Account
 To promote an explorer account to the `ADMIN` role:
-1. Ensure the user has logged in once via Google Auth (this creates their `User` entry in the database).
+1. Ensure the user has logged in once via Google Auth (this creates their `User` entry in the database). For demo testing, you can sign in using `aarav.mehta@example.com` (which is pre-seeded in the database).
 2. Run the secure setup script locally or via CI:
    ```bash
    # For local databases
-   node scripts/seed-admin-local.mjs your.email@example.com
+   node scripts/seed-admin-local.mjs aarav.mehta@example.com
    ```
 3. Alternatively, invoke the secure backend endpoint (requires `ADMIN_SETUP_KEY` header):
    ```bash
    curl -X POST https://your-domain.com/api/admin/promote \
      -H "Content-Type: application/json" \
      -H "Authorization: Bearer YOUR_ADMIN_SETUP_KEY" \
-     -d '{"email": "your.email@example.com"}'
+     -d '{"email": "aarav.mehta@example.com"}'
    ```
 
 ---

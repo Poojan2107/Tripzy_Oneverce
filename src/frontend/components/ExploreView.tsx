@@ -60,6 +60,15 @@ export default function ExploreView({
 
   const activeTour = useMemo(() => tours.find(t => t.id === activeTourId) || null, [tours, activeTourId]);
 
+  const activeTourMatchPercent = useMemo(() => {
+    if (!activeTour) return 95;
+    let sum = 0;
+    for (let i = 0; i < activeTour.id.length; i++) {
+      sum += activeTour.id.charCodeAt(i);
+    }
+    return 80 + (sum % 20); // deterministic 80% to 99%
+  }, [activeTour?.id]);
+
   useEffect(() => {
     if (typeof window !== 'undefined' && window.innerWidth >= 768 && filteredTours.length > 0 && !activeTourId) {
       setActiveTourId(filteredTours[0].id);
@@ -251,7 +260,7 @@ export default function ExploreView({
               <div className="flex items-center gap-2 text-[9px] font-mono text-muted">
                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{activeTour.duration}</span>
                 <span className="text-border/40">·</span>
-                <span className="flex items-center gap-1 text-coral font-bold">{Math.floor(Math.random() * 20 + 80)}% Match</span>
+                <span className="flex items-center gap-1 text-coral font-bold">{activeTourMatchPercent}% Match</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeTour.moods?.slice(0, 3).map(m => (

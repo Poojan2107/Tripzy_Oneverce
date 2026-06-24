@@ -54,26 +54,26 @@ export default function StoryTab({ tour, cultural, accentColor }: StoryTabProps)
 
       <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {tour.localSecret && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-soft">
-            <span className="text-[8px] font-mono text-coral uppercase tracking-widest font-bold block mb-1.5">🤫 Local Secret</span>
+          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-sm">
+            <span className="text-[8px] font-mono text-coral uppercase tracking-widest font-bold block mb-1.5">Local Secret</span>
             <p className="text-xs text-night/70 font-light leading-relaxed">{tour.localSecret}</p>
           </div>
         )}
         {tour.photographySpot && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-soft">
-            <span className="text-[8px] font-mono text-gold uppercase tracking-widest font-bold block mb-1.5">📷 Best Photo Spot</span>
+          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-sm">
+            <span className="text-[8px] font-mono text-gold uppercase tracking-widest font-bold block mb-1.5">Best Photo Spot</span>
             <p className="text-xs text-night/70 font-light leading-relaxed">{tour.photographySpot}</p>
           </div>
         )}
         {tour.signatureExperience && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-soft">
-            <span className="text-[8px] font-mono text-sage uppercase tracking-widest font-bold block mb-1.5">✨ Signature Experience</span>
+          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-sm">
+            <span className="text-[8px] font-mono text-teal uppercase tracking-widest font-bold block mb-1.5">Signature Experience</span>
             <p className="text-xs text-night/70 font-light leading-relaxed">{tour.signatureExperience}</p>
           </div>
         )}
         {tour.budgetRange && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-soft">
-            <span className="text-[8px] font-mono text-ocean uppercase tracking-widest font-bold block mb-1.5">💰 Budget Guide</span>
+          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-sm">
+            <span className="text-[8px] font-mono text-ocean uppercase tracking-widest font-bold block mb-1.5">Budget Guide</span>
             <p className="text-xs text-night/70 font-light leading-relaxed">{tour.budgetRange}</p>
           </div>
         )}

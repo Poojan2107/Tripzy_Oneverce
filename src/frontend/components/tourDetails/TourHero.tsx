@@ -1,7 +1,7 @@
 "use client";
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowLeft, Heart, Share2, CheckCircle2, MapPin, Star } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Tour } from '../../types';
 
 interface TourHeroProps {
@@ -16,17 +16,23 @@ interface TourHeroProps {
 
 export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted, tagline, copiedLink, onShare }: TourHeroProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.4]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
-    <motion.div className="relative w-full h-[45vh] md:h-[60vh] min-h-[300px] md:min-h-[440px] overflow-hidden"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+    <motion.div ref={heroRef} className="relative w-full h-[45vh] md:h-[60vh] min-h-[300px] md:min-h-[440px] overflow-hidden"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} style={{ opacity }}>
       {!imageLoaded && (
         <div className="absolute inset-0 bg-[#F2ECE3] animate-pulse flex items-center justify-center">
           <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Loading panorama...</span>
         </div>
       )}
-      <img src={tour.bannerImage} alt={tour.title} className={`w-full h-full object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-        onLoad={() => setImageLoaded(true)} onError={e => { e.currentTarget.style.opacity = '0'; setImageLoaded(true); }} />
+      <motion.img src={tour.bannerImage} alt={tour.title} className={`w-full h-full object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setImageLoaded(true)} onError={e => { e.currentTarget.style.opacity = '0'; setImageLoaded(true); }}
+        style={{ y: parallaxY }} />
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent" />
 
@@ -48,7 +54,7 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
       </motion.div>
 
       <motion.div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 z-10"
-        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, type: "spring", stiffness: 80, damping: 20 }}>
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, type: "spring", stiffness: 80, damping: 20 }} style={{ opacity: contentOpacity }}>
         <div className="flex items-center gap-3 mb-3 flex-wrap">
           {tour.chapterName && (
             <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-[9px] font-mono text-white/70 uppercase tracking-widest">{tour.chapterName}</span>

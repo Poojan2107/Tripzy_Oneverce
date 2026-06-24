@@ -181,30 +181,32 @@ export default function ExploreView({
                     className={`group rounded-3xl border transition-all duration-300 cursor-pointer overflow-hidden ${
                       isActive
                         ? 'bg-surface border-teal shadow-card'
-                        : 'bg-surface border-border hover:border-muted/50'
+                        : 'bg-surface border-border hover:border-muted/50 hover:shadow-sm'
                     }`}
                   >
-                    <div className="flex items-center p-3 gap-3">
-                      <div className="w-20 h-20 shrink-0 overflow-hidden bg-secondary-surface rounded-2xl relative">
+                    <div className="flex items-center p-2.5 gap-3">
+                      <div className="w-[72px] h-[72px] shrink-0 overflow-hidden bg-secondary-surface rounded-2xl relative">
                         <SafeImage src={tour.bannerImage} alt={tour.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
-                      <div className="flex-1 min-w-0 flex flex-col justify-between text-left h-20 py-0.5">
+                      <div className="flex-1 min-w-0 flex flex-col justify-between text-left py-0.5">
                         <div>
                           <div className="flex items-center justify-between text-[8px] font-mono text-muted uppercase tracking-widest">
                             <span className="truncate max-w-[120px]">{tour.location.split(',')[0]}</span>
-                            <span>{tour.duration}</span>
                           </div>
-                          <h3 className="font-display text-lg text-night font-medium lowercase truncate mt-1">{tour.title}</h3>
+                          <h3 className="font-display text-[15px] text-night font-light lowercase truncate mt-0.5 leading-tight group-hover:text-gold transition-colors">{tour.title}</h3>
                         </div>
-                        <div className="flex items-center justify-between mt-auto">
+                        <div className="flex items-center justify-between mt-1.5">
                           <span className="text-[10px] font-semibold text-night">{formatINR(tour.price)}</span>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5">
                             <div className="flex items-center gap-0.5">
-                              <Star className="w-3 h-3 fill-gold text-gold" />
+                              <Star className="w-2.5 h-2.5 fill-gold text-gold" />
                               <span className="text-[9px] font-bold text-night">{parseFloat(tour.rating.toFixed(1))}</span>
                             </div>
-                            <span className="text-[9px] font-bold uppercase tracking-wider text-teal">Explore</span>
+                            <span className="text-[8px] font-bold uppercase tracking-wider text-teal flex items-center gap-0.5 group-hover:gap-1 transition-all">
+                              Explore <ArrowRight className="w-2.5 h-2.5" />
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -225,27 +227,33 @@ export default function ExploreView({
       {/* Right: Destination Preview card */}
       <div className={`hidden lg:flex w-[28%] flex-col border-l border-border bg-surface h-full overflow-y-auto shrink-0 p-5 ${activeTour ? '' : 'items-center justify-center'}`}>
         {activeTour ? (
-          <div className="space-y-5 w-full">
-            <div className="aspect-[3/2] rounded-3xl overflow-hidden bg-secondary-surface shadow-card border border-border">
-              <img src={activeTour.bannerImage} alt={activeTour.title} loading="lazy" className="w-full h-full object-cover" />
+          <motion.div key={activeTour.id} className="space-y-5 w-full"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}>
+            <div className="aspect-[3/2] rounded-3xl overflow-hidden bg-secondary-surface shadow-card border border-border group">
+              <img src={activeTour.bannerImage} alt={activeTour.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               <div className="flex items-center justify-between text-[8px] font-mono text-muted uppercase tracking-widest">
                 <span className="font-bold text-gold">{activeTour.chapterName || ''}</span>
                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{activeTour.duration}</span>
               </div>
               {activeTour.chapterTitle && (
-                <span className="font-mono text-[9px] text-muted/70 uppercase tracking-widest block -mt-2">{activeTour.chapterTitle}</span>
+                <span className="font-mono text-[9px] text-muted/70 uppercase tracking-widest block -mt-1">{activeTour.chapterTitle}</span>
               )}
-              <h2 className="font-display text-3xl text-night font-medium lowercase leading-none">{activeTour.title}</h2>
-              <p className="text-xs text-muted/90 font-light leading-relaxed">{activeTour.storyNarrative || activeTour.subtitle}</p>
+              <h2 className="font-display text-[28px] text-night font-light lowercase leading-[0.95]">{activeTour.title}</h2>
+              <p className="text-xs text-muted/90 font-light leading-relaxed line-clamp-3">{activeTour.storyNarrative || activeTour.subtitle}</p>
               <div className="flex flex-wrap gap-1.5">
                 {activeTour.moods?.slice(0, 3).map(m => (
-                  <span key={m} className="px-2.5 py-1 rounded-full bg-secondary-surface text-[8px] font-bold uppercase tracking-wider text-muted">{m}</span>
+                  <span key={m} className="px-2.5 py-1 rounded-full bg-sand text-[8px] font-bold uppercase tracking-wider text-muted border border-warm-gray/30">{m}</span>
                 ))}
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">
-                <span className="text-xl font-display font-medium text-night">{formatINR(activeTour.price)}</span>
+                <div>
+                  <span className="text-xl font-display font-medium text-night">{formatINR(activeTour.price)}</span>
+                  <span className="text-[9px] text-muted font-light ml-1">/ day</span>
+                </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 fill-gold text-gold" />
                   <span className="text-sm font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
@@ -258,7 +266,7 @@ export default function ExploreView({
                 View Full Chapter
               </motion.button>
             </div>
-          </div>
+          </motion.div>
         ) : (
           <div className="text-center space-y-2">
             <MapPin className="w-8 h-8 text-muted/20 mx-auto" />

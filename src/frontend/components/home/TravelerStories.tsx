@@ -11,10 +11,20 @@ interface TravelerStoriesProps {
 }
 
 function StoryCard({ story, index, onClick }: { story: any; index: number; onClick: () => void }) {
-  const tilt = useMemo(() => ({
-    rotate: (Math.random() - 0.5) * 3,
-    y: Math.random() * 8,
-  }), []);
+  const tilt = useMemo(() => {
+    // Generate stable values based on the story title and index to avoid hydration warnings
+    const seed = (story.title || "") + "-" + index;
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+      hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const rand1 = Math.abs(Math.sin(hash)) * 10000 % 1;
+    const rand2 = Math.abs(Math.cos(hash)) * 10000 % 1;
+    return {
+      rotate: parseFloat(((rand1 - 0.5) * 3).toFixed(2)),
+      y: parseFloat((rand2 * 8).toFixed(2)),
+    };
+  }, [story.title, index]);
 
   return (
     <motion.div
@@ -31,6 +41,7 @@ function StoryCard({ story, index, onClick }: { story: any; index: number; onCli
         style={{ transform: `rotate(${tilt.rotate}deg)`, marginTop: `${tilt.y}px` }}
         whileHover={{ rotate: 0, y: -8 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        suppressHydrationWarning
       >
         <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary-surface mb-4">
           <SafeImage src={story.image} alt={story.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />

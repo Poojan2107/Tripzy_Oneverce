@@ -1,13 +1,53 @@
 "use client";
 import { useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { STORIES } from './data';
 import { Tour } from '../../types';
-import ScrollReveal from '../ui/ScrollReveal';
 import SafeImage from '../ui/SafeImage';
 
 interface TravelerStoriesProps {
   tours: Tour[];
   onSelectTour: (tour: Tour) => void;
+}
+
+function StoryCard({ story, index, onClick }: { story: any; index: number; onClick: () => void }) {
+  const tilt = useMemo(() => ({
+    rotate: (Math.random() - 0.5) * 3,
+    y: Math.random() * 8,
+  }), []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ delay: index * 0.08, type: "spring", stiffness: 100, damping: 20 }}
+      whileHover={{ y: -6 }}
+      className="group cursor-pointer shrink-0 w-[290px] md:w-auto"
+      onClick={onClick}
+    >
+      <motion.div
+        className="bg-surface border border-border shadow-card rounded-3xl p-5 pb-6"
+        style={{ transform: `rotate(${tilt.rotate}deg)`, marginTop: `${tilt.y}px` }}
+        whileHover={{ rotate: 0, y: -8 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      >
+        <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-secondary-surface mb-4">
+          <SafeImage src={story.image} alt={story.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        </div>
+        <div className="space-y-2 px-0.5">
+          <span className="text-[8px] font-mono text-coral uppercase tracking-widest block font-bold">{story.location}</span>
+          <h3 className="font-display text-lg text-night font-medium lowercase leading-tight group-hover:text-coral transition-colors line-clamp-2">{story.title}</h3>
+          <p className="text-[11px] text-muted/90 font-light leading-relaxed font-sans line-clamp-3">{story.excerpt}</p>
+          <div className="flex items-center gap-2 pt-3 border-t border-border mt-3">
+            <SafeImage src={story.avatar} alt={story.author} className="w-6 h-6 rounded-full object-cover" />
+            <span className="text-[9px] font-mono uppercase tracking-wider text-night/70">{story.author}</span>
+            <span className="ml-auto text-[8px] text-muted/50">· {story.readTime}</span>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
 }
 
 export default function TravelerStories({ tours, onSelectTour }: TravelerStoriesProps) {
@@ -38,37 +78,43 @@ export default function TravelerStories({ tours, onSelectTour }: TravelerStories
   }, [tours]);
 
   return (
-    <section className="py-16 md:py-24 bg-white border-t border-warm-gray/30">
+    <section className="py-16 md:py-24 bg-[#FFFDF9] border-t border-warm-gray/30">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
-        <ScrollReveal>
-          <div className="mb-12 text-left">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-coral block mb-2 font-bold">chronicles of movement</span>
-            <h2 className="font-display text-4xl sm:text-5xl text-night lowercase font-light tracking-[-0.03em]">
-              traveler <em className="italic font-light text-gold">stories</em>
-            </h2>
-          </div>
-        </ScrollReveal>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div
+          className="mb-12 text-left"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 80, damping: 20 }}
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-coral block mb-2 font-bold">chronicles of movement</span>
+          <h2 className="font-display text-4xl sm:text-5xl text-night lowercase font-light tracking-[-0.03em]">
+            traveler <em className="italic font-light text-gold">stories</em>
+          </h2>
+        </motion.div>
+
+        {/* Mobile: horizontal scroll */}
+        <div className="flex md:hidden gap-4 overflow-x-auto no-scrollbar pb-4 -mx-6 px-6 scroll-snap-x">
           {dynamicStories.map((story, i) => (
-            <ScrollReveal key={story.title + "-" + i} delay={(i % 3) as 0 | 1 | 2}>
-              <div role="button" tabIndex={0} onClick={() => { const matched = findTourForStory(story); if (matched) onSelectTour(matched); }}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const matched = findTourForStory(story); if (matched) onSelectTour(matched); } }}
-                className="flex flex-col space-y-4 cursor-pointer group">
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-warm-gray/30 bg-cream">
-                  <SafeImage src={story.image} alt={story.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-102" />
-                  <span className="absolute bottom-3 left-4 text-[8px] font-mono text-white bg-black/45 px-2 py-0.5 rounded-full uppercase tracking-widest">{story.readTime} read</span>
-                </div>
-                <div className="space-y-2 text-left">
-                  <span className="text-[8px] font-mono text-coral uppercase tracking-widest block">{story.location}</span>
-                  <h3 className="font-display text-2xl text-night font-light lowercase group-hover:text-coral transition-colors">{story.title}</h3>
-                  <p className="text-xs text-muted/90 leading-relaxed font-light font-sans">{story.excerpt}</p>
-                  <div className="flex items-center gap-3 pt-3 border-t border-warm-gray/30">
-                    <SafeImage src={story.avatar} alt={story.author} className="w-8 h-8 rounded-full object-cover" />
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-night/80">{story.author}</span>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
+            <StoryCard
+              key={story.title + "-" + i}
+              story={story}
+              index={i}
+              onClick={() => { const matched = findTourForStory(story); if (matched) onSelectTour(matched); }}
+            />
+          ))}
+        </div>
+
+        {/* Desktop: masonry polaroid columns */}
+        <div className="hidden md:block columns-2 lg:columns-3 gap-6 space-y-6">
+          {dynamicStories.map((story, i) => (
+            <div key={story.title + "-" + i} className="break-inside-avoid">
+              <StoryCard
+                story={story}
+                index={i}
+                onClick={() => { const matched = findTourForStory(story); if (matched) onSelectTour(matched); }}
+              />
+            </div>
           ))}
         </div>
       </div>

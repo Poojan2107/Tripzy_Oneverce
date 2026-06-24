@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Compass } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useSession, signIn } from 'next-auth/react';
 import { saveItineraryAction } from '../../backend/actions/shareActions';
 import { TOURS_DATA } from '../data';
@@ -24,6 +25,9 @@ export default function AiPlannerView({
   onClearLoadedItinerary,
   allTours = []
 }: AiPlannerViewProps) {
+  const mountedRef = useRef(true);
+  useEffect(() => { return () => { mountedRef.current = false; }; }, []);
+
   const [step, setStep] = useState(1);
   const [hasStarted, setHasStarted] = useState(false);
   const [loadingStepIndex, setLoadingStepIndex] = useState(0);
@@ -40,13 +44,11 @@ export default function AiPlannerView({
 
   const [customBudgetAmount, setCustomBudgetAmount] = useState(15000);
 
-  // Destination-aware budget range
   const selectedTour = selectedDestination ? (allTours.find(t => t.id === selectedDestination || t.dbId === selectedDestination) || TOURS_DATA.find(t => t.id === selectedDestination)) : null;
   const destBudgetRange = selectedTour ? parseBudgetRange(selectedTour.budgetRange) : null;
   const budgetSliderMin = Math.max(5000, destBudgetRange?.min || 5000);
   const budgetSliderMax = destBudgetRange?.max || 60000;
 
-  // Derive tier from amount
   const derivedBudgetTier = useMemo(() => {
     if (customBudgetAmount <= 15000) return 'Small';
     if (customBudgetAmount <= 40000) return 'Medium';
@@ -84,7 +86,6 @@ export default function AiPlannerView({
 
   const totalSteps = 5;
 
-  // Handle pre-loaded itinerary
   useEffect(() => {
     if (loadedItinerary) {
       setHasStarted(true);
@@ -186,6 +187,7 @@ export default function AiPlannerView({
 
       const data = await res.json();
       clearInterval(msgInterval);
+      if (!mountedRef.current) return;
       setLoading(false);
 
       if (!res.ok) throw new Error(data.error || "Failed to generate");
@@ -194,6 +196,7 @@ export default function AiPlannerView({
     } catch (err: any) {
       clearTimeout(timeoutId);
       clearInterval(msgInterval);
+      if (!mountedRef.current) return;
       setLoading(false);
       console.error("AI Generation failed:", err);
       const friendlyMsg = err.name === 'AbortError'
@@ -288,20 +291,39 @@ export default function AiPlannerView({
 
   if (loading) {
     return (
-      <div className="pt-28 pb-32 px-6 max-w-lg mx-auto min-h-[100dvh] bg-[#081A24] flex flex-col items-center justify-center text-center">
-        <div className="relative w-20 h-20 mb-8 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full border-2 border-white/10 border-t-ocean animate-spin" />
-          <Compass className="w-8 h-8 text-gold animate-pulse" />
+      <div className="pt-28 pb-32 px-6 max-w-lg mx-auto min-h-[100dvh] bg-background flex flex-col items-center justify-center text-center">
+        <div className="relative w-32 h-20 mb-6 flex items-center justify-center">
+          <svg width="120" height="60" viewBox="0 0 120 60" fill="none" className="text-teal">
+            <motion.path
+              d="M 10 30 Q 30 10 60 30 T 110 30"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeDasharray="4 4"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Start Node */}
+            <motion.circle cx="10" cy="30" r="4.5" fill="var(--color-gold)" 
+              animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
+            {/* Mid Node */}
+            <motion.circle cx="60" cy="30" r="4.5" fill="var(--color-teal)" 
+              animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }} />
+            {/* End Node */}
+            <motion.circle cx="110" cy="30" r="4.5" fill="var(--color-coral)" 
+              animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 1 }} />
+          </svg>
         </div>
-        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-coral block mb-2 font-bold">
-          Generating Journey
+        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-coral block mb-2 font-bold animate-pulse">
+          Crafting Journey
         </span>
-        <h2 className="font-display text-3xl font-light text-white lowercase leading-none mb-3">
+        <h2 className="font-display text-3xl font-light text-night lowercase leading-none mb-3">
           {loadingMsg}
         </h2>
-        <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden max-w-[200px]">
+        <div className="w-full bg-border h-1 rounded-full overflow-hidden max-w-[200px]">
           <div
-            className="bg-[#148596] h-full transition-all duration-700 ease-out"
+            className="bg-teal h-full transition-all duration-700 ease-out"
             style={{ width: `${((loadingStepIndex + 1) / LOADING_MESSAGES.length) * 100}%` }}
           />
         </div>

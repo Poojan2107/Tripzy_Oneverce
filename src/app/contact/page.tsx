@@ -1,11 +1,9 @@
-import type { Metadata } from "next";
+"use client";
+import { motion } from 'framer-motion';
 import Link from "next/link";
 import { Compass, Mail, MapPin } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Contact — Tripzy",
-  description: "Get in touch with the Tripzy team.",
-};
+const fadeUp = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 80, damping: 20 } } };
 
 export default function ContactPage() {
   return (
@@ -21,10 +19,11 @@ export default function ContactPage() {
         </div>
       </header>
       <main className="max-w-3xl mx-auto px-6 py-16 space-y-12">
-        <h1 className="text-3xl font-display font-bold text-night">Contact</h1>
+        <motion.h1 className="text-3xl font-display font-bold text-night"
+          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 80, damping: 20 }}>Contact</motion.h1>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-6">
+          <motion.div className="space-y-6" variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
                 <Mail className="w-5 h-5 text-gold" />
@@ -45,9 +44,10 @@ export default function ContactPage() {
                 <p className="text-sm text-charcoal">India</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-cream border border-warm-gray/30 rounded-2xl p-6 space-y-4">
+          <motion.div className="bg-cream border border-warm-gray/30 rounded-2xl p-6 space-y-4"
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <h2 className="text-sm font-bold text-night uppercase tracking-wider">Send a Message</h2>
             <p className="text-xs text-muted leading-relaxed">
               Have a question, suggestion, or feedback? We'd love to hear from you. Send us an email and we'll get back to you.
@@ -58,7 +58,7 @@ export default function ContactPage() {
             >
               Email Us
             </a>
-          </div>
+          </motion.div>
         </div>
       </main>
     </div>

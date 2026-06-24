@@ -65,7 +65,7 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                       </div>
                     </div>
                   </td>
-                  <td className="py-4 px-6 font-medium text-muted">
+                  <td className="py-4 px-6 font-medium text-stone">
                     <div className="flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-stone" />
                       <span>{tour.location}</span>

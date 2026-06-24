@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 import { TOURS_DATA } from '../../data';
 import { getHotelsByDestination } from '../../data/hotels';
 import HotelCard from '../HotelCard';
+import Footer from '../Footer';
+
 
 const ItineraryMap = dynamic(() => import('../map/ItineraryMap'), {
   ssr: false,
@@ -73,24 +75,28 @@ export default function PlannerResult({
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
         >
           <Compass className="w-10 h-10 text-muted/30 mx-auto" />
-          <h2 className="font-display text-2xl font-light text-night lowercase">Journey Interrupted</h2>
-          <p className="text-xs text-muted/60 font-light leading-relaxed">{itineraryResult.error}</p>
-          <motion.button
-            onClick={onReset}
-            className="px-6 py-2.5 rounded-xl bg-gold hover:bg-gold/90 text-night text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Try Again
-          </motion.button>
-          <motion.button
-            onClick={onReset}
-            className="px-6 py-2.5 rounded-xl border border-warm-gray/40 bg-[#F8F4EE] text-xs font-bold uppercase tracking-wider text-muted/70 hover:text-night transition-colors cursor-pointer min-h-[44px]"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Start Over
-          </motion.button>
+          <h2 className="font-display text-2xl font-light text-night lowercase">journey interrupted</h2>
+          <p className="text-xs text-muted/60 font-light leading-relaxed">
+            We're consulting our explorer archive and preparing an alternative journey.
+          </p>
+          <div className="flex flex-col gap-2 pt-2">
+            <motion.button
+              onClick={onReset}
+              className="w-full px-6 py-2.5 rounded-xl bg-gold hover:bg-gold/90 text-night text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px] border-none"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Retry Action
+            </motion.button>
+            <motion.button
+              onClick={onReset}
+              className="w-full px-6 py-2.5 rounded-xl border border-warm-gray/40 bg-[#F8F4EE] text-xs font-bold uppercase tracking-wider text-muted/70 hover:text-night transition-colors cursor-pointer min-h-[44px]"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Start Over
+            </motion.button>
+          </div>
         </motion.div>
       </div>
     );
@@ -113,7 +119,7 @@ export default function PlannerResult({
         <motion.div className="bg-surface relative overflow-hidden border border-border rounded-3xl shadow-card" variants={sectionVariants} custom={0}>
           {tour?.bannerImage && (
             <div className="absolute inset-0 opacity-[0.08]">
-              <img src={tour.bannerImage} alt="" className="w-full h-full object-cover" />
+              <img src={tour.bannerImage} alt="" loading="lazy" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/90 to-transparent" />
             </div>
           )}
@@ -127,9 +133,14 @@ export default function PlannerResult({
                 <h1 className="font-display text-night font-light lowercase leading-none mt-1" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
                   your <em className="text-gold not-italic">{getDestinationPrettyName(destId).toLowerCase()}</em> odyssey
                 </h1>
-                <p className="text-muted text-[10px] font-mono uppercase tracking-widest mt-1">
-                  {customDuration} days · {itin.length} chapters · crafted for {travelers || 'the explorer'}
-                </p>
+                <div className="flex flex-wrap items-center gap-2 mt-2">
+                  <span className="px-2.5 py-1 rounded-full bg-background border border-border text-[8px] font-mono font-bold uppercase tracking-wider text-night">{customDuration} Days</span>
+                  <span className="px-2.5 py-1 rounded-full bg-background border border-border text-[8px] font-mono font-bold uppercase tracking-wider text-night">{itin.length} Chapters</span>
+                  {itineraryResult.recommendationScore && (
+                    <span className="px-2.5 py-1 rounded-full bg-coral/10 border border-coral/20 text-[8px] font-mono font-bold uppercase tracking-wider text-coral">{itineraryResult.recommendationScore}% Match</span>
+                  )}
+                  <span className="px-2.5 py-1 rounded-full bg-teal/10 border border-teal/20 text-[8px] font-mono font-bold uppercase tracking-wider text-teal">Crafted For {travelers === 'solo' ? 'Solo' : travelers === 'couple' ? 'Couple' : travelers === 'family' ? 'Family' : travelers === 'friends' ? 'Group' : 'Explorer'}</span>
+                </div>
               </div>
 
               <div className="flex items-center gap-2.5 shrink-0">
@@ -137,16 +148,16 @@ export default function PlannerResult({
                   <motion.button
                     onClick={onSave}
                     disabled={saving}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gold text-night text-[10px] font-bold uppercase tracking-wider cursor-pointer disabled:opacity-50 shadow-md min-h-[44px] border-none"
-                    whileHover={{ scale: 1.03 }}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gold text-night text-[10px] font-bold uppercase tracking-wider cursor-pointer disabled:opacity-50 shadow-lg min-h-[46px] border-none hover:bg-gold/90"
+                    whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <CheckCircle2 className="w-4 h-4" />
                     {saving ? 'Archiving...' : 'Save to Passport'}
                   </motion.button>
                 ) : (
                   <motion.span
-                    className="px-4 py-2.5 rounded-xl bg-secondary-surface text-muted text-[10px] font-bold uppercase tracking-wider border border-border flex items-center gap-1.5 min-h-[44px]"
+                    className="px-5 py-3 rounded-xl bg-secondary-surface text-muted text-[10px] font-bold uppercase tracking-wider border border-border flex items-center gap-1.5 min-h-[46px]"
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 200, damping: 15 }}
@@ -278,7 +289,7 @@ export default function PlannerResult({
             <h3 className="font-display text-xl text-night font-light lowercase">route map</h3>
             <div className="h-px flex-1 bg-border/65" />
           </div>
-          <div className="bg-surface border border-border rounded-3xl overflow-hidden shadow-card h-56 w-full relative">
+          <div className="bg-surface border border-border rounded-3xl overflow-hidden shadow-card h-44 w-full relative">
             <ItineraryMap days={itin} activeDay={activeDayTab} />
           </div>
         </motion.div>
@@ -450,6 +461,9 @@ export default function PlannerResult({
             </div>
           </div>
         </motion.div>
+      </div>
+      <div className="mt-16">
+        <Footer />
       </div>
     </motion.div>
   );

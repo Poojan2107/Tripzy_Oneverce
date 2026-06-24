@@ -199,9 +199,7 @@ export default function AiPlannerView({
       if (!mountedRef.current) return;
       setLoading(false);
       console.error("AI Generation failed:", err);
-      const friendlyMsg = err.name === 'AbortError'
-        ? 'The journey is taking longer than expected. Please try again.'
-        : 'Something went wrong while planning your trip. Please try again.';
+      const friendlyMsg = "We're consulting our explorer archive and preparing an alternative journey.";
       setItineraryResult({ error: friendlyMsg });
     }
   };

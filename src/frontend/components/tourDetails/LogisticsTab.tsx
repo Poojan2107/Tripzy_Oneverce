@@ -13,7 +13,7 @@ export default function LogisticsTab({ tour, onPlanClick }: LogisticsTabProps) {
     <div className="space-y-6 animate-fade-in">
       <div>
         <h2 className="font-display text-2xl text-night font-bold mb-1">Plan & Reserve</h2>
-        <p className="text-xs text-muted font-light">Everything you need to know before arriving, and how to book your journey.</p>
+        <p className="text-xs text-muted font-light">Everything you need to know before arriving, and how to plan your journey.</p>
       </div>
 
       <div className="p-6 rounded-3xl bg-white border border-warm-gray shadow-card">

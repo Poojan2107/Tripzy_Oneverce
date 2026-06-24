@@ -52,7 +52,7 @@ export default function AdminUsersTab({ users, loadingUsers, searchTerm, onSearc
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         {u.image ? (
-                          <img src={u.image} alt={u.name || u.email} className="w-9 h-9 rounded-full object-cover border border-warm-gray shrink-0" />
+                          <img src={u.image} alt={u.name || u.email} loading="lazy" className="w-9 h-9 rounded-full object-cover border border-warm-gray shrink-0" />
                         ) : (
                           <div className="w-9 h-9 rounded-full bg-cream flex items-center justify-center shrink-0 border border-warm-gray">
                             <Users className="w-4 h-4 text-stone" />

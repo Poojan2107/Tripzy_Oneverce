@@ -35,13 +35,15 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="w-full min-h-[100dvh] bg-background text-ink flex flex-col items-center justify-center p-6">
           <Compass className="w-12 h-12 text-gold mb-4" />
-          <h1 className="text-xl font-bold uppercase tracking-wider mb-2">Something went wrong</h1>
-          <p className="text-xs text-muted mb-6">Please refresh the page to try again.</p>
+          <h1 className="font-display text-2xl font-light text-night lowercase mb-2">journey interrupted</h1>
+          <p className="text-xs text-muted leading-relaxed max-w-xs text-center mb-6">
+            We're consulting our explorer archive and preparing an alternative journey.
+          </p>
           <button
             onClick={() => { this.setState({ hasError: false }); window.location.reload(); }}
-            className="px-5 py-2.5 bg-gold text-night font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-gold-light transition-all"
+            className="px-5 py-2.5 bg-gold text-night font-bold text-[10px] uppercase tracking-wider rounded-xl hover:bg-gold/90 transition-all cursor-pointer min-h-[40px] border-none"
           >
-            Refresh
+            Retry Action
           </button>
         </div>
       );

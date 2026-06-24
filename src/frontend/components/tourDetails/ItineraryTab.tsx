@@ -22,7 +22,7 @@ export default function ItineraryTab({ tour, activeDay, onDayChange, accentColor
       </motion.div>
 
       <motion.div variants={fadeUp} className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
-        {tour.itinerary.map((day) => (
+        {(tour.itinerary || []).map((day) => (
           <button key={day.day} onClick={() => onDayChange(day.day)} className={`px-4 py-3 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-colors duration-200 border cursor-pointer min-h-[44px] flex items-center ${activeDay === day.day ? 'bg-night text-white border-night' : 'bg-white text-muted border-warm-gray hover:border-ocean/30'}`}>
             Day {day.day}
           </button>
@@ -30,7 +30,7 @@ export default function ItineraryTab({ tour, activeDay, onDayChange, accentColor
       </motion.div>
 
       <AnimatePresence mode="wait">
-        {tour.itinerary.filter(d => d.day === activeDay).map((day) => (
+        {(tour.itinerary || []).filter(d => d.day === activeDay).map((day) => (
           <motion.div key={day.day}
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -60,7 +60,7 @@ export default function ItineraryTab({ tour, activeDay, onDayChange, accentColor
       <motion.div variants={fadeUp}>
         <h2 className="font-display text-xl text-night font-bold mb-4">What's Included</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {tour.includedServices.map((s, i) => (
+          {(tour.includedServices || []).map((s, i) => (
             <div key={i} className="flex items-center gap-3.5 p-4 rounded-2xl bg-white border border-warm-gray">
               <div className="w-8 h-8 rounded-xl bg-cream flex items-center justify-center"><ServiceIcon iconName={s.iconName} /></div>
               <span className="text-xs text-night font-semibold">{s.name}</span>

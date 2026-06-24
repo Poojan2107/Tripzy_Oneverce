@@ -126,9 +126,9 @@ export default function PlannerWizard({
           </motion.div>
           <div>
             <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-gold block mb-2 font-bold">journey guide</span>
-            <h2 className="font-display text-3xl font-light text-night lowercase">no journey crafted yet</h2>
+            <h2 className="font-display text-3xl font-light text-night lowercase">your passport awaits its first chapter</h2>
             <p className="text-[11px] text-muted/65 font-light leading-relaxed mt-2.5 font-sans max-w-xs mx-auto">
-              Your travel companion is ready. Tell us about your story preferences — travel style, destination chapters, and pace — to craft a custom journey.
+              Begin exploring India and start collecting stories.
             </p>
           </div>
           <motion.button
@@ -139,7 +139,7 @@ export default function PlannerWizard({
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             <Sparkles className="w-4 h-4 text-night" />
-            <span>Start Your Journey</span>
+            <span>Craft First Journey</span>
           </motion.button>
         </motion.div>
       </div>
@@ -211,7 +211,7 @@ export default function PlannerWizard({
             
             <div className="space-y-2.5 text-[11px] font-sans">
               <div className="flex justify-between">
-                <span className="text-muted">Traveler Type:</span>
+                <span className="text-muted">Travel Style:</span>
                 <span className="font-semibold text-night">{mood || 'not selected'}</span>
               </div>
               <div className="flex justify-between">
@@ -227,8 +227,12 @@ export default function PlannerWizard({
                 <span className="font-semibold text-night">{duration ? (duration === 'weekend' ? '3 Days' : duration === 'short' ? '5 Days' : duration === 'week' ? '7 Days' : '14 Days') : 'not selected'}</span>
               </div>
               <div className="flex justify-between">
+                <span className="text-muted">Budget:</span>
+                <span className="font-semibold text-night">{customBudgetAmount ? `₹${customBudgetAmount.toLocaleString('en-IN')}` : 'not set'}</span>
+              </div>
+              <div className="flex justify-between">
                 <span className="text-muted">Match Score:</span>
-                <span className="font-bold text-coral">{mood ? '96% match' : '--'}</span>
+                <span className="font-bold text-coral">{mood ? '96%' : '--'}</span>
               </div>
             </div>
             
@@ -245,8 +249,8 @@ export default function PlannerWizard({
               <motion.div key="step1" className="space-y-6" variants={stepVariants} initial="initial" animate="animate" exit="exit">
                 <div>
                   <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-coral font-bold block mb-1">Step 1 of 5</span>
-                  <h3 className="font-display text-3xl text-night font-light lowercase font-display">who's traveling?</h3>
-                  <p className="text-xs text-muted/60 font-light font-sans mt-1">Select the travel style archetype that best matches your desires.</p>
+                  <h3 className="font-display text-3xl text-night font-light lowercase font-display">what kind of chapter are you looking for?</h3>
+                  <p className="text-xs text-muted/60 font-light font-sans mt-1">Select the travel style that best matches what you seek.</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {WIZARD_STYLE_OPTIONS.map((opt, i) => {
@@ -354,7 +358,7 @@ export default function PlannerWizard({
                               : 'border-border/40'
                           }`}
                         >
-                          <img src={tour.bannerImage}
+                          <img src={tour.bannerImage} alt={tour.title} loading="lazy"
                             className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 ${
                               isSelected ? 'opacity-50' : 'opacity-30'
                             }`}
@@ -425,7 +429,7 @@ export default function PlannerWizard({
                 <div>
                   <span className="font-mono text-[8px] uppercase tracking-[0.25em] text-coral font-bold block mb-1">Step 4 of 5</span>
                   <h3 className="font-display text-3xl text-night font-light lowercase">craft your journey</h3>
-                  <p className="text-xs text-muted/60 font-light font-sans mt-1">Set your duration and budget to shape this chapter of your story.</p>
+                  <p className="text-xs text-muted/60 font-light font-sans mt-1">Set your duration and budget to shape your story.</p>
                 </div>
 
                 <div className="space-y-2.5">

@@ -642,8 +642,9 @@ async function main() {
     }
   ];
 
+  const createdDestinations: Record<string, any> = {};
   for (const item of destsData) {
-    await prisma.destination.create({
+    const dest = await prisma.destination.create({
       data: {
         name: item.name,
         slug: item.slug,
@@ -675,9 +676,255 @@ async function main() {
         metadata: item.metadata
       }
     });
+    createdDestinations[dest.slug] = dest;
   }
 
-  console.log("Database seeded successfully with 12 Indian Chapters!");
+  console.log("Seeding users...");
+  const user1 = await prisma.user.create({
+    data: {
+      name: "Aarav Mehta",
+      email: "aarav.mehta@example.com",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Aarav",
+      role: "USER"
+    }
+  });
+  const user2 = await prisma.user.create({
+    data: {
+      name: "Ananya Iyer",
+      email: "ananya.iyer@example.com",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ananya",
+      role: "USER"
+    }
+  });
+  const user3 = await prisma.user.create({
+    data: {
+      name: "Vikram Singh",
+      email: "vikram.singh@example.com",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vikram",
+      role: "USER"
+    }
+  });
+  const user4 = await prisma.user.create({
+    data: {
+      name: "Pooja Patel",
+      email: "pooja.patel@example.com",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Pooja",
+      role: "USER"
+    }
+  });
+  const user5 = await prisma.user.create({
+    data: {
+      name: "Kabir Sharma",
+      email: "kabir.sharma@example.com",
+      image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Kabir",
+      role: "USER"
+    }
+  });
+
+  console.log("Seeding reviews...");
+  const reviews = [
+    {
+      userId: user1.id,
+      slug: "varanasi-spiritual",
+      rating: 5,
+      comment: "A deeply spiritual and transformational experience. The evening Ganga Aarti from the wooden boat is something I will never forget."
+    },
+    {
+      userId: user2.id,
+      slug: "varanasi-spiritual",
+      rating: 4,
+      comment: "Varanasi is crowded but beautiful. Walking the narrow alleys and drinking chai from clay cups was wonderful."
+    },
+    {
+      userId: user3.id,
+      slug: "jaisalmer-fort",
+      rating: 5,
+      comment: "Staying inside the living fort was like stepping back in time. The sunset jeep safari in Thar desert was incredible!"
+    },
+    {
+      userId: user4.id,
+      slug: "kerala-houseboats",
+      rating: 5,
+      comment: "Absolute paradise. Floating through the Vembanad Lake while eating freshly cooked pearl-spot fish is pure relaxation."
+    },
+    {
+      userId: user5.id,
+      slug: "ladakh-passes",
+      rating: 5,
+      comment: "A true adventure of a lifetime. The high-altitude passes are challenging but the view of Pangong Tso makes it worth every bit."
+    },
+    {
+      userId: user1.id,
+      slug: "kashmir-meadows",
+      rating: 5,
+      comment: "Kashmir really is heaven on earth. The heritage houseboats on Dal lake are beautifully carved and very comfortable."
+    },
+    {
+      userId: user2.id,
+      slug: "udaipur-mewar",
+      rating: 5,
+      comment: "Udaipur has a royal charm like no other. Watching the palace lights reflect on Lake Pichola during sunset is magical."
+    },
+    {
+      userId: user3.id,
+      slug: "munnar-tea",
+      rating: 4,
+      comment: "Lush green tea gardens and mist. It's a serene weekend escape, perfect for slow travel and relaxation."
+    },
+    {
+      userId: user4.id,
+      slug: "goa-beach",
+      rating: 5,
+      comment: "South Goa is so peaceful and clean. Loved the eco-shacks and walking the Portuguese Latin Quarters."
+    },
+    {
+      userId: user5.id,
+      slug: "hampi-ruins",
+      rating: 5,
+      comment: "Surreal boulder landscapes and magnificent ruins. Crossing the Tungabhadra river in a coracle boat was a highlight!"
+    },
+    {
+      userId: user1.id,
+      slug: "kutch-salt",
+      rating: 5,
+      comment: "The endless white salt flat desert is breathtaking, especially under the full moon. Truly an out-of-this-world sight."
+    },
+    {
+      userId: user2.id,
+      slug: "cherrapunji-roots",
+      rating: 5,
+      comment: "The living root bridges are a biological wonder. Trekking down the hills was challenging but extremely rewarding."
+    },
+    {
+      userId: user3.id,
+      slug: "andaman-reefs",
+      rating: 5,
+      comment: "Turquoise waters, white sand beaches, and excellent snorkeling. Bioluminescent kayaking was a dream come true!"
+    }
+  ];
+
+  for (const r of reviews) {
+    const dest = createdDestinations[r.slug];
+    if (dest) {
+      await prisma.review.create({
+        data: {
+          userId: r.userId,
+          destinationId: dest.id,
+          rating: r.rating,
+          comment: r.comment
+        }
+      });
+    }
+  }
+
+  console.log("Seeding saved itineraries...");
+  const varanasiDest = createdDestinations["varanasi-spiritual"];
+  if (varanasiDest) {
+    await prisma.savedItinerary.create({
+      data: {
+        userId: user1.id,
+        title: "Odyssey of the Soul: Varanasi",
+        destination: varanasiDest.id,
+        budget: 45000,
+        duration: 3,
+        itinerary: {
+          days: [
+            {
+              title: "Sacred Ganges & Sunset Devotion",
+              description: "Begin your spiritual odyssey on the banks of Varanasi. Witness the ancient fire rituals and sunrise prayers.",
+              activities: [
+                "Early morning sunrise boat ride on the Ganges to witness bathing rituals",
+                "Explore the narrow heritage lanes of the old city and savor clay-pot malaiyo",
+                "Watch the grand Ganga Aarti ceremony from a private Bajra boat at sunset"
+              ]
+            },
+            {
+              title: "Silk Weavers & Vedic Philosophy",
+              description: "Explore the ancient craftsmanship and philosophical heritage of the city.",
+              activities: [
+                "Visit the traditional silk weavers of the Sarai Mohalla district",
+                "Private chanting session and discussion with Vedic scholars",
+                "Walk through the historic ghats and visit the ancient temples"
+              ]
+            },
+            {
+              title: "Sarnath Excursion & Departure",
+              description: "Conclude your journey where Buddhism was first taught.",
+              activities: [
+                "Half-day excursion to the peaceful archaeological park of Sarnath",
+                "Visit the Dhamek Stupa and Sarnath Museum",
+                "Savor a traditional sattvik thali meal before heading home"
+              ]
+            }
+          ],
+          costs: {
+            transit: 15000,
+            stay: 20000,
+            food: 10000,
+            total: 45000
+          },
+          weather: { temperature: "20°C - 26°C", conditions: "Clear & Pleasant" },
+          recommendationScore: 98,
+          recommendationReasoning: "A perfect blend of spiritual ceremonies and heritage crafts."
+        }
+      }
+    });
+  }
+
+  const jaisalmerDest = createdDestinations["jaisalmer-fort"];
+  if (jaisalmerDest) {
+    await prisma.savedItinerary.create({
+      data: {
+        userId: user1.id,
+        title: "Golden Sands & Stone Forts",
+        destination: jaisalmerDest.id,
+        budget: 55000,
+        duration: 3,
+        itinerary: {
+          days: [
+            {
+              title: "Citadel of the Sun",
+              description: "Explore the only living sand fort in Rajasthan, a medieval fortress housing local families.",
+              activities: [
+                "Guided walking tour of the Golden Fort including Raj Mahal",
+                "Visit the beautifully carved Patwon ki Haveli",
+                "Sunset views from the cenotaphs of Vyas Chhatri"
+              ]
+            },
+            {
+              title: "Thar Desert Dunes Caravan",
+              description: "Journey into the Thar Desert for a night under the stars in camel canopy tents.",
+              activities: [
+                "Visit the abandoned stepwells and ruins of Kuldhara village",
+                "Camel caravan trek into the Sam Sand Dunes at golden hour",
+                "Traditional Rajasthani folk music and dinner around the campfire"
+              ]
+            },
+            {
+              title: "Desert Wildlife & Lakes",
+              description: "Observe the desert ecosystem and local lake reservoirs.",
+              activities: [
+                "Morning boat ride on the scenic Gadisar Lake",
+                "Visit the Desert Cultural Center and Museum",
+                "Local spice shopping and hand-blocked textile shopping in the town"
+              ]
+            }
+          ],
+          costs: {
+            transit: 18000,
+            stay: 25000,
+            food: 12000,
+            total: 55000
+          },
+          weather: { temperature: "18°C - 28°C", conditions: "Sunny & Dry" },
+          recommendationScore: 95,
+          recommendationReasoning: "Ideal for travelers seeking fort heritage and desert camping."
+        }
+      }
+    });
+  }
+
+  console.log("Database seeded successfully with 12 Indian Chapters and demo user data!");
 }
 
 main()

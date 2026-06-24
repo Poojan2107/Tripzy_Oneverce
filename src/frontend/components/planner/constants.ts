@@ -37,7 +37,7 @@ export const LOADING_MESSAGES = [
 ];
 
 export const PLANNER_STEPS = [
-  { step: 1, title: "Who's Traveling?", desc: 'Choose your travel style' },
+  { step: 1, title: "What Kind of Chapter?", desc: 'Choose your travel style' },
   { step: 2, title: 'Who Are You Traveling With?', desc: 'Companion & destination' },
   { step: 3, title: 'What Pace Fits You?', desc: 'Daily rhythm preference' },
   { step: 4, title: 'Craft Your Journey', desc: 'Duration & budget' },

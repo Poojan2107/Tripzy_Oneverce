@@ -1,24 +1,23 @@
+"use client";
 import { useEffect, useState, useMemo, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Star, MapPin, Compass, Clock, Sparkles } from 'lucide-react';
 import { Tour } from '../types';
 import { trackEvent } from '../utils/analytics';
 
-interface SearchModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  tours: Tour[];
-  onSelectTour: (tour: Tour) => void;
-}
+interface SearchModalProps { isOpen: boolean; onClose: () => void; tours: Tour[]; onSelectTour: (tour: Tour) => void; }
 
 const QUICK_TAGS = ['Adventure', 'Relaxation', 'Luxury', 'Food', 'Culture', 'Nature'];
 const SUGGESTED_DESTINATIONS = ['Varanasi', 'Kerala', 'Ladakh', 'Udaipur', 'Goa'];
 
-export default function SearchModal({
-  isOpen,
-  onClose,
-  tours,
-  onSelectTour
-}: SearchModalProps) {
+const overlayVariants = { hidden: { opacity: 0 }, visible: { opacity: 1 } };
+const modalVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.96 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 200, damping: 25, mass: 0.8 } },
+  exit: { opacity: 0, y: 20, scale: 0.96, transition: { duration: 0.15 } },
+};
+
+export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: SearchModalProps) {
   const [query, setQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [isFiltering, setIsFiltering] = useState(false);
@@ -26,17 +25,37 @@ export default function SearchModal({
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const filterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
 
-  // Load recent searches
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('tripzy_recent_searches');
-      if (saved) {
-        setRecentSearches(JSON.parse(saved));
+    if (!isOpen) return;
+    lastFocusedRef.current = document.activeElement as HTMLElement;
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !modalRef.current) return;
+      const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
-    } catch (e) {
-      console.error("Failed to load recent searches", e);
-    }
+    };
+    window.addEventListener('keydown', handleTab);
+    return () => {
+      window.removeEventListener('keydown', handleTab);
+      lastFocusedRef.current?.focus();
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    try { const saved = localStorage.getItem('tripzy_recent_searches'); if (saved) setRecentSearches(JSON.parse(saved)); }
+    catch (e) { console.error("Failed to load recent searches", e); }
   }, [isOpen]);
 
   const saveRecentSearch = (term: string) => {
@@ -49,45 +68,26 @@ export default function SearchModal({
         localStorage.setItem('tripzy_recent_searches', JSON.stringify(updated));
         return updated;
       });
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
   };
+
+  const onCloseRef = useRef(onClose);
+  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
 
   const removeRecentSearch = (e: React.MouseEvent, term: string) => {
     e.stopPropagation();
     try {
-      setRecentSearches(prev => {
-        const updated = prev.filter(t => t !== term);
-        localStorage.setItem('tripzy_recent_searches', JSON.stringify(updated));
-        return updated;
-      });
-    } catch (e) {
-      console.error(e);
-    }
+      setRecentSearches(prev => { const updated = prev.filter(t => t !== term); localStorage.setItem('tripzy_recent_searches', JSON.stringify(updated)); return updated; });
+    } catch (e) { console.error(e); }
   };
 
-  // Keyboard navigation & Esc to close
   useEffect(() => {
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
+    const handleGlobalKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') onCloseRef.current(); };
     window.addEventListener('keydown', handleGlobalKeyDown);
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      // Reset index on open
-      setFocusedIndex(-1);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-    return () => {
-      window.removeEventListener('keydown', handleGlobalKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [onClose, isOpen]);
+    if (isOpen) { document.body.style.overflow = 'hidden'; setFocusedIndex(-1); setTimeout(() => inputRef.current?.focus(), 50); }
+    return () => { window.removeEventListener('keydown', handleGlobalKeyDown); document.body.style.overflow = ''; };
+  }, [isOpen]);
 
-  // Analytics query trigger
   useEffect(() => {
     if (query || selectedTag) {
       setIsFiltering(true);
@@ -95,273 +95,180 @@ export default function SearchModal({
       filterTimeoutRef.current = setTimeout(() => {
         setIsFiltering(false);
         const activeTerm = selectedTag || query.trim();
-        if (activeTerm && activeTerm.length >= 3) {
-          trackEvent('search', { query: activeTerm });
-        }
+        if (activeTerm && activeTerm.length >= 3) trackEvent('search', { query: activeTerm });
       }, 300);
-    } else {
-      setIsFiltering(false);
-    }
+    } else { setIsFiltering(false); }
     return () => { if (filterTimeoutRef.current) clearTimeout(filterTimeoutRef.current); };
   }, [query, selectedTag]);
 
-  // Reset focus index when matches change
-  useEffect(() => {
-    setFocusedIndex(-1);
-  }, [query, selectedTag]);
+  useEffect(() => setFocusedIndex(-1), [query, selectedTag]);
 
   const matchedTours = useMemo(() => {
     const activeTerm = selectedTag ? selectedTag.toLowerCase() : query.toLowerCase().trim();
     if (activeTerm === '') return tours.slice(0, 3);
     return tours.filter(t =>
-      t.title.toLowerCase().includes(activeTerm) ||
-      t.location.toLowerCase().includes(activeTerm) ||
-      t.subtitle.toLowerCase().includes(activeTerm) ||
-      t.description.toLowerCase().includes(activeTerm) ||
-      t.tags.some(tag => tag.toLowerCase().includes(activeTerm)) ||
+      t.title.toLowerCase().includes(activeTerm) || t.location.toLowerCase().includes(activeTerm) ||
+      t.subtitle.toLowerCase().includes(activeTerm) || t.description.toLowerCase().includes(activeTerm) ||
+      (t.tags || []).some(tag => tag.toLowerCase().includes(activeTerm)) ||
       (t.moods || []).some(m => m.toLowerCase().includes(activeTerm))
     );
   }, [query, selectedTag, tours]);
 
-  const handleSelect = (tour: Tour) => {
-    saveRecentSearch(tour.title);
-    trackEvent('search_select', { tourId: tour.id, title: tour.title });
-    onSelectTour(tour);
-    onClose();
-  };
+  const handleSelect = (tour: Tour) => { saveRecentSearch(tour.title); trackEvent('search_select', { tourId: tour.id, title: tour.title }); onSelectTour(tour); onClose(); };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (matchedTours.length === 0) return;
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setFocusedIndex(prev => (prev + 1) % matchedTours.length);
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setFocusedIndex(prev => (prev - 1 + matchedTours.length) % matchedTours.length);
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (focusedIndex >= 0 && focusedIndex < matchedTours.length) {
-        handleSelect(matchedTours[focusedIndex]);
-      } else if (matchedTours.length > 0) {
-        handleSelect(matchedTours[0]);
-      }
-    }
+    if (e.key === 'ArrowDown') { e.preventDefault(); setFocusedIndex(prev => (prev + 1) % matchedTours.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setFocusedIndex(prev => (prev - 1 + matchedTours.length) % matchedTours.length); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (focusedIndex >= 0 && focusedIndex < matchedTours.length) handleSelect(matchedTours[focusedIndex]); else if (matchedTours.length > 0) handleSelect(matchedTours[0]); }
   };
-
-  const handleTagClick = (tag: string) => {
-    if (selectedTag === tag) {
-      setSelectedTag(null);
-      setQuery('');
-    } else {
-      setSelectedTag(tag);
-      trackEvent('search_tag_click', { tag });
-    }
-  };
-
-  const handleSuggestionClick = (dest: string) => {
-    setQuery(dest);
-    setSelectedTag(null);
-    trackEvent('search_suggestion_click', { destination: dest });
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-    if (selectedTag) setSelectedTag(null);
-  };
-
-  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center md:pt-[10vh] px-0 md:px-4">
-      {/* Backdrop */}
-      <div onClick={onClose} className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-200" />
-      
-      {/* Modal box */}
-      <div className="w-full h-full md:h-auto md:max-w-lg bg-[#0C2533] md:rounded-3xl shadow-elevated border-0 md:border border-white/10 relative z-10 overflow-hidden flex flex-col animate-[fadeIn_0.2s_ease-out] text-white">
-        
-        {/* Top input zone */}
-        <div className="p-4 pb-3 border-b border-white/10 shrink-0">
-          <div className="relative flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-              <input
-                ref={inputRef}
-                type="text"
-                autoFocus
-                placeholder="Search destinations, regional chapters..."
-                value={query}
-                onChange={handleInputChange}
-                onKeyDown={handleInputKeyDown}
-                className="w-full pl-10 pr-4 py-3 bg-[#081A24] text-white text-sm md:text-base rounded-xl border border-white/10 outline-none focus:border-[#148596] focus:ring-2 focus:ring-[#148596]/20 transition-all duration-200 placeholder:text-white/30 font-light"
-              />
-            </div>
-            {/* Close button for mobile */}
-            <button 
-              onClick={onClose} 
-              aria-label="Close search"
-              className="md:hidden p-3 rounded-xl hover:bg-white/5 transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center border border-white/10"
-            >
-              <X className="w-4 h-4 text-white/60" />
-            </button>
-          </div>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div className="fixed inset-0 z-50 flex items-start justify-center md:pt-[10vh] px-0 md:px-4"
+          variants={overlayVariants} initial="hidden" animate="visible" exit={{ opacity: 0 }}>
+          <motion.div onClick={onClose} className="absolute inset-0 bg-black/40 backdrop-blur-sm" variants={overlayVariants} />
 
-          {/* Quick mood chips */}
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {QUICK_TAGS.map((tag) => {
-              const isActive = selectedTag === tag;
-              return (
-                <button
-                  key={tag}
-                  onClick={() => handleTagClick(tag)}
-                  className={`px-3 py-2 rounded-full text-[10px] font-mono uppercase tracking-wider transition-all duration-200 border min-h-[38px] flex items-center ${
-                    isActive
-                      ? 'bg-[#148596] text-white border-[#148596] font-bold'
-                      : 'bg-[#081A24] text-white/60 border-white/10 hover:border-[#148596]/30 hover:text-white'
-                  }`}
-                >
-                  {tag}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+          <motion.div ref={modalRef} role="dialog" aria-modal="true" aria-label="Search destinations" className="w-full h-full md:h-auto md:max-w-lg bg-white md:rounded-3xl shadow-elevated border-0 md:border border-warm-gray/50 relative z-10 overflow-hidden flex flex-col text-night"
+            variants={modalVariants} initial="hidden" animate="visible" exit="exit">
 
-        {/* Suggestion & Recent Searches Container (Only if query is empty) */}
-        {!query && !selectedTag && (
-          <div className="p-4 pt-3 space-y-4 text-left border-b border-white/10 shrink-0">
-            {/* Popular Chapters */}
-            <div className="space-y-2">
-              <span className="text-[8px] font-mono uppercase tracking-widest text-white/40 font-bold">Suggested Chapters</span>
-              <div className="flex flex-wrap gap-1.5">
-                {SUGGESTED_DESTINATIONS.map((dest) => (
-                  <button
-                    key={dest}
-                    onClick={() => handleSuggestionClick(dest)}
-                    className="px-3 py-1.5 bg-[#081A24] hover:bg-[#0C2533] text-[10px] font-semibold text-white/80 border border-white/10 rounded-lg transition-colors cursor-pointer"
-                  >
-                    {dest}
-                  </button>
-                ))}
+            <div className="p-4 pb-3 border-b border-warm-gray/30 shrink-0">
+              <div className="relative flex items-center gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/30" />
+                  <input ref={inputRef} type="text" autoFocus placeholder="Search destinations, regional chapters..."
+                    value={query} onChange={e => { setQuery(e.target.value); if (selectedTag) setSelectedTag(null); }}
+                    onKeyDown={handleInputKeyDown}
+                    className="w-full pl-10 pr-4 py-3 bg-[#F8F4EE] text-night text-sm md:text-base rounded-xl border border-warm-gray/40 outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all duration-200 placeholder:text-muted/30 font-light" />
+                </div>
+                <motion.button onClick={onClose} aria-label="Close search"
+                  className="md:hidden p-3 rounded-xl hover:bg-[#F2ECE3] transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center border border-warm-gray/40"
+                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <X className="w-4 h-4 text-muted/60" />
+                </motion.button>
+              </div>
+
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {QUICK_TAGS.map((tag) => {
+                  const isActive = selectedTag === tag;
+                  return (
+                    <motion.button key={tag} onClick={() => {
+                      if (selectedTag === tag) { setSelectedTag(null); setQuery(''); }
+                      else { setSelectedTag(tag); trackEvent('search_tag_click', { tag }); }
+                    }}
+                      className={`px-3 py-2 rounded-full text-[10px] font-mono uppercase tracking-wider transition-colors duration-200 border min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'bg-[#F8F4EE] text-muted/70 border-warm-gray/40'}`}
+                      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      {tag}
+                    </motion.button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Recent Searches */}
-            {recentSearches.length > 0 && (
-              <div className="space-y-2">
-                <span className="text-[8px] font-mono uppercase tracking-widest text-white/40 font-bold">Recent Searches</span>
-                <div className="flex flex-wrap gap-1.5">
-                  {recentSearches.map((term) => (
-                    <div
-                      key={term}
-                      onClick={() => setQuery(term)}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#081A24] hover:bg-[#0C2533]/60 text-[10px] text-white/70 border border-white/10 rounded-lg cursor-pointer transition-colors group"
-                    >
-                      <Clock className="w-2.5 h-2.5 text-white/40" />
-                      <span>{term}</span>
-                      <button
-                        onClick={(e) => removeRecentSearch(e, term)}
-                        className="p-0.5 rounded-full hover:bg-white/10 text-white/40 hover:text-rose-400 shrink-0 ml-1 transition-colors"
-                        aria-label={`Remove recent search ${term}`}
-                      >
-                        <X className="w-2 h-2" />
-                      </button>
+            <AnimatePresence mode="wait">
+              {!query && !selectedTag && (
+                <motion.div key="suggestions" className="p-4 pt-3 space-y-4 text-left border-b border-warm-gray/30 shrink-0"
+                  initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }}>
+                  <div className="space-y-2">
+                    <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 font-bold">Suggested Chapters</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {SUGGESTED_DESTINATIONS.map((dest) => (
+                        <motion.button key={dest} onClick={() => { setQuery(dest); setSelectedTag(null); trackEvent('search_suggestion_click', { destination: dest }); }}
+                          className="px-3 py-1.5 bg-[#F8F4EE] text-[10px] font-semibold text-muted/80 border border-warm-gray/40 rounded-lg cursor-pointer"
+                          whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+                          {dest}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                  {recentSearches.length > 0 && (
+                    <div className="space-y-2">
+                      <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 font-bold">Recent Searches</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {recentSearches.map((term) => (
+                          <motion.div key={term} onClick={() => setQuery(term)}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#F8F4EE] text-[10px] text-muted/80 border border-warm-gray/40 rounded-lg cursor-pointer transition-colors group"
+                            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                            <Clock className="w-2.5 h-2.5 text-muted/40" />
+                            <span>{term}</span>
+                            <button onClick={(e) => removeRecentSearch(e, term)}
+                              className="p-0.5 rounded-full hover:bg-[#F2ECE3] text-muted/40 hover:text-coral shrink-0 ml-1 transition-colors"
+                              aria-label={`Remove recent search ${term}`}>
+                              <X className="w-2 h-2" />
+                            </button>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1 min-h-[220px]">
+              {isFiltering ? (
+                <div className="space-y-2 py-2">
+                  {[1, 2, 3].map((n) => (
+                    <div key={n} className="flex gap-3 p-3 rounded-xl bg-[#F8F4EE] animate-pulse">
+                      <div className="w-12 h-12 rounded-lg bg-[#E7DED3] shrink-0" />
+                      <div className="flex-1 space-y-2"><div className="w-1/4 h-3 bg-[#E7DED3] rounded" /><div className="w-3/4 h-4 bg-[#E7DED3] rounded" /><div className="w-1/2 h-3 bg-[#E7DED3] rounded" /></div>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Results Panel */}
-        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1 min-h-[220px]">
-          {isFiltering ? (
-            <div className="space-y-2 py-2">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="flex gap-3 p-3 rounded-xl bg-[#081A24] animate-pulse">
-                  <div className="w-12 h-12 rounded-lg bg-white/10 shrink-0" />
-                  <div className="flex-1 space-y-2">
-                    <div className="w-1/4 h-3 bg-white/10 rounded" />
-                    <div className="w-3/4 h-4 bg-white/10 rounded" />
-                    <div className="w-1/2 h-3 bg-white/10 rounded" />
-                  </div>
+              ) : matchedTours.length > 0 ? (
+                <div className="space-y-1">
+                  {(query || selectedTag) && (
+                    <div className="px-2 py-1 text-left"><span className="text-[8px] font-mono uppercase tracking-widest text-muted/50">Matched Chapters ({matchedTours.length})</span></div>
+                  )}
+                  <AnimatePresence>
+                    {matchedTours.map((tour, index) => {
+                      const isFocused = index === focusedIndex;
+                      return (
+                        <motion.div key={tour.id} layout
+                          initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.03, type: "spring", stiffness: 100, damping: 20 }}
+                          onClick={() => handleSelect(tour)}
+                          className={`flex gap-3 p-3 rounded-xl cursor-pointer group transition-colors duration-200 text-left border ${isFocused ? 'bg-[#F8F4EE] border-teal/30 shadow-sm' : 'bg-transparent border-transparent hover:bg-[#F8F4EE]'}`}>
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F2ECE3] shrink-0 relative">
+                            <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5 text-[9px] text-muted/50 font-mono uppercase tracking-wider">
+                              <MapPin className="w-2.5 h-2.5 text-teal" /><span>{tour.location}</span>
+                            </div>
+                            <p className={`text-xs font-semibold text-night truncate transition-colors ${isFocused ? 'text-teal' : 'group-hover:text-teal'}`}>{tour.title}</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <div className="flex items-center gap-1"><Star className="w-2.5 h-2.5 text-gold fill-gold" /><span className="text-[9px] font-bold text-muted/60">{parseFloat(tour.rating.toFixed(1))}</span></div>
+                              {tour.moods?.length > 0 && <span className="text-[9px] font-mono text-muted/40 uppercase">{tour.moods.slice(0, 1).join('')}</span>}
+                              <span className="text-muted/20">·</span>
+                              <span className="text-[9px] font-mono text-muted/50">{tour.duration}</span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
                 </div>
-              ))}
+              ) : (
+                <motion.div className="py-8 text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <Compass className="w-8 h-8 text-muted/30 mx-auto mb-2" />
+                  <p className="text-sm text-night/80 font-medium">No results found</p>
+                  <p className="text-xs text-muted/60 mt-1">Try a different search term or mood tag.</p>
+                </motion.div>
+              )}
             </div>
-          ) : matchedTours.length > 0 ? (
-            <div className="space-y-1">
-              {query || selectedTag ? (
-                <div className="px-2 py-1 text-left">
-                  <span className="text-[8px] font-mono uppercase tracking-widest text-white/40">Matched Chapters ({matchedTours.length})</span>
-                </div>
-              ) : null}
-              {matchedTours.map((tour, index) => {
-                const isFocused = index === focusedIndex;
-                return (
-                  <div
-                    key={tour.id}
-                    onClick={() => handleSelect(tour)}
-                    className={`flex gap-3 p-3 rounded-xl cursor-pointer group transition-all duration-200 text-left border ${
-                      isFocused 
-                        ? 'bg-[#081A24] border-[#148596]/30 shadow-sm' 
-                        : 'bg-transparent border-transparent hover:bg-[#081A24]'
-                    }`}
-                  >
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/10 shrink-0 relative">
-                      <img 
-                        src={tour.bannerImage} 
-                        alt={tour.title} 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" 
-                        loading="lazy" 
-                        decoding="async" 
-                        onError={e => { e.currentTarget.style.opacity = '0' }} 
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 text-[9px] text-white/50 font-mono uppercase tracking-wider">
-                        <MapPin className="w-2.5 h-2.5 text-[#148596]" />
-                        <span>{tour.location}</span>
-                      </div>
-                      <p className={`text-xs font-semibold text-white truncate transition-colors ${isFocused ? 'text-[#148596]' : 'group-hover:text-[#148596]'}`}>{tour.title}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <div className="flex items-center gap-1">
-                          <Star className="w-2.5 h-2.5 text-[#FDB62F] fill-[#FDB62F]" />
-                          <span className="text-[9px] font-bold text-white/60">{parseFloat(tour.rating.toFixed(1))}</span>
-                        </div>
-                        {tour.moods && tour.moods.length > 0 && (
-                          <span className="text-[9px] font-mono text-white/40 uppercase">{tour.moods.slice(0, 1).join('')}</span>
-                        )}
-                        <span className="text-white/20">·</span>
-                        <span className="text-[9px] font-mono text-white/40">{tour.duration}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="py-8 text-center">
-              <Compass className="w-8 h-8 text-white/20 mx-auto mb-2" />
-              <p className="text-sm text-white/80 font-medium">No results found</p>
-              <p className="text-xs text-white/50 mt-1">Try a different search term or mood tag.</p>
-            </div>
-          )}
-        </div>
 
-        {/* Footer shortcuts */}
-        <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between text-[9px] text-white/40 font-mono uppercase tracking-wider shrink-0 bg-[#081A24]">
-          <span className="flex items-center gap-1.5">
-            <Sparkles className="w-3 h-3 text-[#FDB62F]" />
-            <span>Search destinations</span>
-          </span>
-          <span className="flex items-center gap-2">
-            <span className="px-1.5 py-0.5 bg-[#0C2533] border border-white/10 rounded text-[8px]">↑↓ navigate</span>
-            <span className="px-1.5 py-0.5 bg-[#0C2533] border border-white/10 rounded text-[8px]">enter select</span>
-            <span className="px-1.5 py-0.5 bg-[#0C2533] border border-white/10 rounded text-[8px]">esc close</span>
-          </span>
-        </div>
-      </div>
-    </div>
+            <div className="px-4 py-3 border-t border-warm-gray/30 flex items-center justify-between text-[9px] text-muted/50 font-mono uppercase tracking-wider shrink-0 bg-[#FFFDF9]">
+              <span className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-gold" /><span>Search destinations</span></span>
+              <span className="flex items-center gap-2">
+                <span className="px-1.5 py-0.5 bg-[#FFFDF9] border border-warm-gray/40 rounded text-[8px]">↑↓ navigate</span>
+                <span className="px-1.5 py-0.5 bg-[#FFFDF9] border border-warm-gray/40 rounded text-[8px]">enter select</span>
+                <span className="px-1.5 py-0.5 bg-[#FFFDF9] border border-warm-gray/40 rounded text-[8px]">esc close</span>
+              </span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

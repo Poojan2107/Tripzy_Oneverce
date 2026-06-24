@@ -16,7 +16,7 @@ export default function HotelsTab({ tour, loadingHotels, onPlanClick }: HotelsTa
         <h2 className="font-display text-2xl text-night font-bold mb-1">Where to Stay</h2>
         <p className="text-xs text-muted font-light">Curated hotels and stays in {tour.title}. Compare and book via our partner sites.</p>
       </div>
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {loadingHotels ? (
           Array(2).fill(null).map((_, i) => (
             <div key={i} className="bg-white rounded-2xl border border-warm-gray/60 p-5 flex flex-col sm:flex-row gap-5 animate-pulse text-left">

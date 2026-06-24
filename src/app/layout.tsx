@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, Instrument_Serif, La_Belle_Aurore } from "next/font/google";
+import { Inter, Instrument_Serif, La_Belle_Aurore } from "next/font/google";
 import "../frontend/styles/globals.css";
 import Providers from "./providers";
 import Footer from "../frontend/components/Footer";
+import PageTransition from "../frontend/components/PageTransition";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-sans",
@@ -81,7 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${instrumentSerif.variable} ${laBelleAurore.variable}`}>
+    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable} ${laBelleAurore.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -104,7 +105,7 @@ export default function RootLayout({
       <body className="antialiased" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <Providers>
           <div className="flex flex-col min-h-[100dvh]">
-            {children}
+            <PageTransition>{children}</PageTransition>
             <Footer />
           </div>
         </Providers>

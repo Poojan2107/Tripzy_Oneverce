@@ -96,7 +96,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                       </div>
                     </td>
                     <td className="py-4 px-6 font-mono text-gold text-xs">{exp.icon || 'Sparkles'}</td>
-                    <td className="py-4 px-6 font-medium text-muted font-mono text-[11px]">{exp.estimatedBudget ? formatINR(exp.estimatedBudget) : 'Flexible'}</td>
+                    <td className="py-4 px-6 font-medium text-stone font-mono text-[11px]">{exp.estimatedBudget ? formatINR(exp.estimatedBudget) : 'Flexible'}</td>
                     <td className="py-4 px-6 text-stone">{exp.durationRange || 'N/A'}</td>
                     <td className="py-4 px-6 text-center">
                       {exp.featured ? (
@@ -142,7 +142,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                   <p className="font-medium text-ink text-sm truncate">{exp.name}</p>
                   <p className="text-[10px] text-stone mt-0.5 font-mono truncate">{exp.slug}</p>
                   <div className="flex gap-2 mt-2 flex-wrap">
-                    <span className="text-[10px] text-muted">{exp.estimatedBudget ? formatINR(exp.estimatedBudget) : 'Flexible'}</span>
+                    <span className="text-[10px] text-stone">{exp.estimatedBudget ? formatINR(exp.estimatedBudget) : 'Flexible'}</span>
                     <span className="text-[10px] text-stone">{exp.durationRange || ''}</span>
                     {exp.featured && <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded-full text-[9px] font-bold">Featured</span>}
                   </div>

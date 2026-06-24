@@ -42,8 +42,8 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
     mapInstanceRef.current = map;
 
-    // Dark map tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    // Light map tiles (CartoDB Positron)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 20
@@ -61,8 +61,8 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
         className: 'itinerary-day-marker',
         html: `
           <div class="relative flex items-center justify-center w-6 h-6 rounded-full ${
-            isActive ? 'bg-[#148596] text-white' : 'bg-[#0C2533] text-white border border-white/30'
-          } font-bold text-[10px] shadow-md">
+            isActive ? 'bg-[#18B6C9] text-white shadow-[0_0_8px_rgba(24,182,201,0.5)]' : 'bg-white text-[#0E1B26] border border-[#E7DED3]'
+          } font-bold text-[10px] shadow-sm">
             ${index + 1}
           </div>
         `,
@@ -72,16 +72,16 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
       const marker = L.marker([lat, lng], { icon: dayMarkerIcon }).addTo(map);
       marker.bindPopup(`
-        <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; color: #1F2937; padding: 4px;">
+        <div style="font-family: 'Inter', sans-serif; font-size: 11px; color: #0E1B26; padding: 4px;">
           <strong style="font-size: 12px; display: block; margin-bottom: 2px;">Day ${index + 1}: ${day.title}</strong>
-          <span style="color: #6B7280; font-size: 10px;">${day.activities?.[0] || 'Activities scheduled'}</span>
+          <span style="color: #64748B; font-size: 10px;">${day.activities?.[0] || 'Activities scheduled'}</span>
         </div>
       `, { closeButton: false });
     });
 
     if (latlngs.length > 1) {
       const routeLine = L.polyline(latlngs, {
-        color: '#FDB62F',
+        color: '#18B6C9',
         weight: 2,
         dashArray: '6, 8',
         lineCap: 'round',
@@ -98,8 +98,8 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
   if (!mounted) {
     return (
-      <div className="w-full h-full bg-[#081A24] animate-pulse flex flex-col items-center justify-center border border-white/5">
-        <span className="text-[10px] font-bold text-white/40 tracking-widest uppercase">Plotting Route Map...</span>
+      <div className="w-full h-full bg-background animate-pulse flex flex-col items-center justify-center border border-border">
+        <span className="text-[10px] font-bold text-muted/40 tracking-widest uppercase">Plotting Route Map...</span>
       </div>
     );
   }
@@ -107,7 +107,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
   return (
     <div className="w-full h-full relative">
       <div ref={mapContainerRef} className="w-full h-full z-0" />
-      <div className="absolute top-3 left-3 z-10 bg-[#0C2533]/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 shadow-card pointer-events-none text-[9px] font-medium text-white/50">
+      <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-border shadow-card pointer-events-none text-[9px] font-medium text-muted">
         ROUTE MAP
       </div>
     </div>

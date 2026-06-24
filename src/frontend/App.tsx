@@ -1,7 +1,9 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, Search, LogIn, LogOut } from 'lucide-react';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 import { trackPageView, trackWishlistSave, trackDestinationClick } from './utils/analytics';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -14,9 +16,24 @@ import BottomNavbar from './components/BottomNavbar';
 import ExploreView from './components/ExploreView';
 import TourDetailsView from './components/TourDetailsView';
 import SearchModal from './components/SearchModal';
-import AiPlannerView from './components/AiPlannerView';
-import TripsWishlistView from './components/TripsWishlistView';
 import HomeView from './components/HomeView';
+
+const AiPlannerView = dynamic(() => import('./components/AiPlannerView'), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-[100dvh] bg-[#F8F4EE] flex items-center justify-center">
+      <div className="w-10 h-10 rounded-full border-2 border-warm-gray/40 border-t-teal animate-spin" />
+    </div>
+  )
+});
+const TripsWishlistView = dynamic(() => import('./components/TripsWishlistView'), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-[100dvh] bg-[#F8F4EE] flex items-center justify-center">
+      <div className="w-10 h-10 rounded-full border-2 border-warm-gray/40 border-t-teal animate-spin" />
+    </div>
+  )
+});
 
 import { useAtmosphere } from './utils/AtmosphereContext';
 
@@ -137,7 +154,10 @@ export default function App() {
     }
   }, [savedItineraries, isClient]);
 
-  const displayTours = sortToursIndiaFirst(isClient && tours.length > 0 ? tours : TOURS_DATA);
+  const displayTours = useMemo(
+    () => sortToursIndiaFirst(isClient && tours.length > 0 ? tours : TOURS_DATA),
+    [tours, isClient]
+  );
 
   useEffect(() => {
     if (isClient && tours.length > 0) {
@@ -193,8 +213,14 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
-  const wishlistTours = displayTours.filter((tour) => wishlistIds.includes(tour.id));
-  const featuredTours = displayTours.filter(t => t.category === 'trending' || t.category === 'popular').slice(0, 4);
+  const wishlistTours = useMemo(
+    () => displayTours.filter((tour) => wishlistIds.includes(tour.id)),
+    [displayTours, wishlistIds]
+  );
+  const featuredTours = useMemo(
+    () => displayTours.filter(t => t.category === 'trending' || t.category === 'popular').slice(0, 4),
+    [displayTours]
+  );
 
   useEffect(() => {
     const handleKeys = (e: KeyboardEvent) => {
@@ -303,37 +329,50 @@ export default function App() {
       </header>
 
       <main className="w-full flex-grow">
-        {selectedTour ? (
-          <ErrorBoundary
-            onError={() => handleSelectTour(null)}
-            fallback={
-              <div className="w-full min-h-[60dvh] flex flex-col items-center justify-center p-6">
-                <Compass className="w-10 h-10 text-gold mb-3" />
-                <h2 className="font-display text-xl text-night font-light lowercase mb-1">could not load chapter</h2>
-                <p className="text-xs text-muted/60 font-light mb-4">This destination details are temporarily unavailable.</p>
-                <button
-                  onClick={() => handleSelectTour(null)}
-                  className="px-5 py-2.5 bg-night text-white text-[10px] font-bold uppercase tracking-wider rounded-xl hover:opacity-90 transition-all"
-                >
-                  Back to Explore
-                </button>
-              </div>
-            }
-          >
-          <TourDetailsView
-            tour={selectedTour}
-            onBack={() => handleSelectTour(null)}
-            onPlanClick={() => {
-              setCurrentTab('ai-planner');
-              handleSelectTour(null);
-            }}
-            onToggleWishlist={handleToggleWishlist}
-            isWishlisted={wishlistIds.includes(selectedTour.id)}
-          />
-          </ErrorBoundary>
-        ) : (
-          <>
-            {currentTab === 'home' && (
+        <AnimatePresence mode="wait">
+          {selectedTour ? (
+            <motion.div key="tour-details"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ErrorBoundary
+                onError={() => handleSelectTour(null)}
+                fallback={
+                  <div className="w-full min-h-[60dvh] flex flex-col items-center justify-center p-6">
+                    <Compass className="w-10 h-10 text-gold mb-3" />
+                    <h2 className="font-display text-xl text-night font-light lowercase mb-1">could not load chapter</h2>
+                    <p className="text-xs text-muted/60 font-light mb-4">This destination details are temporarily unavailable.</p>
+                    <button
+                      onClick={() => handleSelectTour(null)}
+                      className="px-5 py-2.5 bg-night text-white text-[10px] font-bold uppercase tracking-wider rounded-xl hover:opacity-90 transition-all"
+                    >
+                      Back to Explore
+                    </button>
+                  </div>
+                }
+              >
+              <TourDetailsView
+                tour={selectedTour}
+                onBack={() => handleSelectTour(null)}
+                onPlanClick={() => {
+                  setCurrentTab('ai-planner');
+                  handleSelectTour(null);
+                }}
+                onToggleWishlist={handleToggleWishlist}
+                isWishlisted={wishlistIds.includes(selectedTour.id)}
+              />
+              </ErrorBoundary>
+            </motion.div>
+          ) : (
+            <motion.div key={currentTab}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+            >
+              {currentTab === 'home' && (
               <HomeView
                 tours={displayTours}
                 wishlistIds={wishlistIds}
@@ -403,8 +442,9 @@ export default function App() {
                 allTours={tours}
               />
             )}
-          </>
+          </motion.div>
         )}
+        </AnimatePresence>
       </main>
 
       <BottomNavbar

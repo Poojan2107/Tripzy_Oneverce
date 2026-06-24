@@ -1,4 +1,7 @@
+"use client";
+
 import React from 'react';
+import { motion } from 'framer-motion';
 import {
   Users,
   MapPin,
@@ -31,7 +34,8 @@ export default function AdminDashboard({ metrics, loadingMetrics }: AdminDashboa
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <motion.div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+        initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.04 } } }}>
         {[
           { label: 'Users', icon: Users, value: totals?.users || 0, suffix: `${totals?.admins || 0} admins`, color: 'bg-gold/10 text-gold' },
           { label: 'Destinations', icon: MapPin, value: totals?.destinations || 0, color: 'bg-ocean/10 text-ocean' },
@@ -44,7 +48,9 @@ export default function AdminDashboard({ metrics, loadingMetrics }: AdminDashboa
         ].map(card => {
           const Icon = card.icon;
           return (
-            <div key={card.label} className="bg-white rounded-2xl sm:rounded-3xl border border-warm-gray p-4 sm:p-6 shadow-card relative overflow-hidden">
+            <motion.div key={card.label}
+              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 80, damping: 20 } } }}
+              className="bg-white rounded-2xl sm:rounded-3xl border border-warm-gray p-4 sm:p-6 shadow-card relative overflow-hidden">
               <div className="flex items-center justify-between">
                 <span className="text-[9px] sm:text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em] truncate max-w-[60%]">{card.label}</span>
                 <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${card.color} flex items-center justify-center shrink-0`}>
@@ -55,10 +61,10 @@ export default function AdminDashboard({ metrics, loadingMetrics }: AdminDashboa
                 {(card.value as number).toLocaleString()}
               </p>
               {card.suffix && <p className="text-[8px] font-mono text-stone/50 mt-0.5">{card.suffix}</p>}
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="bg-white border border-warm-gray rounded-3xl p-5 sm:p-6 shadow-card">

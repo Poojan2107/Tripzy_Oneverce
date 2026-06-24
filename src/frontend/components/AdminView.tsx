@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart2, Users, MapPin, Sparkles,
   Brain, BookOpen, MessageCircle, Heart, Shield, Mail, Calendar, Clock, Star, Navigation
@@ -220,22 +223,43 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
           <h1 className="text-3xl font-light font-display lowercase tracking-tight text-ink mt-3">tripzy admin</h1>
           <p className="text-xs text-stone mt-1">Manage destinations, experiences, and view analytics</p>
         </div>
-        <div className="flex bg-white border border-warm-gray p-1 rounded-2xl shadow-soft self-stretch md:self-auto overflow-x-auto no-scrollbar">
+        <div className="relative flex bg-white border border-warm-gray p-1 rounded-2xl shadow-soft self-stretch md:self-auto overflow-x-auto no-scrollbar">
           {tabs.map(tab => {
             const Icon = tab.icon;
             return (
-              <button key={tab.id} onClick={() => { setActiveTab(tab.id); setSearchTerm(''); }} className={`px-3 sm:px-4 py-3 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 whitespace-nowrap transition-all duration-300 touch-action-manipulation select-none min-h-[44px] ${activeTab === tab.id ? 'bg-gold text-white shadow-md shadow-gold/20' : 'text-stone hover:text-ink hover:bg-cream/30'}`}>
-                <Icon className="w-3.5 sm:w-4 h-3.5 sm:h-4" />{tab.label}
+              <button key={tab.id} onClick={() => { setActiveTab(tab.id); setSearchTerm(''); }} className={`relative px-3 sm:px-4 py-3 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 whitespace-nowrap touch-action-manipulation select-none min-h-[44px] transition-colors duration-200 ${activeTab === tab.id ? 'text-white' : 'text-stone hover:text-ink hover:bg-cream/30'}`}>
+                {activeTab === tab.id && (
+                  <motion.div layoutId="adminTabActive" className="absolute inset-0 bg-gold rounded-xl shadow-md shadow-gold/20" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
+                )}
+                <span className="relative z-10 flex items-center gap-1.5"><Icon className="w-3.5 sm:w-4 h-3.5 sm:h-4" />{tab.label}</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {activeTab === 'dashboard' && <AdminDashboard metrics={metrics} loadingMetrics={loadingMetrics} />}
-      {activeTab === 'users' && <AdminUsersTab users={users} loadingUsers={loadingUsers} searchTerm={searchTerm} onSearchChange={setSearchTerm} />}
-      {activeTab === 'destinations' && <AdminDestinationsTab tours={tours} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditDestForm} onDelete={handleDeleteDest} onCreate={openCreateDestForm} />}
-      {activeTab === 'experiences' && <AdminExperiencesTab experiences={experiences} loadingExperiences={loadingExperiences} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditExpForm} onDelete={handleDeleteExp} onCreate={openCreateExpForm} />}
+      <AnimatePresence mode="wait">
+        {activeTab === 'dashboard' && (
+          <motion.div key="dashboard" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+            <AdminDashboard metrics={metrics} loadingMetrics={loadingMetrics} />
+          </motion.div>
+        )}
+        {activeTab === 'users' && (
+          <motion.div key="users" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+            <AdminUsersTab users={users} loadingUsers={loadingUsers} searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+          </motion.div>
+        )}
+        {activeTab === 'destinations' && (
+          <motion.div key="destinations" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+            <AdminDestinationsTab tours={tours} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditDestForm} onDelete={handleDeleteDest} onCreate={openCreateDestForm} />
+          </motion.div>
+        )}
+        {activeTab === 'experiences' && (
+          <motion.div key="experiences" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+            <AdminExperiencesTab experiences={experiences} loadingExperiences={loadingExperiences} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditExpForm} onDelete={handleDeleteExp} onCreate={openCreateExpForm} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <DestinationForm
         state={{ isOpen: isDestFormOpen, editingDest, ...dest }}

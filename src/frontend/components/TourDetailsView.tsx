@@ -1,4 +1,6 @@
+"use client";
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { Tour } from '../types';
 import { formatINR } from '../utils/currency';
@@ -67,19 +69,69 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
       <div className="max-w-7xl mx-auto px-6 mt-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-0">
-            <div className="flex gap-1 overflow-x-auto no-scrollbar pb-4 border-b border-warm-gray mb-8">
+            <div className="relative flex gap-1 overflow-x-auto no-scrollbar pb-4 border-b border-warm-gray mb-8">
               {TABS.map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-5 py-3 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-200 whitespace-nowrap cursor-pointer border min-h-[44px] ${activeTab === tab.id ? 'bg-night text-white border-night' : 'bg-white text-muted border-warm-gray hover:border-gold'}`}>
-                  {tab.label}
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-5 py-3 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer border min-h-[44px] transition-colors duration-200 ${activeTab === tab.id ? 'text-white border-transparent' : 'text-muted bg-white border-warm-gray hover:border-gold'}`}>
+                  {activeTab === tab.id && (
+                    <motion.div layoutId="tourTabActive" className="absolute inset-0 bg-night rounded-full" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
                 </button>
               ))}
             </div>
 
-            {activeTab === 'story' && <StoryTab tour={tour} cultural={cultural} accentColor={accentColor} />}
-            {activeTab === 'itinerary' && <ItineraryTab tour={tour} activeDay={activeDay} onDayChange={setActiveDay} accentColor={accentColor} />}
-            {activeTab === 'local' && cultural && <LocalIntelTab tour={tour} cultural={cultural} dayTrips={dayTrips} accentColor={accentColor} />}
-            {activeTab === 'logistics' && <LogisticsTab tour={tour} onPlanClick={onPlanClick} />}
-            {activeTab === 'hotels' && <HotelsTab tour={tour} loadingHotels={loadingHotels} onPlanClick={onPlanClick} />}
+            <AnimatePresence mode="wait">
+              {activeTab === 'story' && (
+                <motion.div key="story"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <StoryTab tour={tour} cultural={cultural} accentColor={accentColor} />
+                </motion.div>
+              )}
+              {activeTab === 'itinerary' && (
+                <motion.div key="itinerary"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ItineraryTab tour={tour} activeDay={activeDay} onDayChange={setActiveDay} accentColor={accentColor} />
+                </motion.div>
+              )}
+              {activeTab === 'local' && cultural && (
+                <motion.div key="local"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <LocalIntelTab tour={tour} cultural={cultural} dayTrips={dayTrips} accentColor={accentColor} />
+                </motion.div>
+              )}
+              {activeTab === 'logistics' && (
+                <motion.div key="logistics"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <LogisticsTab tour={tour} onPlanClick={onPlanClick} />
+                </motion.div>
+              )}
+              {activeTab === 'hotels' && (
+                <motion.div key="hotels"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <HotelsTab tour={tour} loadingHotels={loadingHotels} onPlanClick={onPlanClick} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <Sidebar tour={tour} cultural={cultural} onPlanClick={onPlanClick} />

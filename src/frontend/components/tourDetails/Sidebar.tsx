@@ -1,3 +1,5 @@
+"use client";
+import { motion } from 'framer-motion';
 import { Star, Calendar, Sparkles } from 'lucide-react';
 import { Tour } from '../../types';
 import { formatINR } from '../../utils/currency';
@@ -9,10 +11,13 @@ interface SidebarProps {
   onPlanClick: () => void;
 }
 
+const fadeUp = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 80, damping: 20 } } };
+
 export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
   return (
     <div className="max-lg:static lg:sticky lg:top-24 space-y-4">
-      <div className="p-6 rounded-3xl bg-white border border-warm-gray shadow-card">
+      <motion.div className="p-6 rounded-3xl bg-white border border-warm-gray shadow-card"
+        variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-gold fill-gold" />
@@ -26,15 +31,18 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
           <span className="text-xs text-muted font-light ml-1">/ person daily</span>
         </div>
         <div className="flex flex-col gap-2.5">
-          <button onClick={onPlanClick} className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gold hover:bg-gold/90 text-[10px] font-bold uppercase tracking-[0.15em] text-night hover:shadow-[0_4px_15px_rgba(253,182,47,0.3)] transition-all cursor-pointer border-none min-h-[46px]">
-            <Sparkles className="w-4 h-4 text-[#0B1720] animate-pulse" />
+          <motion.button onClick={onPlanClick}
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gold hover:bg-gold/90 text-[10px] font-bold uppercase tracking-[0.15em] text-night hover:shadow-[0_4px_15px_rgba(253,182,47,0.3)] transition-all cursor-pointer border-none min-h-[46px]"
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+            <Sparkles className="w-4 h-4 text-[#0B1720]" />
             <span>Start AI Planning</span>
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
 
       {cultural && (
-        <div className="p-5 rounded-3xl bg-white border border-warm-gray shadow-card">
+        <motion.div className="p-5 rounded-3xl bg-white border border-warm-gray shadow-card"
+          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
           <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-warm-gray/40 pb-2">Destination Snapshot</h3>
           <div className="space-y-3">
             <div>
@@ -50,11 +58,12 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
               <p className="text-[10px] text-night/70 font-medium leading-relaxed">{tour.localSecret}</p>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
 
       {tour.reviews.length > 0 && (
-        <div className="p-5 rounded-3xl bg-white border border-warm-gray shadow-card">
+        <motion.div className="p-5 rounded-3xl bg-white border border-warm-gray shadow-card"
+          variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
           <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-warm-gray/40 pb-2">Traveler Notes</h3>
           <div className="space-y-4">
             {tour.reviews.slice(0, 2).map((r) => (
@@ -73,7 +82,7 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   );

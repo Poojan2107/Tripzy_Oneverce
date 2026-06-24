@@ -30,18 +30,18 @@ export const DURATION_OPTIONS = [
 ];
 
 export const LOADING_MESSAGES = [
-  "Consulting regional archives...",
-  "Mapping coordinates and route paths...",
-  "Formatting localized experiences in ₹ INR...",
-  "Finalizing your Indian companion journal...",
+  "Plotting coordinates for your explorer log...",
+  "Consulting local archives for hidden gems...",
+  "Weaving your journey chapters together...",
+  "Adding photography spots and local secrets...",
 ];
 
 export const PLANNER_STEPS = [
-  { step: 1, title: 'About You', desc: 'What kind of traveler you are' },
-  { step: 2, title: 'Preferences', desc: 'Select companion & route' },
-  { step: 3, title: 'Travel Style', desc: 'Select energy & pace' },
-  { step: 4, title: 'Budget & Duration', desc: 'Plan that fits your wallet' },
-  { step: 5, title: 'Journey Generation', desc: 'Notes and AI generation' }
+  { step: 1, title: "Who's Traveling?", desc: 'Choose your travel style' },
+  { step: 2, title: 'Who Are You Traveling With?', desc: 'Companion & destination' },
+  { step: 3, title: 'What Pace Fits You?', desc: 'Daily rhythm preference' },
+  { step: 4, title: 'Craft Your Journey', desc: 'Duration & budget' },
+  { step: 5, title: 'Review & Launch', desc: 'Finalize your companion journal' }
 ];
 
 export const DEST_CUISINE: Record<string, string> = {

@@ -7,6 +7,7 @@ import FeaturedChapters from "./home/FeaturedChapters";
 import TravelerStories from "./home/TravelerStories";
 import AtlasPassportPreview from "./home/AtlasPassportPreview";
 import CompanionPreview from "./home/CompanionPreview";
+import JourneyCta from "./home/JourneyCta";
 
 interface HomeViewProps {
   tours: Tour[];
@@ -32,6 +33,7 @@ export default function HomeView(props: HomeViewProps) {
       <FeaturedChapters tours={tours} wishlistIds={wishlistIds} loadingDestinations={loadingDestinations} onSelectTour={onSelectTour} onToggleWishlist={onToggleWishlist} />
       <TravelerStories tours={tours} onSelectTour={onSelectTour} />
       <CompanionPreview />
+      <JourneyCta onGoToPlanner={onGoToPlanner} onGoToExplore={onGoToExplore} />
     </div>
   );
 }

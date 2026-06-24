@@ -1,6 +1,6 @@
 "use client";
 import { motion } from 'framer-motion';
-import { Compass, Search, Sparkles, Heart, Shield } from 'lucide-react';
+import { Compass, Search, Sparkles, BookOpen, Shield } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { TabType } from '../types';
 
@@ -17,8 +17,8 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
 
   const tabs = [
     { id: 'home' as TabType, label: 'Home', icon: Compass },
-    { id: 'explore' as TabType, label: 'Explore', icon: Search },
-    { id: 'saved' as TabType, label: 'Discover', icon: Heart, badge: wishlistCount },
+    { id: 'explore' as TabType, label: 'Atlas', icon: Search },
+    { id: 'saved' as TabType, label: 'Passport', icon: BookOpen, badge: wishlistCount },
     { id: 'ai-planner' as TabType, label: 'Companion', icon: Sparkles },
     ...(isAdmin ? [{ id: 'admin' as TabType, label: 'Admin', icon: Shield, href: '/admin' }] : []),
   ];

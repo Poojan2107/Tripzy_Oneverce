@@ -9,15 +9,15 @@
     "start": "next start --port=3000",
     "lint": "next typegen && tsc --noEmit",
     "typecheck": "next typegen && tsc --noEmit",
-    "postinstall": "prisma generate && prisma db push --accept-data-loss && prisma db seed",
+    "postinstall": "prisma generate && prisma db push && prisma db seed",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed"
   },
   "dependencies": {
-    "@ai-sdk/google": "^3.0.80",
     "@auth/prisma-adapter": "^2.11.2",
     "@google/genai": "^2.4.0",
     "@prisma/client": "^6.19.3",
+    "@sentry/nextjs": "^10.60.0",
     "@tailwindcss/postcss": "^4.3.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",

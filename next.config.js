@@ -7,7 +7,7 @@ const nextConfig = {
     "127.0.0.1:3000",
     "127.0.0.1",
   ],
-  serverExternalPackages: ["@google/genai"],
+  serverExternalPackages: ["@google/genai", "@sentry/nextjs"],
   async redirects() {
     return [
       {
@@ -29,4 +29,11 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+const { withSentryConfig } = await import("@sentry/nextjs");
+
+export default withSentryConfig(nextConfig, {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+});

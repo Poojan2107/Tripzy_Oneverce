@@ -258,11 +258,11 @@ export default function App() {
         wishlistCount={wishlistIds.length}
       />
 
-      {/* Mobile Top Header */}
+      {/* Mobile Brand Bar — logo only, no duplicate auth/nav */}
       <header className={`md:hidden w-full sticky top-0 z-50 px-4 py-2.5 flex items-center justify-between border-b select-none transition-all duration-300 ${
         currentTab === 'home' && selectedTour === null
-          ? 'bg-sand/90 backdrop-blur-md border-warm-gray/25 text-night'
-          : 'bg-[#081A24]/90 backdrop-blur-md border-white/5 text-white'
+          ? 'bg-sand/90 backdrop-blur-md border-warm-gray/25'
+          : 'bg-[#081A24]/90 backdrop-blur-md border-white/5'
       }`}>
         <button
           onClick={() => {
@@ -280,59 +280,6 @@ export default function App() {
             tripzy<span className="text-gold">.ai</span>
           </span>
         </button>
-
-        <div className="flex items-center gap-3">
-          {/* Search Button */}
-          <button
-            onClick={() => setSearchModalOpen(true)}
-            className={`p-2 rounded-xl transition-all cursor-pointer min-h-[38px] min-w-[38px] flex items-center justify-center ${
-              currentTab === 'home' && selectedTour === null
-                ? 'text-muted hover:text-night hover:bg-sand'
-                : 'text-white/60 hover:text-white hover:bg-white/5'
-            }`}
-          >
-            <Search className="w-4 h-4" />
-          </button>
-
-          {/* User Sign In / Profile Info */}
-          {session ? (
-            <div className="flex items-center gap-2">
-              {session.user?.image ? (
-                <img
-                  src={session.user.image}
-                  alt={session.user.name || "User"}
-                  className="w-6 h-6 rounded-full object-cover border border-warm-gray/50"
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-gold text-[#0B1720] flex items-center justify-center text-[10px] font-bold">
-                  {session.user?.name ? session.user.name[0].toUpperCase() : "U"}
-                </div>
-              )}
-              <button
-                onClick={() => signOut()}
-                className={`p-1.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[32px] ${
-                  currentTab === 'home' && selectedTour === null
-                    ? 'text-muted hover:text-rose-500 hover:bg-rose-50'
-                    : 'text-white/60 hover:text-rose-400 hover:bg-white/5'
-                }`}
-              >
-                <LogOut className="w-3 h-3 inline mr-1" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => signIn("google", { callbackUrl: window.location.href })}
-              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[8px] font-bold uppercase tracking-wider transition-all cursor-pointer min-h-[32px] ${
-                currentTab === 'home' && selectedTour === null
-                  ? 'bg-night text-white hover:bg-coral'
-                  : 'bg-white text-night hover:bg-gold'
-              }`}
-            >
-              <LogIn className="w-3.5 h-3.5" />
-              <span>Sign In</span>
-            </button>
-          )}
-        </div>
       </header>
 
       <main className="w-full flex-grow">
@@ -488,7 +435,7 @@ export default function App() {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.2 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-[84px] right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-night text-white shadow-lg hover:bg-gold hover:text-night transition-colors cursor-pointer"
+            className="fixed bottom-[calc(84px+env(safe-area-inset-bottom,0px))] right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-night text-white shadow-lg hover:bg-gold hover:text-night transition-colors cursor-pointer"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-4 h-4" />

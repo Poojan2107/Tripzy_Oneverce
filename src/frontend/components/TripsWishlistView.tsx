@@ -50,9 +50,11 @@ function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove
         <h3 className="font-display text-2xl text-night font-light leading-none lowercase group-hover:text-gold transition-colors">{tour.title}</h3>
         <p className="text-[11px] text-muted/80 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
         <div className="pt-3 flex justify-between items-center text-xs font-bold text-night border-t border-border mt-3">
-          <span>{formatINR(tour.price)}</span>
+          <span className="text-[8px] font-mono font-bold text-teal bg-teal/10 border border-teal/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            {tour.moods?.[0] || 'Chapter'}
+          </span>
           <span className="text-[8px] font-mono font-bold text-coral bg-coral/10 border border-coral/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            {tour.moods?.[0] || 'Wander'}
+            {tour.duration}
           </span>
         </div>
       </div>
@@ -142,7 +144,7 @@ export default function TripsWishlistView({
   allTours = []
 }: TripsWishlistViewProps) {
   const { data: session } = useSession();
-  const [activeSubTab, setActiveSubTab] = useState<'wishlist' | 'itineraries'>('wishlist');
+  const [activeSubTab, setActiveSubTab] = useState<'chapters' | 'journeys'>('chapters');
 
   const displayTours = useMemo(() => {
     return allTours.length > 0 ? allTours : TOURS_DATA;
@@ -222,7 +224,7 @@ export default function TripsWishlistView({
       {!session && (
         <div className="mb-6 p-4 rounded-3xl bg-surface border border-border flex items-center justify-between gap-4 shadow-sm">
           <p className="text-[10px] text-muted/65 font-light leading-relaxed">
-            Sign in to sync your wishlist and itineraries across devices.
+            Sign in to sync your Passport across devices.
           </p>
           <button
             onClick={() => signIn('google', { callbackUrl: window.location.href })}
@@ -447,9 +449,9 @@ export default function TripsWishlistView({
             <h3 className="font-display text-xl text-night font-light lowercase leading-none">saved chapters</h3>
           </div>
           <div className="bg-secondary-surface p-0.5 rounded-2xl flex gap-0.5 border border-border relative">
-            {['wishlist', 'itineraries'].map((tab) => {
+            {['chapters', 'journeys'].map((tab) => {
               const isActive = activeSubTab === tab;
-              const count = tab === 'wishlist' ? wishlistTours.length : savedItineraries.length;
+              const count = tab === 'chapters' ? wishlistTours.length : savedItineraries.length;
               return (
                 <button key={tab} onClick={() => setActiveSubTab(tab as any)}
                   className={`px-4 py-2 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer min-h-[34px] shrink-0 relative ${
@@ -460,7 +462,7 @@ export default function TripsWishlistView({
                     <motion.span className="absolute inset-0 rounded-xl bg-night"
                       layoutId="subTabActive" transition={{ type: "spring", stiffness: 300, damping: 25 }} />
                   )}
-                  <span className="relative z-10">{tab === 'wishlist' ? 'Saved' : 'Chapters'}</span>
+                  <span className="relative z-10">{tab === 'chapters' ? 'Saved Chapters' : 'Journey Collection'}</span>
                   {count > 0 && (
                     <motion.span className="relative z-10 h-4 min-w-4 rounded-full bg-coral text-[8px] font-bold text-white flex items-center justify-center px-1"
                       initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 15 }}>
@@ -473,7 +475,7 @@ export default function TripsWishlistView({
           </div>
         </div>
 
-        {activeSubTab === 'wishlist' && (
+        {activeSubTab === 'chapters' && (
           <div className="animate-scale-in">
             {wishlistTours.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
@@ -492,7 +494,7 @@ export default function TripsWishlistView({
           </div>
         )}
 
-        {activeSubTab === 'itineraries' && (
+        {activeSubTab === 'journeys' && (
           <div className="animate-scale-in">
             {savedItineraries.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

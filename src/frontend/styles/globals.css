@@ -4,7 +4,6 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Instrument Serif", ui-serif, Georgia, serif;
-  --font-handwritten: "La Belle Aurore", cursive;
 
   /* Core backgrounds */
   --color-background: #F8F4EE;

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Instrument_Serif, La_Belle_Aurore } from "next/font/google";
+import { Inter, Instrument_Serif } from "next/font/google";
 import "../frontend/styles/globals.css";
 import Providers from "./providers";
 import PageTransition from "../frontend/components/PageTransition";
@@ -20,12 +20,6 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-const laBelleAurore = La_Belle_Aurore({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-handwritten",
-  display: "swap",
-});
 
 const baseUrl = "https://tripzy-oneverce.vercel.app";
 
@@ -82,14 +76,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable} ${laBelleAurore.variable}`}>
+    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "TravelAgency",
+              "@type": "WebApplication",
               name: "Tripzy",
               url: baseUrl,
               description: "AI-powered travel companion for exploring India through handcrafted chapters.",

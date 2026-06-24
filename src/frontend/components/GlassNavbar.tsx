@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Search, Sparkles, Heart, LogIn, LogOut, Shield } from 'lucide-react';
+import { Compass, Search, Sparkles, BookOpen, LogIn, LogOut, Shield } from 'lucide-react';
 import { TabType } from '../types';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
@@ -32,8 +32,8 @@ export default function GlassNavbar({
 
   const tabs = [
     { id: 'home' as TabType, label: 'Home', icon: Compass },
-    { id: 'explore' as TabType, label: 'Explore', icon: Search },
-    { id: 'saved' as TabType, label: 'Discover', icon: Heart, badge: wishlistCount },
+    { id: 'explore' as TabType, label: 'Atlas', icon: Search },
+    { id: 'saved' as TabType, label: 'Passport', icon: BookOpen, badge: wishlistCount },
     { id: 'ai-planner' as TabType, label: 'Companion', icon: Sparkles },
   ];
 
@@ -93,7 +93,7 @@ export default function GlassNavbar({
                 <Icon className={`w-3.5 h-3.5 transition-transform duration-300 ${isActive ? 'text-gold scale-110' : ''}`} />
                 <span>{tab.label}</span>
                 {tab.badge !== undefined && tab.badge > 0 && (
-                  <motion.span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-white animate-pulse"
+                  <motion.span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-white"
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 15 }}>
                     {tab.badge}
                   </motion.span>

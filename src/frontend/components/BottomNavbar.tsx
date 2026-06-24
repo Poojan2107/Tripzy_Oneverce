@@ -19,7 +19,7 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
     { id: 'home' as TabType, label: 'Home', icon: Compass },
     { id: 'explore' as TabType, label: 'Explore', icon: Search },
     { id: 'saved' as TabType, label: 'Discover', icon: Heart, badge: wishlistCount },
-    { id: 'ai-planner' as TabType, label: 'Planner', icon: Sparkles },
+    { id: 'ai-planner' as TabType, label: 'Companion', icon: Sparkles },
     ...(isAdmin ? [{ id: 'admin' as TabType, label: 'Admin', icon: Shield, href: '/admin' }] : []),
   ];
 

@@ -60,14 +60,6 @@ export default function ExploreView({
 
   const activeTour = useMemo(() => tours.find(t => t.id === activeTourId) || null, [tours, activeTourId]);
 
-  const activeTourMatchPercent = useMemo(() => {
-    if (!activeTour) return 95;
-    let sum = 0;
-    for (let i = 0; i < activeTour.id.length; i++) {
-      sum += activeTour.id.charCodeAt(i);
-    }
-    return 80 + (sum % 20); // deterministic 80% to 99%
-  }, [activeTour?.id]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.innerWidth >= 768 && filteredTours.length > 0 && !activeTourId) {
@@ -137,23 +129,19 @@ export default function ExploreView({
             ))}
           </div>
 
-          {/* Editorial Metrics Ribbon (Moved below filters) */}
+          {/* Real atlas stats */}
           <div className="flex justify-between items-center py-2 px-1 border-t border-border pt-3">
-            {[
-              { value: '87', label: 'Places' },
-              { value: '250', label: 'Chapters' },
-              { value: '1.2K', label: 'Stories' },
-              { value: '15K', label: 'Explorers' },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <span className="font-display text-base text-gold font-medium block leading-tight">{stat.value}</span>
-                <span className="text-[7px] font-mono uppercase tracking-widest text-muted/65">{stat.label}</span>
-              </div>
-            ))}
+            <div className="text-left">
+              <span className="font-display text-base text-gold font-medium block leading-tight">12</span>
+              <span className="text-[7px] font-mono uppercase tracking-widest text-muted/65">Living Chapters</span>
+            </div>
+            <div className="text-right">
+              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted/50 font-light">India's Story Atlas</span>
+            </div>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background scrollbar-thin">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background scrollbar-thin pb-[calc(68px+env(safe-area-inset-bottom,8px))] md:pb-4">
           {loading ? (
             Array(5).fill(null).map((_, i) => (
               <div key={i} className="h-24 rounded-2xl bg-secondary-surface animate-pulse border border-border" />
@@ -260,7 +248,9 @@ export default function ExploreView({
               <div className="flex items-center gap-2 text-[9px] font-mono text-muted">
                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{activeTour.duration}</span>
                 <span className="text-border/40">·</span>
-                <span className="flex items-center gap-1 text-coral font-bold">{activeTourMatchPercent}% Match</span>
+                {activeTour.moods?.[0] && (
+                  <span className="font-bold text-teal capitalize">{activeTour.moods[0]} Chapter</span>
+                )}
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeTour.moods?.slice(0, 3).map(m => (

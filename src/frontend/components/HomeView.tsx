@@ -1,13 +1,11 @@
 "use client";
 import { Tour } from "../types";
 import HeroCarousel from "./home/HeroCarousel";
-import StatusCapsule from "./home/StatusCapsule";
 import CategoryScroller from "./home/CategoryScroller";
 import FeaturedChapters from "./home/FeaturedChapters";
 import TravelerStories from "./home/TravelerStories";
 import AtlasPassportPreview from "./home/AtlasPassportPreview";
 import CompanionPreview from "./home/CompanionPreview";
-import JourneyCta from "./home/JourneyCta";
 import HowTripzyWorks from "./home/HowTripzyWorks";
 import WhyTripzy from "./home/WhyTripzy";
 import Footer from "./Footer";
@@ -30,7 +28,6 @@ export default function HomeView(props: HomeViewProps) {
   return (
     <div className="bg-sand min-h-[100dvh] text-night selection:bg-coral/20 selection:text-night">
       <HeroCarousel tours={tours} onGoToPlanner={onGoToPlanner} onGoToExplore={onGoToExplore} onSelectTour={onSelectTour} />
-      <StatusCapsule />
       <CategoryScroller onQuickCategoryClick={onQuickCategoryClick} />
       <AtlasPassportPreview />
       <WhyTripzy />
@@ -38,7 +35,6 @@ export default function HomeView(props: HomeViewProps) {
       <HowTripzyWorks />
       <TravelerStories tours={tours} onSelectTour={onSelectTour} />
       <CompanionPreview />
-      <JourneyCta onGoToPlanner={onGoToPlanner} onGoToExplore={onGoToExplore} />
       <Footer />
     </div>
   );

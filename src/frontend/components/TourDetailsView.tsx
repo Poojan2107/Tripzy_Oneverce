@@ -27,10 +27,10 @@ interface TourDetailsViewProps {
 
 const TABS = [
   { id: 'story', label: 'The Story' },
-  { id: 'itinerary', label: 'Itinerary' },
-  { id: 'local', label: 'Local Intel' },
+  { id: 'itinerary', label: 'Explorer Log' },
+  { id: 'local', label: 'Local Secrets' },
   { id: 'logistics', label: 'Plan & Prepare' },
-  { id: 'hotels', label: 'Hotels' },
+  { id: 'hotels', label: 'Where To Stay' },
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
@@ -149,7 +149,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
         </div>
         <button onClick={onPlanClick} className="shrink-0 inline-flex items-center gap-1.5 px-6 py-3 rounded-xl bg-gold text-[#0B1720] text-[10px] font-bold uppercase tracking-wider hover:bg-gold/90 transition-all cursor-pointer min-h-[44px] min-w-[44px] border-none">
           <Sparkles className="w-3.5 h-3.5 text-[#0B1720]" />
-          <span>AI Plan</span>
+          <span>Craft Journey</span>
         </button>
       </div>
     </div>

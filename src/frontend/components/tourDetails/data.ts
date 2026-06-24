@@ -26,7 +26,7 @@ export const CULTURAL_CONTEXT: Record<string, CulturalContext> = {
     context: 'Kerala\'s backwaters are a 900km network of interconnected canals, rivers and lakes running parallel to the Arabian Sea. The iconic Kettuvallam houseboats are made entirely of jackfruit wood and palm leaves — and were once used to carry rice and spices along the trade routes.',
     etiquette: ['Remove footwear before boarding any houseboat', 'Avoid wearing swimwear on public backwater banks — locals may be offended', 'Accept a banana leaf meal the traditional way — with your right hand', 'Tip your houseboat cook generously — they wake at dawn to prepare your meals'],
     mustDo: ['Board the houseboat before noon to catch the full day on the water', 'Try karimeen pollichathu — pearl spot fish wrapped in banana leaf', 'Watch fishermen cast their Chinese fishing nets at dusk in Fort Kochi', 'Attend a traditional Kathakali performance at Kerala Kalamandalam'],
-    avoid: ['Visiting Alleppey in June-August — monsoon makes boat cruises rough', 'Booking through unlicensed operators — safety standards vary widely']
+    avoid: ['Visiting Alleppey in June-August — monsoon makes boat cruises rough', 'Selecting unlicensed operators — safety standards vary widely']
   },
   'ladakh-passes': {
     tagline: 'The roof of the world — where prayers float on wind flags',
@@ -45,9 +45,9 @@ export const CULTURAL_CONTEXT: Record<string, CulturalContext> = {
   'udaipur-mewar': {
     tagline: 'The Venice of the East — royal palaces rising from still water',
     context: 'Udaipur was founded in 1558 by Maharana Udai Singh II. The city sits beside five interconnected lakes and is famous for its palace architecture. The City Palace — the largest palace complex in Rajasthan — was home to 22 successive Maharanas of the Mewar dynasty.',
-    etiquette: ['Dress smartly to enter the City Palace museum — casual wear is acceptable', 'Hire a local licensed guide inside the City Palace — they decode the art', 'Book the Lake Palace restaurant well in advance — it fills up weeks ahead', 'Photography is permitted in most palace rooms except private chambers'],
+    etiquette: ['Dress smartly to enter the City Palace museum — casual wear is acceptable', 'Hire a local licensed guide inside the City Palace — they decode the art', 'Reserve the Lake Palace restaurant well in advance — it fills up weeks ahead', 'Photography is permitted in most palace rooms except private chambers'],
     mustDo: ['Sunset boat cruise on Lake Pichola past the floating Lake Palace', 'Watch the Bagore Ki Haveli traditional folk dance show at 7 PM', 'Walk Jagdish Temple and the silver market in the old city bazaar', 'Stay or dine at a heritage haveli with views over the lake'],
-    avoid: ['Visiting in May — peak summer, temperature can reach 43°C', 'Booking standard hotel boats — private charters offer far better views']
+    avoid: ['Visiting in May — peak summer, temperature can reach 43°C', 'Selecting standard hotel boats — private charters offer far better views']
   },
   'munnar-tea': {
     tagline: 'Rolling green carpets of the Western Ghats',
@@ -73,7 +73,7 @@ export const CULTURAL_CONTEXT: Record<string, CulturalContext> = {
   'kutch-salt': {
     tagline: 'An endless white horizon where sky and earth become one',
     context: 'The Rann of Kutch is the world\'s largest salt desert — a seasonal wetland that floods during monsoon and dries into a cracked white expanse from November to February. The region supports one of India\'s oldest craft traditions — embroidery, mirror work, and Rogan painting — practiced by semi-nomadic communities.',
-    etiquette: ['Carry permits for the restricted areas near the Pakistan border — issued at Khavda', 'Buy directly from artisan guilds — many middlemen sell imitation work as authentic', 'Wear sun-protective clothing on the Rann — UV intensity at ground level is extreme', 'The Tent City resort requires advance booking — closes in March each year'],
+    etiquette: ['Carry permits for the restricted areas near the Pakistan border — issued at Khavda', 'Buy directly from artisan guilds — many middlemen sell imitation work as authentic', 'Wear sun-protective clothing on the Rann — UV intensity at ground level is extreme', 'The Tent City resort requires advance reservation — closes in March each year'],
     mustDo: ['Walk onto the white salt expanse during a full moon night — no light pollution', 'Visit Nirona village to watch the last surviving Rogan painting family at work', 'Explore the Kala Dungar (Black Hills) for a panoramic view of the desert', 'Attend the Rann Utsav cultural festival (November-February) for folk music'],
     avoid: ['Visiting May-October — the entire Rann is flooded and inaccessible', 'Buying craft items from Bhuj roadside stalls — many are machine-made replicas']
   },
@@ -87,7 +87,7 @@ export const CULTURAL_CONTEXT: Record<string, CulturalContext> = {
   'andaman-reefs': {
     tagline: 'Pristine sapphire seas where time still moves slowly',
     context: 'The Andaman Islands are part of an archipelago of 572 islands — only 38 of which are inhabited. The islands were isolated from outside contact until the 1800s. The coral reefs here are among the most biodiverse in Asia, supporting over 200 species of hard coral and 1,300 species of fish.',
-    etiquette: ['Use only reef-safe sunscreen — chemical sunscreens are killing the coral', 'The Jarawa Tribe Reserve is strictly off-limits — do not interact with them', 'Book PADI-certified dive operators only — others may cut safety corners', 'The cellular jail has a mandatory minimum 1-hour light and sound show — book ahead'],
+    etiquette: ['Use only reef-safe sunscreen — chemical sunscreens are killing the coral', 'The Jarawa Tribe Reserve is strictly off-limits — do not interact with them', 'Select PADI-certified dive operators only — others may cut safety corners', 'The cellular jail has a mandatory minimum 1-hour light and sound show — reserve ahead'],
     mustDo: ['Snorkel at Elephant Beach, Havelock — easy access, stunning coral gardens', 'Kayak through the mangrove tunnels at night for bioluminescence', 'Visit the Cellular Jail for the evening light and sound show at 6 PM', 'Take the government catamaran to Neil Island for a quieter beach experience'],
     avoid: ['Visiting May-November — cyclone season, ferries are frequently cancelled', 'Booking private boats for island hopping — only use licensed ferry services']
   }

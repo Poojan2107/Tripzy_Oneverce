@@ -357,25 +357,21 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
             <motion.div className="flex-grow w-full lg:w-1/2 flex flex-col items-center justify-center relative min-h-[520px]" variants={itemVariants}>
               {/* Floating Passport Badge */}
               <motion.div
-                className="absolute top-0 right-2 lg:right-8 z-40 flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-4 py-3 shadow-xl select-none"
+                className="absolute top-0 right-2 lg:right-8 z-40 flex flex-col items-start gap-1 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-4.5 py-3 shadow-xl select-none text-left"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <div className="text-center">
-                  <span className="text-[8px] font-mono uppercase tracking-wider text-white/50 block">Level</span>
-                  <span className="text-base font-display text-white font-semibold leading-none">Lv.3</span>
-                </div>
-                <div className="w-px h-8 bg-white/10" />
-                <div className="flex gap-3">
+                <span className="text-[8.5px] font-mono uppercase tracking-[0.2em] text-gold font-bold">Explorer Passport</span>
+                <div className="flex gap-4 mt-1">
                   {[
-                    { value: '4', label: 'Countries' },
-                    { value: '6', label: 'Stories' },
                     { value: '12', label: 'Chapters' },
+                    { value: '4', label: 'Regions' },
+                    { value: '3', label: 'Journeys' },
                   ].map((s) => (
-                    <div key={s.label} className="text-center">
-                      <span className="text-sm font-bold text-white leading-none block">{s.value}</span>
-                      <span className="text-[7px] font-mono uppercase tracking-wider text-white/40">{s.label}</span>
+                    <div key={s.label} className="text-left">
+                      <span className="text-sm font-bold text-white leading-none block font-display">{s.value}</span>
+                      <span className="text-[7px] font-mono uppercase tracking-wider text-white/40 block mt-0.5">{s.label}</span>
                     </div>
                   ))}
                 </div>

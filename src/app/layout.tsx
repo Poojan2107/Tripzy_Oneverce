@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Instrument_Serif, La_Belle_Aurore } from "next/font/google";
 import "../frontend/styles/globals.css";
 import Providers from "./providers";
-import Footer from "../frontend/components/Footer";
 import PageTransition from "../frontend/components/PageTransition";
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -106,7 +106,6 @@ export default function RootLayout({
         <Providers>
           <div className="flex flex-col min-h-[100dvh]">
             <PageTransition>{children}</PageTransition>
-            <Footer />
           </div>
         </Providers>
       </body>

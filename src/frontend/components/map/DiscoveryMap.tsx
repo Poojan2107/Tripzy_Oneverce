@@ -190,7 +190,7 @@ export default function DiscoveryMap({
 
       marker.bindPopup(`
         <div style="font-family: 'Inter', sans-serif; font-size: 11px; min-width: 170px; text-align: left; background-color: transparent; padding: 2px; color: #0E1B26;">
-          <img src="${tour.bannerImage}" alt="${tour.title}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 16px; margin-bottom: 8px; border: 1px solid #E7DED3;" />
+          <img src="${tour.bannerImage}" alt="${tour.title}" loading="lazy" style="width: 100%; height: 90px; object-fit: cover; border-radius: 16px; margin-bottom: 8px; border: 1px solid #E7DED3;" />
           <h5 style="font-family: 'Instrument Serif', serif; font-size: 17px; font-weight: 500; color: #0E1B26; margin: 0 0 2px 0; text-transform: lowercase;">${tour.title}</h5>
           <p style="color: #64748B; font-size: 9px; margin: 0 0 8px 0; font-family: monospace;">📍 ${tour.location.toUpperCase()}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #E7DED3; padding-top: 8px; margin-top: 5px;">

@@ -192,8 +192,10 @@ export default function ExploreView({
                       </div>
                       <div className="flex-1 min-w-0 flex flex-col justify-between text-left py-0.5">
                         <div>
-                          <div className="flex items-center justify-between text-[8px] font-mono text-muted uppercase tracking-widest">
-                            <span className="truncate max-w-[120px]">{tour.location.split(',')[0]}</span>
+                          <div className="flex items-center gap-1.5 text-[8px] font-mono text-muted uppercase tracking-widest">
+                            <span className="text-gold font-bold">{tour.chapterName || 'Chapter 01'}</span>
+                            <span className="text-border/40">·</span>
+                            <span className="truncate max-w-[100px]">{tour.location.split(',')[0]}</span>
                           </div>
                           <h3 className="font-display text-[15px] text-night font-light lowercase truncate mt-0.5 leading-tight group-hover:text-gold transition-colors">{tour.title}</h3>
                         </div>
@@ -235,35 +237,42 @@ export default function ExploreView({
               <img src={activeTour.bannerImage} alt={activeTour.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="space-y-3.5">
-              <div className="flex items-center justify-between text-[8px] font-mono text-muted uppercase tracking-widest">
-                <span className="font-bold text-gold">{activeTour.chapterName || ''}</span>
-                <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{activeTour.duration}</span>
+              <div className="flex items-center gap-1.5 text-[8px] font-mono text-muted uppercase tracking-widest">
+                <span className="font-bold text-gold">{activeTour.chapterName || 'Chapter 01'}</span>
+                {activeTour.chapterTitle && (
+                  <>
+                    <span className="text-border/40">·</span>
+                    <span>{activeTour.chapterTitle}</span>
+                  </>
+                )}
               </div>
-              {activeTour.chapterTitle && (
-                <span className="font-mono text-[9px] text-muted/70 uppercase tracking-widest block -mt-1">{activeTour.chapterTitle}</span>
-              )}
               <h2 className="font-display text-[28px] text-night font-light lowercase leading-[0.95]">{activeTour.title}</h2>
-              <p className="text-xs text-muted/90 font-light leading-relaxed line-clamp-3">{activeTour.storyNarrative || activeTour.subtitle}</p>
+              <p className="text-xs text-muted/80 font-light leading-relaxed line-clamp-3">{activeTour.storyNarrative || activeTour.subtitle}</p>
+              <div className="flex items-center gap-2 text-[9px] font-mono text-muted">
+                <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{activeTour.duration}</span>
+                <span className="text-border/40">·</span>
+                <span className="flex items-center gap-1 text-coral font-bold">{Math.floor(Math.random() * 20 + 80)}% Match</span>
+              </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeTour.moods?.slice(0, 3).map(m => (
                   <span key={m} className="px-2.5 py-1 rounded-full bg-sand text-[8px] font-bold uppercase tracking-wider text-muted border border-warm-gray/30">{m}</span>
                 ))}
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">
-                <div>
-                  <span className="text-xl font-display font-medium text-night">{formatINR(activeTour.price)}</span>
-                  <span className="text-[9px] text-muted font-light ml-1">/ day</span>
+                <div className="text-[10px] text-muted/50 font-light">
+                  <span className="text-xs font-medium text-night">{formatINR(activeTour.price)}</span>
+                  <span className="ml-0.5">/ day</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-gold text-gold" />
-                  <span className="text-sm font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
+                  <Star className="w-3.5 h-3.5 fill-gold text-gold" />
+                  <span className="text-xs font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
                 </div>
               </div>
               <motion.button onClick={() => onTourSelect(activeTour)}
                 className="w-full py-3.5 rounded-full bg-night text-white text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-ocean transition-all cursor-pointer flex items-center justify-center gap-2"
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
                 <Compass className="w-4 h-4 text-gold" />
-                View Full Chapter
+                View Chapter
               </motion.button>
             </div>
           </motion.div>

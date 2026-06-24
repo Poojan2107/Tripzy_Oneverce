@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Search, LogIn, LogOut } from 'lucide-react';
+import { Compass, Search, LogIn, LogOut, ArrowUp } from 'lucide-react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { trackPageView, trackWishlistSave, trackDestinationClick } from './utils/analytics';
@@ -141,6 +141,13 @@ export default function App() {
 
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [exploreCategoryFilter, setExploreCategoryFilter] = useState('all');
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     if (isClient) {
@@ -332,10 +339,10 @@ export default function App() {
         <AnimatePresence mode="wait">
           {selectedTour ? (
             <motion.div key="tour-details"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <ErrorBoundary
                 onError={() => handleSelectTour(null)}
@@ -367,10 +374,10 @@ export default function App() {
             </motion.div>
           ) : (
             <motion.div key={currentTab}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
             >
               {currentTab === 'home' && (
               <HomeView
@@ -472,6 +479,22 @@ export default function App() {
         }}
       />
 
+      {/* Scroll-to-top button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-[84px] right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-night text-white shadow-lg hover:bg-gold hover:text-night transition-colors cursor-pointer"
+            aria-label="Scroll to top"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
     </div>
     </ErrorBoundary>

@@ -6,5 +6,10 @@ export function getGeminiApiKey(): string | undefined {
     return undefined;
   }
 
+  if (!key.startsWith("AIzaSy")) {
+    console.warn("[tripzy] Gemini API key does not match expected format (AIzaSy...). Using offline fallback.");
+    return undefined;
+  }
+
   return key;
 }

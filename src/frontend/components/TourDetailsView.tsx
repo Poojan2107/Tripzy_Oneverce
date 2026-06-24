@@ -14,6 +14,8 @@ import LocalIntelTab from './tourDetails/LocalIntelTab';
 import LogisticsTab from './tourDetails/LogisticsTab';
 import HotelsTab from './tourDetails/HotelsTab';
 import Sidebar from './tourDetails/Sidebar';
+import Footer from './Footer';
+
 
 interface TourDetailsViewProps {
   tour: Tour;
@@ -27,7 +29,7 @@ const TABS = [
   { id: 'story', label: 'The Story' },
   { id: 'itinerary', label: 'Itinerary' },
   { id: 'local', label: 'Local Intel' },
-  { id: 'logistics', label: 'Plan & Book' },
+  { id: 'logistics', label: 'Plan & Prepare' },
   { id: 'hotels', label: 'Hotels' },
 ] as const;
 
@@ -137,6 +139,8 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
           <Sidebar tour={tour} cultural={cultural} onPlanClick={onPlanClick} />
         </div>
       </div>
+
+      <Footer />
 
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-warm-gray shadow-elevated px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom,8px))] flex items-center gap-3">
         <div className="flex-1 min-w-0">

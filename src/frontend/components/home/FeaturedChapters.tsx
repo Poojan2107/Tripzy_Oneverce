@@ -1,6 +1,6 @@
 "use client";
 import { motion } from 'framer-motion';
-import { Clock, ArrowRight, Heart, Star, BookOpen, Compass } from 'lucide-react';
+import { ArrowRight, Heart, Star, BookOpen, Compass } from 'lucide-react';
 import { Tour } from '../../types';
 import ScrollReveal from '../ui/ScrollReveal';
 
@@ -10,6 +10,7 @@ interface FeaturedChaptersProps {
   loadingDestinations: boolean;
   onSelectTour: (tour: Tour) => void;
   onToggleWishlist: (tourId: string) => void;
+  onGoToExplore?: () => void;
 }
 
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -26,7 +27,7 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
   );
 }
 
-export default function FeaturedChapters({ tours, wishlistIds, loadingDestinations, onSelectTour, onToggleWishlist }: FeaturedChaptersProps) {
+export default function FeaturedChapters({ tours, wishlistIds, loadingDestinations, onSelectTour, onToggleWishlist, onGoToExplore }: FeaturedChaptersProps) {
   const featuredIds = ['varanasi-spiritual', 'kerala-houseboats', 'ladakh-passes', 'jaisalmer-fort'];
   const featuredChapters = tours.filter(t => featuredIds.includes(t.id));
 
@@ -71,12 +72,12 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                 <TiltCard>
                   <div onClick={() => onSelectTour(tour)} className={`group cursor-pointer text-left ${!isEven ? 'md:mt-16' : ''}`}>
                     {/* Image container with editorial overlay */}
-                    <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-card bg-cream mb-0">
-                      <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                    <div className="relative min-h-[380px] md:min-h-[420px] rounded-3xl overflow-hidden shadow-card bg-cream mb-0">
+                      <img src={tour.bannerImage} alt={tour.title} className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
 
-                      {/* Dark gradient at bottom for text legibility */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br" style={{ background: `linear-gradient(135deg, ${accentColor}20, transparent)` }} />
+                      {/* Dark gradient overlay at bottom for text legibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br" style={{ background: `linear-gradient(135deg, ${accentColor}30, transparent)` }} />
 
                       {/* Chapter number decorative badge */}
                       <div className="absolute top-5 left-5 flex items-center gap-2">
@@ -97,37 +98,28 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                         <Heart className={`w-3.5 h-3.5 ${wishlistIds.includes(tour.id) ? 'fill-rose-400 text-rose-400' : 'text-white/80'}`} />
                       </motion.button>
 
-                      {/* Title overlaid on image at bottom */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6 pb-5">
-                        <div className="flex items-center gap-2 text-[9px] font-mono text-white/60 uppercase tracking-widest mb-1.5">
+                      {/* Title and metadata overlaid on image at bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 p-7 pb-6">
+                        <div className="flex items-center gap-2 text-[9px] font-mono text-white/60 uppercase tracking-widest mb-2">
                           <span className="w-4 h-px bg-gold/60" />
                           <span>{tour.location}</span>
+                          <span className="text-white/20 mx-1">·</span>
+                          <span className="text-gold/80">{tour.duration}</span>
                         </div>
-                        <h3 className="font-display text-2xl md:text-3xl text-white font-light lowercase leading-tight">{tour.title}</h3>
+                        <h3 className="font-display text-3xl md:text-4xl text-white font-light lowercase leading-tight mb-1">{tour.title}</h3>
+                        <p className="text-xs text-white/50 font-light leading-relaxed max-w-md line-clamp-2">{tour.subtitle}</p>
                       </div>
-
-                      {/* Hover content slide-up */}
-                      <motion.div
-                        className="absolute inset-0 flex flex-col justify-end p-6 pb-5 pointer-events-none"
-                        initial={{ opacity: 0 }}
-                        whileHover={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                      </motion.div>
                     </div>
 
-                    {/* Metadata row below image */}
-                    <div className="px-1 pt-4 flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-[10px] text-muted">
-                        <span className="flex items-center gap-1.5">
-                          <Clock className="w-3 h-3 text-muted" />
-                          {tour.duration}
-                        </span>
-                        <span className="text-border/60">|</span>
+                    {/* Explore Chapter link */}
+                    <div className="px-0 pt-4 flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-[9px] text-muted/60">
                         <span className="flex items-center gap-1">
                           <Star className="w-3 h-3 fill-gold text-gold" />
                           <span className="font-semibold text-night">{parseFloat(tour.rating.toFixed(1))}</span>
                         </span>
+                        <span className="text-border/40">·</span>
+                        <span>{tour.reviewsCount} reviews</span>
                       </div>
                       <motion.span className="text-[10px] font-bold uppercase tracking-wider text-coral flex items-center gap-1.5 group-hover:gap-2.5 transition-all" whileHover={{ x: 3 }}>
                         Explore Chapter <ArrowRight className="w-3 h-3 text-gold" />
@@ -147,15 +139,14 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <motion.a
-            href="/"
-            onClick={(e) => { e.preventDefault(); }}
+          <motion.button
+            onClick={() => onGoToExplore?.()}
             className="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-night/20 text-night/80 hover:bg-night hover:text-white text-[10px] font-bold uppercase tracking-[0.18em] transition-all cursor-pointer"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >
             <Compass className="w-4 h-4" /> View All Chapters
-          </motion.a>
+          </motion.button>
         </motion.div>
       </div>
     </section>

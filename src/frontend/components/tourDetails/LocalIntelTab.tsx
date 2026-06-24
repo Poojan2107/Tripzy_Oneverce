@@ -18,7 +18,7 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
           <h2 className="font-display text-xl text-night font-bold">Must-Do Experiences</h2>
         </div>
         <div className="space-y-2">
-          {cultural.mustDo.map((item, i) => (
+          {(cultural.mustDo || []).map((item, i) => (
             <div key={i} className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-warm-gray shadow-soft">
               <span className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0 mt-0.5" style={{ backgroundColor: accentColor }}>{i + 1}</span>
               <p className="text-xs text-night font-medium leading-relaxed">{item}</p>
@@ -33,7 +33,7 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
           <h2 className="font-display text-xl text-night font-bold">Cultural Etiquette</h2>
         </div>
         <div className="p-5 rounded-3xl bg-sage/5 border border-sage/20 space-y-3">
-          {cultural.etiquette.map((item, i) => (
+          {(cultural.etiquette || []).map((item, i) => (
             <div key={i} className="flex items-start gap-3 text-xs text-muted font-light">
               <CheckCircle2 className="w-4 h-4 text-sage shrink-0 mt-0.5" />
               <span className="leading-relaxed">{item}</span>
@@ -48,7 +48,7 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
           <h2 className="font-display text-xl text-night font-bold">Traveler Cautions</h2>
         </div>
         <div className="p-5 rounded-3xl bg-coral/5 border border-coral/20 space-y-3">
-          {cultural.avoid.map((item, i) => (
+          {(cultural.avoid || []).map((item, i) => (
             <div key={i} className="flex items-start gap-3 text-xs text-muted font-light">
               <AlertCircle className="w-4 h-4 text-coral shrink-0 mt-0.5" />
               <span className="leading-relaxed">{item}</span>

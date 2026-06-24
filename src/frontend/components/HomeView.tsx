@@ -8,6 +8,8 @@ import TravelerStories from "./home/TravelerStories";
 import AtlasPassportPreview from "./home/AtlasPassportPreview";
 import CompanionPreview from "./home/CompanionPreview";
 import JourneyCta from "./home/JourneyCta";
+import WhyTripzy from "./home/WhyTripzy";
+import SiteFooter from "./home/SiteFooter";
 
 interface HomeViewProps {
   tours: Tour[];
@@ -30,10 +32,12 @@ export default function HomeView(props: HomeViewProps) {
       <StatusCapsule />
       <CategoryScroller onQuickCategoryClick={onQuickCategoryClick} />
       <AtlasPassportPreview />
+      <WhyTripzy />
       <FeaturedChapters tours={tours} wishlistIds={wishlistIds} loadingDestinations={loadingDestinations} onSelectTour={onSelectTour} onToggleWishlist={onToggleWishlist} />
       <TravelerStories tours={tours} onSelectTour={onSelectTour} />
       <CompanionPreview />
       <JourneyCta onGoToPlanner={onGoToPlanner} onGoToExplore={onGoToExplore} />
+      <SiteFooter />
     </div>
   );
 }

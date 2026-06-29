@@ -15,7 +15,7 @@ export default function ContactView() {
             <div className="w-7 h-7 rounded-full bg-gold flex items-center justify-center text-night">
               <Compass className="w-3.5 h-3.5 stroke-[2.5]" />
             </div>
-            <span className="font-display text-lg font-bold text-ink">Tripzy</span>
+            <span className="font-display text-lg font-bold text-ink">Travebie</span>
           </Link>
         </div>
       </header>

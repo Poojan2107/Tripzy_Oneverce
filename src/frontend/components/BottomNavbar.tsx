@@ -53,7 +53,7 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
                 {tab.label}
               </span>
               {tab.badge !== undefined && tab.badge > 0 && (
-                <motion.span className="absolute -top-0.5 right-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full px-1 text-[8px] font-bold text-white bg-coral ring-2 ring-white animate-pulse"
+                <motion.span className="absolute -top-0.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-white"
                   initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 15 }}>
                   {tab.badge}
                 </motion.span>

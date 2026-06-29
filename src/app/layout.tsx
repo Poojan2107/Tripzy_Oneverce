@@ -1,21 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Nunito_Sans, Pacifico } from "next/font/google";
 import "../frontend/styles/globals.css";
 import Providers from "./providers";
 import PageTransition from "../frontend/components/PageTransition";
 
 
-const inter = Inter({
+const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "600", "800"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const instrumentSerif = Instrument_Serif({
+const pacifico = Pacifico({
   subsets: ["latin"],
   weight: ["400"],
-  style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
 });
@@ -25,8 +24,8 @@ const baseUrl = "https://tripzy-oneverce.vercel.app";
 
 export const metadata: Metadata = {
   title: {
-    default: "Tripzy — AI Travel Companion for India",
-    template: "%s — Tripzy",
+    default: "Travebie — AI Travel Companion for India",
+    template: "%s — Travebie",
   },
   description: "Discover India through 12 handcrafted chapters. AI-powered itinerary planner for the curious explorer.",
   metadataBase: new URL(baseUrl),
@@ -34,10 +33,10 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Tripzy — AI Travel Companion for India",
+    title: "Travebie — AI Travel Companion for India",
     description: "Discover India through 12 handcrafted chapters. AI-powered itinerary planner for the curious explorer.",
     url: baseUrl,
-    siteName: "Tripzy",
+    siteName: "Travebie",
     type: "website",
     locale: "en_IN",
     images: [
@@ -45,13 +44,13 @@ export const metadata: Metadata = {
         url: "/images/hero-varanasi.jpg",
         width: 1200,
         height: 630,
-        alt: "Tripzy — Explore India",
+        alt: "Travebie — Explore India",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tripzy — AI Travel Companion for India",
+    title: "Travebie — AI Travel Companion for India",
     description: "Discover India through 12 handcrafted chapters. AI-powered itinerary planner for the curious explorer.",
     images: ["/images/hero-varanasi.jpg"],
   },
@@ -76,7 +75,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${instrumentSerif.variable}`}>
+    <html lang="en" className={`${nunitoSans.variable} ${pacifico.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -84,7 +83,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebApplication",
-              name: "Tripzy",
+              name: "Travebie",
               url: baseUrl,
               description: "AI-powered travel companion for exploring India through handcrafted chapters.",
               image: `${baseUrl}/images/hero-varanasi.jpg`,

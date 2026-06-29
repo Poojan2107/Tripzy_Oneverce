@@ -1,5 +1,5 @@
 /**
- * Tripzy V2 Centralized Analytics utility
+ * Travebie Centralized Analytics utility
  */
 
 export function trackEvent(type: string, payload: Record<string, any>) {

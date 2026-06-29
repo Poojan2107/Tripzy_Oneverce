@@ -43,8 +43,9 @@ const createIcon = (tour: Tour, isActive: boolean, simple: boolean) => {
     className: `glowing-marker-teal ${isActive ? 'active' : ''}`,
     html: `
       <div class="relative flex items-center justify-center select-none" style="width: 32px; height: 32px;">
-        <span class="text-[10px] font-bold font-sans">${count}</span>
-        <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-night text-white font-mono text-[7px] uppercase tracking-wider whitespace-nowrap border border-border">
+        ${isActive ? '<div class="absolute inset-0 rounded-full bg-[#18B6C9] opacity-40 animate-ping"></div>' : ''}
+        <span class="text-[10px] font-bold font-sans z-10">${count}</span>
+        <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-night text-white font-mono text-[7px] uppercase tracking-wider whitespace-nowrap border border-border z-10">
           ${tour.title.toLowerCase().slice(0, 10)}
         </div>
       </div>
@@ -123,8 +124,8 @@ export default function DiscoveryMap({
     // Add zoom control to bottom-right for thumb reach on mobile
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    // Light map tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // CartoDB Voyager map tiles
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 20
@@ -189,9 +190,9 @@ export default function DiscoveryMap({
       }).addTo(markerGroup);
 
       marker.bindPopup(`
-        <div style="font-family: 'Inter', sans-serif; font-size: 11px; min-width: 170px; text-align: left; background-color: transparent; padding: 2px; color: #0E1B26;">
+        <div style="font-family: var(--font-sans), sans-serif; font-size: 11px; min-width: 170px; text-align: left; background-color: transparent; padding: 2px; color: #0E1B26;">
           <img src="${tour.bannerImage}" alt="${tour.title}" loading="lazy" style="width: 100%; height: 90px; object-fit: cover; border-radius: 16px; margin-bottom: 8px; border: 1px solid #E7DED3;" />
-          <h5 style="font-family: 'Instrument Serif', serif; font-size: 17px; font-weight: 500; color: #0E1B26; margin: 0 0 2px 0; text-transform: lowercase;">${tour.title}</h5>
+          <h5 style="font-family: var(--font-display), cursive; font-size: 17px; font-weight: 500; color: #0E1B26; margin: 0 0 2px 0; text-transform: lowercase;">${tour.title}</h5>
           <p style="color: #64748B; font-size: 9px; margin: 0 0 8px 0; font-family: monospace;">📍 ${tour.location.toUpperCase()}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #E7DED3; padding-top: 8px; margin-top: 5px;">
             <span style="font-weight: 700; font-size: 12px; color: #F4B63D;">${formatINR(tour.price)}</span>

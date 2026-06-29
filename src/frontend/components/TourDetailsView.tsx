@@ -39,15 +39,8 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
   const [activeDay, setActiveDay] = useState(1);
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('story');
-  const [loadingHotels, setLoadingHotels] = useState(false);
 
-  useEffect(() => {
-    if (activeTab === 'hotels') {
-      setLoadingHotels(true);
-      const timer = setTimeout(() => setLoadingHotels(false), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [activeTab]);
+  // Stays render instantly without artificial loading delay
 
   useEffect(() => {
     if (tour && tour.id) trackEvent('view', { destinationId: tour.dbId || tour.id });
@@ -103,14 +96,20 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
                   <ItineraryTab tour={tour} activeDay={activeDay} onDayChange={setActiveDay} accentColor={accentColor} />
                 </motion.div>
               )}
-              {activeTab === 'local' && cultural && (
+              {activeTab === 'local' && (
                 <motion.div key="local"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <LocalIntelTab tour={tour} cultural={cultural} dayTrips={dayTrips} accentColor={accentColor} />
+                  {cultural ? (
+                    <LocalIntelTab tour={tour} cultural={cultural} dayTrips={dayTrips} accentColor={accentColor} />
+                  ) : (
+                    <div className="py-16 text-center">
+                      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted/40">Local intel coming soon for this chapter</span>
+                    </div>
+                  )}
                 </motion.div>
               )}
               {activeTab === 'logistics' && (
@@ -130,7 +129,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <HotelsTab tour={tour} loadingHotels={loadingHotels} onPlanClick={onPlanClick} />
+                  <HotelsTab tour={tour} loadingHotels={false} onPlanClick={onPlanClick} />
                 </motion.div>
               )}
             </AnimatePresence>

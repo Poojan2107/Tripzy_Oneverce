@@ -13,10 +13,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id } = await params;
   const res = await getSharedItineraryAction(id);
   const title = res.success && res.data
-    ? `Shared Itinerary — ${res.data.title || 'Tripzy Journey'}`
-    : 'Itinerary Not Found — Tripzy';
+    ? `Shared Itinerary — ${res.data.title || 'Travebie Journey'}`
+    : 'Itinerary Not Found — Travebie';
   const description = res.success && res.data
-    ? `Explore this AI-crafted ${res.data.duration}-day itinerary for ${res.data.destination} — planned with Tripzy.`
+    ? `Explore this AI-crafted ${res.data.duration}-day itinerary for ${res.data.destination} — planned with Travebie.`
     : 'This itinerary could not be found.';
   return {
     title,
@@ -62,7 +62,7 @@ export default async function SharePage(props: PageProps) {
             <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-night shadow-md">
               <Compass className="w-4 h-4 stroke-[2.5]" />
             </div>
-            <span className="font-display text-xl font-bold tracking-tight text-ink">Tripzy</span>
+            <span className="font-display text-xl font-bold tracking-tight text-ink">Travebie</span>
           </Link>
           <Link href="/" className="px-4 py-2 bg-gold/10 border border-gold/20 text-gold hover:bg-gold hover:text-night font-bold text-xs uppercase tracking-wider rounded-xl transition-all">
             Plan A Trip
@@ -165,7 +165,7 @@ export default async function SharePage(props: PageProps) {
               Inspired by this Journey?
             </h3>
             <p className="text-xs text-muted max-w-md mx-auto leading-relaxed">
-              Create your own luxury escape plan tailored precisely to your budget, travel style, and interests in seconds using Tripzy's AI Recommendation engine.
+              Create your own luxury escape plan tailored precisely to your budget, travel style, and interests in seconds using Travebie's AI Recommendation engine.
             </p>
             <Link 
               href="/"

@@ -68,7 +68,7 @@ export default function GlassNavbar({
           </motion.div>
           <div className="flex flex-col text-left">
             <span className={`font-display text-[22px] font-bold tracking-tight lowercase leading-tight ${isTransparent ? 'text-white' : 'text-night'}`}>
-              tripzy<span className="text-gold">.ai</span>
+              travebie<span className="text-gold">.ai</span>
             </span>
             <span className={`text-[8px] font-mono uppercase tracking-[0.2em] mt-0.5 ${isTransparent ? 'text-white/60' : 'text-night/60'}`}>Atlas Vivant</span>
           </div>

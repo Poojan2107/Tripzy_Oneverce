@@ -24,7 +24,7 @@ export async function GET() {
     }
 
     // TESTING_MODE: auto-promote any signed-in user to ADMIN for easy testing
-    if (process.env.TESTING_MODE === "true" && user.role !== "ADMIN") {
+    if (process.env.TESTING_MODE === "true" && process.env.NODE_ENV !== "production" && user.role !== "ADMIN") {
       user = await db.user.update({
         where: { id: session.user.id },
         data: { role: "ADMIN" },

@@ -35,7 +35,7 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
             className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gold hover:bg-gold/90 text-[10px] font-bold uppercase tracking-[0.15em] text-night hover:shadow-[0_4px_15px_rgba(253,182,47,0.3)] transition-all cursor-pointer border-none min-h-[46px]"
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
             <Sparkles className="w-4 h-4 text-[#0B1720]" />
-            <span>Start AI Planning</span>
+            <span>Craft Journey</span>
           </motion.button>
         </div>
       </motion.div>

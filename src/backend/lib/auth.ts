@@ -13,11 +13,11 @@ declare module "next-auth" {
 }
 
 if (!process.env.AUTH_SECRET) {
-  console.error("[tripzy/auth] Missing AUTH_SECRET environment variable");
+  console.error("[travebie/auth] Missing AUTH_SECRET environment variable");
 }
 
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
-  console.error("[tripzy/auth] Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET environment variables");
+  console.error("[travebie/auth] Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET environment variables");
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({

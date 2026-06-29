@@ -4,6 +4,13 @@ import { ArrowLeft, Heart, Share2, CheckCircle2, MapPin, Star } from 'lucide-rea
 import { useState, useRef } from 'react';
 import { Tour } from '../../types';
 
+function getMoodLabel(id: string): string {
+  if (id === 'varanasi-spiritual') return 'Spiritual Chapter';
+  if (['udaipur-mewar', 'jaisalmer-fort', 'hampi-ruins'].includes(id)) return 'Heritage Story';
+  if (['kerala-houseboats', 'andaman-reefs', 'goa-beach'].includes(id)) return 'Coastal Escape';
+  return 'Hidden Gem';
+}
+
 interface TourHeroProps {
   tour: Tour;
   onBack: () => void;
@@ -59,7 +66,7 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
           {tour.chapterName && (
             <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-[9px] font-mono text-white/70 uppercase tracking-widest">{tour.chapterName}</span>
           )}
-          <span className="px-3 py-1 rounded-full bg-gold/90 text-[10px] font-bold text-white uppercase tracking-wider">96% Match</span>
+          <span className="px-3 py-1 rounded-full bg-gold/90 text-[10px] font-bold text-white uppercase tracking-wider">{getMoodLabel(tour.id)}</span>
           {tour.moods?.slice(0, 2).map(m => (
             <span key={m} className="px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[10px] font-medium text-white uppercase tracking-wider">{m}</span>
           ))}

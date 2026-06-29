@@ -12,6 +12,13 @@ interface HeroCarouselProps {
   onSelectTour: (tour: Tour) => void;
 }
 
+function getMoodLabel(id: string): string {
+  if (id === 'varanasi-spiritual') return 'Spiritual Chapter';
+  if (['udaipur-mewar', 'jaisalmer-fort', 'hampi-ruins'].includes(id)) return 'Heritage Story';
+  if (['kerala-houseboats', 'andaman-reefs', 'goa-beach'].includes(id)) return 'Coastal Escape';
+  return 'Hidden Gem';
+}
+
 interface CarouselSlide { id: string; title: string; subtitle: string; category: string; badgeColor: string; tag: string; storyHook: string; bannerImage: string; explorers: string; rating: number; duration: string; season: string; matchScore: number; style: string; }
 
 const TAG_GRADIENTS: Record<string, string> = {
@@ -67,7 +74,9 @@ function CarouselCard({
 
   return (
     <motion.div
-      className="absolute w-[320px] h-[440px] rounded-3xl overflow-hidden cursor-pointer origin-center border border-white/20"
+      className={`absolute w-[320px] h-[440px] rounded-3xl overflow-hidden cursor-pointer origin-center border transition-colors duration-300 ${
+        isActive ? 'border-gold/40 shadow-[0_0_30px_rgba(244,182,61,0.15)]' : 'border-white/10 hover:border-white/25'
+      }`}
       variants={variants}
       animate={position}
       transition={springConfig}
@@ -86,11 +95,11 @@ function CarouselCard({
         className="w-full h-full rounded-3xl overflow-hidden"
         style={{
           boxShadow: isActive
-            ? `0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px ${accentColor}`
+            ? `0 20px 60px rgba(0,0,0,0.25), 0 0 0 1px ${accentColor}`
             : '0 12px 40px rgba(0,0,0,0.08)',
         }}
       >
-        <div className="w-full h-full flex flex-col relative bg-surface">
+        <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">
           <div className="h-[55%] w-full overflow-hidden relative bg-secondary-surface">
             <motion.img
               src={slide.bannerImage}
@@ -101,12 +110,12 @@ function CarouselCard({
               animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <span className={`absolute top-4 left-4 px-3 py-1 rounded-full text-[8px] font-bold text-white uppercase tracking-wider ${slide.badgeColor}`}>{slide.category}</span>
+            <span className={`absolute top-4 left-4 px-3 py-1 rounded-full text-[8.5px] font-mono font-bold text-white uppercase tracking-[0.16em] border border-white/20 backdrop-blur-md shadow-sm bg-opacity-80 ${slide.badgeColor}`}>{slide.category}</span>
             <div className="absolute bottom-3 left-4 right-4 flex justify-between items-end">
               <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-white/95">{slide.subtitle}</span>
             </div>
           </div>
-          <div className="flex-1 p-5 flex flex-col justify-between text-left">
+          <div className="flex-1 p-5 flex flex-col justify-between text-left bg-surface/95 paper-grain border-t border-border/40">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <h3 className="font-display text-2.5xl text-night font-light lowercase leading-tight">{slide.title}</h3>
@@ -121,7 +130,7 @@ function CarouselCard({
               </div>
               <p className="text-xs text-muted/80 leading-relaxed font-sans font-light line-clamp-3">{slide.storyHook}</p>
             </div>
-            <div className="pt-3 border-t border-border flex items-center justify-between">
+            <div className="pt-3 border-t border-border/60 flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-[9px] font-mono text-muted">
                 <Users className="w-3.5 h-3.5 text-ocean" />
                 <span>{slide.explorers} explorers loved this</span>
@@ -275,7 +284,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
         }}
       />
 
-      <div className="relative z-10 min-h-screen flex flex-col justify-center">
+      <div className="relative z-10 min-h-screen flex flex-col justify-center pt-20 md:pt-24">
         <motion.div
           className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 w-full"
           variants={staggerVariants}
@@ -288,7 +297,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
               <div className="space-y-6">
                 <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10" variants={itemVariants}>
                   <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-white/80 font-bold">tripzy · atlas vivant</span>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-white/80 font-bold">travebie · atlas vivant</span>
                 </motion.div>
 
                 <motion.div className="relative inline-block" variants={itemVariants}>
@@ -332,7 +341,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                     animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
-                  Watch Story
+                  Explore Chapters
                 </motion.button>
               </motion.div>
 
@@ -347,7 +356,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 <span className="text-white/20">•</span>
                 <span>{activeSlide.season}</span>
                 <span className="text-white/20">•</span>
-                <span className="text-gold font-medium">{activeSlide.matchScore}% Match</span>
+                <span className="text-gold font-medium">{getMoodLabel(activeSlide.id)}</span>
                 <span className="text-white/20">•</span>
                 <span className="px-2 py-0.5 rounded-full bg-white/10 text-[9px] uppercase font-bold tracking-wider text-gold">{activeSlide.style}</span>
               </motion.div>

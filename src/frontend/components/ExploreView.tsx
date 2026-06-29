@@ -8,6 +8,13 @@ import SafeImage from './ui/SafeImage';
 import dynamic from 'next/dynamic';
 import { formatINR } from '../utils/currency';
 
+export function getMoodLabel(id: string): string {
+  if (id === 'varanasi-spiritual') return 'Spiritual Chapter';
+  if (['udaipur-mewar', 'jaisalmer-fort', 'hampi-ruins'].includes(id)) return 'Heritage Story';
+  if (['kerala-houseboats', 'andaman-reefs', 'goa-beach'].includes(id)) return 'Coastal Escape';
+  return 'Hidden Gem';
+}
+
 const DiscoveryMap = dynamic(() => import('./map/DiscoveryMap'), {
   ssr: false,
   loading: () => (
@@ -68,7 +75,7 @@ export default function ExploreView({
   }, []);
 
   return (
-    <div className="h-[calc(100dvh-76px)] min-h-0 bg-[#F8F4EE] flex flex-col md:flex-row select-none relative overflow-hidden text-night">
+    <div className="h-[calc(100dvh-56px)] md:h-[calc(100dvh-76px)] min-h-0 bg-[#F8F4EE] flex flex-col md:flex-row select-none relative overflow-hidden text-night">
       {/* Mobile toggle */}
       <div className={`md:hidden fixed bottom-[calc(68px+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-warm-gray/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         {(['list', 'map'] as const).map(view => {
@@ -130,18 +137,12 @@ export default function ExploreView({
           </div>
 
           {/* Real atlas stats */}
-          <div className="flex justify-between items-center py-2 px-1 border-t border-border pt-3">
-            <div className="text-left">
-              <span className="font-display text-base text-gold font-medium block leading-tight">12</span>
-              <span className="text-[7px] font-mono uppercase tracking-widest text-muted/65">Living Chapters</span>
-            </div>
-            <div className="text-right">
-              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted/50 font-light">India's Story Atlas</span>
-            </div>
+          <div className="py-2.5 px-1 border-t border-border pt-3.5 flex justify-center">
+            <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-muted/70 font-semibold">12 Living Chapters · India's Story Atlas</span>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background scrollbar-thin pb-[calc(68px+env(safe-area-inset-bottom,8px))] md:pb-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background scrollbar-thin pb-[calc(96px+env(safe-area-inset-bottom,8px))] md:pb-4">
           {loading ? (
             Array(5).fill(null).map((_, i) => (
               <div key={i} className="h-24 rounded-2xl bg-secondary-surface animate-pulse border border-border" />
@@ -174,7 +175,13 @@ export default function ExploreView({
                 return (
                   <motion.div key={tour.id} layout
                     variants={listItemVariants} initial="hidden" animate="visible" custom={idx}
-                    onClick={() => setActiveTourId(tour.id)}
+                    onClick={() => {
+                      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                        onTourSelect(tour);
+                      } else {
+                        setActiveTourId(tour.id);
+                      }
+                    }}
                     className={`group rounded-3xl border transition-all duration-300 cursor-pointer overflow-hidden ${
                       isActive
                         ? 'bg-surface border-teal shadow-card'
@@ -248,9 +255,7 @@ export default function ExploreView({
               <div className="flex items-center gap-2 text-[9px] font-mono text-muted">
                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{activeTour.duration}</span>
                 <span className="text-border/40">·</span>
-                {activeTour.moods?.[0] && (
-                  <span className="font-bold text-teal capitalize">{activeTour.moods[0]} Chapter</span>
-                )}
+                <span className="font-bold text-teal capitalize">{getMoodLabel(activeTour.id)}</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeTour.moods?.slice(0, 3).map(m => (

@@ -33,7 +33,7 @@ const MOCK_MESSAGES = [
   { role: 'companion', text: 'Added: dawn boat ride for golden hour shots + a hidden rooftop kitchen for homemade Bihari thali.' },
 ];
 
-export default function CompanionPreview() {
+export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: () => void }) {
   const [visibleMessages, setVisibleMessages] = useState(1);
   const [isTyping, setIsTyping] = useState(false);
 
@@ -70,7 +70,7 @@ export default function CompanionPreview() {
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 text-left">
-                  <span className="font-bold text-xs text-night tracking-wide block">tripzy companion</span>
+                  <span className="font-bold text-xs text-night tracking-wide block">travebie companion</span>
                   <span className="text-[9px] text-muted font-mono flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
                     Ready to craft your journey
@@ -187,8 +187,8 @@ export default function CompanionPreview() {
               })}
             </motion.div>
 
-            <MagneticButton onClick={() => {}}
-              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-night text-white text-[11px] font-bold uppercase tracking-[0.18em] cursor-pointer shadow-md">
+            <MagneticButton onClick={() => onGoToPlanner?.()}
+              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-night text-white text-[11px] font-bold uppercase tracking-[0.18em] cursor-pointer shadow-md border-none">
               <Sparkles className="w-4 h-4 text-gold" /> Craft Journey
             </MagneticButton>
           </motion.div>

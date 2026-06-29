@@ -220,7 +220,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 pb-6 border-b border-warm-gray">
         <div>
           <span className="text-[10px] font-mono font-bold text-gold uppercase tracking-[0.25em] bg-gold/10 px-3 py-1.5 rounded-full border border-gold/20">admin panel</span>
-          <h1 className="text-3xl font-light font-display lowercase tracking-tight text-ink mt-3">tripzy admin</h1>
+          <h1 className="text-3xl font-light font-display lowercase tracking-tight text-ink mt-3">travebie admin</h1>
           <p className="text-xs text-stone mt-1">Manage destinations, experiences, and view analytics</p>
         </div>
         <div className="relative flex bg-white border border-warm-gray p-1 rounded-2xl shadow-soft self-stretch md:self-auto overflow-x-auto no-scrollbar">

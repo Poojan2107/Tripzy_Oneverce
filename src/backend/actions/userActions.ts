@@ -132,3 +132,35 @@ export async function getUserTrips() {
     return { success: false, error: "Failed to load trips." };
   }
 }
+
+export async function getSharedPassportAction(userId: string) {
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        email: true,
+        createdAt: true,
+        savedItineraries: {
+          orderBy: { createdAt: "desc" }
+        },
+        bookmarks: {
+          include: {
+            destination: true
+          }
+        }
+      }
+    });
+
+    if (!user) {
+      return { success: false, error: "Explorer Passport not found" };
+    }
+
+    return { success: true, data: user };
+  } catch (err: any) {
+    console.error("Failed to fetch shared passport:", err);
+    return { success: false, error: "Your journey details could not be loaded right now. Please try again shortly." };
+  }
+}

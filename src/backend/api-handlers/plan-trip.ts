@@ -809,6 +809,25 @@ export async function POST(req: Request) {
 
       const data = JSON.parse(response.text);
 
+      // Validate Gemini response schema structure to catch truncated or malformed payloads
+      if (
+        !data ||
+        !Array.isArray(data.itinerary) ||
+        data.itinerary.length === 0 ||
+        !data.itinerary.every((item: any) => item && typeof item.day === 'string' && typeof item.title === 'string' && typeof item.description === 'string') ||
+        !data.costs ||
+        typeof data.costs.transit !== 'number' ||
+        typeof data.costs.stay !== 'number' ||
+        typeof data.costs.food !== 'number' ||
+        typeof data.costs.total !== 'number' ||
+        !data.weather ||
+        typeof data.weather.temperature !== 'string' ||
+        typeof data.weather.conditions !== 'string' ||
+        !Array.isArray(data.nearbyPlaces)
+      ) {
+        throw new Error("Gemini response is missing required itinerary, costs, or weather schema elements");
+      }
+
       const finalResponse = {
         ...data,
         destinationId: finalDest?.slug || finalDest?.id || undefined,

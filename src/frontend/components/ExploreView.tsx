@@ -19,7 +19,7 @@ const DiscoveryMap = dynamic(() => import('./map/DiscoveryMap'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-secondary-surface animate-pulse flex flex-col items-center justify-center">
-      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted/60">Loading Atlas Map...</span>
+      <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/60">Loading Atlas Map...</span>
     </div>
   )
 });
@@ -75,7 +75,7 @@ export default function ExploreView({
   }, []);
 
   return (
-    <div className="h-[calc(100dvh-56px)] md:h-[calc(100dvh-76px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
+    <div className="h-[calc(100dvh-48px)] md:h-[calc(100dvh-64px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
       {/* Mobile toggle */}
       <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-border/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         {(['list', 'map'] as const).map(view => {
@@ -98,11 +98,11 @@ export default function ExploreView({
               <h1 className="font-display text-3xl font-light text-night lowercase tracking-tight">
                 explore <span className="font-display italic text-gold">atlas</span>
               </h1>
-              <p className="text-[10px] font-mono text-muted uppercase tracking-widest mt-0.5">india's story atlas</p>
+              <p className="text-micro font-mono text-muted uppercase tracking-widest mt-0.5">india's story atlas</p>
             </div>
             <div className="text-right">
               <span className="font-display text-2xl font-light text-gold">{filteredTours.length}</span>
-              <p className="font-mono text-[8px] text-muted uppercase tracking-widest">Chapters</p>
+              <p className="font-mono text-micro text-muted uppercase tracking-widest">Chapters</p>
             </div>
           </div>
 
@@ -113,7 +113,7 @@ export default function ExploreView({
               className="bg-transparent text-base text-night placeholder:text-muted/40 outline-none w-full font-sans font-light"
             />
             {searchQuery && (
-              <motion.button onClick={() => setSearchQuery('')} className="shrink-0 w-8 h-8 flex items-center justify-center"
+              <motion.button onClick={() => setSearchQuery('')} aria-label="Clear search" className="shrink-0 w-8 h-8 flex items-center justify-center"
                 initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}>
                 <X className="w-3.5 h-3.5 text-muted/50 hover:text-night" />
               </motion.button>
@@ -124,7 +124,7 @@ export default function ExploreView({
             {CATEGORY_CHIPS.map((chip) => (
               <motion.button key={chip.id}
                 onClick={() => { setActiveCategory(chip.id); setActiveTourId(null); }}
-                className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-[8px] font-mono uppercase tracking-wider transition-colors duration-300 border min-h-[36px] flex items-center cursor-pointer ${
+                className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-micro font-mono uppercase tracking-wider transition-colors duration-300 border min-h-[36px] flex items-center cursor-pointer ${
                   activeCategory === chip.id
                     ? 'bg-night text-white border-night'
                     : 'bg-background text-muted border-border hover:border-gold'
@@ -138,7 +138,7 @@ export default function ExploreView({
 
           {/* Real atlas stats */}
           <div className="py-2.5 px-1 border-t border-border pt-3.5 flex justify-center">
-            <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-muted/70 font-semibold">12 Living Chapters · India's Story Atlas</span>
+            <span className="text-micro font-mono uppercase tracking-[0.15em] text-muted/70 font-semibold">12 Living Chapters · India's Story Atlas</span>
           </div>
         </div>
 
@@ -159,10 +159,10 @@ export default function ExploreView({
               </div>
               <div>
                 <p className="font-display text-xl text-muted/60 font-light lowercase">no entries found</p>
-                <p className="text-[11px] text-muted/40 font-light mt-1 max-w-xs mx-auto">try a different category or search query.</p>
+                <p className="text-small text-muted/40 font-light mt-1 max-w-xs mx-auto">try a different category or search query.</p>
               </div>
               <motion.button onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}
-                className="px-5 py-2.5 bg-teal text-white text-[9px] font-bold uppercase tracking-wider rounded-full hover:bg-teal/80 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                className="px-5 py-2.5 bg-teal text-white text-micro font-bold uppercase tracking-wider rounded-full hover:bg-teal/80 transition-colors cursor-pointer inline-flex items-center gap-1.5"
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                 <Compass className="w-3 h-3" />
                 <span>Clear Filters</span>
@@ -196,21 +196,21 @@ export default function ExploreView({
                       </div>
                       <div className="flex-1 min-w-0 flex flex-col justify-between text-left py-0.5">
                         <div>
-                          <div className="flex items-center gap-1.5 text-[8px] font-mono text-muted uppercase tracking-widest">
+                          <div className="flex items-center gap-1.5 text-micro font-mono text-muted uppercase tracking-widest">
                             <span className="text-gold font-bold">{tour.chapterName || 'Chapter 01'}</span>
                             <span className="text-border/40">·</span>
                             <span className="truncate max-w-[100px]">{tour.location.split(',')[0]}</span>
                           </div>
-                          <h3 className="font-display text-[15px] text-night font-light lowercase truncate mt-0.5 leading-tight group-hover:text-gold transition-colors">{tour.title}</h3>
+                          <h3 className="font-display text-h4 text-night font-light lowercase truncate mt-0.5 leading-tight group-hover:text-gold transition-colors">{tour.title}</h3>
                         </div>
                         <div className="flex items-center justify-between mt-1.5">
-                          <span className="text-[10px] font-semibold text-night">{formatINR(tour.price)}</span>
+                          <span className="text-micro font-semibold text-night">{formatINR(tour.price)}</span>
                           <div className="flex items-center gap-1.5">
                             <div className="flex items-center gap-0.5">
                               <Star className="w-2.5 h-2.5 fill-gold text-gold" />
-                              <span className="text-[9px] font-bold text-night">{parseFloat(tour.rating.toFixed(1))}</span>
+                              <span className="text-small font-bold text-night">{parseFloat(tour.rating.toFixed(1))}</span>
                             </div>
-                            <span className="text-[8px] font-bold uppercase tracking-wider text-teal flex items-center gap-0.5 group-hover:gap-1 transition-all">
+                            <span className="text-micro font-bold uppercase tracking-wider text-teal flex items-center gap-0.5 group-hover:gap-1 transition-all">
                               Explore <ArrowRight className="w-2.5 h-2.5" />
                             </span>
                           </div>
@@ -240,8 +240,8 @@ export default function ExploreView({
             <div className="aspect-[3/2] rounded-3xl overflow-hidden bg-secondary-surface shadow-card border border-border group">
               <img src={activeTour.bannerImage} alt={activeTour.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
-            <div className="space-y-3.5">
-              <div className="flex items-center gap-1.5 text-[8px] font-mono text-muted uppercase tracking-widest">
+            <div className="space-y-4">
+              <div className="flex items-center gap-1.5 text-micro font-mono text-muted uppercase tracking-widest">
                 <span className="font-bold text-gold">{activeTour.chapterName || 'Chapter 01'}</span>
                 {activeTour.chapterTitle && (
                   <>
@@ -250,30 +250,30 @@ export default function ExploreView({
                   </>
                 )}
               </div>
-              <h2 className="font-display text-[28px] text-night font-light lowercase leading-[0.95]">{activeTour.title}</h2>
-              <p className="text-xs text-muted/80 font-light leading-relaxed line-clamp-3">{activeTour.storyNarrative || activeTour.subtitle}</p>
-              <div className="flex items-center gap-2 text-[9px] font-mono text-muted">
+              <h2 className="font-display text-h2 text-night font-light lowercase leading-[0.95]">{activeTour.title}</h2>
+              <p className="text-body text-muted/80 font-light leading-relaxed line-clamp-3">{activeTour.storyNarrative || activeTour.subtitle}</p>
+              <div className="flex items-center gap-2 text-small font-mono text-muted">
                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{activeTour.duration}</span>
                 <span className="text-border/40">·</span>
                 <span className="font-bold text-teal capitalize">{getMoodLabel(activeTour.id)}</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeTour.moods?.slice(0, 3).map(m => (
-                  <span key={m} className="px-2.5 py-1 rounded-full bg-sand text-[8px] font-bold uppercase tracking-wider text-muted border border-border/30">{m}</span>
+                  <span key={m} className="px-2.5 py-1 rounded-full bg-background text-micro font-bold uppercase tracking-wider text-muted border border-border/30">{m}</span>
                 ))}
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">
-                <div className="text-[10px] text-muted/50 font-light">
-                  <span className="text-xs font-medium text-night">{formatINR(activeTour.price)}</span>
+                <div className="text-micro text-muted/50 font-light">
+                  <span className="text-small font-medium text-night">{formatINR(activeTour.price)}</span>
                   <span className="ml-0.5">/ day</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-                  <span className="text-xs font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
+                  <span className="text-small font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
                 </div>
               </div>
               <motion.button onClick={() => onTourSelect(activeTour)}
-                className="w-full py-3.5 rounded-full bg-night text-white text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-ocean transition-all cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3.5 rounded-full bg-night text-white text-micro font-bold uppercase tracking-[0.12em] hover:bg-teal transition-all cursor-pointer flex items-center justify-center gap-2"
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
                 <Compass className="w-4 h-4 text-gold" />
                 View Chapter
@@ -284,7 +284,7 @@ export default function ExploreView({
           <div className="text-center space-y-2">
             <MapPin className="w-8 h-8 text-muted/20 mx-auto" />
             <p className="text-xs text-muted/50 font-light">select a destination</p>
-            <p className="text-[9px] text-muted/30 font-mono uppercase tracking-wider">from the atlas to preview</p>
+            <p className="text-micro text-muted/30 font-mono uppercase tracking-wider">from the atlas to preview</p>
           </div>
         )}
       </div>

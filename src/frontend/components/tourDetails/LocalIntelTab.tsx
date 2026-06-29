@@ -20,7 +20,7 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
         <div className="space-y-2">
           {(cultural.mustDo || []).map((item, i) => (
             <div key={i} className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-border shadow-soft">
-              <span className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0 mt-0.5" style={{ backgroundColor: accentColor }}>{i + 1}</span>
+              <span className="w-6 h-6 rounded-full flex items-center justify-center text-micro font-bold text-white shrink-0 mt-0.5" style={{ backgroundColor: accentColor }}>{i + 1}</span>
               <p className="text-xs text-night font-medium leading-relaxed">{item}</p>
             </div>
           ))}
@@ -60,15 +60,15 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
       {dayTrips.length > 0 && (
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <Compass className="w-4 h-4 text-ocean" />
+            <Compass className="w-4 h-4 text-teal" />
             <h2 className="font-display text-xl text-night font-bold">Nearby Day Trips</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {dayTrips.map((trip, i) => (
               <div key={i} className="p-4 rounded-2xl bg-white border border-border shadow-soft text-center">
-                <span className="text-[8px] font-mono uppercase tracking-widest text-ocean font-bold block mb-1">{trip.type}</span>
+                <span className="text-micro font-mono uppercase tracking-widest text-teal font-bold block mb-1">{trip.type}</span>
                 <p className="text-xs font-bold text-night mb-1">{trip.name}</p>
-                <span className="text-[10px] text-muted font-light">{trip.distance} away</span>
+                <span className="text-micro text-muted font-light">{trip.distance} away</span>
               </div>
             ))}
           </div>
@@ -89,7 +89,7 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
                       {Array.from({ length: r.rating }).map((_, i) => (
                         <Star key={i} className="w-2.5 h-2.5 text-gold fill-gold" />
                       ))}
-                      <span className="text-[9px] text-muted ml-1">{r.date}</span>
+                      <span className="text-micro text-muted ml-1">{r.date}</span>
                     </div>
                   </div>
                 </div>

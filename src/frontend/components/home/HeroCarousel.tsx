@@ -110,9 +110,9 @@ function CarouselCard({
               animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <span className={`absolute top-4 left-4 px-3 py-1 rounded-full text-[8.5px] font-mono font-bold text-white uppercase tracking-[0.16em] border border-white/20 backdrop-blur-md shadow-sm bg-opacity-80 ${slide.badgeColor}`}>{slide.category}</span>
+            <span className={`absolute top-4 left-4 px-3 py-1 rounded-full text-small font-mono font-bold text-white uppercase tracking-[0.16em] border border-white/20 backdrop-blur-md shadow-sm bg-opacity-80 ${slide.badgeColor}`}>{slide.category}</span>
             <div className="absolute bottom-3 left-4 right-4 flex justify-between items-end">
-              <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-white/95">{slide.subtitle}</span>
+              <span className="text-micro font-mono uppercase tracking-[0.2em] text-white/95">{slide.subtitle}</span>
             </div>
           </div>
           <div className="flex-1 p-5 flex flex-col justify-between text-left bg-surface/95 paper-grain border-t border-border/40">
@@ -125,20 +125,20 @@ function CarouselCard({
                   transition={{ duration: 0.6, delay: 2 }}
                 >
                   <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-                  <span className="text-[10px] font-bold text-night mt-0.5">{slide.rating}</span>
+                  <span className="text-micro font-bold text-night mt-0.5">{slide.rating}</span>
                 </motion.div>
               </div>
-              <p className="text-xs text-muted/80 leading-relaxed font-sans font-light line-clamp-3">{slide.storyHook}</p>
+              <p className="text-small text-muted/80 leading-relaxed font-sans font-light line-clamp-3">{slide.storyHook}</p>
             </div>
             <div className="pt-3 border-t border-border/60 flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-[9px] font-mono text-muted">
-                <Users className="w-3.5 h-3.5 text-ocean" />
+              <div className="flex items-center gap-1.5 text-micro font-mono text-muted">
+                <Users className="w-3.5 h-3.5 text-teal" />
                 <span>{slide.explorers} explorers loved this</span>
               </div>
               {isActive && (
                 <motion.button
                   onClick={(e) => { e.stopPropagation(); onClick(); }}
-                  className="px-3.5 py-2 rounded-xl bg-night hover:bg-ocean text-white text-[9px] font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-night hover:bg-teal text-white text-micro font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
@@ -297,7 +297,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
               <div className="space-y-6">
                 <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10" variants={itemVariants}>
                   <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                  <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-white/80 font-bold">travebie · atlas vivant</span>
+                  <span className="font-mono text-micro uppercase tracking-[0.25em] text-white/80 font-bold">travebie · atlas vivant</span>
                 </motion.div>
 
                 <motion.div className="relative inline-block" variants={itemVariants}>
@@ -321,7 +321,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
               <motion.div className="flex flex-wrap items-center gap-4 pt-2" variants={itemVariants}>
                 <motion.button
                   onClick={onGoToPlanner}
-                  className="px-8 py-4 rounded-full bg-gold hover:bg-gold/90 text-night text-[11px] font-bold uppercase tracking-[0.16em] flex items-center gap-2 cursor-pointer shadow-lg shadow-gold/20"
+                  className="px-8 py-4 rounded-full bg-gold hover:bg-gold/90 text-night text-small font-bold uppercase tracking-[0.16em] flex items-center gap-2 cursor-pointer shadow-lg shadow-gold/20"
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -331,7 +331,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 </motion.button>
                 <motion.button
                   onClick={onGoToExplore}
-                  className="px-6 py-4 rounded-full border border-white/20 hover:border-white/60 text-white/80 hover:text-white text-[11px] font-bold uppercase tracking-[0.16em] flex items-center gap-2 cursor-pointer backdrop-blur-sm bg-white/5"
+                  className="px-6 py-4 rounded-full border border-white/20 hover:border-white/60 text-white/80 hover:text-white text-small font-bold uppercase tracking-[0.16em] flex items-center gap-2 cursor-pointer backdrop-blur-sm bg-white/5"
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -358,7 +358,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 <span className="text-white/20">•</span>
                 <span className="text-gold font-medium">{getMoodLabel(activeSlide.id)}</span>
                 <span className="text-white/20">•</span>
-                <span className="px-2 py-0.5 rounded-full bg-white/10 text-[9px] uppercase font-bold tracking-wider text-gold">{activeSlide.style}</span>
+                <span className="px-2 py-0.5 rounded-full bg-white/10 text-micro uppercase font-bold tracking-wider text-gold">{activeSlide.style}</span>
               </motion.div>
             </motion.div>
 
@@ -371,7 +371,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <span className="text-[8.5px] font-mono uppercase tracking-[0.2em] text-gold font-bold">Explorer Passport</span>
+                <span className="text-small font-mono uppercase tracking-[0.2em] text-gold font-bold">Explorer Passport</span>
                 <div className="flex gap-4 mt-1">
                   {[
                     { value: '12', label: 'Chapters' },
@@ -380,7 +380,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                   ].map((s) => (
                     <div key={s.label} className="text-left">
                       <span className="text-sm font-bold text-white leading-none block font-display">{s.value}</span>
-                      <span className="text-[7px] font-mono uppercase tracking-wider text-white/40 block mt-0.5">{s.label}</span>
+                      <span className="text-micro font-mono uppercase tracking-wider text-white/40 block mt-0.5">{s.label}</span>
                     </div>
                   ))}
                 </div>
@@ -413,6 +413,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
               <motion.div className="flex items-center gap-5 z-10 mt-4 w-full max-w-[380px]">
                 <motion.button
                   onClick={() => goTo('prev')}
+                  aria-label="Previous slide"
                   className="w-9 h-9 rounded-full border border-white/15 bg-white/5 text-white/60 flex items-center justify-center cursor-pointer backdrop-blur-sm shrink-0"
                   whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.15)' }}
                   whileTap={{ scale: 0.9 }}
@@ -432,7 +433,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                     />
                   </div>
                   <motion.span
-                    className="font-mono text-[10px] text-white/40 tracking-widest shrink-0"
+                    className="font-mono text-micro text-white/40 tracking-widest shrink-0"
                     key={activeIndex}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -444,6 +445,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
 
                 <motion.button
                   onClick={() => goTo('next')}
+                  aria-label="Next slide"
                   className="w-9 h-9 rounded-full border border-white/15 bg-white/5 text-white/60 flex items-center justify-center cursor-pointer backdrop-blur-sm shrink-0"
                   whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.15)' }}
                   whileTap={{ scale: 0.9 }}

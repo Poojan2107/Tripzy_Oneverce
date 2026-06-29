@@ -47,13 +47,13 @@ function StoryCard({ story, index, onClick }: { story: any; index: number; onCli
           <SafeImage src={story.image} alt={story.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
         <div className="space-y-2 px-0.5">
-          <span className="text-[8px] font-mono text-coral uppercase tracking-widest block font-bold">{story.location}</span>
+          <span className="text-micro font-mono text-coral uppercase tracking-widest block font-bold">{story.location}</span>
           <h3 className="font-display text-lg text-night font-medium lowercase leading-tight group-hover:text-coral transition-colors line-clamp-2">{story.title}</h3>
-          <p className="text-[11px] text-muted/90 font-light leading-relaxed font-sans line-clamp-3">{story.excerpt}</p>
+          <p className="text-small text-muted/90 font-light leading-relaxed font-sans line-clamp-3">{story.excerpt}</p>
           <div className="flex items-center gap-2 pt-3 border-t border-border mt-3">
             <SafeImage src={story.avatar} alt={story.author} className="w-6 h-6 rounded-full object-cover" />
-            <span className="text-[9px] font-mono uppercase tracking-wider text-night/70">{story.author}</span>
-            <span className="ml-auto text-[8px] text-muted/50">· {story.readTime}</span>
+            <span className="text-micro font-mono uppercase tracking-wider text-night/70">{story.author}</span>
+            <span className="ml-auto text-micro text-muted/50">· {story.readTime}</span>
           </div>
         </div>
       </motion.div>
@@ -89,7 +89,7 @@ export default function TravelerStories({ tours, onSelectTour }: TravelerStories
   }, [tours]);
 
   return (
-    <section className="py-20 md:py-28 bg-[#FFFDF9] border-t border-border/30">
+    <section className="py-20 md:py-28 bg-background border-t border-border/30">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <motion.div
           className="mb-12 text-left"
@@ -98,7 +98,7 @@ export default function TravelerStories({ tours, onSelectTour }: TravelerStories
           viewport={{ once: true }}
           transition={{ type: "spring", stiffness: 80, damping: 20 }}
         >
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-coral block mb-2 font-bold">chronicles of movement</span>
+          <span className="font-mono text-micro uppercase tracking-[0.3em] text-coral block mb-2 font-bold">chronicles of movement</span>
           <h2 className="font-display text-4xl sm:text-5xl text-night lowercase font-light tracking-[-0.03em]">
             traveler <em className="italic font-light text-gold">stories</em>
           </h2>

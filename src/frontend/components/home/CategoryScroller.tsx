@@ -18,11 +18,11 @@ export default function CategoryScroller({ onQuickCategoryClick }: CategoryScrol
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="py-16 md:py-20 bg-sand relative">
+    <section className="py-16 md:py-20 bg-background relative">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <ScrollReveal>
           <div className="mb-8 text-left">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-coral block mb-2 font-bold">discover by archetype</span>
+            <span className="font-mono text-micro uppercase tracking-[0.3em] text-coral block mb-2 font-bold">discover by archetype</span>
             <h2 className="font-display text-4xl sm:text-5xl text-night lowercase font-light tracking-[-0.03em]">
               india through <em className="italic font-light text-gold">journeys</em>
             </h2>
@@ -61,7 +61,7 @@ export default function CategoryScroller({ onQuickCategoryClick }: CategoryScrol
                   </div>
 
                   <div className="absolute bottom-4 left-4 right-4">
-                    <span className="text-[8px] font-mono uppercase tracking-[0.25em] text-gold block mb-1">{cat.mood}</span>
+                    <span className="text-micro font-mono uppercase tracking-[0.25em] text-gold block mb-1">{cat.mood}</span>
                     <span className="font-display text-xl text-white font-light lowercase">{cat.label}</span>
                   </div>
 

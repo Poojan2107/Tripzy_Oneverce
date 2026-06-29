@@ -59,7 +59,7 @@ export function getAtmosphere(location: string = ""): Atmosphere {
   if (loc.includes('kerala') || loc.includes('alleppey')) {
     return {
       primaryColor: '#00B0FF', secondaryColor: '#2E7D32',
-      glowClass: 'bg-turquoise-glow', textAccent: 'text-ocean',
+      glowClass: 'bg-turquoise-glow', textAccent: 'text-teal',
       badgeColor: 'border-[#00B0FF]/35 text-[#00B0FF]',
       badgeBg: 'bg-[#00B0FF]/15 text-[#00B0FF] border-[#00B0FF]/20',
       lineAccent: 'border-[#00B0FF]/40',
@@ -212,7 +212,7 @@ export function getAtmosphere(location: string = ""): Atmosphere {
   if (loc.includes('andaman') || loc.includes('havelock')) {
     return {
       primaryColor: '#01579B', secondaryColor: '#00B0FF',
-      glowClass: 'bg-ocean-glow', textAccent: 'text-ocean',
+      glowClass: 'bg-teal-glow', textAccent: 'text-teal',
       badgeColor: 'border-[#01579B]/35 text-[#01579B]',
       badgeBg: 'bg-[#01579B]/15 text-[#01579B] border-[#01579B]/20',
       lineAccent: 'border-[#01579B]/40',

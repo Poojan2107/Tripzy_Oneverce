@@ -62,7 +62,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
         html: `
           <div class="relative flex items-center justify-center w-6 h-6 rounded-full ${
             isActive ? 'bg-teal text-white shadow-[0_0_8px_rgba(24,182,201,0.5)]' : 'bg-white text-night border border-border'
-          } font-bold text-[10px] shadow-sm">
+          } font-bold text-micro shadow-sm">
             ${index + 1}
           </div>
         `,
@@ -99,7 +99,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
   if (!mounted) {
     return (
       <div className="w-full h-full bg-background animate-pulse flex flex-col items-center justify-center border border-border">
-        <span className="text-[10px] font-bold text-muted/40 tracking-widest uppercase">Plotting Route Map...</span>
+        <span className="text-micro font-bold text-muted/40 tracking-widest uppercase">Plotting Route Map...</span>
       </div>
     );
   }
@@ -107,7 +107,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
   return (
     <div className="w-full h-full relative">
       <div ref={mapContainerRef} className="w-full h-full z-0" />
-      <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-border shadow-card pointer-events-none text-[9px] font-medium text-muted">
+      <div className="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-border shadow-card pointer-events-none text-micro font-medium text-muted">
         ROUTE MAP
       </div>
     </div>

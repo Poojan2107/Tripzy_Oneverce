@@ -24,7 +24,7 @@ export default function AdminUsersTab({ users, loadingUsers, searchTerm, onSearc
         </div>
         <div className="text-right shrink-0">
           <p className="text-lg font-light font-display text-night">{users.length}</p>
-          <p className="text-[9px] font-mono uppercase tracking-wider text-stone">Total Users</p>
+          <p className="text-micro font-mono uppercase tracking-wider text-stone">Total Users</p>
         </div>
       </div>
 
@@ -35,55 +35,55 @@ export default function AdminUsersTab({ users, loadingUsers, searchTerm, onSearc
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs">
               <thead>
-                <tr className="bg-sand text-stone uppercase font-bold tracking-wider border-b border-border">
-                  <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">User</th>
-                  <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Role</th>
-                  <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Joined</th>
-                  <th className="py-4 px-6 text-center text-[10px] font-mono tracking-[0.25em]">Wishlist</th>
-                  <th className="py-4 px-6 text-center text-[10px] font-mono tracking-[0.25em]">Itineraries</th>
-                  <th className="py-4 px-6 text-center text-[10px] font-mono tracking-[0.25em]">Reviews</th>
-                  <th className="py-4 px-6 text-center text-[10px] font-mono tracking-[0.25em]">Trips</th>
-                  <th className="py-4 px-6 text-center text-[10px] font-mono tracking-[0.25em]">Chats</th>
+                <tr className="bg-background text-stone uppercase font-bold tracking-wider border-b border-border">
+                  <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">User</th>
+                  <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Role</th>
+                  <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Joined</th>
+                  <th className="py-4 px-6 text-center text-micro font-mono tracking-[0.25em]">Wishlist</th>
+                  <th className="py-4 px-6 text-center text-micro font-mono tracking-[0.25em]">Itineraries</th>
+                  <th className="py-4 px-6 text-center text-micro font-mono tracking-[0.25em]">Reviews</th>
+                  <th className="py-4 px-6 text-center text-micro font-mono tracking-[0.25em]">Trips</th>
+                  <th className="py-4 px-6 text-center text-micro font-mono tracking-[0.25em]">Chats</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
                 {users.map((u: any) => (
-                  <tr key={u.id} className="hover:bg-cream/30 transition-colors">
+                  <tr key={u.id} className="hover:bg-secondary-surface/30 transition-colors">
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         {u.image ? (
                           <img src={u.image} alt={u.name || u.email} loading="lazy" className="w-9 h-9 rounded-full object-cover border border-border shrink-0" />
                         ) : (
-                          <div className="w-9 h-9 rounded-full bg-cream flex items-center justify-center shrink-0 border border-border">
+                          <div className="w-9 h-9 rounded-full bg-secondary-surface flex items-center justify-center shrink-0 border border-border">
                             <Users className="w-4 h-4 text-stone" />
                           </div>
                         )}
                         <div>
                           <p className="font-medium text-night text-sm">{u.name || 'Unnamed'}</p>
-                          <p className="text-[10px] text-stone mt-0.5 flex items-center gap-1"><Mail className="w-3 h-3" />{u.email}</p>
+                          <p className="text-micro text-stone mt-0.5 flex items-center gap-1"><Mail className="w-3 h-3" />{u.email}</p>
                         </div>
                       </div>
                     </td>
                     <td className="py-4 px-6">
                       {u.role === "ADMIN" ? (
-                        <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase flex items-center gap-1 w-fit">
+                        <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded-full text-micro font-bold uppercase flex items-center gap-1 w-fit">
                           <Shield className="w-3 h-3" />Admin
                         </span>
                       ) : (
-                        <span className="bg-cream/40 text-stone px-2 py-0.5 rounded-full text-[9px] font-medium">User</span>
+                        <span className="bg-secondary-surface/40 text-stone px-2 py-0.5 rounded-full text-micro font-medium">User</span>
                       )}
                     </td>
-                    <td className="py-4 px-6 text-stone font-mono text-[10px]">
+                    <td className="py-4 px-6 text-stone font-mono text-micro">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-3 h-3 text-stone/60" />
                         {new Date(u.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-center font-mono text-[10px] text-night">{u._count?.bookmarks || 0}</td>
-                    <td className="py-4 px-6 text-center font-mono text-[10px] text-night">{u._count?.savedItineraries || 0}</td>
-                    <td className="py-4 px-6 text-center font-mono text-[10px] text-night">{u._count?.reviews || 0}</td>
-                    <td className="py-4 px-6 text-center font-mono text-[10px] text-night">{u._count?.trips || 0}</td>
-                    <td className="py-4 px-6 text-center font-mono text-[10px] text-night">{u._count?.conversations || 0}</td>
+                    <td className="py-4 px-6 text-center font-mono text-micro text-night">{u._count?.bookmarks || 0}</td>
+                    <td className="py-4 px-6 text-center font-mono text-micro text-night">{u._count?.savedItineraries || 0}</td>
+                    <td className="py-4 px-6 text-center font-mono text-micro text-night">{u._count?.reviews || 0}</td>
+                    <td className="py-4 px-6 text-center font-mono text-micro text-night">{u._count?.trips || 0}</td>
+                    <td className="py-4 px-6 text-center font-mono text-micro text-night">{u._count?.conversations || 0}</td>
                   </tr>
                 ))}
               </tbody>
@@ -108,7 +108,7 @@ export default function AdminUsersTab({ users, loadingUsers, searchTerm, onSearc
                 {u.image ? (
                   <img src={u.image} alt={u.name || u.email} className="w-12 h-12 rounded-full object-cover border border-border shrink-0" />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-cream flex items-center justify-center shrink-0 border border-border">
+                  <div className="w-12 h-12 rounded-full bg-secondary-surface flex items-center justify-center shrink-0 border border-border">
                     <Users className="w-5 h-5 text-stone" />
                   </div>
                 )}
@@ -116,11 +116,11 @@ export default function AdminUsersTab({ users, loadingUsers, searchTerm, onSearc
                   <div className="flex items-center gap-2">
                     <p className="font-medium text-night text-sm truncate">{u.name || 'Unnamed'}</p>
                     {u.role === "ADMIN" && (
-                      <span className="bg-gold/10 text-gold border border-gold/20 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase flex items-center gap-0.5"><Shield className="w-2.5 h-2.5" />Admin</span>
+                      <span className="bg-gold/10 text-gold border border-gold/20 px-1.5 py-0.5 rounded-full text-micro font-bold uppercase flex items-center gap-0.5"><Shield className="w-2.5 h-2.5" />Admin</span>
                     )}
                   </div>
-                  <p className="text-[10px] text-stone mt-0.5">{u.email}</p>
-                  <div className="flex gap-3 mt-2 text-[10px] text-stone">
+                  <p className="text-micro text-stone mt-0.5">{u.email}</p>
+                  <div className="flex gap-3 mt-2 text-micro text-stone">
                     <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{new Date(u.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>
                     <span className="flex items-center gap-1"><Heart className="w-3 h-3" />{u._count?.bookmarks || 0}</span>
                     <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" />{u._count?.savedItineraries || 0}</span>

@@ -70,15 +70,15 @@ export default function AdminPage() {
 
   if (status === "loading") {
     return (
-      <div className="bg-sand min-h-[100dvh] flex flex-col items-center justify-center font-sans">
-        <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-stone animate-pulse">Verifying credentials...</span>
+      <div className="bg-background min-h-[100dvh] flex flex-col items-center justify-center font-sans">
+        <span className="text-micro font-mono uppercase tracking-[0.25em] text-stone animate-pulse">Verifying credentials...</span>
       </div>
     );
   }
 
   if (!session || session.user.role !== "ADMIN") {
     return (
-      <div className="bg-sand min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center font-sans space-y-6">
+      <div className="bg-background min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center font-sans space-y-6">
         <div className="w-16 h-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mx-auto border border-rose-200">
           <ShieldAlert className="w-8 h-8" />
         </div>
@@ -88,7 +88,7 @@ export default function AdminPage() {
         </p>
         <a
           href="/"
-          className="px-7 py-3 rounded-full bg-night text-white hover:bg-ink text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 inline-block"
+          className="px-7 py-3 rounded-full bg-night text-white hover:bg-ink text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 inline-block"
         >
           return to home
         </a>
@@ -97,7 +97,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="bg-sand min-h-[100dvh]">
+    <div className="bg-background min-h-[100dvh]">
       <AdminView
         tours={displayTours}
         wishlistCount={0}

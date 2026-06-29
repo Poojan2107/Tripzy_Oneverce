@@ -13,7 +13,7 @@ const ItineraryMap = dynamic(() => import('../map/ItineraryMap'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-52 rounded-2xl bg-white animate-pulse flex items-center justify-center border border-border/40">
-      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted/50">Plotting Route Map...</span>
+      <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/50">Plotting Route Map...</span>
     </div>
   )
 });
@@ -92,7 +92,7 @@ export default function PlannerResult({
 
   if (itineraryResult.error) {
     return (
-      <div className="pt-28 pb-32 px-6 max-w-md mx-auto min-h-[100dvh] bg-[#F8F4EE] flex items-center justify-center">
+      <div className="pt-28 pb-32 px-6 max-w-md mx-auto min-h-[100dvh] bg-background flex items-center justify-center">
         <motion.div
           className="text-center p-8 bg-white border border-border/50 rounded-3xl shadow-sm space-y-4 text-night"
           initial={{ opacity: 0, scale: 0.95 }}
@@ -101,7 +101,7 @@ export default function PlannerResult({
         >
           <Compass className="w-10 h-10 text-muted/30 mx-auto" />
           <h2 className="font-display text-2xl font-light text-night lowercase">journey interrupted</h2>
-          <p className="text-xs text-muted/60 font-light leading-relaxed">
+          <p className="text-small text-muted/60 font-light leading-relaxed">
             We're consulting our explorer archive and preparing an alternative journey.
           </p>
           <div className="flex flex-col gap-2 pt-2">
@@ -115,7 +115,7 @@ export default function PlannerResult({
             </motion.button>
             <motion.button
               onClick={onReset}
-              className="w-full px-6 py-2.5 rounded-xl border border-border/40 bg-[#F8F4EE] text-xs font-bold uppercase tracking-wider text-muted/70 hover:text-night transition-colors cursor-pointer min-h-[44px]"
+              className="w-full px-6 py-2.5 rounded-xl border border-border/40 bg-background text-xs font-bold uppercase tracking-wider text-muted/70 hover:text-night transition-colors cursor-pointer min-h-[44px]"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -153,18 +153,18 @@ export default function PlannerResult({
               <div className="space-y-2 text-left">
                 <div className="flex items-center gap-1.5">
                   <Compass className="w-4 h-4 text-gold animate-spin-slow" />
-                  <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-gold font-bold">travebie.ai · companion journal</span>
+                  <span className="font-mono text-micro uppercase tracking-[0.3em] text-gold font-bold">travebie.ai · companion journal</span>
                 </div>
                 <h1 className="font-display text-night font-light lowercase leading-none mt-1" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
                   your <em className="text-gold not-italic">{getDestinationPrettyName(destId).toLowerCase()}</em> odyssey
                 </h1>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="px-2.5 py-1 rounded-full bg-background border border-border text-[8px] font-mono font-bold uppercase tracking-wider text-night">{customDuration} Days</span>
-                  <span className="px-2.5 py-1 rounded-full bg-background border border-border text-[8px] font-mono font-bold uppercase tracking-wider text-night">{itin.length} Chapters</span>
+                  <span className="px-2.5 py-1 rounded-full bg-background border border-border text-micro font-mono font-bold uppercase tracking-wider text-night">{customDuration} Days</span>
+                  <span className="px-2.5 py-1 rounded-full bg-background border border-border text-micro font-mono font-bold uppercase tracking-wider text-night">{itin.length} Chapters</span>
                   {itineraryResult.recommendationScore && (
-                    <span className="px-2.5 py-1 rounded-full bg-coral/10 border border-coral/20 text-[8px] font-mono font-bold uppercase tracking-wider text-coral">{itineraryResult.recommendationScore}% Match</span>
+                    <span className="px-2.5 py-1 rounded-full bg-coral/10 border border-coral/20 text-micro font-mono font-bold uppercase tracking-wider text-coral">{itineraryResult.recommendationScore}% Match</span>
                   )}
-                  <span className="px-2.5 py-1 rounded-full bg-teal/10 border border-teal/20 text-[8px] font-mono font-bold uppercase tracking-wider text-teal">Crafted For {travelers === 'solo' ? 'Solo' : travelers === 'couple' ? 'Couple' : travelers === 'family' ? 'Family' : travelers === 'friends' ? 'Group' : 'Explorer'}</span>
+                  <span className="px-2.5 py-1 rounded-full bg-teal/10 border border-teal/20 text-micro font-mono font-bold uppercase tracking-wider text-teal">Crafted For {travelers === 'solo' ? 'Solo' : travelers === 'couple' ? 'Couple' : travelers === 'family' ? 'Family' : travelers === 'friends' ? 'Group' : 'Explorer'}</span>
                 </div>
               </div>
 
@@ -173,7 +173,7 @@ export default function PlannerResult({
                   <motion.button
                     onClick={onSave}
                     disabled={saving}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gold text-night text-[10px] font-bold uppercase tracking-wider cursor-pointer disabled:opacity-50 shadow-lg min-h-[46px] border-none hover:bg-gold/90"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gold text-night text-micro font-bold uppercase tracking-wider cursor-pointer disabled:opacity-50 shadow-lg min-h-[46px] border-none hover:bg-gold/90"
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                   >
@@ -182,7 +182,7 @@ export default function PlannerResult({
                   </motion.button>
                 ) : (
                   <motion.span
-                    className="px-5 py-3 rounded-xl bg-secondary-surface text-muted text-[10px] font-bold uppercase tracking-wider border border-border flex items-center gap-1.5 min-h-[46px]"
+                    className="px-5 py-3 rounded-xl bg-secondary-surface text-muted text-micro font-bold uppercase tracking-wider border border-border flex items-center gap-1.5 min-h-[46px]"
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 200, damping: 15 }}
@@ -198,7 +198,7 @@ export default function PlannerResult({
                       navigator.clipboard.writeText(url);
                       alert("Shareable Journey link copied to clipboard:\n" + url);
                     }}
-                    className="px-4 py-3 rounded-xl border border-teal/20 bg-teal/10 hover:bg-teal/20 text-teal text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
+                    className="px-4 py-3 rounded-xl border border-teal/20 bg-teal/10 hover:bg-teal/20 text-teal text-micro font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                   >
@@ -208,22 +208,22 @@ export default function PlannerResult({
 
                 <div className="relative group">
                   <motion.button
-                    className="px-4 py-3 rounded-xl border border-border bg-background text-[10px] font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-surface transition-colors cursor-pointer min-h-[44px] flex items-center gap-1"
+                    className="px-4 py-3 rounded-xl border border-border bg-background text-micro font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-surface transition-colors cursor-pointer min-h-[44px] flex items-center gap-1"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                   >
                     <span>Export Journal</span>
                   </motion.button>
-                  <div className="absolute right-0 mt-1 w-32 bg-white border border-border rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50 py-1 font-mono text-[9px] uppercase tracking-wider">
+                  <div className="absolute right-0 mt-1 w-32 bg-white border border-border rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50 py-1 font-mono text-micro uppercase tracking-wider">
                     <button
                       onClick={() => window.print()}
-                      className="w-full text-left px-3 py-2 hover:bg-[#F8F4EE] text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
+                      className="w-full text-left px-3 py-2 hover:bg-background text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
                     >
                       Print / PDF
                     </button>
                     <button
                       onClick={handleCopyItineraryText}
-                      className="w-full text-left px-3 py-2 hover:bg-[#F8F4EE] text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
+                      className="w-full text-left px-3 py-2 hover:bg-background text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
                     >
                       Copy Text
                     </button>
@@ -232,7 +232,7 @@ export default function PlannerResult({
 
                 <motion.button
                   onClick={onReset}
-                  className="px-4 py-3 rounded-xl border border-border bg-background text-[10px] font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-surface transition-colors cursor-pointer min-h-[44px]"
+                  className="px-4 py-3 rounded-xl border border-border bg-background text-micro font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-surface transition-colors cursor-pointer min-h-[44px]"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
@@ -243,7 +243,7 @@ export default function PlannerResult({
 
             {itineraryResult.recommendationReasoning && (
               <div className="border-t border-border/50 pt-4 mt-6">
-                <p className="text-[11px] text-muted leading-relaxed font-light italic">
+                <p className="text-small text-muted leading-relaxed font-light italic">
                   &ldquo;{itineraryResult.recommendationReasoning}&rdquo;
                 </p>
               </div>
@@ -274,7 +274,7 @@ export default function PlannerResult({
                 whileTap={{ scale: 0.95 }}
               >
                 <span className="font-display text-lg font-light leading-none">{idx + 1}</span>
-                <span className="text-[7px] font-mono uppercase tracking-wider mt-0.5">day</span>
+                <span className="text-micro font-mono uppercase tracking-wider mt-0.5">day</span>
               </motion.button>
             ))}
           </div>
@@ -290,7 +290,7 @@ export default function PlannerResult({
               transition={{ type: "spring", stiffness: 120, damping: 20 }}
             >
               <div>
-                <span className="text-[8px] font-mono uppercase tracking-[0.3em] text-coral font-bold block mb-1">
+                <span className="text-micro font-mono uppercase tracking-[0.3em] text-coral font-bold block mb-1">
                   chapter {activeDayTab + 1} of {itin.length}
                 </span>
                 <h3 className="font-display text-2xl sm:text-3xl font-light text-night lowercase">
@@ -298,31 +298,31 @@ export default function PlannerResult({
                 </h3>
               </div>
 
-              <p className="text-xs text-muted leading-relaxed font-sans font-light">
+              <p className="text-small text-muted leading-relaxed font-sans font-light">
                 {currentDay.description}
               </p>
 
               {/* Local Secret */}
               {tour?.localSecret && (
                 <div className="bg-background/60 border border-border/50 rounded-2xl p-4 space-y-1">
-                  <span className="font-mono text-[8px] uppercase tracking-wider text-coral font-bold block">local secret</span>
-                  <p className="text-xs text-night/85 leading-relaxed font-sans font-light">{tour.localSecret}</p>
+                  <span className="font-mono text-micro uppercase tracking-wider text-coral font-bold block">local secret</span>
+                  <p className="text-small text-night/85 leading-relaxed font-sans font-light">{tour.localSecret}</p>
                 </div>
               )}
 
               {/* Photography Spot */}
               {tour?.photographySpot && (
                 <div className="bg-background/60 border border-border/50 rounded-2xl p-4 space-y-1">
-                  <span className="font-mono text-[8px] uppercase tracking-wider text-gold font-bold block">photography spot</span>
-                  <p className="text-xs text-night/85 leading-relaxed font-sans font-light">{tour.photographySpot}</p>
+                  <span className="font-mono text-micro uppercase tracking-wider text-gold font-bold block">photography spot</span>
+                  <p className="text-small text-night/85 leading-relaxed font-sans font-light">{tour.photographySpot}</p>
                 </div>
               )}
 
               {/* Signature Experience */}
               {tour?.signatureExperience && (
                 <div className="bg-background/60 border border-border/50 rounded-2xl p-4 space-y-1">
-                  <span className="font-mono text-[8px] uppercase tracking-wider text-teal font-bold block">signature experience</span>
-                  <p className="text-xs text-night/85 leading-relaxed font-sans font-light">{tour.signatureExperience}</p>
+                  <span className="font-mono text-micro uppercase tracking-wider text-teal font-bold block">signature experience</span>
+                  <p className="text-small text-night/85 leading-relaxed font-sans font-light">{tour.signatureExperience}</p>
                 </div>
               )}
 
@@ -335,11 +335,11 @@ export default function PlannerResult({
 
                     <div className="bg-background/40 hover:bg-surface transition-all duration-300 p-4 rounded-2xl border border-border/50 hover:border-border hover:shadow-sm">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <span className="font-mono text-[8px] uppercase tracking-wider text-gold font-bold">explorer log</span>
+                        <span className="font-mono text-micro uppercase tracking-wider text-gold font-bold">explorer log</span>
                         <span className="h-px w-3 bg-border/40" />
-                        <span className="text-[8px] font-mono text-muted/40 uppercase">stop {aIdx + 1}</span>
+                        <span className="text-micro font-mono text-muted/40 uppercase">stop {aIdx + 1}</span>
                       </div>
-                      <p className="text-xs text-night/95 leading-relaxed font-sans font-light">{act}</p>
+                      <p className="text-small text-night/95 leading-relaxed font-sans font-light">{act}</p>
                     </div>
                   </div>
                 ))}
@@ -373,7 +373,7 @@ export default function PlannerResult({
             </div>
           ) : (
             <div className="p-6 rounded-2xl bg-surface border border-border text-center">
-              <p className="text-xs text-muted font-light font-sans">Stay recommendations for this chapter are currently being hand-selected.</p>
+              <p className="text-small text-muted font-light font-sans">Stay recommendations for this chapter are currently being hand-selected.</p>
             </div>
           )}
         </motion.div>
@@ -390,19 +390,19 @@ export default function PlannerResult({
                 <span className="font-display text-3xl font-light text-coral leading-none block">
                   <AnimatedCounter value={itineraryResult.recommendationScore || 96} /><span className="text-xl">%</span>
                 </span>
-                <span className="text-[7px] font-mono uppercase tracking-[0.2em] text-muted/70 block mt-1">match score</span>
+                <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/70 block mt-1">match score</span>
               </div>
               <div className="text-center border-l border-border/50 pl-4">
                 <span className="font-display text-2xl font-light text-night leading-none block">₹{(costs.total / 1000).toFixed(0)}k</span>
-                <span className="text-[7px] font-mono uppercase tracking-[0.2em] text-muted/70 block mt-1">est. total</span>
+                <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/70 block mt-1">est. total</span>
               </div>
               <div className="text-center border-l border-border/50 pl-4">
                 <span className="font-display text-lg font-light text-gold leading-snug block">{(tour?.bestSeason || 'Oct – Mar').split(' to ')[0]}</span>
-                <span className="text-[7px] font-mono uppercase tracking-[0.2em] text-muted/70 block mt-1">best season</span>
+                <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/70 block mt-1">best season</span>
               </div>
               <div className="text-center border-l border-border/50 pl-4">
                 <span className="font-display text-3xl font-light text-night leading-none block">{customDuration}</span>
-                <span className="text-[7px] font-mono uppercase tracking-[0.2em] text-muted/70 block mt-1">day journey</span>
+                <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/70 block mt-1">day journey</span>
               </div>
             </div>
           </div>
@@ -422,12 +422,12 @@ export default function PlannerResult({
             {/* Ticket Header */}
             <div className="bg-dark-surface px-6 py-4 flex items-center justify-between border-b border-dark-card">
               <div className="text-left">
-                <span className="font-mono text-[7px] uppercase tracking-[0.3em] text-gold block">travebie.ai · atlas vivant</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-dark-text">Journey Boarding Pass</span>
+                <span className="font-mono text-micro uppercase tracking-[0.3em] text-gold block">travebie.ai · atlas vivant</span>
+                <span className="text-micro font-bold uppercase tracking-wider text-dark-text">Journey Boarding Pass</span>
               </div>
               <div className="text-right">
-                <span className="text-[7px] font-mono text-dark-muted block uppercase">Pass No.</span>
-                <span className="text-[10px] font-mono font-bold text-gold">TB-{destId.slice(0,3).toUpperCase()}-{customDuration}D</span>
+                <span className="text-micro font-mono text-dark-muted block uppercase">Pass No.</span>
+                <span className="text-micro font-mono font-bold text-gold">TB-{destId.slice(0,3).toUpperCase()}-{customDuration}D</span>
               </div>
             </div>
 
@@ -435,7 +435,7 @@ export default function PlannerResult({
               {/* Journey Cities */}
               <div className="flex items-center gap-3">
                 <div className="text-left">
-                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-dark-muted block">from</span>
+                  <span className="text-micro font-mono uppercase tracking-wider text-dark-muted block">from</span>
                   <span className="font-display text-2xl font-light leading-none text-dark-text">{fromLocation ? fromLocation.split(',')[0].slice(0,3).toUpperCase() : 'DEL'}</span>
                 </div>
                 <div className="flex-1 flex items-center gap-1">
@@ -444,7 +444,7 @@ export default function PlannerResult({
                   <div className="h-px flex-1 border-t border-dashed border-dark-card" />
                 </div>
                 <div className="text-right">
-                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-dark-muted block">to</span>
+                  <span className="text-micro font-mono uppercase tracking-wider text-dark-muted block">to</span>
                   <span className="font-display text-2xl font-light text-gold leading-none">{getDestinationPrettyName(destId).slice(0,3).toUpperCase()}</span>
                 </div>
               </div>
@@ -455,15 +455,15 @@ export default function PlannerResult({
               {/* Cost Breakdowns */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs text-left">
                 <div>
-                  <span className="text-dark-muted font-light font-sans block text-[10px] lowercase">Transit & transfers</span>
+                  <span className="text-dark-muted font-light font-sans block text-micro lowercase">Transit & transfers</span>
                   <span className="font-semibold font-mono text-dark-text text-sm">₹{costs.transit.toLocaleString('en-IN')}</span>
                 </div>
                 <div>
-                  <span className="text-dark-muted font-light font-sans block text-[10px] lowercase">Accommodations</span>
+                  <span className="text-dark-muted font-light font-sans block text-micro lowercase">Accommodations</span>
                   <span className="font-semibold font-mono text-dark-text text-sm">₹{costs.stay.toLocaleString('en-IN')}</span>
                 </div>
                 <div>
-                  <span className="text-dark-muted font-light font-sans block text-[10px] lowercase">Food & experiences</span>
+                  <span className="text-dark-muted font-light font-sans block text-micro lowercase">Food & experiences</span>
                   <span className="font-semibold font-mono text-dark-text text-sm">₹{costs.food.toLocaleString('en-IN')}</span>
                 </div>
               </div>
@@ -481,7 +481,7 @@ export default function PlannerResult({
                       <motion.div className="bg-gold/70 h-full" initial={{ width: 0 }} animate={{ width: `${stayPct}%` }} transition={{ duration: 0.8, delay: 0.4 }} />
                       <motion.div className="bg-coral/70 h-full" initial={{ width: 0 }} animate={{ width: `${foodPct}%` }} transition={{ duration: 0.8, delay: 0.6 }} />
                     </div>
-                    <div className="flex justify-between text-[7px] font-mono text-dark-muted">
+                    <div className="flex justify-between text-micro font-mono text-dark-muted">
                       <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-teal/70 inline-block" />Transit</span>
                       <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-gold/70 inline-block" />Stay</span>
                       <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-coral/70 inline-block" />Food</span>
@@ -493,10 +493,10 @@ export default function PlannerResult({
               {/* Total / Tier */}
               <div className="border-t border-dashed border-dark-card pt-4 flex justify-between items-end text-left">
                 <div>
-                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-dark-muted block mb-1">estimated total cost</span>
+                  <span className="text-micro font-mono uppercase tracking-wider text-dark-muted block mb-1">estimated total cost</span>
                   <span className="font-display text-3xl font-light text-gold leading-none">₹{costs.total.toLocaleString('en-IN')}</span>
                 </div>
-                <span className="px-3 py-1 rounded bg-teal/10 text-teal text-[9px] font-bold uppercase tracking-wider border border-teal/20">
+                <span className="px-3 py-1 rounded bg-teal/10 text-teal text-micro font-bold uppercase tracking-wider border border-teal/20">
                   {derivedBudgetTier}
                 </span>
               </div>
@@ -521,7 +521,7 @@ export default function PlannerResult({
                     <rect x="96" y="0" width="1.2" height="20" /><rect x="98" y="0" width="2.5" height="20" />
                   </svg>
                 </div>
-                <span className="font-mono text-[7px] tracking-[0.25em] text-dark-muted uppercase">TZ-{destId.slice(0,3).toUpperCase()}-{customBudgetAmount}-{customDuration}D</span>
+                <span className="font-mono text-micro tracking-[0.25em] text-dark-muted uppercase">TZ-{destId.slice(0,3).toUpperCase()}-{customBudgetAmount}-{customDuration}D</span>
               </div>
             </div>
           </div>

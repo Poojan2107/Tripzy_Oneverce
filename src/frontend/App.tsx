@@ -266,7 +266,7 @@ export default function App() {
       <header className={`print:hidden md:hidden w-full z-50 px-4 py-2.5 flex items-center justify-between select-none transition-all duration-300 ${
         currentTab === 'home' && selectedTour === null
           ? 'absolute top-0 left-0 bg-transparent border-none'
-          : 'sticky top-0 border-b bg-[#081A24]/90 backdrop-blur-md border-white/5'
+          : 'sticky top-0 border-b bg-background/90 backdrop-blur-md border-border/40'
       }`}>
         <button
           onClick={() => {
@@ -302,7 +302,7 @@ export default function App() {
                     <p className="text-xs text-muted/60 font-light mb-4">This destination details are temporarily unavailable.</p>
                     <button
                       onClick={() => handleSelectTour(null)}
-                      className="px-5 py-2.5 bg-night text-white text-[10px] font-bold uppercase tracking-wider rounded-xl hover:opacity-90 transition-all"
+                      className="px-5 py-2.5 bg-night text-white text-micro font-bold uppercase tracking-wider rounded-xl hover:opacity-90 transition-all"
                     >
                       Back to Explore
                     </button>

@@ -47,13 +47,13 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
                   isActive ? 'text-gold' : 'text-muted/50'
                 }`} />
               </motion.div>
-              <span className={`text-[9px] font-bold uppercase tracking-wider mt-0.5 transition-colors ${
+              <span className={`text-micro font-bold uppercase tracking-wider mt-0.5 transition-colors ${
                 isActive ? 'text-night font-bold' : 'text-muted/50'
               }`}>
                 {tab.label}
               </span>
               {tab.badge !== undefined && tab.badge > 0 && (
-                <motion.span className="absolute -top-0.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-white"
+                <motion.span className="absolute -top-0.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-micro font-bold text-white"
                   initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 15 }}>
                   {tab.badge}
                 </motion.span>

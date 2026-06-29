@@ -25,7 +25,7 @@ export default function HomeView(props: HomeViewProps) {
   const { tours, wishlistIds, loadingDestinations, onQuickCategoryClick, onSelectTour, onToggleWishlist, onGoToExplore, onGoToPlanner } = props;
 
   return (
-    <div className="bg-sand min-h-[100dvh] text-night selection:bg-coral/20 selection:text-night">
+    <div className="bg-background min-h-[100dvh] text-night selection:bg-coral/20 selection:text-night">
       <HeroCarousel tours={tours} onGoToPlanner={onGoToPlanner} onGoToExplore={onGoToExplore} onSelectTour={onSelectTour} />
       <CategoryScroller onQuickCategoryClick={onQuickCategoryClick} />
       <AtlasPassportPreview onGoToExplore={onGoToExplore} onGoToPassport={onGoToExplore} />

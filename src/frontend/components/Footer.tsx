@@ -18,22 +18,22 @@ export default function Footer() {
                 travebie<span className="text-gold">.ai</span>
               </span>
             </div>
-            <p className="text-[9px] font-mono uppercase tracking-[0.2em] text-white/40">Atlas Vivant</p>
-            <p className="text-[10px] text-white/30 font-light leading-relaxed max-w-xs font-sans">
+            <p className="text-micro font-mono uppercase tracking-[0.2em] text-white/40">Atlas Vivant</p>
+            <p className="text-micro text-white/30 font-light leading-relaxed max-w-xs font-sans">
               Every destination tells a story. Explore chapter by chapter, journey by journey.
             </p>
           </div>
 
           {/* Explore */}
           <div className="text-left space-y-3">
-            <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Navigate</span>
+            <span className="text-micro font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Navigate</span>
             <div className="space-y-1.5">
               {[
                 { label: 'Explore Atlas', href: '#explore' },
                 { label: 'AI Companion', href: '#ai-planner' },
                 { label: 'Passport', href: '#saved' },
               ].map(link => (
-                <a key={link.label} href={link.href} className="block text-[11px] text-white/40 hover:text-gold transition-colors font-light">
+                <a key={link.label} href={link.href} className="block text-small text-white/40 hover:text-gold transition-colors font-light">
                   {link.label}
                 </a>
               ))}
@@ -42,26 +42,26 @@ export default function Footer() {
 
           {/* Legal */}
           <div className="text-left space-y-3">
-            <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Info</span>
+            <span className="text-micro font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Info</span>
             <div className="space-y-1.5">
-              <a href="/privacy" className="block text-[11px] text-white/40 hover:text-gold transition-colors font-light">Privacy</a>
-              <a href="/terms" className="block text-[11px] text-white/40 hover:text-gold transition-colors font-light">Terms</a>
-              <a href="/contact" className="block text-[11px] text-white/40 hover:text-gold transition-colors font-light">Contact</a>
+              <a href="/privacy" className="block text-small text-white/40 hover:text-gold transition-colors font-light">Privacy</a>
+              <a href="/terms" className="block text-small text-white/40 hover:text-gold transition-colors font-light">Terms</a>
+              <a href="/contact" className="block text-small text-white/40 hover:text-gold transition-colors font-light">Contact</a>
             </div>
           </div>
 
           {/* Connect */}
           <div className="text-left space-y-3">
-            <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Journey</span>
+            <span className="text-micro font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Journey</span>
             <div className="space-y-1.5">
               {['Varanasi', 'Kerala', 'Ladakh', 'Rajasthan'].map(dest => (
-                <a key={dest} href="#explore" className="block text-[11px] text-white/40 hover:text-gold transition-colors font-light">{dest}</a>
+                <a key={dest} href="#explore" className="block text-small text-white/40 hover:text-gold transition-colors font-light">{dest}</a>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-[9px] font-mono uppercase tracking-wider text-white/25">
+        <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-micro font-mono uppercase tracking-wider text-white/25">
           <span>&copy; {year} travebie.ai — all journeys reserved</span>
           <span className="flex items-center gap-1">crafted with <Heart className="w-3 h-3 text-coral inline" /> for explorers</span>
         </div>

@@ -41,7 +41,7 @@ export default class ErrorBoundary extends Component<Props, State> {
           </p>
           <button
             onClick={() => { this.setState({ hasError: false }); window.location.reload(); }}
-            className="px-5 py-2.5 bg-gold text-night font-bold text-[10px] uppercase tracking-wider rounded-xl hover:bg-gold/90 transition-all cursor-pointer min-h-[40px] border-none"
+            className="px-5 py-2.5 bg-gold text-night font-bold text-micro uppercase tracking-wider rounded-xl hover:bg-gold/90 transition-all cursor-pointer min-h-[40px] border-none"
           >
             Retry Action
           </button>

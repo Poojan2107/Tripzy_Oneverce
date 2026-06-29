@@ -216,10 +216,10 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
   ] as const;
 
   return (
-    <div className="w-full min-h-dvh bg-sand pt-10 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans antialiased [-webkit-tap-highlight-color]:transparent selection:bg-gold/20 selection:text-night">
+    <div className="w-full min-h-dvh bg-background pt-10 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans antialiased [-webkit-tap-highlight-color]:transparent selection:bg-gold/20 selection:text-night">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 pb-6 border-b border-border">
         <div>
-          <span className="text-[10px] font-mono font-bold text-gold uppercase tracking-[0.25em] bg-gold/10 px-3 py-1.5 rounded-full border border-gold/20">admin panel</span>
+          <span className="text-micro font-mono font-bold text-gold uppercase tracking-[0.25em] bg-gold/10 px-3 py-1.5 rounded-full border border-gold/20">admin panel</span>
           <h1 className="text-3xl font-light font-display lowercase tracking-tight text-night mt-3">travebie admin</h1>
           <p className="text-xs text-stone mt-1">Manage destinations, experiences, and view analytics</p>
         </div>
@@ -227,7 +227,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
           {tabs.map(tab => {
             const Icon = tab.icon;
             return (
-              <button key={tab.id} onClick={() => { setActiveTab(tab.id); setSearchTerm(''); }} className={`relative px-3 sm:px-4 py-3 rounded-xl text-[10px] font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 whitespace-nowrap touch-action-manipulation select-none min-h-[44px] transition-colors duration-200 ${activeTab === tab.id ? 'text-white' : 'text-stone hover:text-night hover:bg-cream/30'}`}>
+              <button key={tab.id} onClick={() => { setActiveTab(tab.id); setSearchTerm(''); }} className={`relative px-3 sm:px-4 py-3 rounded-xl text-micro font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 whitespace-nowrap touch-action-manipulation select-none min-h-[44px] transition-colors duration-200 ${activeTab === tab.id ? 'text-white' : 'text-stone hover:text-night hover:bg-secondary-surface/30'}`}>
                 {activeTab === tab.id && (
                   <motion.div layoutId="adminTabActive" className="absolute inset-0 bg-gold rounded-xl shadow-md shadow-gold/20" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
                 )}

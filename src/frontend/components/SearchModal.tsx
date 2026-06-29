@@ -157,7 +157,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                       if (selectedTag === tag) { setSelectedTag(null); setQuery(''); }
                       else { setSelectedTag(tag); trackEvent('search_tag_click', { tag }); }
                     }}
-                      className={`px-3 py-2 rounded-full text-[10px] font-mono uppercase tracking-wider transition-colors duration-200 border min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'bg-background text-muted/70 border-border/40'}`}
+                      className={`px-3 py-2 rounded-full text-micro font-mono uppercase tracking-wider transition-colors duration-200 border min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'bg-background text-muted/70 border-border/40'}`}
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       {tag}
                     </motion.button>
@@ -171,11 +171,11 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                 <motion.div key="suggestions" className="p-4 pt-3 space-y-4 text-left border-b border-border/30 shrink-0"
                   initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }}>
                   <div className="space-y-2">
-                    <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 font-bold">Suggested Chapters</span>
+                    <span className="text-micro font-mono uppercase tracking-widest text-muted/50 font-bold">Suggested Chapters</span>
                     <div className="flex flex-wrap gap-1.5">
                       {SUGGESTED_DESTINATIONS.map((dest) => (
                         <motion.button key={dest} onClick={() => { setQuery(dest); setSelectedTag(null); trackEvent('search_suggestion_click', { destination: dest }); }}
-                          className="px-3 py-1.5 bg-background text-[10px] font-semibold text-muted/80 border border-border/40 rounded-lg cursor-pointer"
+                          className="px-3 py-1.5 bg-background text-micro font-semibold text-muted/80 border border-border/40 rounded-lg cursor-pointer"
                           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                           {dest}
                         </motion.button>
@@ -184,11 +184,11 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                   </div>
                   {recentSearches.length > 0 && (
                     <div className="space-y-2">
-                      <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 font-bold">Recent Searches</span>
+                      <span className="text-micro font-mono uppercase tracking-widest text-muted/50 font-bold">Recent Searches</span>
                       <div className="flex flex-wrap gap-1.5">
                         {recentSearches.map((term) => (
                           <motion.div key={term} onClick={() => setQuery(term)}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-background text-[10px] text-muted/80 border border-border/40 rounded-lg cursor-pointer transition-colors group"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-background text-micro text-muted/80 border border-border/40 rounded-lg cursor-pointer transition-colors group"
                             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                             <Clock className="w-2.5 h-2.5 text-muted/40" />
                             <span>{term}</span>
@@ -219,7 +219,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
               ) : matchedTours.length > 0 ? (
                 <div className="space-y-1">
                   {(query || selectedTag) && (
-                    <div className="px-2 py-1 text-left"><span className="text-[8px] font-mono uppercase tracking-widest text-muted/50">Matched Chapters ({matchedTours.length})</span></div>
+                    <div className="px-2 py-1 text-left"><span className="text-micro font-mono uppercase tracking-widest text-muted/50">Matched Chapters ({matchedTours.length})</span></div>
                   )}
                   <AnimatePresence>
                     {matchedTours.map((tour, index) => {
@@ -233,15 +233,15 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                             <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5 text-[9px] text-muted/50 font-mono uppercase tracking-wider">
+                            <div className="flex items-center gap-1.5 text-micro text-muted/50 font-mono uppercase tracking-wider">
                               <MapPin className="w-2.5 h-2.5 text-teal" /><span>{tour.location}</span>
                             </div>
                             <p className={`text-xs font-semibold text-night truncate transition-colors ${isFocused ? 'text-teal' : 'group-hover:text-teal'}`}>{tour.title}</p>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <div className="flex items-center gap-1"><Star className="w-2.5 h-2.5 text-gold fill-gold" /><span className="text-[9px] font-bold text-muted/60">{parseFloat(tour.rating.toFixed(1))}</span></div>
-                              {tour.moods?.length > 0 && <span className="text-[9px] font-mono text-muted/40 uppercase">{tour.moods.slice(0, 1).join('')}</span>}
+                              <div className="flex items-center gap-1"><Star className="w-2.5 h-2.5 text-gold fill-gold" /><span className="text-micro font-bold text-muted/60">{parseFloat(tour.rating.toFixed(1))}</span></div>
+                              {tour.moods?.length > 0 && <span className="text-micro font-mono text-muted/40 uppercase">{tour.moods.slice(0, 1).join('')}</span>}
                               <span className="text-muted/20">·</span>
-                              <span className="text-[9px] font-mono text-muted/50">{tour.duration}</span>
+                              <span className="text-micro font-mono text-muted/50">{tour.duration}</span>
                             </div>
                           </div>
                         </motion.div>
@@ -258,12 +258,12 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
               )}
             </div>
 
-            <div className="px-4 py-3 border-t border-border/30 flex items-center justify-between text-[9px] text-muted/50 font-mono uppercase tracking-wider shrink-0 bg-surface">
+            <div className="px-4 py-3 border-t border-border/30 flex items-center justify-between text-micro text-muted/50 font-mono uppercase tracking-wider shrink-0 bg-surface">
               <span className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-gold" /><span>Search destinations</span></span>
               <span className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-[8px]">↑↓ navigate</span>
-                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-[8px]">enter select</span>
-                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-[8px]">esc close</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-micro">↑↓ navigate</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-micro">enter select</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-micro">esc close</span>
               </span>
             </div>
           </motion.div>

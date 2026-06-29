@@ -5,7 +5,7 @@ import { Tour } from '../../types';
 
 const statItems = [
   { key: 'duration', icon: Clock, color: 'text-gold', label: 'Duration', get: (t: Tour) => t.duration },
-  { key: 'group', icon: User, color: 'text-ocean', label: 'Group', get: (t: Tour) => t.groupSize },
+  { key: 'group', icon: User, color: 'text-teal', label: 'Group', get: (t: Tour) => t.groupSize },
   { key: 'difficulty', icon: Zap, color: 'text-sage', label: 'Difficulty', get: (t: Tour) => t.difficulty },
   { key: 'bestTime', icon: Calendar, color: 'text-coral', label: 'Best Time', get: (t: Tour) => t.bestSeason || 'Oct – Mar' },
   { key: 'rating', icon: Star, color: 'fill-gold text-gold', label: 'Rating', get: (t: Tour) => `${parseFloat(t.rating.toFixed(1))} (${t.reviewsCount} reviews)` },
@@ -28,7 +28,7 @@ export default function StatsBar({ tour }: { tour: Tour }) {
                 <div className="flex items-center gap-2 shrink-0">
                   {Icon ? <Icon className={`w-4 h-4 ${s.color}`} /> : <span className="text-lg" style={{ lineHeight: 1 }}>₹</span>}
                   <div>
-                    <p className="text-[9px] font-mono uppercase tracking-wider text-muted/50">{s.label}</p>
+                    <p className="text-micro font-mono uppercase tracking-wider text-muted/50">{s.label}</p>
                     <p className="text-xs font-bold text-night">{s.get(tour)}</p>
                   </div>
                 </div>

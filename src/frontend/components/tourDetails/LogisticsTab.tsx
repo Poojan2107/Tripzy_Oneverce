@@ -29,8 +29,8 @@ export default function LogisticsTab({ tour, onPlanClick }: LogisticsTabProps) {
           </div>
         </div>
         <div className="space-y-2.5">
-          <button onClick={onPlanClick} className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-[#148596] to-[#286F98] text-xs font-bold uppercase tracking-[0.15em] text-white hover:shadow-[0_4px_15px_rgba(20,133,150,0.3)] transition-all cursor-pointer hover:scale-101 border-none min-h-[46px]">
-            <Sparkles className="w-4 h-4 text-[#FDB62F] animate-pulse" />
+          <button onClick={onPlanClick} className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-teal to-teal/60 text-micro font-bold uppercase tracking-[0.15em] text-white hover:shadow-[0_4px_15px_rgba(24,182,201,0.3)] transition-all cursor-pointer hover:scale-101 border-none min-h-[46px]">
+            <Sparkles className="w-4 h-4 text-gold animate-pulse" />
             <span>Generate AI Journey Plan</span>
           </button>
         </div>
@@ -38,29 +38,29 @@ export default function LogisticsTab({ tour, onPlanClick }: LogisticsTabProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="p-4 rounded-2xl bg-white border border-border">
-          <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Best Season</span>
+          <span className="text-micro font-mono uppercase tracking-wider text-muted/50 block mb-2">Best Season</span>
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-coral" />
             <span className="text-xs font-bold text-night">{tour.bestSeason || 'Oct – Mar'}</span>
           </div>
         </div>
         <div className="p-4 rounded-2xl bg-white border border-border">
-          <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Difficulty</span>
+          <span className="text-micro font-mono uppercase tracking-wider text-muted/50 block mb-2">Difficulty</span>
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-sage" />
             <span className="text-xs font-bold text-night">{tour.difficulty}</span>
           </div>
         </div>
         <div className="p-4 rounded-2xl bg-white border border-border">
-          <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Group Size</span>
+          <span className="text-micro font-mono uppercase tracking-wider text-muted/50 block mb-2">Group Size</span>
           <div className="flex items-center gap-2">
-            <User className="w-4 h-4 text-ocean" />
+            <User className="w-4 h-4 text-teal" />
             <span className="text-xs font-bold text-night">{tour.groupSize}</span>
           </div>
         </div>
         {tour.budgetRange && (
           <div className="p-4 rounded-2xl bg-white border border-border">
-            <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Budget Guide</span>
+            <span className="text-micro font-mono uppercase tracking-wider text-muted/50 block mb-2">Budget Guide</span>
             <span className="text-xs font-bold text-night">{tour.budgetRange}</span>
           </div>
         )}

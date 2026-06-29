@@ -18,7 +18,7 @@ export function getMoodLabel(id: string): string {
 const DiscoveryMap = dynamic(() => import('./map/DiscoveryMap'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full bg-[#F2ECE3] animate-pulse flex flex-col items-center justify-center">
+    <div className="w-full h-full bg-secondary-surface animate-pulse flex flex-col items-center justify-center">
       <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted/60">Loading Atlas Map...</span>
     </div>
   )
@@ -75,7 +75,7 @@ export default function ExploreView({
   }, []);
 
   return (
-    <div className="h-[calc(100dvh-56px)] md:h-[calc(100dvh-76px)] min-h-0 bg-[#F8F4EE] flex flex-col md:flex-row select-none relative overflow-hidden text-night">
+    <div className="h-[calc(100dvh-56px)] md:h-[calc(100dvh-76px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
       {/* Mobile toggle */}
       <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-warm-gray/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         {(['list', 'map'] as const).map(view => {

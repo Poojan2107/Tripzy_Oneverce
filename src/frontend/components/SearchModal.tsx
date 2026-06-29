@@ -140,10 +140,10 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                   <input ref={inputRef} type="text" autoFocus placeholder="Search destinations, regional chapters..."
                     value={query} onChange={e => { setQuery(e.target.value); if (selectedTag) setSelectedTag(null); }}
                     onKeyDown={handleInputKeyDown}
-                    className="w-full pl-10 pr-4 py-3 bg-[#F8F4EE] text-night text-sm md:text-base rounded-xl border border-warm-gray/40 outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all duration-200 placeholder:text-muted/30 font-light" />
+                    className="w-full pl-10 pr-4 py-3 bg-background text-night text-sm md:text-base rounded-xl border border-warm-gray/40 outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all duration-200 placeholder:text-muted/30 font-light" />
                 </div>
                 <motion.button onClick={onClose} aria-label="Close search"
-                  className="md:hidden p-3 rounded-xl hover:bg-[#F2ECE3] transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center border border-warm-gray/40"
+                  className="md:hidden p-3 rounded-xl hover:bg-secondary-surface transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center border border-warm-gray/40"
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <X className="w-4 h-4 text-muted/60" />
                 </motion.button>
@@ -157,7 +157,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                       if (selectedTag === tag) { setSelectedTag(null); setQuery(''); }
                       else { setSelectedTag(tag); trackEvent('search_tag_click', { tag }); }
                     }}
-                      className={`px-3 py-2 rounded-full text-[10px] font-mono uppercase tracking-wider transition-colors duration-200 border min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'bg-[#F8F4EE] text-muted/70 border-warm-gray/40'}`}
+                      className={`px-3 py-2 rounded-full text-[10px] font-mono uppercase tracking-wider transition-colors duration-200 border min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'bg-background text-muted/70 border-warm-gray/40'}`}
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       {tag}
                     </motion.button>
@@ -175,7 +175,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                     <div className="flex flex-wrap gap-1.5">
                       {SUGGESTED_DESTINATIONS.map((dest) => (
                         <motion.button key={dest} onClick={() => { setQuery(dest); setSelectedTag(null); trackEvent('search_suggestion_click', { destination: dest }); }}
-                          className="px-3 py-1.5 bg-[#F8F4EE] text-[10px] font-semibold text-muted/80 border border-warm-gray/40 rounded-lg cursor-pointer"
+                          className="px-3 py-1.5 bg-background text-[10px] font-semibold text-muted/80 border border-warm-gray/40 rounded-lg cursor-pointer"
                           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                           {dest}
                         </motion.button>
@@ -188,12 +188,12 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                       <div className="flex flex-wrap gap-1.5">
                         {recentSearches.map((term) => (
                           <motion.div key={term} onClick={() => setQuery(term)}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#F8F4EE] text-[10px] text-muted/80 border border-warm-gray/40 rounded-lg cursor-pointer transition-colors group"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-background text-[10px] text-muted/80 border border-warm-gray/40 rounded-lg cursor-pointer transition-colors group"
                             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                             <Clock className="w-2.5 h-2.5 text-muted/40" />
                             <span>{term}</span>
                             <button onClick={(e) => removeRecentSearch(e, term)}
-                              className="p-0.5 rounded-full hover:bg-[#F2ECE3] text-muted/40 hover:text-coral shrink-0 ml-1 transition-colors"
+                              className="p-0.5 rounded-full hover:bg-secondary-surface text-muted/40 hover:text-coral shrink-0 ml-1 transition-colors"
                               aria-label={`Remove recent search ${term}`}>
                               <X className="w-2 h-2" />
                             </button>
@@ -210,9 +210,9 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
               {isFiltering ? (
                 <div className="space-y-2 py-2">
                   {[1, 2, 3].map((n) => (
-                    <div key={n} className="flex gap-3 p-3 rounded-xl bg-[#F8F4EE] animate-pulse">
-                      <div className="w-12 h-12 rounded-lg bg-[#E7DED3] shrink-0" />
-                      <div className="flex-1 space-y-2"><div className="w-1/4 h-3 bg-[#E7DED3] rounded" /><div className="w-3/4 h-4 bg-[#E7DED3] rounded" /><div className="w-1/2 h-3 bg-[#E7DED3] rounded" /></div>
+                    <div key={n} className="flex gap-3 p-3 rounded-xl bg-background animate-pulse">
+                      <div className="w-12 h-12 rounded-lg bg-border shrink-0" />
+                      <div className="flex-1 space-y-2"><div className="w-1/4 h-3 bg-border rounded" /><div className="w-3/4 h-4 bg-border rounded" /><div className="w-1/2 h-3 bg-border rounded" /></div>
                     </div>
                   ))}
                 </div>
@@ -228,8 +228,8 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                         <motion.div key={tour.id} layout
                           initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.03, type: "spring", stiffness: 100, damping: 20 }}
                           onClick={() => handleSelect(tour)}
-                          className={`flex gap-3 p-3 rounded-xl cursor-pointer group transition-colors duration-200 text-left border ${isFocused ? 'bg-[#F8F4EE] border-teal/30 shadow-sm' : 'bg-transparent border-transparent hover:bg-[#F8F4EE]'}`}>
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#F2ECE3] shrink-0 relative">
+                          className={`flex gap-3 p-3 rounded-xl cursor-pointer group transition-colors duration-200 text-left border ${isFocused ? 'bg-background border-teal/30 shadow-sm' : 'bg-transparent border-transparent hover:bg-background'}`}>
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-secondary-surface shrink-0 relative">
                             <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -258,12 +258,12 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
               )}
             </div>
 
-            <div className="px-4 py-3 border-t border-warm-gray/30 flex items-center justify-between text-[9px] text-muted/50 font-mono uppercase tracking-wider shrink-0 bg-[#FFFDF9]">
+            <div className="px-4 py-3 border-t border-warm-gray/30 flex items-center justify-between text-[9px] text-muted/50 font-mono uppercase tracking-wider shrink-0 bg-surface">
               <span className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-gold" /><span>Search destinations</span></span>
               <span className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 bg-[#FFFDF9] border border-warm-gray/40 rounded text-[8px]">↑↓ navigate</span>
-                <span className="px-1.5 py-0.5 bg-[#FFFDF9] border border-warm-gray/40 rounded text-[8px]">enter select</span>
-                <span className="px-1.5 py-0.5 bg-[#FFFDF9] border border-warm-gray/40 rounded text-[8px]">esc close</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-warm-gray/40 rounded text-[8px]">↑↓ navigate</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-warm-gray/40 rounded text-[8px]">enter select</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-warm-gray/40 rounded text-[8px]">esc close</span>
               </span>
             </div>
           </motion.div>

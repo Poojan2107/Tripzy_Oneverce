@@ -197,7 +197,7 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
             <button type="button" onClick={() => actions.setOpen(false)} className="flex-1 py-3.5 rounded-xl bg-white border border-warm-gray text-stone hover:bg-cream/30 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center touch-action-manipulation select-none">
               cancel
             </button>
-            <button type="submit" className="flex-1 py-3.5 rounded-xl bg-gold text-white hover:bg-gold-light text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center shadow-md">
+            <button type="submit" className="flex-1 py-3.5 rounded-xl bg-gold text-night hover:bg-gold/90 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center shadow-md">
               save destination
             </button>
           </div>

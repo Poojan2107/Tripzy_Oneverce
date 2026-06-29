@@ -75,7 +75,7 @@ export default function GlassNavbar({
         </motion.button>
 
         <motion.div className={`flex items-center gap-0.5 rounded-lg px-1 py-1 border ${
-          isTransparent ? 'bg-white/[0.06] border-white/10' : 'bg-[#F2ECE3]/60 border-warm-gray/30'
+          isTransparent ? 'bg-white/[0.06] border-white/10' : 'bg-secondary-surface/60 border-border/40'
         }`} layout>
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -86,7 +86,7 @@ export default function GlassNavbar({
                   isActive
                     ? 'text-gold bg-transparent border-none'
                     : isTransparent ? 'text-white/70 hover:text-white hover:bg-white/10'
-                      : 'text-muted/80 hover:text-night hover:bg-[#F2ECE3]'
+                      : 'text-muted/80 hover:text-night hover:bg-secondary-surface'
                 }`}
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
               >
@@ -111,7 +111,7 @@ export default function GlassNavbar({
           <motion.button onClick={onSearchClick}
             className={`p-3 rounded-lg transition-colors cursor-pointer ${
               isTransparent ? 'text-white/70 hover:text-white hover:bg-white/10'
-                : 'text-muted/80 hover:text-night hover:bg-[#F2ECE3]'
+                : 'text-muted/80 hover:text-night hover:bg-secondary-surface'
             }`}
             whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
             <Search className="w-4 h-4" />

@@ -32,7 +32,7 @@ export default async function SharedPassportPage(props: PageProps) {
 
   if (!res.success || !res.data) {
     return (
-      <div className="w-full min-h-[100dvh] bg-[#F8F4EE] text-night flex flex-col items-center justify-center p-6 select-none">
+      <div className="w-full min-h-[100dvh] bg-background text-night flex flex-col items-center justify-center p-6 select-none">
         <Compass className="w-12 h-12 text-gold animate-spin mb-4" />
         <h1 className="text-xl font-display font-light lowercase mb-2">passport not found</h1>
         <p className="text-xs text-muted mb-6">This explorer passport does not exist or has been made private.</p>
@@ -132,7 +132,7 @@ export default async function SharedPassportPage(props: PageProps) {
     : '2026';
 
   return (
-    <div className="w-full min-h-[100dvh] bg-[#F8F4EE] text-night font-sans flex flex-col pb-24">
+    <div className="w-full min-h-[100dvh] bg-background text-night font-sans flex flex-col pb-24">
       {/* Header */}
       <header className="w-full bg-white border-b border-warm-gray/30 py-4 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-80">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
@@ -161,7 +161,7 @@ export default async function SharedPassportPage(props: PageProps) {
                 {user.image ? (
                   <img src={user.image} alt={user.name || 'Avatar'} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full rounded-full bg-[#F8F4EE] flex items-center justify-center text-night/60 text-xl font-bold font-mono">
+                  <div className="w-full h-full rounded-full bg-background flex items-center justify-center text-night/60 text-xl font-bold font-mono">
                     {user.name ? user.name[0].toUpperCase() : 'AV'}
                   </div>
                 )}
@@ -252,7 +252,7 @@ export default async function SharedPassportPage(props: PageProps) {
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex gap-2">
-                        <span className="text-[8px] font-mono font-bold text-night bg-[#F8F4EE] px-2.5 py-1 rounded-full uppercase tracking-wider border border-warm-gray/30">{durationDays} Days</span>
+                        <span className="text-[8px] font-mono font-bold text-night bg-background px-2.5 py-1 rounded-full uppercase tracking-wider border border-border/40">{durationDays} Days</span>
                         <span className="text-[8px] font-mono font-bold text-gold bg-gold/15 border border-gold/30 px-2.5 py-1 rounded-full uppercase tracking-wider">{companionLabel}</span>
                       </div>
                     </div>
@@ -292,7 +292,7 @@ export default async function SharedPassportPage(props: PageProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {wishlistTours.map((tour: any) => (
                 <div key={tour.id} className="bg-white border border-warm-gray/40 p-5 pb-6 rounded-3xl flex flex-col justify-between text-left shadow-card">
-                  <div className="relative aspect-[3/2] rounded-2xl overflow-hidden bg-[#F8F4EE] mb-4">
+                  <div className="relative aspect-[3/2] rounded-2xl overflow-hidden bg-background mb-4">
                     <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover" />
                   </div>
                   <div className="space-y-2">

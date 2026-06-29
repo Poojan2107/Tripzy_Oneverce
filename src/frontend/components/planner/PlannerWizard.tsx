@@ -172,7 +172,7 @@ export default function PlannerWizard({
                         onClick={() => onTravelersChange(opt.id)}
                         className={`p-3 rounded-xl border text-left cursor-pointer flex items-center gap-3 outline-none transition-all duration-300 ${
                           isSelected
-                            ? 'bg-[#F2ECE3] border-gold text-night shadow-sm'
+                            ? 'bg-secondary-surface border-gold text-night shadow-sm'
                             : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'
                         }`}
                       >
@@ -202,7 +202,7 @@ export default function PlannerWizard({
                         onClick={() => onDurationChange(opt.id)}
                         className={`py-2 px-1 rounded-xl border text-center cursor-pointer flex flex-col justify-center items-center outline-none transition-all duration-300 min-h-[54px] ${
                           isSelected
-                            ? 'bg-[#F2ECE3] border-gold text-night shadow-sm'
+                            ? 'bg-secondary-surface border-gold text-night shadow-sm'
                             : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'
                         }`}
                       >
@@ -253,7 +253,7 @@ export default function PlannerWizard({
               className={`px-8 py-3.5 rounded-full font-bold text-[10px] uppercase tracking-[0.2em] shadow-md transition-all duration-300 inline-flex items-center gap-2 cursor-pointer border-none min-h-[46px] ${
                 isFormValid && !generating
                   ? 'bg-night text-white hover:bg-gold hover:text-night hover:scale-102 shadow-lg'
-                  : 'bg-[#F2ECE3] text-muted/40 cursor-not-allowed'
+                  : 'bg-secondary-surface text-muted/40 cursor-not-allowed'
               }`}
             >
               {generating ? (

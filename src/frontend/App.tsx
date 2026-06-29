@@ -21,7 +21,7 @@ import HomeView from './components/HomeView';
 const AiPlannerView = dynamic(() => import('./components/AiPlannerView'), {
   ssr: false,
   loading: () => (
-    <div className="min-h-[100dvh] bg-[#F8F4EE] flex items-center justify-center">
+    <div className="min-h-[100dvh] bg-background flex items-center justify-center">
       <div className="w-10 h-10 rounded-full border-2 border-warm-gray/40 border-t-teal animate-spin" />
     </div>
   )
@@ -29,7 +29,7 @@ const AiPlannerView = dynamic(() => import('./components/AiPlannerView'), {
 const TripsWishlistView = dynamic(() => import('./components/TripsWishlistView'), {
   ssr: false,
   loading: () => (
-    <div className="min-h-[100dvh] bg-[#F8F4EE] flex items-center justify-center">
+    <div className="min-h-[100dvh] bg-background flex items-center justify-center">
       <div className="w-10 h-10 rounded-full border-2 border-warm-gray/40 border-t-teal animate-spin" />
     </div>
   )

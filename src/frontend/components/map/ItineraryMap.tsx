@@ -61,7 +61,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
         className: 'itinerary-day-marker',
         html: `
           <div class="relative flex items-center justify-center w-6 h-6 rounded-full ${
-            isActive ? 'bg-[#18B6C9] text-white shadow-[0_0_8px_rgba(24,182,201,0.5)]' : 'bg-white text-[#0E1B26] border border-[#E7DED3]'
+            isActive ? 'bg-teal text-white shadow-[0_0_8px_rgba(24,182,201,0.5)]' : 'bg-white text-night border border-border'
           } font-bold text-[10px] shadow-sm">
             ${index + 1}
           </div>
@@ -72,9 +72,9 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
       const marker = L.marker([lat, lng], { icon: dayMarkerIcon }).addTo(map);
       marker.bindPopup(`
-        <div style="font-family: var(--font-sans), sans-serif; font-size: 11px; color: #0E1B26; padding: 4px;">
+        <div style="font-family: var(--font-sans), sans-serif; font-size: 11px; color: var(--color-night, #0E1B26); padding: 4px;">
           <strong style="font-size: 12px; display: block; margin-bottom: 2px;">Day ${index + 1}: ${day.title}</strong>
-          <span style="color: #64748B; font-size: 10px;">${day.activities?.[0] || 'Activities scheduled'}</span>
+          <span style="color: var(--color-muted, #64748B); font-size: 10px;">${day.activities?.[0] || 'Activities scheduled'}</span>
         </div>
       `, { closeButton: false });
     });

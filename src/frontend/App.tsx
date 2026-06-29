@@ -6,7 +6,6 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { trackPageView, trackWishlistSave, trackDestinationClick } from './utils/analytics';
 import ErrorBoundary from './components/ErrorBoundary';
-import DarkModeToggle from './components/DarkModeToggle';
 
 import { TabType, Tour } from './types';
 import { TOURS_DATA } from './data';
@@ -279,11 +278,10 @@ export default function App() {
           className="flex items-center gap-2 border-none bg-transparent cursor-pointer text-left min-h-[40px]"
         >
           <Compass className="w-5 h-5 text-gold animate-spin-slow" />
-          <span className="font-display text-lg font-bold tracking-tight lowercase text-white">
+          <span className="font-logo text-lg font-bold tracking-tight lowercase text-white">
             travebie<span className="text-gold">.ai</span>
           </span>
         </button>
-        <DarkModeToggle />
       </header>
 
       <main className="w-full flex-grow">

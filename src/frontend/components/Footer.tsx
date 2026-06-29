@@ -14,7 +14,7 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                 <Compass className="w-4 h-4 text-gold" />
               </div>
-              <span className="font-display text-xl text-white font-bold tracking-tight lowercase">
+              <span className="font-logo text-xl text-white font-bold tracking-tight lowercase">
                 travebie<span className="text-gold">.ai</span>
               </span>
             </div>

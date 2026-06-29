@@ -46,7 +46,7 @@ export default function AdminUsersTab({ users, loadingUsers, searchTerm, onSearc
                   <th className="py-4 px-6 text-center text-[10px] font-mono tracking-[0.25em]">Chats</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-warm-gray/60">
+              <tbody className="divide-y divide-border/60">
                 {users.map((u: any) => (
                   <tr key={u.id} className="hover:bg-cream/30 transition-colors">
                     <td className="py-4 px-6">

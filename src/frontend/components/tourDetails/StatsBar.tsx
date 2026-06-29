@@ -32,7 +32,7 @@ export default function StatsBar({ tour }: { tour: Tour }) {
                     <p className="text-xs font-bold text-night">{s.get(tour)}</p>
                   </div>
                 </div>
-                {i < statItems.filter(x => !x.conditional || x.conditional(tour)).length - 1 && <div className="w-px h-8 bg-warm-gray ml-2" />}
+                {i < statItems.filter(x => !x.conditional || x.conditional(tour)).length - 1 && <div className="w-px h-8 bg-border ml-2" />}
               </motion.div>
             );
           })}

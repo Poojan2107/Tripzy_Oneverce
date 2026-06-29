@@ -77,7 +77,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                   <th className="py-4 px-6 text-right text-[10px] font-mono tracking-[0.25em]">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-warm-gray/60">
+              <tbody className="divide-y divide-border/60">
                 {filtered.map((exp) => (
                   <tr key={exp.id} className="hover:bg-cream/30 transition-colors">
                     <td className="py-4 px-6">

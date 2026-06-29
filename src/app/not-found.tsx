@@ -5,7 +5,7 @@ import { Compass } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <motion.div className="w-full min-h-[100dvh] bg-background text-ink font-sans flex flex-col items-center justify-center p-6"
+    <motion.div className="w-full min-h-[100dvh] bg-background text-night font-sans flex flex-col items-center justify-center p-6"
       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 80, damping: 20 }}>
       <motion.div className="w-20 h-20 rounded-full bg-gold/10 flex items-center justify-center mb-6 border border-gold/20"
         initial={{ scale: 0, rotate: -20 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 150, damping: 15, delay: 0.1 }}>

@@ -41,7 +41,7 @@ function MagneticButton({ children, onClick, className }: { children: React.Reac
 
 export default function JourneyCta({ onGoToPlanner, onGoToExplore }: JourneyCtaProps) {
   return (
-    <section className="py-20 md:py-28 bg-cream/30 border-t border-warm-gray/30">
+    <section className="py-20 md:py-28 bg-cream/30 border-t border-border/30">
       <div className="max-w-4xl mx-auto px-6 sm:px-12 md:px-16 text-center">
         <motion.div
           className="relative border border-gold/30 rounded-[32px] p-8 md:p-14 bg-white/60 backdrop-blur-sm overflow-hidden"

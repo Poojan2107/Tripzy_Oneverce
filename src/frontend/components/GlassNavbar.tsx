@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, Search, Sparkles, BookOpen, LogIn, LogOut, Shield } from 'lucide-react';
+import DarkModeToggle from './DarkModeToggle';
 import { TabType } from '../types';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
@@ -39,12 +40,12 @@ export default function GlassNavbar({
 
   const getNavContainerClass = () => {
     if (isTransparent) return 'absolute top-0 left-0 w-full z-50 bg-transparent py-3 px-6';
-    return 'sticky top-0 z-50 bg-[#F8F4EE]/80 backdrop-blur-lg border-b border-warm-gray/30 py-2 px-6';
+    return 'sticky top-0 z-50 bg-[#F8F4EE]/80 backdrop-blur-lg border-b border-border/30 py-2 px-6';
   };
 
   const getInnerClass = () => {
     if (isTransparent) return 'bg-white/[0.07] backdrop-blur-[12px] border-white/10 text-white py-2.5';
-    return 'bg-white/95 border-warm-gray/40 shadow-sm text-night py-2';
+    return 'bg-white/95 border-border/40 shadow-sm text-night py-2';
   };
 
   return (
@@ -107,7 +108,8 @@ export default function GlassNavbar({
           })}
         </motion.div>
 
-        <motion.div className="flex items-center gap-3 shrink-0" layout>
+        <motion.div className="flex items-center gap-2 shrink-0" layout>
+          <DarkModeToggle />
           <motion.button onClick={onSearchClick}
             className={`p-3 rounded-lg transition-colors cursor-pointer ${
               isTransparent ? 'text-white/70 hover:text-white hover:bg-white/10'
@@ -134,10 +136,10 @@ export default function GlassNavbar({
                 <div className="flex items-center gap-2 cursor-pointer">
                   {session.user.image ? (
                     <img src={session.user.image} alt={session.user.name || "User"} loading="lazy"
-                      className={`w-7 h-7 rounded-full object-cover border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${isTransparent ? 'border-white/30' : 'border-warm-gray/50'}`} />
+                      className={`w-7 h-7 rounded-full object-cover border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${isTransparent ? 'border-white/30' : 'border-border/50'}`} />
                   ) : (
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${
-                      isTransparent ? 'bg-white/20 text-white border-white/30' : 'bg-night text-white border-warm-gray/50'
+                      isTransparent ? 'bg-white/20 text-white border-white/30' : 'bg-night text-white border-border/50'
                     }`}>
                       {session.user.name ? session.user.name[0].toUpperCase() : "U"}
                     </div>

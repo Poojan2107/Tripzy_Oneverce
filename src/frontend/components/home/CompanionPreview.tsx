@@ -52,7 +52,7 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
   }, []);
 
   return (
-    <section className="py-20 md:py-28 bg-sand border-t border-warm-gray/20">
+    <section className="py-20 md:py-28 bg-sand border-t border-border/20">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Messaging mockup */}
@@ -63,9 +63,9 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 80, damping: 20 }}
           >
-            <div className="relative border border-warm-gray/30 rounded-[28px] p-5 bg-white/90 backdrop-blur-sm shadow-card overflow-hidden">
+            <div className="relative border border-border/30 rounded-[28px] p-5 bg-white/90 backdrop-blur-sm shadow-card overflow-hidden">
               {/* Chat header */}
-              <div className="flex items-center gap-3 pb-4 mb-4 border-b border-warm-gray/20">
+              <div className="flex items-center gap-3 pb-4 mb-4 border-b border-border/20">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-coral flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
@@ -92,7 +92,7 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
                       <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-left ${
                         msg.role === 'user'
                           ? 'bg-night text-white rounded-br-md'
-                          : 'bg-cream/80 text-night rounded-bl-md border border-warm-gray/20'
+                          : 'bg-cream/80 text-night rounded-bl-md border border-border/20'
                       }`}>
                         <p className={`text-[11px] leading-relaxed font-sans ${msg.role === 'user' ? 'text-white/90' : 'text-night/80'}`}>
                           {msg.role === 'companion' && (
@@ -110,7 +110,7 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
                     animate={{ opacity: 1 }}
                     className="flex justify-start"
                   >
-                    <div className="px-4 py-3 rounded-2xl bg-cream/80 border border-warm-gray/20 rounded-bl-md">
+                    <div className="px-4 py-3 rounded-2xl bg-cream/80 border border-border/20 rounded-bl-md">
                       <div className="flex gap-1">
                         {[0, 1, 2].map(i => (
                           <motion.div key={i} className="w-1.5 h-1.5 rounded-full bg-muted/40"
@@ -125,8 +125,8 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
               </div>
 
               {/* Chat input */}
-              <div className="mt-4 pt-3 border-t border-warm-gray/20 flex items-center gap-2">
-                <div className="flex-1 px-4 py-2.5 rounded-xl bg-cream/60 text-[10px] text-muted/60 text-left cursor-text border border-warm-gray/20">
+              <div className="mt-4 pt-3 border-t border-border/20 flex items-center gap-2">
+                <div className="flex-1 px-4 py-2.5 rounded-xl bg-cream/60 text-[10px] text-muted/60 text-left cursor-text border border-border/20">
                   Tell me about your dream journey...
                 </div>
                 <div className="w-9 h-9 rounded-xl bg-gold flex items-center justify-center">

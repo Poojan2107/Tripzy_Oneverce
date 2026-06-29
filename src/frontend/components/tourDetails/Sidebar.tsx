@@ -16,7 +16,7 @@ const fadeUp = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, tra
 export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
   return (
     <div className="max-lg:static lg:sticky lg:top-24 space-y-4">
-      <motion.div className="p-6 rounded-3xl bg-white border border-warm-gray shadow-card"
+      <motion.div className="p-6 rounded-3xl bg-white border border-border shadow-card"
         variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-1">
@@ -24,9 +24,9 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
             <span className="font-bold text-sm text-night">{parseFloat(tour.rating.toFixed(1))}</span>
             <span className="text-xs text-muted font-light">({tour.reviewsCount} reviews)</span>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-sand border border-warm-gray text-night">{tour.difficulty}</span>
+          <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-sand border border-border text-night">{tour.difficulty}</span>
         </div>
-        <div className="py-4 border-y border-warm-gray/40 mb-5">
+        <div className="py-4 border-y border-border/40 mb-5">
           <span className="text-3xl font-display font-bold text-night">{formatINR(tour.price)}</span>
           <span className="text-xs text-muted font-light ml-1">/ person daily</span>
         </div>
@@ -41,19 +41,19 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
       </motion.div>
 
       {cultural && (
-        <motion.div className="p-5 rounded-3xl bg-white border border-warm-gray shadow-card"
+        <motion.div className="p-5 rounded-3xl bg-white border border-border shadow-card"
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
-          <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-warm-gray/40 pb-2">Destination Snapshot</h3>
+          <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-border/40 pb-2">Destination Snapshot</h3>
           <div className="space-y-3">
             <div>
               <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-1">Best Time</span>
               <span className="text-xs font-bold text-night flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-coral" /> {tour.bestSeason || 'Oct – Mar'}</span>
             </div>
-            <div className="border-t border-warm-gray/30 pt-3">
+            <div className="border-t border-border/30 pt-3">
               <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Must Try</span>
               <p className="text-[10px] text-night/70 font-medium leading-relaxed">{cultural.mustDo[0]}</p>
             </div>
-            <div className="border-t border-warm-gray/30 pt-3">
+            <div className="border-t border-border/30 pt-3">
               <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Local Secret</span>
               <p className="text-[10px] text-night/70 font-medium leading-relaxed">{tour.localSecret}</p>
             </div>
@@ -62,14 +62,14 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
       )}
 
       {tour.reviews.length > 0 && (
-        <motion.div className="p-5 rounded-3xl bg-white border border-warm-gray shadow-card"
+        <motion.div className="p-5 rounded-3xl bg-white border border-border shadow-card"
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }}>
-          <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-warm-gray/40 pb-2">Traveler Notes</h3>
+          <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-border/40 pb-2">Traveler Notes</h3>
           <div className="space-y-4">
             {tour.reviews.slice(0, 2).map((r) => (
-              <div key={r.id} className="space-y-1.5 pb-3 border-b border-warm-gray/20 last:border-0 last:pb-0">
+              <div key={r.id} className="space-y-1.5 pb-3 border-b border-border/20 last:border-0 last:pb-0">
                 <div className="flex items-center gap-2">
-                  <img src={r.avatar} alt={r.author} className="w-7 h-7 rounded-full object-cover border border-warm-gray" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                  <img src={r.avatar} alt={r.author} className="w-7 h-7 rounded-full object-cover border border-border" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
                   <div>
                     <p className="text-xs font-bold text-night">{r.author}</p>
                     <div className="flex items-center gap-0.5">

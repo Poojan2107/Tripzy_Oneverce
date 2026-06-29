@@ -17,7 +17,7 @@ const fadeUp = { hidden: { opacity: 0, y: 8 }, visible: { opacity: 1, y: 0, tran
 
 export default function StatsBar({ tour }: { tour: Tour }) {
   return (
-    <div className="border-b border-warm-gray bg-white">
+    <div className="border-b border-border bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div className="flex items-center gap-6 py-4 overflow-x-auto no-scrollbar"
           variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-20px" }}>

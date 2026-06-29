@@ -21,7 +21,7 @@ export default function StoryTab({ tour, cultural, accentColor }: StoryTabProps)
         {tour.moods && tour.moods.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {tour.moods.map((m) => (
-              <span key={m} className="px-3.5 py-1 rounded-full bg-cream text-night border border-warm-gray text-[10px] font-bold uppercase tracking-wider">{m}</span>
+              <span key={m} className="px-3.5 py-1 rounded-full bg-cream text-night border border-border text-[10px] font-bold uppercase tracking-wider">{m}</span>
             ))}
           </div>
         )}
@@ -32,7 +32,7 @@ export default function StoryTab({ tour, cultural, accentColor }: StoryTabProps)
       </motion.div>
 
       {cultural && (
-        <motion.div variants={fadeUp} className="p-6 rounded-3xl border border-warm-gray bg-white shadow-card space-y-4">
+        <motion.div variants={fadeUp} className="p-6 rounded-3xl border border-border bg-white shadow-card space-y-4">
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-gold" />
             <span className="text-[9px] font-mono uppercase tracking-widest text-muted/60 font-bold">Cultural Context</span>
@@ -54,25 +54,25 @@ export default function StoryTab({ tour, cultural, accentColor }: StoryTabProps)
 
       <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {tour.localSecret && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-sm">
+          <div className="p-4 rounded-2xl bg-white border border-border shadow-sm">
             <span className="text-[8px] font-mono text-coral uppercase tracking-widest font-bold block mb-1.5">Local Secret</span>
             <p className="text-xs text-night/70 font-light leading-relaxed">{tour.localSecret}</p>
           </div>
         )}
         {tour.photographySpot && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-sm">
+          <div className="p-4 rounded-2xl bg-white border border-border shadow-sm">
             <span className="text-[8px] font-mono text-gold uppercase tracking-widest font-bold block mb-1.5">Best Photo Spot</span>
             <p className="text-xs text-night/70 font-light leading-relaxed">{tour.photographySpot}</p>
           </div>
         )}
         {tour.signatureExperience && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-sm">
+          <div className="p-4 rounded-2xl bg-white border border-border shadow-sm">
             <span className="text-[8px] font-mono text-teal uppercase tracking-widest font-bold block mb-1.5">Signature Experience</span>
             <p className="text-xs text-night/70 font-light leading-relaxed">{tour.signatureExperience}</p>
           </div>
         )}
         {tour.budgetRange && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray shadow-sm">
+          <div className="p-4 rounded-2xl bg-white border border-border shadow-sm">
             <span className="text-[8px] font-mono text-ocean uppercase tracking-widest font-bold block mb-1.5">Budget Guide</span>
             <p className="text-xs text-night/70 font-light leading-relaxed">{tour.budgetRange}</p>
           </div>
@@ -80,11 +80,11 @@ export default function StoryTab({ tour, cultural, accentColor }: StoryTabProps)
       </motion.div>
 
       {tour.highlights && tour.highlights.length > 0 && (
-        <motion.div variants={fadeUp} className="border-t border-warm-gray/50 pt-6">
+        <motion.div variants={fadeUp} className="border-t border-border/50 pt-6">
           <h2 className="font-display text-xl text-night font-bold mb-4">Top Highlights</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {tour.highlights.map((h, i) => (
-              <div key={i} className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-warm-gray">
+              <div key={i} className="flex items-center gap-3 p-3.5 rounded-xl bg-white border border-border">
                 <span className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0" style={{ backgroundColor: accentColor }}>{i + 1}</span>
                 <span className="text-xs text-night font-medium">{h}</span>
               </div>

@@ -23,7 +23,7 @@ function Card({ item, index }: { item: typeof items[0]; index: number }) {
   const Icon = item.icon;
   return (
     <motion.div
-      className="group relative p-8 rounded-3xl bg-white/60 backdrop-blur-sm border border-warm-gray/30 card-lift"
+      className="group relative p-8 rounded-3xl bg-white/60 backdrop-blur-sm border border-border/30 card-lift"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -51,7 +51,7 @@ function Card({ item, index }: { item: typeof items[0]; index: number }) {
 
 export default function WhyTravebie() {
   return (
-    <section className="py-12 md:py-16 border-y border-warm-gray/30 bg-white">
+    <section className="py-12 md:py-16 border-y border-border/30 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {items.map((item, i) => <Card key={i} item={item} index={i} />)}

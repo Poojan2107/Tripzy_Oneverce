@@ -113,10 +113,10 @@ function EmptyPassportState({
   }[type];
 
   return (
-    <div className="text-center py-16 bg-white border border-warm-gray/50 rounded-[32px] max-w-lg mx-auto p-8 shadow-card relative overflow-hidden w-full">
+    <div className="text-center py-16 bg-white border border-border/50 rounded-[32px] max-w-lg mx-auto p-8 shadow-card relative overflow-hidden w-full">
       <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.02] to-teal/[0.02] pointer-events-none" />
       
-      <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-[#F8F4EE] rounded-2xl border border-warm-gray/50 transition-transform duration-500 hover:rotate-2">
+      <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-[#F8F4EE] rounded-2xl border border-border/50 transition-transform duration-500 hover:rotate-2">
         {content.illustration}
       </div>
       
@@ -414,19 +414,19 @@ export default function TripsWishlistView({
 
           {/* Enhanced Stats grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 shrink-0 w-full md:w-auto">
-            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-warm-gray/15">
+            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-border/15">
               <span className="block font-display text-2xl font-light text-night leading-none">{savedItineraries.length}</span>
               <span className="text-[7.5px] font-mono uppercase tracking-widest text-muted/60 block mt-1">Journeys</span>
             </div>
-            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-warm-gray/15">
+            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-border/15">
               <span className="block font-display text-2xl font-light text-gold leading-none">{wishlistTours.length}</span>
               <span className="text-[7.5px] font-mono uppercase tracking-widest text-muted/60 block mt-1">Saved Chapters</span>
             </div>
-            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-warm-gray/15">
+            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-border/15">
               <span className="block font-display text-2xl font-light text-coral leading-none">{regionsExplored}</span>
               <span className="text-[7.5px] font-mono uppercase tracking-widest text-muted/60 block mt-1">Regions</span>
             </div>
-            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-warm-gray/15">
+            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-border/15">
               <span className="block font-display text-2xl font-light text-teal leading-none">{daysTraveled}</span>
               <span className="text-[7.5px] font-mono uppercase tracking-widest text-muted/60 block mt-1">Days Traveled</span>
             </div>

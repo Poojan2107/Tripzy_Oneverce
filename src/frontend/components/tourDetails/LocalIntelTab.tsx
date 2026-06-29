@@ -19,7 +19,7 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
         </div>
         <div className="space-y-2">
           {(cultural.mustDo || []).map((item, i) => (
-            <div key={i} className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-warm-gray shadow-soft">
+            <div key={i} className="flex items-start gap-3.5 p-4 rounded-2xl bg-white border border-border shadow-soft">
               <span className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0 mt-0.5" style={{ backgroundColor: accentColor }}>{i + 1}</span>
               <p className="text-xs text-night font-medium leading-relaxed">{item}</p>
             </div>
@@ -65,7 +65,7 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {dayTrips.map((trip, i) => (
-              <div key={i} className="p-4 rounded-2xl bg-white border border-warm-gray shadow-soft text-center">
+              <div key={i} className="p-4 rounded-2xl bg-white border border-border shadow-soft text-center">
                 <span className="text-[8px] font-mono uppercase tracking-widest text-ocean font-bold block mb-1">{trip.type}</span>
                 <p className="text-xs font-bold text-night mb-1">{trip.name}</p>
                 <span className="text-[10px] text-muted font-light">{trip.distance} away</span>
@@ -80,9 +80,9 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
           <h2 className="font-display text-xl text-night font-bold mb-4">Traveler Notes</h2>
           <div className="space-y-4">
             {tour.reviews.map((r) => (
-              <div key={r.id} className="p-5 rounded-2xl bg-white border border-warm-gray shadow-soft">
+              <div key={r.id} className="p-5 rounded-2xl bg-white border border-border shadow-soft">
                 <div className="flex items-center gap-3 mb-3">
-                  <img src={r.avatar} alt={r.author} className="w-8 h-8 rounded-full object-cover border border-warm-gray" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                  <img src={r.avatar} alt={r.author} className="w-8 h-8 rounded-full object-cover border border-border" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
                   <div>
                     <p className="text-xs font-bold text-night">{r.author}</p>
                     <div className="flex items-center gap-0.5">

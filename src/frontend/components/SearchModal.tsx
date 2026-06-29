@@ -130,20 +130,20 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
           variants={overlayVariants} initial="hidden" animate="visible" exit={{ opacity: 0 }}>
           <motion.div onClick={onClose} className="absolute inset-0 bg-black/40 backdrop-blur-sm" variants={overlayVariants} />
 
-          <motion.div ref={modalRef} role="dialog" aria-modal="true" aria-label="Search destinations" className="w-full h-full md:h-auto md:max-w-lg bg-white md:rounded-3xl shadow-elevated border-0 md:border border-warm-gray/50 relative z-10 overflow-hidden flex flex-col text-night"
+          <motion.div ref={modalRef} role="dialog" aria-modal="true" aria-label="Search destinations" className="w-full h-full md:h-auto md:max-w-lg bg-white md:rounded-3xl shadow-elevated border-0 md:border border-border/50 relative z-10 overflow-hidden flex flex-col text-night"
             variants={modalVariants} initial="hidden" animate="visible" exit="exit">
 
-            <div className="p-4 pb-3 border-b border-warm-gray/30 shrink-0">
+            <div className="p-4 pb-3 border-b border-border/30 shrink-0">
               <div className="relative flex items-center gap-2">
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/30" />
                   <input ref={inputRef} type="text" autoFocus placeholder="Search destinations, regional chapters..."
                     value={query} onChange={e => { setQuery(e.target.value); if (selectedTag) setSelectedTag(null); }}
                     onKeyDown={handleInputKeyDown}
-                    className="w-full pl-10 pr-4 py-3 bg-background text-night text-sm md:text-base rounded-xl border border-warm-gray/40 outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all duration-200 placeholder:text-muted/30 font-light" />
+                    className="w-full pl-10 pr-4 py-3 bg-background text-night text-sm md:text-base rounded-xl border border-border/40 outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all duration-200 placeholder:text-muted/30 font-light" />
                 </div>
                 <motion.button onClick={onClose} aria-label="Close search"
-                  className="md:hidden p-3 rounded-xl hover:bg-secondary-surface transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center border border-warm-gray/40"
+                  className="md:hidden p-3 rounded-xl hover:bg-secondary-surface transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center border border-border/40"
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <X className="w-4 h-4 text-muted/60" />
                 </motion.button>
@@ -157,7 +157,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                       if (selectedTag === tag) { setSelectedTag(null); setQuery(''); }
                       else { setSelectedTag(tag); trackEvent('search_tag_click', { tag }); }
                     }}
-                      className={`px-3 py-2 rounded-full text-[10px] font-mono uppercase tracking-wider transition-colors duration-200 border min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'bg-background text-muted/70 border-warm-gray/40'}`}
+                      className={`px-3 py-2 rounded-full text-[10px] font-mono uppercase tracking-wider transition-colors duration-200 border min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'bg-background text-muted/70 border-border/40'}`}
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       {tag}
                     </motion.button>
@@ -168,14 +168,14 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
 
             <AnimatePresence mode="wait">
               {!query && !selectedTag && (
-                <motion.div key="suggestions" className="p-4 pt-3 space-y-4 text-left border-b border-warm-gray/30 shrink-0"
+                <motion.div key="suggestions" className="p-4 pt-3 space-y-4 text-left border-b border-border/30 shrink-0"
                   initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }}>
                   <div className="space-y-2">
                     <span className="text-[8px] font-mono uppercase tracking-widest text-muted/50 font-bold">Suggested Chapters</span>
                     <div className="flex flex-wrap gap-1.5">
                       {SUGGESTED_DESTINATIONS.map((dest) => (
                         <motion.button key={dest} onClick={() => { setQuery(dest); setSelectedTag(null); trackEvent('search_suggestion_click', { destination: dest }); }}
-                          className="px-3 py-1.5 bg-background text-[10px] font-semibold text-muted/80 border border-warm-gray/40 rounded-lg cursor-pointer"
+                          className="px-3 py-1.5 bg-background text-[10px] font-semibold text-muted/80 border border-border/40 rounded-lg cursor-pointer"
                           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                           {dest}
                         </motion.button>
@@ -188,7 +188,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                       <div className="flex flex-wrap gap-1.5">
                         {recentSearches.map((term) => (
                           <motion.div key={term} onClick={() => setQuery(term)}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-background text-[10px] text-muted/80 border border-warm-gray/40 rounded-lg cursor-pointer transition-colors group"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 bg-background text-[10px] text-muted/80 border border-border/40 rounded-lg cursor-pointer transition-colors group"
                             whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                             <Clock className="w-2.5 h-2.5 text-muted/40" />
                             <span>{term}</span>
@@ -258,12 +258,12 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
               )}
             </div>
 
-            <div className="px-4 py-3 border-t border-warm-gray/30 flex items-center justify-between text-[9px] text-muted/50 font-mono uppercase tracking-wider shrink-0 bg-surface">
+            <div className="px-4 py-3 border-t border-border/30 flex items-center justify-between text-[9px] text-muted/50 font-mono uppercase tracking-wider shrink-0 bg-surface">
               <span className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-gold" /><span>Search destinations</span></span>
               <span className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 bg-surface border border-warm-gray/40 rounded text-[8px]">↑↓ navigate</span>
-                <span className="px-1.5 py-0.5 bg-surface border border-warm-gray/40 rounded text-[8px]">enter select</span>
-                <span className="px-1.5 py-0.5 bg-surface border border-warm-gray/40 rounded text-[8px]">esc close</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-[8px]">↑↓ navigate</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-[8px]">enter select</span>
+                <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-[8px]">esc close</span>
               </span>
             </div>
           </motion.div>

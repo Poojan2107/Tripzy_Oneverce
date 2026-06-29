@@ -8,14 +8,14 @@ const fadeUp = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, tra
 
 export default function ContactView() {
   return (
-    <div className="w-full min-h-[100dvh] bg-background text-ink font-sans">
-      <header className="w-full bg-surface border-b border-warm-gray/30 py-4 px-6">
+    <div className="w-full min-h-[100dvh] bg-background text-night font-sans">
+      <header className="w-full bg-surface border-b border-border/30 py-4 px-6">
         <div className="max-w-3xl mx-auto flex items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-gold flex items-center justify-center text-night">
               <Compass className="w-3.5 h-3.5 stroke-[2.5]" />
             </div>
-            <span className="font-display text-lg font-bold text-ink">Travebie</span>
+            <span className="font-display text-lg font-bold text-night">Travebie</span>
           </Link>
         </div>
       </header>
@@ -47,7 +47,7 @@ export default function ContactView() {
             </div>
           </motion.div>
 
-          <motion.div className="bg-cream border border-warm-gray/30 rounded-2xl p-6 space-y-4"
+          <motion.div className="bg-cream border border-border/30 rounded-2xl p-6 space-y-4"
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <h2 className="text-sm font-bold text-night uppercase tracking-wider">Send a Message</h2>
             <p className="text-xs text-muted leading-relaxed">

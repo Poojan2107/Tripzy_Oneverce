@@ -29,7 +29,7 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
       animate={visible ? { y: 0, opacity: 1 } : { y: 80, opacity: 0 }}
       transition={{ type: "spring", stiffness: 200, damping: 25 }}
     >
-      <div className="flex items-center justify-around py-2.5 px-3 rounded-2xl backdrop-blur-lg shadow-elevated border bg-white/95 border-warm-gray/50 text-night">
+      <div className="flex items-center justify-around py-2.5 px-3 rounded-2xl backdrop-blur-lg shadow-elevated border bg-white/95 border-border/50 text-night">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = currentTab === tab.id;

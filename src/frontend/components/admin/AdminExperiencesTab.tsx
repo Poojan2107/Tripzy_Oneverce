@@ -43,7 +43,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
             placeholder="Search experiences..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 sm:py-3 rounded-xl bg-white border border-warm-gray text-base text-ink placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
+            className="w-full pl-10 pr-4 py-3 sm:py-3 rounded-xl bg-white border border-border text-base text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors"
           />
         </div>
         <button
@@ -55,20 +55,20 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
         </button>
       </div>
 
-      <div className="hidden sm:block bg-white border border-warm-gray rounded-3xl overflow-hidden shadow-card">
+      <div className="hidden sm:block bg-white border border-border rounded-3xl overflow-hidden shadow-card">
         {loadingExperiences ? (
           <div className="text-center py-12 text-stone text-xs">Loading experiences...</div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 text-stone">
             <Sparkles className="w-12 h-12 mx-auto stroke-[1.2] mb-3 text-stone/40" />
-            <p className="text-sm font-medium text-ink">No experiences registered</p>
+            <p className="text-sm font-medium text-night">No experiences registered</p>
             <p className="text-xs mt-1">Create experience nodes to enrich your AI recommendations.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-xs">
               <thead>
-                <tr className="bg-sand text-stone uppercase font-bold tracking-wider border-b border-warm-gray">
+                <tr className="bg-sand text-stone uppercase font-bold tracking-wider border-b border-border">
                   <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Experience Node</th>
                   <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Icon</th>
                   <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Budget Target</th>
@@ -83,14 +83,14 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         {exp.featuredImage ? (
-                          <img src={exp.featuredImage} alt={exp.name} loading="lazy" decoding="async" className="w-10 h-10 rounded-lg object-cover border border-warm-gray shrink-0" />
+                          <img src={exp.featuredImage} alt={exp.name} loading="lazy" decoding="async" className="w-10 h-10 rounded-lg object-cover border border-border shrink-0" />
                         ) : (
-                          <div className="w-10 h-10 rounded-lg bg-cream flex items-center justify-center shrink-0 border border-warm-gray">
+                          <div className="w-10 h-10 rounded-lg bg-cream flex items-center justify-center shrink-0 border border-border">
                             <Sparkles className="w-4 h-4 text-stone" />
                           </div>
                         )}
                         <div>
-                          <p className="font-medium text-ink text-sm">{exp.name}</p>
+                          <p className="font-medium text-night text-sm">{exp.name}</p>
                           <p className="text-[10px] text-stone mt-0.5 font-mono">{exp.slug}</p>
                         </div>
                       </div>
@@ -106,7 +106,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                       )}
                     </td>
                     <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
-                      <button onClick={() => onEdit(exp)} className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-warm-gray/60 touch-action-manipulation select-none" title="Edit">
+                      <button onClick={() => onEdit(exp)} className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-border/60 touch-action-manipulation select-none" title="Edit">
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button onClick={() => onDelete(exp.id, exp.name)} className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200 touch-action-manipulation select-none" title="Delete">
@@ -127,19 +127,19 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
         ) : filtered.length === 0 ? (
           <div className="text-center py-12 text-stone">
             <Sparkles className="w-10 h-10 mx-auto stroke-[1.2] mb-2 text-stone/40" />
-            <p className="text-sm font-medium text-ink">No experiences registered</p>
+            <p className="text-sm font-medium text-night">No experiences registered</p>
           </div>
         ) : (
           filtered.map((exp) => (
-            <div key={exp.id} className="bg-white border border-warm-gray rounded-2xl p-4 shadow-card">
+            <div key={exp.id} className="bg-white border border-border rounded-2xl p-4 shadow-card">
               <div className="flex items-start gap-3">
                 {exp.featuredImage ? (
-                  <img src={exp.featuredImage} alt={exp.name} loading="lazy" decoding="async" className="w-14 h-14 rounded-xl object-cover border border-warm-gray shrink-0" />
+                  <img src={exp.featuredImage} alt={exp.name} loading="lazy" decoding="async" className="w-14 h-14 rounded-xl object-cover border border-border shrink-0" />
                 ) : (
-                  <div className="w-14 h-14 rounded-xl bg-cream flex items-center justify-center shrink-0 border border-warm-gray"><Sparkles className="w-5 h-5 text-stone" /></div>
+                  <div className="w-14 h-14 rounded-xl bg-cream flex items-center justify-center shrink-0 border border-border"><Sparkles className="w-5 h-5 text-stone" /></div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-ink text-sm truncate">{exp.name}</p>
+                  <p className="font-medium text-night text-sm truncate">{exp.name}</p>
                   <p className="text-[10px] text-stone mt-0.5 font-mono truncate">{exp.slug}</p>
                   <div className="flex gap-2 mt-2 flex-wrap">
                     <span className="text-[10px] text-stone">{exp.estimatedBudget ? formatINR(exp.estimatedBudget) : 'Flexible'}</span>
@@ -148,7 +148,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                   </div>
                 </div>
                 <div className="flex gap-2 shrink-0">
-                  <button onClick={() => onEdit(exp)} className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-warm-gray/60" title="Edit">
+                  <button onClick={() => onEdit(exp)} className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-border/60" title="Edit">
                     <Edit3 className="w-3.5 h-3.5" />
                   </button>
                   <button onClick={() => onDelete(exp.id, exp.name)} className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200" title="Delete">

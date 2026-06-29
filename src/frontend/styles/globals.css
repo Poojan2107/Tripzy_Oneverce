@@ -3,7 +3,8 @@
 /* ── TRAVEBIE V3 — Premium Editorial Design System ── */
 @theme {
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display), cursive, serif;
+  --font-display: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-logo: var(--font-logo), cursive, serif;
 
   /* Core backgrounds */
   --color-background: #F8F4EE;
@@ -47,17 +48,6 @@
   --nav-bottom-height: 88px;
 }
 
-/* Dark mode overrides — activated by .dark class on <html> */
-.dark {
-  --color-background: #0E1B26;
-  --color-surface: #132533;
-  --color-night: #DCE5EC;
-  --color-muted: #8FA0AB;
-  --color-border: #1A3142;
-  --color-secondary-surface: #1A3142;
-  --color-stone: #64748B;
-}
-
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -80,10 +70,14 @@
     font-weight: 800;
   }
 
-  /* Prevent faux-bold/faux-light on Pacifico display text */
   .font-display {
     font-family: var(--font-display);
-    font-weight: 400 !important;
+    font-weight: 800;
+  }
+
+  .font-logo {
+    font-family: var(--font-logo);
+    font-weight: 400;
   }
 
   ::selection {

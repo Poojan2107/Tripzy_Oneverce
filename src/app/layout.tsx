@@ -15,7 +15,7 @@ const nunitoSans = Nunito_Sans({
 const pacifico = Pacifico({
   subsets: ["latin"],
   weight: ["400"],
-  variable: "--font-display",
+  variable: "--font-logo",
   display: "swap",
 });
 

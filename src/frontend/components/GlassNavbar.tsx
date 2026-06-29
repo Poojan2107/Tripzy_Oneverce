@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, Search, Sparkles, BookOpen, LogIn, LogOut, Shield } from 'lucide-react';
-import DarkModeToggle from './DarkModeToggle';
 import { TabType } from '../types';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
@@ -68,7 +67,7 @@ export default function GlassNavbar({
             <Compass className="w-4.5 h-4.5 stroke-[1.5] animate-spin-slow" />
           </motion.div>
           <div className="flex flex-col text-left">
-            <span className={`font-display text-[22px] font-bold tracking-tight lowercase leading-tight ${isTransparent ? 'text-white' : 'text-night'}`}>
+            <span className={`font-logo text-[22px] font-bold tracking-tight lowercase leading-tight ${isTransparent ? 'text-white' : 'text-night'}`}>
               travebie<span className="text-gold">.ai</span>
             </span>
             <span className={`text-[8px] font-mono uppercase tracking-[0.2em] mt-0.5 ${isTransparent ? 'text-white/60' : 'text-night/60'}`}>Atlas Vivant</span>
@@ -108,8 +107,7 @@ export default function GlassNavbar({
           })}
         </motion.div>
 
-        <motion.div className="flex items-center gap-2 shrink-0" layout>
-          <DarkModeToggle />
+        <motion.div className="flex items-center gap-3 shrink-0" layout>
           <motion.button onClick={onSearchClick}
             className={`p-3 rounded-lg transition-colors cursor-pointer ${
               isTransparent ? 'text-white/70 hover:text-white hover:bg-white/10'

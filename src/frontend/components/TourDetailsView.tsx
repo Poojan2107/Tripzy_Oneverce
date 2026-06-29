@@ -64,9 +64,9 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
       <div className="max-w-7xl mx-auto px-6 mt-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-0">
-            <div className="relative flex gap-1.5 overflow-x-auto no-scrollbar pb-4 border-b border-warm-gray/50 mb-8">
+            <div className="relative flex gap-1.5 overflow-x-auto no-scrollbar pb-4 border-b border-border/50 mb-8">
               {TABS.map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer border min-h-[40px] transition-all duration-200 ${activeTab === tab.id ? 'text-white border-transparent shadow-sm' : 'text-muted/70 bg-white border-warm-gray/50 hover:border-gold/50 hover:text-night'}`}>
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer border min-h-[40px] transition-all duration-200 ${activeTab === tab.id ? 'text-white border-transparent shadow-sm' : 'text-muted/70 bg-white border-border/50 hover:border-gold/50 hover:text-night'}`}>
                   {activeTab === tab.id && (
                     <motion.span layoutId="tourTabActive" className="absolute inset-0 bg-night rounded-xl" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
                   )}
@@ -141,7 +141,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
 
       <Footer />
 
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-warm-gray shadow-elevated px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom,8px))] flex items-center gap-3">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-border shadow-elevated px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom,8px))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <span className="text-lg font-display font-bold text-night">{formatINR(tour.price)}</span>
           <span className="text-[10px] text-muted font-light ml-1">/ person</span>

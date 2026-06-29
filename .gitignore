@@ -42,3 +42,9 @@ check-*.cjs
 # Backup files
 *.bak
 *.bak.*
+
+# Generated audit / report files
+*_REPORT.md
+*_AUDIT.md
+*_SCORECARD.md
+*_SUMMARY.md

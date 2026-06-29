@@ -33,7 +33,7 @@ export default class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
       return (
-        <div className="w-full min-h-[100dvh] bg-background text-ink flex flex-col items-center justify-center p-6">
+        <div className="w-full min-h-[100dvh] bg-background text-night flex flex-col items-center justify-center p-6">
           <Compass className="w-12 h-12 text-gold mb-4" />
           <h1 className="font-display text-2xl font-light text-night lowercase mb-2">journey interrupted</h1>
           <p className="text-xs text-muted leading-relaxed max-w-xs text-center mb-6">

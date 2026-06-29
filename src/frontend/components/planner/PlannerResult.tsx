@@ -12,7 +12,7 @@ import Footer from '../Footer';
 const ItineraryMap = dynamic(() => import('../map/ItineraryMap'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-52 rounded-2xl bg-white animate-pulse flex items-center justify-center border border-warm-gray/40">
+    <div className="w-full h-52 rounded-2xl bg-white animate-pulse flex items-center justify-center border border-border/40">
       <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted/50">Plotting Route Map...</span>
     </div>
   )
@@ -94,7 +94,7 @@ export default function PlannerResult({
     return (
       <div className="pt-28 pb-32 px-6 max-w-md mx-auto min-h-[100dvh] bg-[#F8F4EE] flex items-center justify-center">
         <motion.div
-          className="text-center p-8 bg-white border border-warm-gray/50 rounded-3xl shadow-sm space-y-4 text-night"
+          className="text-center p-8 bg-white border border-border/50 rounded-3xl shadow-sm space-y-4 text-night"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
@@ -115,7 +115,7 @@ export default function PlannerResult({
             </motion.button>
             <motion.button
               onClick={onReset}
-              className="w-full px-6 py-2.5 rounded-xl border border-warm-gray/40 bg-[#F8F4EE] text-xs font-bold uppercase tracking-wider text-muted/70 hover:text-night transition-colors cursor-pointer min-h-[44px]"
+              className="w-full px-6 py-2.5 rounded-xl border border-border/40 bg-[#F8F4EE] text-xs font-bold uppercase tracking-wider text-muted/70 hover:text-night transition-colors cursor-pointer min-h-[44px]"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >

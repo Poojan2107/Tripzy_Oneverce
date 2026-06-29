@@ -35,7 +35,7 @@ const steps = [
 
 export default function HowTravebieWorks() {
   return (
-    <section className="py-20 md:py-28 bg-white border-b border-warm-gray/30">
+    <section className="py-20 md:py-28 bg-white border-b border-border/30">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <ScrollReveal>
           <div className="mb-14 text-center">
@@ -59,7 +59,7 @@ export default function HowTravebieWorks() {
                 transition={{ delay: i * 0.12, type: "spring", stiffness: 80, damping: 20 }}
               >
                 {i < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-px border-t border-dashed border-warm-gray/50" />
+                  <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-px border-t border-dashed border-border/50" />
                 )}
                 <div className={`w-20 h-20 rounded-2xl ${step.bgColor} border ${step.borderColor} flex items-center justify-center mx-auto mb-5 transition-transform duration-300 hover:scale-105`}>
                   <Icon className={`w-8 h-8 ${step.color}`} />

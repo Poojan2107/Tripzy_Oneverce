@@ -13,7 +13,7 @@ export default function StatusCapsule() {
   return (
     <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 -mt-6 mb-16 relative z-20">
       <motion.div
-        className="bg-white/75 backdrop-blur-xl rounded-[28px] p-4 shadow-glass border border-warm-gray/30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch"
+        className="bg-white/75 backdrop-blur-xl rounded-[28px] p-4 shadow-glass border border-border/30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

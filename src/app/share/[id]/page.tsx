@@ -33,7 +33,7 @@ export default async function SharePage(props: PageProps) {
 
   if (!res.success || !res.data) {
     return (
-      <div className="w-full min-h-[100dvh] bg-background text-ink flex flex-col items-center justify-center p-6">
+      <div className="w-full min-h-[100dvh] bg-background text-night flex flex-col items-center justify-center p-6">
         <Compass className="w-12 h-12 text-gold animate-spin mb-4" />
         <h1 className="text-xl font-bold uppercase tracking-wider mb-2">Itinerary Not Found</h1>
         <p className="text-xs text-muted mb-6">This itinerary does not exist or has been deleted.</p>
@@ -55,14 +55,14 @@ export default async function SharePage(props: PageProps) {
   };
 
   return (
-    <div className="w-full min-h-[100dvh] bg-background text-ink font-sans flex flex-col">
-      <header className="w-full bg-surface border-b border-warm-gray/30 py-4 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-80">
+    <div className="w-full min-h-[100dvh] bg-background text-night font-sans flex flex-col">
+      <header className="w-full bg-surface border-b border-border/30 py-4 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-80">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-night shadow-md">
               <Compass className="w-4 h-4 stroke-[2.5]" />
             </div>
-            <span className="font-display text-xl font-bold tracking-tight text-ink">Travebie</span>
+            <span className="font-display text-xl font-bold tracking-tight text-night">Travebie</span>
           </Link>
           <Link href="/" className="px-4 py-2 bg-gold/10 border border-gold/20 text-gold hover:bg-gold hover:text-night font-bold text-xs uppercase tracking-wider rounded-xl transition-all">
             Plan A Trip
@@ -81,10 +81,10 @@ export default async function SharePage(props: PageProps) {
               {data.title}
             </h1>
             
-            <div className="flex flex-wrap gap-4 text-xs text-muted pt-2 border-t border-warm-gray/30">
+            <div className="flex flex-wrap gap-4 text-xs text-muted pt-2 border-t border-border/30">
               <div className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4 text-gold" />
-                <span className="font-semibold text-ink">{data.destination}</span>
+                <span className="font-semibold text-night">{data.destination}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4 text-gold" />
@@ -98,14 +98,14 @@ export default async function SharePage(props: PageProps) {
           </div>
 
           <div className="space-y-6">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-muted border-b border-warm-gray/30 pb-2">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-muted border-b border-border/30 pb-2">
               Itinerary Schedule
             </h2>
 
             {itineraryDays.map((day: any, idx: number) => (
               <div 
                 key={idx} 
-                className="bg-cream border border-warm-gray/30 rounded-2xl p-5 hover:border-warm-gray/50 transition-all duration-300 relative group"
+                className="bg-cream border border-border/30 rounded-2xl p-5 hover:border-border/50 transition-all duration-300 relative group"
               >
                 {day.latitude && day.longitude && (
                   <div className="absolute top-5 right-5 text-[9px] font-mono text-muted font-bold">
@@ -126,7 +126,7 @@ export default async function SharePage(props: PageProps) {
                   {day.activities?.map((act: string, aIdx: number) => (
                     <span 
                       key={aIdx} 
-                      className="px-2.5 py-1 bg-surface text-muted text-[10px] font-semibold rounded-lg border border-warm-gray/30 flex items-center gap-1 hover:bg-warm-gray transition-colors"
+                      className="px-2.5 py-1 bg-surface text-muted text-[10px] font-semibold rounded-lg border border-border/30 flex items-center gap-1 hover:bg-warm-gray transition-colors"
                     >
                       <Navigation className="w-3 h-3 text-gold" /> {act}
                     </span>
@@ -136,22 +136,22 @@ export default async function SharePage(props: PageProps) {
             ))}
           </div>
 
-          <div className="bg-cream border border-warm-gray/30 rounded-2xl p-5 space-y-4">
+          <div className="bg-cream border border-border/30 rounded-2xl p-5 space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
               Estimated Expenses
             </h3>
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="bg-surface border border-warm-gray/30 p-3 rounded-xl">
+              <div className="bg-surface border border-border/30 p-3 rounded-xl">
                 <span className="text-[9px] text-muted block uppercase font-bold">Transit</span>
-                <span className="text-sm font-bold text-ink">₹{costs.transit?.toLocaleString() || '0'}</span>
+                <span className="text-sm font-bold text-night">₹{costs.transit?.toLocaleString() || '0'}</span>
               </div>
-              <div className="bg-surface border border-warm-gray/30 p-3 rounded-xl">
+              <div className="bg-surface border border-border/30 p-3 rounded-xl">
                 <span className="text-[9px] text-muted block uppercase font-bold">Stay</span>
-                <span className="text-sm font-bold text-ink">₹{costs.stay?.toLocaleString() || '0'}</span>
+                <span className="text-sm font-bold text-night">₹{costs.stay?.toLocaleString() || '0'}</span>
               </div>
-              <div className="bg-surface border border-warm-gray/30 p-3 rounded-xl">
+              <div className="bg-surface border border-border/30 p-3 rounded-xl">
                 <span className="text-[9px] text-muted block uppercase font-bold">Food/Acts</span>
-                <span className="text-sm font-bold text-ink">₹{costs.food?.toLocaleString() || '0'}</span>
+                <span className="text-sm font-bold text-night">₹{costs.food?.toLocaleString() || '0'}</span>
               </div>
             </div>
             <div className="flex justify-between items-center bg-surface border border-gold/20 px-4 py-3 rounded-xl">
@@ -177,7 +177,7 @@ export default async function SharePage(props: PageProps) {
 
         </div>
 
-        <div className="lg:col-span-5 h-[400px] lg:h-[calc(100dvh-69px)] border-t lg:border-t-0 lg:border-l border-warm-gray/30 bg-surface overflow-hidden sticky bottom-0 lg:top-[69px]">
+        <div className="lg:col-span-5 h-[400px] lg:h-[calc(100dvh-69px)] border-t lg:border-t-0 lg:border-l border-border/30 bg-surface overflow-hidden sticky bottom-0 lg:top-[69px]">
           <SharedMap itinerary={itineraryDays} />
         </div>
       </div>

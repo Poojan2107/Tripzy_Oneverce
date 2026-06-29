@@ -16,7 +16,7 @@ export default function LogisticsTab({ tour, onPlanClick }: LogisticsTabProps) {
         <p className="text-xs text-muted font-light">Everything you need to know before arriving, and how to plan your journey.</p>
       </div>
 
-      <div className="p-6 rounded-3xl bg-white border border-warm-gray shadow-card">
+      <div className="p-6 rounded-3xl bg-white border border-border shadow-card">
         <div className="flex items-center justify-between mb-6">
           <div>
             <span className="text-4xl font-display font-bold text-night">{formatINR(tour.price)}</span>
@@ -37,21 +37,21 @@ export default function LogisticsTab({ tour, onPlanClick }: LogisticsTabProps) {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 rounded-2xl bg-white border border-warm-gray">
+        <div className="p-4 rounded-2xl bg-white border border-border">
           <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Best Season</span>
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-coral" />
             <span className="text-xs font-bold text-night">{tour.bestSeason || 'Oct – Mar'}</span>
           </div>
         </div>
-        <div className="p-4 rounded-2xl bg-white border border-warm-gray">
+        <div className="p-4 rounded-2xl bg-white border border-border">
           <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Difficulty</span>
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-sage" />
             <span className="text-xs font-bold text-night">{tour.difficulty}</span>
           </div>
         </div>
-        <div className="p-4 rounded-2xl bg-white border border-warm-gray">
+        <div className="p-4 rounded-2xl bg-white border border-border">
           <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Group Size</span>
           <div className="flex items-center gap-2">
             <User className="w-4 h-4 text-ocean" />
@@ -59,7 +59,7 @@ export default function LogisticsTab({ tour, onPlanClick }: LogisticsTabProps) {
           </div>
         </div>
         {tour.budgetRange && (
-          <div className="p-4 rounded-2xl bg-white border border-warm-gray">
+          <div className="p-4 rounded-2xl bg-white border border-border">
             <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Budget Guide</span>
             <span className="text-xs font-bold text-night">{tour.budgetRange}</span>
           </div>
@@ -70,7 +70,7 @@ export default function LogisticsTab({ tour, onPlanClick }: LogisticsTabProps) {
         <h3 className="font-display text-lg text-night font-bold mb-3">What's Included</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {tour.includedServices.map((s, i) => (
-            <div key={i} className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border border-warm-gray">
+            <div key={i} className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-white border border-border">
               <ServiceIcon iconName={s.iconName} />
               <span className="text-xs text-night font-semibold">{s.name}</span>
             </div>

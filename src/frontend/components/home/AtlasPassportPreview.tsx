@@ -38,12 +38,12 @@ export default function AtlasPassportPreview({
   onGoToPassport?: () => void;
 }) {
   return (
-    <section className="py-16 md:py-20 border-y border-warm-gray/30 bg-white">
+    <section className="py-16 md:py-20 border-y border-border/30 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Atlas Stats */}
           <motion.div
-            className="relative p-8 rounded-3xl bg-sand/80 border border-warm-gray/30 overflow-hidden"
+            className="relative p-8 rounded-3xl bg-sand/80 border border-border/30 overflow-hidden"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
@@ -77,7 +77,7 @@ export default function AtlasPassportPreview({
 
           {/* Passport Preview */}
           <motion.div
-            className="relative p-8 rounded-3xl bg-white border border-warm-gray/30 overflow-hidden"
+            className="relative p-8 rounded-3xl bg-white border border-border/30 overflow-hidden"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
@@ -97,7 +97,7 @@ export default function AtlasPassportPreview({
               ].map((stat) => {
                 const StatIcon = stat.label.includes('stories') ? BookOpen : MapPin;
                 return (
-                  <div key={stat.label} className="text-center p-4 rounded-2xl bg-sand/60 border border-warm-gray/20">
+                  <div key={stat.label} className="text-center p-4 rounded-2xl bg-sand/60 border border-border/20">
                     <StatIcon className="w-4 h-4 text-gold/60 mx-auto mb-2" />
                     <AnimatedStat value={stat.value} label={stat.label} />
                   </div>

@@ -19,7 +19,7 @@ export default function HotelsTab({ tour, loadingHotels, onPlanClick }: HotelsTa
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {loadingHotels ? (
           Array(2).fill(null).map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl border border-warm-gray/60 p-5 flex flex-col sm:flex-row gap-5 animate-pulse text-left">
+            <div key={i} className="bg-white rounded-2xl border border-border/60 p-5 flex flex-col sm:flex-row gap-5 animate-pulse text-left">
               <div className="sm:w-52 h-44 sm:h-32 bg-cream rounded-xl shrink-0" />
               <div className="flex-1 space-y-3">
                 <div className="flex justify-between"><div className="w-1/3 h-5 bg-cream rounded" /><div className="w-1/6 h-5 bg-cream rounded" /></div>
@@ -34,7 +34,7 @@ export default function HotelsTab({ tour, loadingHotels, onPlanClick }: HotelsTa
             <HotelCard key={hotel.id} hotel={hotel} />
           ))
         ) : (
-          <div className="p-8 py-10 rounded-[32px] bg-white border border-warm-gray/60 text-center max-w-md mx-auto space-y-4 shadow-soft">
+          <div className="p-8 py-10 rounded-[32px] bg-white border border-border/60 text-center max-w-md mx-auto space-y-4 shadow-soft">
             <div className="w-12 h-12 rounded-full bg-ocean/10 text-ocean flex items-center justify-center mx-auto">
               <Compass className="w-5 h-5 text-ocean" />
             </div>

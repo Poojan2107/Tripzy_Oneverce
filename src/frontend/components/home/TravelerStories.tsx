@@ -89,7 +89,7 @@ export default function TravelerStories({ tours, onSelectTour }: TravelerStories
   }, [tours]);
 
   return (
-    <section className="py-20 md:py-28 bg-[#FFFDF9] border-t border-warm-gray/30">
+    <section className="py-20 md:py-28 bg-[#FFFDF9] border-t border-border/30">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <motion.div
           className="mb-12 text-left"

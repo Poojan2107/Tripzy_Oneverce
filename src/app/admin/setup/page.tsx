@@ -54,7 +54,7 @@ export default function AdminSetupPage() {
 
   return (
     <div className="min-h-[100dvh] bg-sand flex items-center justify-center p-6 font-sans">
-      <div className="max-w-md w-full bg-white rounded-3xl border border-warm-gray shadow-sm p-8 text-center space-y-6">
+      <div className="max-w-md w-full bg-white rounded-3xl border border-border shadow-sm p-8 text-center space-y-6">
         
         <div className="w-16 h-16 rounded-full bg-night flex items-center justify-center mx-auto">
           {alreadyAdmin ? <ShieldCheck className="w-8 h-8 text-emerald-400" /> : <Shield className="w-8 h-8 text-gold" />}
@@ -108,7 +108,7 @@ export default function AdminSetupPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="bg-sand border border-warm-gray rounded-2xl p-4 text-left">
+            <div className="bg-sand border border-border rounded-2xl p-4 text-left">
               <p className="text-[10px] font-mono uppercase tracking-widest text-muted/50 mb-1">signed in as</p>
               <p className="text-sm font-bold text-night">{session.user?.email}</p>
             </div>
@@ -120,7 +120,7 @@ export default function AdminSetupPage() {
             )}
 
             <div className="space-y-3">
-              <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-sand border border-warm-gray focus-within:border-gold transition-colors">
+              <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-sand border border-border focus-within:border-gold transition-colors">
                 <KeyRound className="w-4 h-4 text-muted/40 shrink-0" />
                 <input
                   type="text"

@@ -134,7 +134,7 @@ export default async function SharedPassportPage(props: PageProps) {
   return (
     <div className="w-full min-h-[100dvh] bg-background text-night font-sans flex flex-col pb-24">
       {/* Header */}
-      <header className="w-full bg-white border-b border-warm-gray/30 py-4 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-80">
+      <header className="w-full bg-white border-b border-border/30 py-4 px-6 sticky top-0 z-30 backdrop-blur-md bg-opacity-80">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 flex-row">
             <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-night shadow-md">
@@ -151,7 +151,7 @@ export default async function SharedPassportPage(props: PageProps) {
       <main className="pt-8 md:pt-10 px-4 md:px-6 max-w-5xl mx-auto w-full select-none text-left space-y-10">
         
         {/* ── 1. PASSPORT HERO ── */}
-        <div className="relative bg-white border border-warm-gray/40 rounded-3xl p-7 md:p-10 shadow-card overflow-hidden">
+        <div className="relative bg-white border border-border/40 rounded-3xl p-7 md:p-10 shadow-card overflow-hidden">
           <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-gold/5 to-transparent rounded-bl-full pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-teal/5 to-transparent rounded-tr-full pointer-events-none" />
 
@@ -202,8 +202,8 @@ export default async function SharedPassportPage(props: PageProps) {
         </div>
 
         {/* ── 2. TRAVEL SEALS ── */}
-        <div className="bg-white border border-warm-gray/40 rounded-3xl p-6 md:p-8 shadow-card">
-          <div className="flex items-center gap-2 pb-3 border-b border-warm-gray/20 mb-5">
+        <div className="bg-white border border-border/40 rounded-3xl p-6 md:p-8 shadow-card">
+          <div className="flex items-center gap-2 pb-3 border-b border-border/20 mb-5">
             <Award className="w-4 h-4 text-teal" />
             <h3 className="font-display text-xl text-night font-light lowercase leading-none">travel seals</h3>
           </div>
@@ -212,14 +212,14 @@ export default async function SharedPassportPage(props: PageProps) {
               <div key={badge.id}
                 className={`p-4 rounded-2xl border flex flex-col items-center text-center relative overflow-hidden ${
                   badge.unlocked
-                    ? 'bg-white border-warm-gray/50 shadow-sm'
-                    : 'bg-warm-gray/20 border-dashed border-warm-gray/40 opacity-30 select-none'
+                    ? 'bg-white border-border/50 shadow-sm'
+                    : 'bg-warm-gray/20 border-dashed border-border/40 opacity-30 select-none'
                 }`}
               >
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center relative mb-3 ${
                   badge.unlocked
                     ? 'bg-gradient-to-tr from-gold/15 via-gold/5 to-white border-2 border-gold/30 shadow-inner'
-                    : 'border border-dashed border-warm-gray bg-white'
+                    : 'border border-dashed border-border bg-white'
                 }`}>
                   {badge.unlocked && (
                     <div className="absolute inset-1 rounded-full border border-dashed border-gold/25 pointer-events-none" />
@@ -248,7 +248,7 @@ export default async function SharedPassportPage(props: PageProps) {
                 const companionLabel = itin.companions === 'solo' ? 'Solo Explorer' : itin.companions === 'couple' ? 'Couple Escape' : itin.companions === 'family' ? 'Family Journey' : 'Explorer';
                 return (
                   <Link key={itin.id} href={`/share/${itin.id}`}
-                    className="relative rounded-3xl overflow-hidden group shadow-card hover:shadow-card-hover border border-warm-gray/40 transition-all duration-300 min-h-[200px] flex flex-col justify-between p-6 bg-white"
+                    className="relative rounded-3xl overflow-hidden group shadow-card hover:shadow-card-hover border border-border/40 transition-all duration-300 min-h-[200px] flex flex-col justify-between p-6 bg-white"
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex gap-2">
@@ -264,7 +264,7 @@ export default async function SharedPassportPage(props: PageProps) {
                       <h3 className="font-display text-xl md:text-2xl text-night font-light lowercase leading-tight group-hover:text-gold transition-colors line-clamp-2 mb-2">
                         {itin.title || 'Untitled Itinerary'}
                       </h3>
-                      <div className="flex justify-between items-center text-[9px] text-muted font-mono uppercase tracking-wider pt-2 border-t border-warm-gray/20">
+                      <div className="flex justify-between items-center text-[9px] text-muted font-mono uppercase tracking-wider pt-2 border-t border-border/20">
                         <span className="flex items-center gap-1.5 flex-row">
                           <BookOpen className="w-3 h-3 text-teal" />
                           {durationDays} Chapters
@@ -291,7 +291,7 @@ export default async function SharedPassportPage(props: PageProps) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {wishlistTours.map((tour: any) => (
-                <div key={tour.id} className="bg-white border border-warm-gray/40 p-5 pb-6 rounded-3xl flex flex-col justify-between text-left shadow-card">
+                <div key={tour.id} className="bg-white border border-border/40 p-5 pb-6 rounded-3xl flex flex-col justify-between text-left shadow-card">
                   <div className="relative aspect-[3/2] rounded-2xl overflow-hidden bg-background mb-4">
                     <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover" />
                   </div>
@@ -299,7 +299,7 @@ export default async function SharedPassportPage(props: PageProps) {
                     <span className="text-[8px] font-mono text-gold uppercase tracking-widest block font-bold">{tour.location}</span>
                     <h3 className="font-display text-2xl text-night font-light leading-none lowercase">{tour.title}</h3>
                     <p className="text-[11px] text-muted/80 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
-                    <div className="pt-3 flex justify-between items-center text-xs font-bold text-night border-t border-warm-gray/20 mt-3">
+                    <div className="pt-3 flex justify-between items-center text-xs font-bold text-night border-t border-border/20 mt-3">
                       <span className="text-[8px] font-mono font-bold text-teal bg-teal/10 border border-teal/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         {tour.moods?.[0] || 'Explore'}
                       </span>

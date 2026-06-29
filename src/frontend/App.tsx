@@ -6,6 +6,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { trackPageView, trackWishlistSave, trackDestinationClick } from './utils/analytics';
 import ErrorBoundary from './components/ErrorBoundary';
+import DarkModeToggle from './components/DarkModeToggle';
 
 import { TabType, Tour } from './types';
 import { TOURS_DATA } from './data';
@@ -22,7 +23,7 @@ const AiPlannerView = dynamic(() => import('./components/AiPlannerView'), {
   ssr: false,
   loading: () => (
     <div className="min-h-[100dvh] bg-background flex items-center justify-center">
-      <div className="w-10 h-10 rounded-full border-2 border-warm-gray/40 border-t-teal animate-spin" />
+      <div className="w-10 h-10 rounded-full border-2 border-border/40 border-t-teal animate-spin" />
     </div>
   )
 });
@@ -30,7 +31,7 @@ const TripsWishlistView = dynamic(() => import('./components/TripsWishlistView')
   ssr: false,
   loading: () => (
     <div className="min-h-[100dvh] bg-background flex items-center justify-center">
-      <div className="w-10 h-10 rounded-full border-2 border-warm-gray/40 border-t-teal animate-spin" />
+      <div className="w-10 h-10 rounded-full border-2 border-border/40 border-t-teal animate-spin" />
     </div>
   )
 });
@@ -244,7 +245,7 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-    <div className="w-full min-h-[100dvh] flex flex-col bg-transparent text-ink antialiased relative overflow-x-clip">
+    <div className="w-full min-h-[100dvh] flex flex-col bg-transparent text-night antialiased relative overflow-x-clip">
       <div className="print:hidden">
         <GlassNavbar
           currentTab={currentTab}
@@ -282,6 +283,7 @@ export default function App() {
             travebie<span className="text-gold">.ai</span>
           </span>
         </button>
+        <DarkModeToggle />
       </header>
 
       <main className="w-full flex-grow">

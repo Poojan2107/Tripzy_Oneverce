@@ -28,7 +28,7 @@ export default function HotelCard({ hotel }: HotelCardProps) {
 
   return (
     <motion.div
-      className="bg-white rounded-3xl border border-warm-gray/50 overflow-hidden flex flex-col text-left shadow-card hover:shadow-hover transition-shadow"
+      className="bg-white rounded-3xl border border-border/50 overflow-hidden flex flex-col text-left shadow-card hover:shadow-hover transition-shadow"
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -79,21 +79,21 @@ export default function HotelCard({ hotel }: HotelCardProps) {
 
           <div className="flex flex-wrap gap-1.5 pt-1">
             {hotel.amenities.slice(0, 3).map((a) => (
-              <span key={a} className="px-2.5 py-0.5 rounded-full bg-[#F8F4EE] text-[8px] font-mono uppercase tracking-wider text-muted/70 border border-warm-gray/40 leading-none">{a}</span>
+              <span key={a} className="px-2.5 py-0.5 rounded-full bg-[#F8F4EE] text-[8px] font-mono uppercase tracking-wider text-muted/70 border border-border/40 leading-none">{a}</span>
             ))}
             {hotel.amenities.length > 3 && (
-              <span className="px-2.5 py-0.5 rounded-full bg-[#F8F4EE] text-[8px] font-mono uppercase tracking-wider text-muted/50 border border-warm-gray/40 leading-none">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#F8F4EE] text-[8px] font-mono uppercase tracking-wider text-muted/50 border border-border/40 leading-none">
                 +{hotel.amenities.length - 3}
               </span>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-2 w-full pt-3.5 border-t border-warm-gray/40">
+        <div className="flex items-center gap-2 w-full pt-3.5 border-t border-border/40">
           {Object.entries(hotel.affiliateLinks).filter(([, url]) => url).map(([key, url]) => (
             <motion.a key={key} href={url} target="_blank" rel="noopener noreferrer"
               onClick={() => trackAffiliateClick(hotel.id, hotel.name, key)}
-              className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-[9px] font-bold uppercase tracking-wider border min-h-[38px] transition-all ${AFFILIATE_COLORS[key] || 'bg-[#F8F4EE] text-muted border-warm-gray/40'}`}
+              className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-[9px] font-bold uppercase tracking-wider border min-h-[38px] transition-all ${AFFILIATE_COLORS[key] || 'bg-[#F8F4EE] text-muted border-border/40'}`}
               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <ExternalLink className="w-3 h-3 shrink-0" />
               {AFFILIATE_LABELS[key] || key}

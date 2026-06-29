@@ -77,7 +77,7 @@ export default function ExploreView({
   return (
     <div className="h-[calc(100dvh-56px)] md:h-[calc(100dvh-76px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
       {/* Mobile toggle */}
-      <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-warm-gray/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
+      <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-border/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         {(['list', 'map'] as const).map(view => {
           const Icon = view === 'list' ? List : Map;
           return (
@@ -259,7 +259,7 @@ export default function ExploreView({
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeTour.moods?.slice(0, 3).map(m => (
-                  <span key={m} className="px-2.5 py-1 rounded-full bg-sand text-[8px] font-bold uppercase tracking-wider text-muted border border-warm-gray/30">{m}</span>
+                  <span key={m} className="px-2.5 py-1 rounded-full bg-sand text-[8px] font-bold uppercase tracking-wider text-muted border border-border/30">{m}</span>
                 ))}
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">

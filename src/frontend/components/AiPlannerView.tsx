@@ -432,13 +432,13 @@ export default function AiPlannerView({
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <motion.div onClick={() => setShowAuthModal(false)} className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
               
-              <motion.div className="bg-white border border-warm-gray/50 rounded-3xl shadow-elevated p-6 max-w-sm w-full relative z-10 text-night text-left space-y-5"
+              <motion.div className="bg-white border border-border/50 rounded-3xl shadow-elevated p-6 max-w-sm w-full relative z-10 text-night text-left space-y-5"
                 initial={{ opacity: 0, y: 20, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 15, scale: 0.96 }}
                 transition={{ type: "spring", stiffness: 200, damping: 25 }}>
                 
-                <div className="flex items-center gap-3 border-b border-warm-gray/30 pb-3">
+                <div className="flex items-center gap-3 border-b border-border/30 pb-3">
                   <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold shrink-0">
                     <Compass className="w-5 h-5" />
                   </div>
@@ -483,7 +483,7 @@ export default function AiPlannerView({
                   </button>
                   <button
                     onClick={handleMaybeLater}
-                    className="w-full py-3 rounded-xl border border-warm-gray/40 bg-white hover:bg-[#F8F4EE] text-muted hover:text-night text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
+                    className="w-full py-3 rounded-xl border border-border/40 bg-white hover:bg-[#F8F4EE] text-muted hover:text-night text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
                   >
                     Maybe Later
                   </button>

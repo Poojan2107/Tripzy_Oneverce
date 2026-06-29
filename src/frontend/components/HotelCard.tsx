@@ -66,9 +66,9 @@ export default function HotelCard({ hotel }: HotelCardProps) {
               {renderStars(hotel.rating)}
               <span className="font-bold text-night ml-1">{hotel.rating}</span>
             </div>
-            <span className="text-warm-gray/60">|</span>
+            <span className="text-border/60">|</span>
             <span className="text-muted/65">({hotel.reviews} reviews)</span>
-            <span className="text-warm-gray/60">|</span>
+            <span className="text-border/60">|</span>
             <div className="flex items-center gap-0.5 text-teal font-mono uppercase tracking-wider text-[8px] font-bold">
               <MapPin className="w-3.5 h-3.5 text-teal shrink-0" />
               <span>{hotel.location}</span>

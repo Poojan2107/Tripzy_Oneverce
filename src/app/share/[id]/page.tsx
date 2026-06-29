@@ -126,7 +126,7 @@ export default async function SharePage(props: PageProps) {
                   {day.activities?.map((act: string, aIdx: number) => (
                     <span 
                       key={aIdx} 
-                      className="px-2.5 py-1 bg-surface text-muted text-[10px] font-semibold rounded-lg border border-border/30 flex items-center gap-1 hover:bg-warm-gray transition-colors"
+                      className="px-2.5 py-1 bg-surface text-muted text-[10px] font-semibold rounded-lg border border-border/30 flex items-center gap-1 hover:bg-border transition-colors"
                     >
                       <Navigation className="w-3 h-3 text-gold" /> {act}
                     </span>

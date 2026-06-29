@@ -80,9 +80,9 @@ export default function HowTravebieWorks() {
           transition={{ delay: 0.4 }}
         >
           <div className="inline-flex items-center gap-2 text-[9px] font-mono uppercase tracking-[0.2em] text-muted/40">
-            <span className="w-8 h-px bg-warm-gray" />
+            <span className="w-8 h-px bg-border" />
             <span>three steps to your story</span>
-            <span className="w-8 h-px bg-warm-gray" />
+            <span className="w-8 h-px bg-border" />
           </div>
         </motion.div>
       </div>

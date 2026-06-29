@@ -119,7 +119,7 @@ export default function GlassNavbar({
             <Search className="w-4 h-4" />
           </motion.button>
 
-          <div className={`h-4 w-px ${isTransparent ? 'bg-white/20' : 'bg-warm-gray/50'}`} />
+          <div className={`h-4 w-px ${isTransparent ? 'bg-white/20' : 'bg-border/50'}`} />
 
           {session ? (
             <div className="flex items-center gap-3.5">

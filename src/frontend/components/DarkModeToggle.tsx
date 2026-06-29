@@ -12,12 +12,6 @@ export default function DarkModeToggle() {
     if (stored === 'dark') {
       setDark(true);
       document.documentElement.classList.add('dark');
-    } else if (stored === 'light') {
-      setDark(false);
-      document.documentElement.classList.remove('dark');
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setDark(true);
-      document.documentElement.classList.add('dark');
     }
   }, []);
 

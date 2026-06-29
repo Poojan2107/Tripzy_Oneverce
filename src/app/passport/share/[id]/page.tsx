@@ -213,7 +213,7 @@ export default async function SharedPassportPage(props: PageProps) {
                 className={`p-4 rounded-2xl border flex flex-col items-center text-center relative overflow-hidden ${
                   badge.unlocked
                     ? 'bg-white border-border/50 shadow-sm'
-                    : 'bg-warm-gray/20 border-dashed border-border/40 opacity-30 select-none'
+                    : 'bg-border/20 border-dashed border-border/40 opacity-30 select-none'
                 }`}
               >
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center relative mb-3 ${
@@ -240,7 +240,7 @@ export default async function SharedPassportPage(props: PageProps) {
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-gold animate-pulse" />
               <h3 className="font-display text-xl text-night font-light lowercase leading-none">journey collection</h3>
-              <div className="h-px flex-1 bg-warm-gray/40" />
+              <div className="h-px flex-1 bg-border/40" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {itineraries.map((itin: any) => {
@@ -287,7 +287,7 @@ export default async function SharedPassportPage(props: PageProps) {
             <div className="flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-gold" />
               <h3 className="font-display text-xl text-night font-light lowercase leading-none">saved chapters</h3>
-              <div className="h-px flex-1 bg-warm-gray/40" />
+              <div className="h-px flex-1 bg-border/40" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {wishlistTours.map((tour: any) => (

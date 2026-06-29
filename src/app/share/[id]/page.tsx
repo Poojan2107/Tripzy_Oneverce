@@ -74,7 +74,7 @@ export default async function SharePage(props: PageProps) {
         <div className="lg:col-span-7 p-6 sm:p-8 space-y-8 overflow-y-auto max-h-[calc(100dvh-69px)] no-scrollbar">
           
           <div className="space-y-4">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-[10px] font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold/10 border border-gold/20 text-gold text-micro font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" /> Shared AI Companion Itinerary
             </div>
             <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-night">
@@ -105,10 +105,10 @@ export default async function SharePage(props: PageProps) {
             {itineraryDays.map((day: any, idx: number) => (
               <div 
                 key={idx} 
-                className="bg-cream border border-border/30 rounded-2xl p-5 hover:border-border/50 transition-all duration-300 relative group"
+                className="bg-secondary-surface border border-border/30 rounded-2xl p-5 hover:border-border/50 transition-all duration-300 relative group"
               >
                 {day.latitude && day.longitude && (
-                  <div className="absolute top-5 right-5 text-[9px] font-mono text-muted font-bold">
+                  <div className="absolute top-5 right-5 text-micro font-mono text-muted font-bold">
                     MAP POINT
                   </div>
                 )}
@@ -126,7 +126,7 @@ export default async function SharePage(props: PageProps) {
                   {day.activities?.map((act: string, aIdx: number) => (
                     <span 
                       key={aIdx} 
-                      className="px-2.5 py-1 bg-surface text-muted text-[10px] font-semibold rounded-lg border border-border/30 flex items-center gap-1 hover:bg-border transition-colors"
+                      className="px-2.5 py-1 bg-surface text-muted text-micro font-semibold rounded-lg border border-border/30 flex items-center gap-1 hover:bg-border transition-colors"
                     >
                       <Navigation className="w-3 h-3 text-gold" /> {act}
                     </span>
@@ -136,21 +136,21 @@ export default async function SharePage(props: PageProps) {
             ))}
           </div>
 
-          <div className="bg-cream border border-border/30 rounded-2xl p-5 space-y-4">
+          <div className="bg-secondary-surface border border-border/30 rounded-2xl p-5 space-y-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-muted">
               Estimated Expenses
             </h3>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="bg-surface border border-border/30 p-3 rounded-xl">
-                <span className="text-[9px] text-muted block uppercase font-bold">Transit</span>
+                <span className="text-micro text-muted block uppercase font-bold">Transit</span>
                 <span className="text-sm font-bold text-night">₹{costs.transit?.toLocaleString() || '0'}</span>
               </div>
               <div className="bg-surface border border-border/30 p-3 rounded-xl">
-                <span className="text-[9px] text-muted block uppercase font-bold">Stay</span>
+                <span className="text-micro text-muted block uppercase font-bold">Stay</span>
                 <span className="text-sm font-bold text-night">₹{costs.stay?.toLocaleString() || '0'}</span>
               </div>
               <div className="bg-surface border border-border/30 p-3 rounded-xl">
-                <span className="text-[9px] text-muted block uppercase font-bold">Food/Acts</span>
+                <span className="text-micro text-muted block uppercase font-bold">Food/Acts</span>
                 <span className="text-sm font-bold text-night">₹{costs.food?.toLocaleString() || '0'}</span>
               </div>
             </div>

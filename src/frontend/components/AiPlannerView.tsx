@@ -358,7 +358,7 @@ export default function AiPlannerView({
               animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 1 }} />
           </svg>
         </div>
-        <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-coral block mb-2 font-bold animate-pulse">
+        <span className="font-mono text-micro uppercase tracking-[0.25em] text-coral block mb-2 font-bold animate-pulse">
           Journey Companion
         </span>
         <h2 className="font-display text-3xl font-light text-night lowercase leading-none mb-6">
@@ -444,12 +444,12 @@ export default function AiPlannerView({
                   </div>
                   <div>
                     <h3 className="font-display text-lg font-light lowercase leading-tight">Save this journey to your Passport</h3>
-                    <p className="text-[8px] font-mono text-muted uppercase tracking-widest mt-0.5">Explorer Passport Sync</p>
+                    <p className="text-micro font-mono text-muted uppercase tracking-widest mt-0.5">Explorer Passport Sync</p>
                   </div>
                 </div>
 
                 <div className="space-y-2.5 py-1">
-                  <p className="text-xs text-muted/80 leading-relaxed font-sans font-light">
+                  <p className="text-small text-muted/80 leading-relaxed font-sans font-light">
                     Save your AI-crafted odyssey to access it anytime and build your explorer achievements.
                   </p>
                   <ul className="text-xs space-y-2 text-night/85 font-sans font-light">
@@ -471,7 +471,7 @@ export default function AiPlannerView({
                 <div className="flex flex-col gap-2.5 pt-2">
                   <button
                     onClick={handleContinueWithGoogle}
-                    className="w-full py-3 rounded-xl bg-night text-white text-[10px] font-bold uppercase tracking-wider hover:bg-[#0B1720] transition-colors cursor-pointer flex items-center justify-center gap-2 border-none shadow-sm min-h-[44px]"
+                    className="w-full py-3 rounded-xl bg-night text-white text-micro font-bold uppercase tracking-wider hover:bg-night transition-colors cursor-pointer flex items-center justify-center gap-2 border-none shadow-sm min-h-[44px]"
                   >
                     <svg className="w-3.5 h-3.5 mr-1" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -483,7 +483,7 @@ export default function AiPlannerView({
                   </button>
                   <button
                     onClick={handleMaybeLater}
-                    className="w-full py-3 rounded-xl border border-border/40 bg-white hover:bg-[#F8F4EE] text-muted hover:text-night text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
+                    className="w-full py-3 rounded-xl border border-border/40 bg-white hover:bg-background text-muted hover:text-night text-micro font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
                   >
                     Maybe Later
                   </button>
@@ -498,7 +498,7 @@ export default function AiPlannerView({
         <AnimatePresence>
           {showToast && (
             <motion.div
-              className="fixed bottom-5 right-5 z-[100] bg-night text-white px-5 py-3 rounded-2xl shadow-elevated border border-white/10 flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest"
+              className="fixed bottom-5 right-5 z-[100] bg-night text-white px-5 py-3 rounded-2xl shadow-elevated border border-white/10 flex items-center gap-2 font-mono text-micro uppercase tracking-widest"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 15 }}

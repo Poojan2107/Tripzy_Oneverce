@@ -169,11 +169,11 @@ export default async function SharedPassportPage(props: PageProps) {
             </div>
 
             <div className="flex-1 text-left">
-              <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-teal font-bold block mb-1">Explorer Passport</span>
+              <span className="font-mono text-micro uppercase tracking-[0.25em] text-teal font-bold block mb-1">Explorer Passport</span>
               <h1 className="font-display text-3xl md:text-4xl text-night font-light lowercase leading-tight">
                 {user.name || "Guest Explorer"}
               </h1>
-              <span className="text-[10px] font-mono text-muted/50 block lowercase mt-0.5">
+              <span className="text-micro font-mono text-muted/50 block lowercase mt-0.5">
                 Explorer Since {explorerSince} · Public Read-only Passport
               </span>
             </div>
@@ -181,21 +181,21 @@ export default async function SharedPassportPage(props: PageProps) {
             <div className="grid grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 shrink-0">
               <div className="text-center">
                 <span className="block font-display text-2xl font-light text-night leading-none">{itineraries.length}</span>
-                <span className="text-[7px] font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Journeys</span>
+                <span className="text-micro font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Journeys</span>
               </div>
               <div className="text-center">
                 <span className="block font-display text-2xl font-light text-gold leading-none">{wishlistTours.length}</span>
-                <span className="text-[7px] font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Saved</span>
+                <span className="text-micro font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Saved</span>
               </div>
               <div className="text-center">
                 <span className="block font-display text-2xl font-light text-coral leading-none">
                   {new Set(wishlistTours.map((t: any) => t.location.split(',')[1]?.trim())).size || 0}
                 </span>
-                <span className="text-[7px] font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Regions</span>
+                <span className="text-micro font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Regions</span>
               </div>
               <div className="text-center hidden md:block">
                 <span className="block font-display text-2xl font-light text-teal leading-none">{badgesList.filter(b => b.unlocked).length}</span>
-                <span className="text-[7px] font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Seals</span>
+                <span className="text-micro font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Seals</span>
               </div>
             </div>
           </div>
@@ -227,8 +227,8 @@ export default async function SharedPassportPage(props: PageProps) {
                   <badge.icon className={`w-6 h-6 ${badge.unlocked ? 'text-gold drop-shadow-sm' : 'text-muted/40'}`} />
                 </div>
                 
-                <span className="text-[10px] font-bold text-night leading-tight block w-full">{badge.label}</span>
-                <span className="text-[7.5px] font-mono text-muted/60 uppercase tracking-wider block mt-1 line-clamp-1 w-full">{badge.desc}</span>
+                <span className="text-micro font-bold text-night leading-tight block w-full">{badge.label}</span>
+                <span className="text-micro font-mono text-muted/60 uppercase tracking-wider block mt-1 line-clamp-1 w-full">{badge.desc}</span>
               </div>
             ))}
           </div>
@@ -252,19 +252,19 @@ export default async function SharedPassportPage(props: PageProps) {
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex gap-2">
-                        <span className="text-[8px] font-mono font-bold text-night bg-background px-2.5 py-1 rounded-full uppercase tracking-wider border border-border/40">{durationDays} Days</span>
-                        <span className="text-[8px] font-mono font-bold text-gold bg-gold/15 border border-gold/30 px-2.5 py-1 rounded-full uppercase tracking-wider">{companionLabel}</span>
+                        <span className="text-micro font-mono font-bold text-night bg-background px-2.5 py-1 rounded-full uppercase tracking-wider border border-border/40">{durationDays} Days</span>
+                        <span className="text-micro font-mono font-bold text-gold bg-gold/15 border border-gold/30 px-2.5 py-1 rounded-full uppercase tracking-wider">{companionLabel}</span>
                       </div>
                     </div>
                     <div className="text-left mt-6">
-                      <div className="flex items-center gap-1 text-[8px] font-mono text-gold uppercase tracking-[0.2em] font-bold mb-1">
+                      <div className="flex items-center gap-1 text-micro font-mono text-gold uppercase tracking-[0.2em] font-bold mb-1">
                         <Sparkles className="w-3 h-3 text-gold" />
                         <span>Companion Journal</span>
                       </div>
                       <h3 className="font-display text-xl md:text-2xl text-night font-light lowercase leading-tight group-hover:text-gold transition-colors line-clamp-2 mb-2">
                         {itin.title || 'Untitled Itinerary'}
                       </h3>
-                      <div className="flex justify-between items-center text-[9px] text-muted font-mono uppercase tracking-wider pt-2 border-t border-border/20">
+                      <div className="flex justify-between items-center text-micro text-muted font-mono uppercase tracking-wider pt-2 border-t border-border/20">
                         <span className="flex items-center gap-1.5 flex-row">
                           <BookOpen className="w-3 h-3 text-teal" />
                           {durationDays} Chapters
@@ -296,14 +296,14 @@ export default async function SharedPassportPage(props: PageProps) {
                     <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover" />
                   </div>
                   <div className="space-y-2">
-                    <span className="text-[8px] font-mono text-gold uppercase tracking-widest block font-bold">{tour.location}</span>
+                    <span className="text-micro font-mono text-gold uppercase tracking-widest block font-bold">{tour.location}</span>
                     <h3 className="font-display text-2xl text-night font-light leading-none lowercase">{tour.title}</h3>
-                    <p className="text-[11px] text-muted/80 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
+                    <p className="text-small text-muted/80 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
                     <div className="pt-3 flex justify-between items-center text-xs font-bold text-night border-t border-border/20 mt-3">
-                      <span className="text-[8px] font-mono font-bold text-teal bg-teal/10 border border-teal/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      <span className="text-micro font-mono font-bold text-teal bg-teal/10 border border-teal/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         {tour.moods?.[0] || 'Explore'}
                       </span>
-                      <span className="text-[8px] font-mono font-bold text-gold bg-gold/10 border border-gold/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      <span className="text-micro font-mono font-bold text-gold bg-gold/10 border border-gold/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         {tour.category || 'Chapter'}
                       </span>
                     </div>

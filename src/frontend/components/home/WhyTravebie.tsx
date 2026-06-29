@@ -4,7 +4,7 @@ import { BookOpen, Sparkles, Compass } from 'lucide-react';
 
 const items = [
   { icon: BookOpen, color: 'text-coral', bg: 'bg-coral/10', title: 'editorial chapters', desc: 'Unveil the secret corners of India through curated region-specific chapters. Not just lists, but stories that explore local culture and hidden treasures.' },
-  { icon: Sparkles, color: 'text-ocean', bg: 'bg-ocean/10', title: 'ai journey generator', desc: 'Bespoke day-wise itineraries engineered to match your companion, pace, style, and budget, complete in less than 60 seconds with ₹ INR pricing.' },
+  { icon: Sparkles, color: 'text-teal', bg: 'bg-teal/10', title: 'ai journey generator', desc: 'Bespoke day-wise itineraries engineered to match your companion, pace, style, and budget, complete in less than 60 seconds with ₹ INR pricing.' },
   { icon: Compass, color: 'text-gold', bg: 'bg-gold/10', title: 'atlas discovery', desc: 'Interact with real coordinates, regional color maps, photography guides, and local secrets on our split-screen Explore Atlas.' },
 ];
 
@@ -36,7 +36,7 @@ function Card({ item, index }: { item: typeof items[0]; index: number }) {
           </div>
         </FloatIcon>
         <h3 className="font-display text-2xl text-night font-light lowercase">{item.title}</h3>
-        <p className="text-xs text-muted/90 leading-relaxed font-light font-sans">{item.desc}</p>
+        <p className="text-small text-muted/90 leading-relaxed font-light font-sans">{item.desc}</p>
       </div>
       <motion.div
         className="absolute -inset-[2px] rounded-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"

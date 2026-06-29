@@ -33,8 +33,8 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
     <motion.div ref={heroRef} className="relative w-full h-[45vh] md:h-[60vh] min-h-[300px] md:min-h-[440px] overflow-hidden"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }} style={{ opacity }}>
       {!imageLoaded && (
-        <div className="absolute inset-0 bg-[#F2ECE3] animate-pulse flex items-center justify-center">
-          <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">Loading panorama...</span>
+        <div className="absolute inset-0 bg-secondary-surface animate-pulse flex items-center justify-center">
+          <span className="text-micro font-mono text-white/30 uppercase tracking-widest">Loading panorama...</span>
         </div>
       )}
       <motion.img src={tour.bannerImage} alt={tour.title} className={`w-full h-full object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
@@ -44,7 +44,7 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
       <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent" />
 
       <motion.button onClick={onBack}
-        className="absolute top-6 left-6 flex items-center gap-2 px-5 py-3 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-white text-[11px] font-bold uppercase tracking-widest hover:bg-white/25 transition-colors cursor-pointer z-20 min-h-[44px]"
+        className="absolute top-6 left-6 flex items-center gap-2 px-5 py-3 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-white text-small font-bold uppercase tracking-widest hover:bg-white/25 transition-colors cursor-pointer z-20 min-h-[44px]"
         initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15, type: "spring", stiffness: 100, damping: 20 }}
         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
         <ArrowLeft className="w-3.5 h-3.5" /> Back
@@ -64,11 +64,11 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, type: "spring", stiffness: 80, damping: 20 }} style={{ opacity: contentOpacity }}>
         <div className="flex items-center gap-3 mb-3 flex-wrap">
           {tour.chapterName && (
-            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-[9px] font-mono text-white/70 uppercase tracking-widest">{tour.chapterName}</span>
+            <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-micro font-mono text-white/70 uppercase tracking-widest">{tour.chapterName}</span>
           )}
-          <span className="px-3 py-1 rounded-full bg-gold/90 text-[10px] font-bold text-white uppercase tracking-wider">{getMoodLabel(tour.id)}</span>
+          <span className="px-3 py-1 rounded-full bg-gold/90 text-micro font-bold text-white uppercase tracking-wider">{getMoodLabel(tour.id)}</span>
           {tour.moods?.slice(0, 2).map(m => (
-            <span key={m} className="px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-[10px] font-medium text-white uppercase tracking-wider">{m}</span>
+            <span key={m} className="px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-micro font-medium text-white uppercase tracking-wider">{m}</span>
           ))}
         </div>
         <h1 className="font-display text-white lowercase font-light tracking-[-0.03em] leading-none" style={{ fontSize: 'clamp(44px, 7vw, 96px)', lineHeight: '0.88' }}>
@@ -76,13 +76,13 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
         </h1>
         {tagline && <p className="text-sm text-white/60 font-light mt-3 italic max-w-md">{tagline}</p>}
         <div className="flex items-center gap-4 mt-4 flex-wrap">
-          <span className="flex items-center gap-1.5 text-[11px] font-mono text-white/60 uppercase tracking-widest">
+          <span className="flex items-center gap-1.5 text-small font-mono text-white/60 uppercase tracking-widest">
             <MapPin className="w-3 h-3 text-gold" /> {tour.location}
           </span>
           <span className="text-white/30 hidden sm:inline">|</span>
-          <span className="text-[11px] font-mono text-white/60 uppercase tracking-widest">{tour.duration}</span>
+          <span className="text-small font-mono text-white/60 uppercase tracking-widest">{tour.duration}</span>
           <span className="text-white/30 hidden sm:inline">|</span>
-          <span className="flex items-center gap-1 text-[11px] font-mono text-white/60">
+          <span className="flex items-center gap-1 text-small font-mono text-white/60">
             <Star className="w-3 h-3 fill-gold text-gold" />{tour.rating?.toFixed(1)}
           </span>
         </div>

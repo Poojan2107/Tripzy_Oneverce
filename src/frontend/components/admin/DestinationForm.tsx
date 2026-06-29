@@ -74,9 +74,9 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
             <h3 className="text-xl font-light font-display lowercase tracking-tight text-gold">
               {state.editingDest ? 'edit destination' : 'new destination'}
             </h3>
-            <p className="text-[10px] text-stone font-mono uppercase tracking-[0.25em] mt-1">destination content model</p>
+            <p className="text-micro text-stone font-mono uppercase tracking-[0.25em] mt-1">destination content model</p>
           </div>
-          <button onClick={() => actions.setOpen(false)} className="w-11 h-11 flex items-center justify-center rounded-full bg-cream/30 hover:bg-cream text-stone hover:text-night transition-all cursor-pointer shrink-0 touch-action-manipulation select-none">
+          <button onClick={() => actions.setOpen(false)} className="w-11 h-11 flex items-center justify-center rounded-full bg-secondary-surface/30 hover:bg-secondary-surface text-stone hover:text-night transition-all cursor-pointer shrink-0 touch-action-manipulation select-none">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -84,37 +84,37 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
         <form onSubmit={onSubmit} className="space-y-4 sm:space-y-5 flex-1 pb-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Destination Name *</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Destination Name *</label>
               <input type="text" required placeholder="e.g. Varanasi" value={state.name} onChange={(e) => actions.setName(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Region / Category</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Region / Category</label>
               <input type="text" placeholder="e.g. South Asia" value={state.region} onChange={(e) => actions.setRegion(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">City *</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">City *</label>
               <input type="text" required placeholder="e.g. Varanasi" value={state.city} onChange={(e) => actions.setCity(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Country *</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Country *</label>
               <input type="text" required placeholder="e.g. India" value={state.country} onChange={(e) => actions.setCountry(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Budget (₹ INR) *</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Budget (₹ INR) *</label>
               <input type="number" required value={state.price} onChange={(e) => actions.setPrice(Number(e.target.value))} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Duration Guide</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Duration Guide</label>
               <input type="text" value={state.duration} onChange={(e) => actions.setDuration(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Difficulty Level</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Difficulty Level</label>
               <select value={state.difficulty} onChange={(e) => actions.setDifficulty(e.target.value as any)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors appearance-none">
                 <option value="Easy">Easy</option>
                 <option value="Moderate">Moderate</option>
@@ -126,17 +126,17 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Latitude *</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Latitude *</label>
               <input type="number" step="0.000001" required value={state.latitude} onChange={(e) => actions.setLatitude(Number(e.target.value))} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Longitude *</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Longitude *</label>
               <input type="number" step="0.000001" required value={state.longitude} onChange={(e) => actions.setLongitude(Number(e.target.value))} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
           </div>
 
-          <div className="p-4 bg-cream/30 rounded-2xl border border-border space-y-4">
-            <span className="text-[10px] font-mono font-bold text-gold uppercase tracking-[0.25em] block">Scores (0-100)</span>
+          <div className="p-4 bg-secondary-surface/30 rounded-2xl border border-border space-y-4">
+            <span className="text-micro font-mono font-bold text-gold uppercase tracking-[0.25em] block">Scores (0-100)</span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
                 { label: 'Adventure', value: state.adventureScore, setter: actions.setAdventureScore },
@@ -145,7 +145,7 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
                 { label: 'Family', value: state.familyScore, setter: actions.setFamilyScore },
               ].map(field => (
                 <div key={field.label} className="space-y-1">
-                  <label className="text-[9px] font-medium text-stone">{field.label}</label>
+                  <label className="text-micro font-medium text-stone">{field.label}</label>
                   <input type="number" min="0" max="100" value={field.value} onChange={(e) => field.setter(Number(e.target.value))} className="w-full px-3 py-3 sm:py-2 bg-white border border-border rounded-lg text-xs text-night text-center font-medium focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
                 </div>
               ))}
@@ -154,50 +154,50 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Best Months (commas)</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Best Months (commas)</label>
               <input type="text" value={state.bestMonths} onChange={(e) => actions.setBestMonths(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Travel Styles (commas)</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Travel Styles (commas)</label>
               <input type="text" value={state.travelStyles} onChange={(e) => actions.setTravelStyles(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Activities (commas)</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Activities (commas)</label>
               <input type="text" value={state.activities} onChange={(e) => actions.setActivities(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Tags (commas)</label>
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Tags (commas)</label>
               <input type="text" value={state.tags} onChange={(e) => actions.setTags(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Banner Image URL *</label>
+            <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Banner Image URL *</label>
             <input type="url" required placeholder="/images/tours/varanasi-banner.jpg" value={state.bannerImage} onChange={(e) => actions.setBannerImage(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-mono font-bold text-stone uppercase tracking-[0.25em]">Description *</label>
+            <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Description *</label>
             <textarea required rows={4} placeholder="Destination description..." value={state.description} onChange={(e) => actions.setDescription(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none" />
           </div>
 
           <div className="flex gap-3 pt-4">
-            <button type="button" onClick={() => { actions.setFeatured(!state.featured); if (state.featured) actions.setTrending(false); }} className={`flex-1 py-3.5 rounded-xl border text-[10px] font-bold uppercase tracking-[0.18em] text-center transition-all cursor-pointer touch-action-manipulation select-none ${state.featured ? 'bg-ocean/10 border-ocean text-ocean' : 'bg-white border-border text-stone'}`}>
+            <button type="button" onClick={() => { actions.setFeatured(!state.featured); if (state.featured) actions.setTrending(false); }} className={`flex-1 py-3.5 rounded-xl border text-micro font-bold uppercase tracking-[0.18em] text-center transition-all cursor-pointer touch-action-manipulation select-none ${state.featured ? 'bg-teal/10 border-teal text-teal' : 'bg-white border-border text-stone'}`}>
               featured
             </button>
-            <button type="button" onClick={() => { actions.setTrending(!state.trending); if (state.trending) actions.setFeatured(false); }} className={`flex-1 py-3.5 rounded-xl border text-[10px] font-bold uppercase tracking-[0.18em] text-center transition-all cursor-pointer touch-action-manipulation select-none ${state.trending ? 'bg-gold/10 border-gold text-gold' : 'bg-white border-border text-stone'}`}>
+            <button type="button" onClick={() => { actions.setTrending(!state.trending); if (state.trending) actions.setFeatured(false); }} className={`flex-1 py-3.5 rounded-xl border text-micro font-bold uppercase tracking-[0.18em] text-center transition-all cursor-pointer touch-action-manipulation select-none ${state.trending ? 'bg-gold/10 border-gold text-gold' : 'bg-white border-border text-stone'}`}>
               trending
             </button>
           </div>
 
           <div className="pt-6 flex gap-4">
-            <button type="button" onClick={() => actions.setOpen(false)} className="flex-1 py-3.5 rounded-xl bg-white border border-border text-stone hover:bg-cream/30 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center touch-action-manipulation select-none">
+            <button type="button" onClick={() => actions.setOpen(false)} className="flex-1 py-3.5 rounded-xl bg-white border border-border text-stone hover:bg-secondary-surface/30 text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center touch-action-manipulation select-none">
               cancel
             </button>
-            <button type="submit" className="flex-1 py-3.5 rounded-xl bg-gold text-night hover:bg-gold/90 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center shadow-md">
+            <button type="submit" className="flex-1 py-3.5 rounded-xl bg-gold text-night hover:bg-gold/90 text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center shadow-md">
               save destination
             </button>
           </div>

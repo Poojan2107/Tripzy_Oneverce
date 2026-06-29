@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Utensils, Plane, Home, Compass } from 'lucide-react';
 
 export default function ServiceIcon({ iconName }: { iconName: string }) {
-  const cn = "w-5 h-5 text-ocean";
+  const cn = "w-5 h-5 text-teal";
   const icon = (() => {
     switch (iconName) {
       case 'Utensils': return <Utensils className={cn} />;

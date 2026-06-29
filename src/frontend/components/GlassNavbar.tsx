@@ -39,7 +39,7 @@ export default function GlassNavbar({
 
   const getNavContainerClass = () => {
     if (isTransparent) return 'absolute top-0 left-0 w-full z-50 bg-transparent py-3 px-6';
-    return 'sticky top-0 z-50 bg-[#F8F4EE]/80 backdrop-blur-lg border-b border-border/30 py-2 px-6';
+    return 'sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/30 py-2 px-6';
   };
 
   const getInnerClass = () => {
@@ -67,10 +67,10 @@ export default function GlassNavbar({
             <Compass className="w-4.5 h-4.5 stroke-[1.5] animate-spin-slow" />
           </motion.div>
           <div className="flex flex-col text-left">
-            <span className={`font-logo text-[22px] font-bold tracking-tight lowercase leading-tight ${isTransparent ? 'text-white' : 'text-night'}`}>
+            <span className={`font-logo text-h3 font-bold tracking-tight lowercase leading-tight ${isTransparent ? 'text-white' : 'text-night'}`}>
               travebie<span className="text-gold">.ai</span>
             </span>
-            <span className={`text-[8px] font-mono uppercase tracking-[0.2em] mt-0.5 ${isTransparent ? 'text-white/60' : 'text-night/60'}`}>Atlas Vivant</span>
+            <span className={`text-micro font-mono uppercase tracking-[0.2em] mt-0.5 ${isTransparent ? 'text-white/60' : 'text-night/60'}`}>Atlas Vivant</span>
           </div>
         </motion.button>
 
@@ -82,7 +82,7 @@ export default function GlassNavbar({
             const isActive = currentTab === tab.id;
             return (
               <motion.button key={tab.id} onClick={() => onTabChange(tab.id)} layout
-                className={`relative px-4 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-[0.12em] flex items-center gap-2 cursor-pointer min-h-[44px] ${
+                className={`relative px-4 py-2.5 rounded-lg text-small font-bold uppercase tracking-[0.12em] flex items-center gap-2 cursor-pointer min-h-[44px] ${
                   isActive
                     ? 'text-gold bg-transparent border-none'
                     : isTransparent ? 'text-white/70 hover:text-white hover:bg-white/10'
@@ -93,7 +93,7 @@ export default function GlassNavbar({
                 <Icon className={`w-3.5 h-3.5 transition-transform duration-300 ${isActive ? 'text-gold scale-110' : ''}`} />
                 <span>{tab.label}</span>
                 {tab.badge !== undefined && tab.badge > 0 && (
-                  <motion.span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[9px] font-bold text-white"
+                  <motion.span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-micro font-bold text-white"
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 15 }}>
                     {tab.badge}
                   </motion.span>
@@ -136,7 +136,7 @@ export default function GlassNavbar({
                     <img src={session.user.image} alt={session.user.name || "User"} loading="lazy"
                       className={`w-7 h-7 rounded-full object-cover border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${isTransparent ? 'border-white/30' : 'border-border/50'}`} />
                   ) : (
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-small font-bold border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${
                       isTransparent ? 'bg-white/20 text-white border-white/30' : 'bg-night text-white border-border/50'
                     }`}>
                       {session.user.name ? session.user.name[0].toUpperCase() : "U"}
@@ -145,7 +145,7 @@ export default function GlassNavbar({
                 </div>
               </motion.div>
               <motion.button onClick={() => signOut()}
-                className={`min-w-[44px] min-h-[44px] px-2 rounded-lg cursor-pointer flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider ${
+                className={`min-w-[44px] min-h-[44px] px-2 rounded-lg cursor-pointer flex items-center justify-center gap-1 text-micro font-bold uppercase tracking-wider ${
                   isTransparent ? 'text-white/70 hover:text-rose-400 hover:bg-white/10'
                     : 'text-muted/80 hover:text-rose-500 hover:bg-rose-50'
                 }`}
@@ -156,7 +156,7 @@ export default function GlassNavbar({
             </div>
           ) : (
             <motion.button onClick={() => signIn("google", { callbackUrl: window.location.href })}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider cursor-pointer min-h-[38px] ${
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-micro font-bold uppercase tracking-wider cursor-pointer min-h-[38px] ${
                 isTransparent ? 'bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm' : 'bg-night text-white hover:bg-gold hover:text-night'
               }`}
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, MapPin, BookOpen, Heart } from 'lucide-react';
 
 const items = [
-  { icon: Sparkles, color: 'text-ocean', bg: 'bg-ocean/10', border: 'border-ocean/15', label: 'AI Itineraries', desc: 'Personalized travel guides for you' },
+  { icon: Sparkles, color: 'text-teal', bg: 'bg-teal/10', border: 'border-teal/15', label: 'AI Itineraries', desc: 'Personalized travel guides for you' },
   { icon: MapPin, color: 'text-coral', bg: 'bg-coral/10', border: 'border-coral/15', label: 'Curated Experiences', desc: 'Handpicked secrets by locals' },
   { icon: BookOpen, color: 'text-gold', bg: 'bg-gold/10', border: 'border-gold/15', label: 'Real Stories', desc: 'Authentic reviews from travelers' },
   { icon: Heart, color: 'text-teal', bg: 'bg-teal/10', border: 'border-teal/15', label: 'Save Journeys', desc: 'Archive memories in your Passport' },
@@ -13,7 +13,7 @@ export default function StatusCapsule() {
   return (
     <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 -mt-6 mb-16 relative z-20">
       <motion.div
-        className="bg-white/75 backdrop-blur-xl rounded-[28px] p-4 shadow-glass border border-border/30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch"
+        className="bg-white/75 backdrop-blur-xl rounded-3xl p-4 shadow-glass border border-border/30 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -39,8 +39,8 @@ export default function StatusCapsule() {
                 <Icon className="w-4 h-4" />
               </motion.div>
               <div className="space-y-0.5">
-                <h4 className="font-bold text-[10px] uppercase tracking-wider text-night">{item.label}</h4>
-                <p className="text-[9px] text-muted/70 leading-tight">{item.desc}</p>
+                <h4 className="font-bold text-micro uppercase tracking-wider text-night">{item.label}</h4>
+                <p className="text-micro text-muted/70 leading-tight">{item.desc}</p>
               </div>
             </motion.div>
           );

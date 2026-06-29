@@ -44,8 +44,8 @@ const createIcon = (tour: Tour, isActive: boolean, simple: boolean) => {
     html: `
       <div class="relative flex items-center justify-center select-none" style="width: 32px; height: 32px;">
         ${isActive ? '<div class="absolute inset-0 rounded-full bg-[#18B6C9] opacity-40 animate-ping"></div>' : ''}
-        <span class="text-[10px] font-bold font-sans z-10">${count}</span>
-        <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-night text-white font-mono text-[7px] uppercase tracking-wider whitespace-nowrap border border-border z-10">
+        <span class="text-micro font-bold font-sans z-10">${count}</span>
+        <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-night text-white font-mono text-micro uppercase tracking-wider whitespace-nowrap border border-border z-10">
           ${tour.title.toLowerCase().slice(0, 10)}
         </div>
       </div>
@@ -331,7 +331,7 @@ export default function DiscoveryMap({
   if (!mounted) {
     return (
       <div className="w-full h-full rounded-[24px] bg-background animate-pulse flex flex-col items-center justify-center border border-border">
-        <span className="text-[10px] font-bold text-muted/65 tracking-widest uppercase">Initializing Living Atlas...</span>
+        <span className="text-micro font-bold text-muted/65 tracking-widest uppercase">Initializing Living Atlas...</span>
       </div>
     );
   }
@@ -364,20 +364,20 @@ export default function DiscoveryMap({
       {showTapHint && !activeTour && isMobile && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 animate-pulse pointer-events-none">
           <div className="bg-night/95 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-border shadow-lg">
-            <span className="text-[9px] font-mono uppercase tracking-wider text-white/90">Tap a marker</span>
+            <span className="text-micro font-mono uppercase tracking-wider text-white/90">Tap a marker</span>
           </div>
         </div>
       )}
 
       <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center gap-2 p-3 pb-[max(12px,env(safe-area-inset-bottom,8px))]">
-        <div className="bg-surface/90 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-border shadow-sm pointer-events-none text-[9px] text-night/70 font-mono uppercase tracking-widest flex items-center gap-2">
+        <div className="bg-surface/90 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-border shadow-sm pointer-events-none text-micro text-night/70 font-mono uppercase tracking-widest flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#E95C74] inline-block animate-pulse"></span>
           <span>Living Atlas</span>
         </div>
         {!isMobile && (
           <button
             onClick={() => setCircuitsVisible(v => !v)}
-            className={`px-3 py-2 rounded-2xl border text-[9px] font-mono uppercase tracking-widest transition-all cursor-pointer shadow-sm min-h-[44px] ${
+            className={`px-3 py-2 rounded-2xl border text-micro font-mono uppercase tracking-widest transition-all cursor-pointer shadow-sm min-h-[44px] ${
               circuitsVisible
                 ? 'bg-surface border-gold/40 text-gold'
                 : 'bg-surface/70 border-border text-muted hover:border-gold'

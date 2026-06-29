@@ -24,7 +24,7 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
             <span className="font-bold text-sm text-night">{parseFloat(tour.rating.toFixed(1))}</span>
             <span className="text-xs text-muted font-light">({tour.reviewsCount} reviews)</span>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-sand border border-border text-night">{tour.difficulty}</span>
+          <span className="px-2.5 py-0.5 rounded-full text-micro font-bold uppercase tracking-wider bg-background border border-border text-night">{tour.difficulty}</span>
         </div>
         <div className="py-4 border-y border-border/40 mb-5">
           <span className="text-3xl font-display font-bold text-night">{formatINR(tour.price)}</span>
@@ -32,9 +32,9 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
         </div>
         <div className="flex flex-col gap-2.5">
           <motion.button onClick={onPlanClick}
-            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gold hover:bg-gold/90 text-[10px] font-bold uppercase tracking-[0.15em] text-night hover:shadow-[0_4px_15px_rgba(253,182,47,0.3)] transition-all cursor-pointer border-none min-h-[46px]"
+            className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gold hover:bg-gold/90 text-micro font-bold uppercase tracking-[0.15em] text-night hover:shadow-[0_4px_15px_rgba(253,182,47,0.3)] transition-all cursor-pointer border-none min-h-[46px]"
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-            <Sparkles className="w-4 h-4 text-[#0B1720]" />
+            <Sparkles className="w-4 h-4 text-night" />
             <span>Craft Journey</span>
           </motion.button>
         </div>
@@ -46,16 +46,16 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
           <h3 className="font-bold text-xs text-night uppercase tracking-wider mb-4 border-b border-border/40 pb-2">Destination Snapshot</h3>
           <div className="space-y-3">
             <div>
-              <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-1">Best Time</span>
+              <span className="text-micro font-mono uppercase tracking-wider text-muted/50 block mb-1">Best Time</span>
               <span className="text-xs font-bold text-night flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-coral" /> {tour.bestSeason || 'Oct – Mar'}</span>
             </div>
             <div className="border-t border-border/30 pt-3">
-              <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Must Try</span>
-              <p className="text-[10px] text-night/70 font-medium leading-relaxed">{cultural.mustDo[0]}</p>
+              <span className="text-micro font-mono uppercase tracking-wider text-muted/50 block mb-2">Must Try</span>
+              <p className="text-micro text-night/70 font-medium leading-relaxed">{cultural.mustDo[0]}</p>
             </div>
             <div className="border-t border-border/30 pt-3">
-              <span className="text-[8px] font-mono uppercase tracking-wider text-muted/50 block mb-2">Local Secret</span>
-              <p className="text-[10px] text-night/70 font-medium leading-relaxed">{tour.localSecret}</p>
+              <span className="text-micro font-mono uppercase tracking-wider text-muted/50 block mb-2">Local Secret</span>
+              <p className="text-micro text-night/70 font-medium leading-relaxed">{tour.localSecret}</p>
             </div>
           </div>
         </motion.div>
@@ -74,11 +74,11 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
                     <p className="text-xs font-bold text-night">{r.author}</p>
                     <div className="flex items-center gap-0.5">
                       <Star className="w-2.5 h-2.5 text-gold fill-gold" />
-                      <span className="text-[9px] font-bold text-muted">{r.rating}</span>
+                      <span className="text-micro font-bold text-muted">{r.rating}</span>
                     </div>
                   </div>
                 </div>
-                <p className="text-[11px] text-muted font-light leading-relaxed italic">"{r.comment}"</p>
+                <p className="text-small text-muted font-light leading-relaxed italic">"{r.comment}"</p>
               </div>
             ))}
           </div>

@@ -17,9 +17,9 @@ export default function WaxSeal({ text = "TRAVEBIE SEAL", subtext = "ATLAS VIVAN
       >
         <div className="w-[84%] h-[84%] rounded-full border-2 border-dashed border-white/25 flex flex-col items-center justify-center bg-coral/15 text-white text-center font-display relative">
           <div className="absolute inset-0 flex items-center justify-center rounded-full border-2 border-white/10 scale-95" />
-          <span className="text-[5px] font-mono font-bold uppercase tracking-widest leading-none block mb-0.5 text-white/90">travebie ai</span>
-          <span className="text-[7.5px] font-bold uppercase tracking-wide leading-none block text-white/95">{text}</span>
-          <span className="text-[5px] font-mono uppercase tracking-[0.2em] leading-none block mt-1 text-white/60">{subtext}</span>
+          <span className="text-micro font-mono font-bold uppercase tracking-widest leading-none block mb-0.5 text-white/90">travebie ai</span>
+          <span className="text-micro font-bold uppercase tracking-wide leading-none block text-white/95">{text}</span>
+          <span className="text-micro font-mono uppercase tracking-[0.2em] leading-none block mt-1 text-white/60">{subtext}</span>
         </div>
       </motion.div>
     </motion.div>

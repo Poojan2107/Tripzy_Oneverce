@@ -33,7 +33,7 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
         </div>
         <button
           onClick={onCreate}
-          className="px-5 py-3 sm:py-2.5 rounded-xl bg-night text-white hover:bg-ink text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer touch-action-manipulation select-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none"
+          className="px-5 py-3 sm:py-2.5 rounded-xl bg-night text-white hover:bg-ink text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer touch-action-manipulation select-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
           <span>Add Destination</span>
@@ -44,24 +44,24 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-xs">
             <thead>
-              <tr className="bg-sand text-stone uppercase font-bold tracking-wider border-b border-border">
-                <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Destination</th>
-                <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Location</th>
-                <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Coordinates</th>
-                <th className="py-4 px-6 text-[10px] font-mono tracking-[0.25em]">Attributes</th>
-                <th className="py-4 px-6 text-right text-[10px] font-mono tracking-[0.25em]">Budget Guide</th>
-                <th className="py-4 px-6 text-right text-[10px] font-mono tracking-[0.25em]">Actions</th>
+              <tr className="bg-background text-stone uppercase font-bold tracking-wider border-b border-border">
+                <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Destination</th>
+                <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Location</th>
+                <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Coordinates</th>
+                <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Attributes</th>
+                <th className="py-4 px-6 text-right text-micro font-mono tracking-[0.25em]">Budget Guide</th>
+                <th className="py-4 px-6 text-right text-micro font-mono tracking-[0.25em]">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60">
               {filtered.map((tour) => (
-                <tr key={tour.id} className="hover:bg-cream/30 transition-colors">
+                <tr key={tour.id} className="hover:bg-secondary-surface/30 transition-colors">
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
                       <img src={tour.bannerImage} alt={tour.title} loading="lazy" decoding="async" className="w-12 h-12 rounded-xl object-cover border border-border shrink-0" />
                       <div>
                         <p className="font-medium text-night text-sm">{tour.title}</p>
-                        <p className="text-[10px] text-stone mt-0.5">{tour.duration}</p>
+                        <p className="text-micro text-stone mt-0.5">{tour.duration}</p>
                       </div>
                     </div>
                   </td>
@@ -71,7 +71,7 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                       <span>{tour.location}</span>
                     </div>
                   </td>
-                  <td className="py-4 px-6 font-mono text-[10px] text-stone">
+                  <td className="py-4 px-6 font-mono text-micro text-stone">
                     {tour.latitude && tour.longitude ? (
                       <div className="flex items-center gap-1">
                         <Navigation className="w-3 h-3 text-gold" />
@@ -84,17 +84,17 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                   <td className="py-4 px-6">
                     <div className="flex gap-1.5 flex-wrap">
                       {tour.category === 'trending' && (
-                        <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Trending</span>
+                        <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded text-micro font-bold uppercase">Trending</span>
                       )}
                       {tour.category === 'popular' && (
-                        <span className="bg-ocean/10 text-ocean border border-ocean/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Featured</span>
+                        <span className="bg-teal/10 text-teal border border-teal/20 px-2 py-0.5 rounded text-micro font-bold uppercase">Featured</span>
                       )}
-                      <span className="bg-cream/30 text-stone px-2 py-0.5 rounded text-[9px] font-medium">{tour.difficulty}</span>
+                      <span className="bg-secondary-surface/30 text-stone px-2 py-0.5 rounded text-micro font-medium">{tour.difficulty}</span>
                     </div>
                   </td>
-                  <td className="py-4 px-6 text-right font-semibold text-night font-mono text-[11px]">{formatINR(tour.price)}</td>
+                  <td className="py-4 px-6 text-right font-semibold text-night font-mono text-small">{formatINR(tour.price)}</td>
                   <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
-                    <button onClick={() => onEdit(tour)} className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-border/60 touch-action-manipulation select-none" title="Edit">
+                    <button onClick={() => onEdit(tour)} className="w-11 h-11 rounded-lg bg-secondary-surface/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-border/60 touch-action-manipulation select-none" title="Edit">
                       <Edit3 className="w-4 h-4" />
                     </button>
                     <button onClick={() => onDelete(tour.id, tour.title)} className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200 touch-action-manipulation select-none" title="Delete">
@@ -115,26 +115,26 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
               <img src={tour.bannerImage} alt={tour.title} loading="lazy" decoding="async" className="w-16 h-16 rounded-xl object-cover border border-border shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-night text-sm truncate">{tour.title}</p>
-                <p className="text-[10px] text-stone mt-0.5 truncate">{tour.location}</p>
+                <p className="text-micro text-stone mt-0.5 truncate">{tour.location}</p>
                 <div className="flex gap-1.5 mt-2 flex-wrap">
-                  {tour.category === 'trending' && <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Trending</span>}
-                  {tour.category === 'popular' && <span className="bg-ocean/10 text-ocean border border-ocean/20 px-2 py-0.5 rounded text-[9px] font-bold uppercase">Featured</span>}
-                  <span className="bg-cream/30 text-stone px-2 py-0.5 rounded text-[9px] font-medium">{tour.difficulty}</span>
+                  {tour.category === 'trending' && <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded text-micro font-bold uppercase">Trending</span>}
+                  {tour.category === 'popular' && <span className="bg-teal/10 text-teal border border-teal/20 px-2 py-0.5 rounded text-micro font-bold uppercase">Featured</span>}
+                  <span className="bg-secondary-surface/30 text-stone px-2 py-0.5 rounded text-micro font-medium">{tour.difficulty}</span>
                 </div>
               </div>
               <div className="text-right shrink-0">
                 <p className="font-semibold text-night text-sm">{formatINR(tour.price)}</p>
-                <p className="text-[10px] text-stone mt-0.5">{tour.duration}</p>
+                <p className="text-micro text-stone mt-0.5">{tour.duration}</p>
               </div>
             </div>
             <div className="flex gap-2 mt-3 pt-3 border-t border-border/60">
               {tour.latitude && tour.longitude ? (
-                <span className="text-[10px] text-stone font-mono flex items-center gap-1"><Navigation className="w-3 h-3 text-gold" />{tour.latitude.toFixed(2)}, {tour.longitude.toFixed(2)}</span>
+                <span className="text-micro text-stone font-mono flex items-center gap-1"><Navigation className="w-3 h-3 text-gold" />{tour.latitude.toFixed(2)}, {tour.longitude.toFixed(2)}</span>
               ) : (
-                <span className="text-[10px] text-red-400">No coords</span>
+                <span className="text-micro text-red-400">No coords</span>
               )}
               <div className="ml-auto flex gap-2">
-                <button onClick={() => onEdit(tour)} className="w-11 h-11 rounded-lg bg-cream/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-border/60" title="Edit">
+                <button onClick={() => onEdit(tour)} className="w-11 h-11 rounded-lg bg-secondary-surface/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-border/60" title="Edit">
                   <Edit3 className="w-3.5 h-3.5" />
                 </button>
                 <button onClick={() => onDelete(tour.id, tour.title)} className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200" title="Delete">

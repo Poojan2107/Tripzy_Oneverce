@@ -20,7 +20,7 @@ export default function NotFound() {
         This chapter doesn&rsquo;t exist in the atlas. It may have been moved or the link may be incorrect.
       </motion.p>
       <motion.div className="flex gap-3" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, type: "spring", stiffness: 80, damping: 20 }}>
-        <Link href="/" className="px-6 py-3 rounded-full bg-gold text-night text-[10px] font-bold uppercase tracking-wider hover:bg-gold/80 transition-all inline-flex items-center gap-2 shadow-sm border-none cursor-pointer">
+        <Link href="/" className="px-6 py-3 rounded-full bg-gold text-night text-micro font-bold uppercase tracking-wider hover:bg-gold/80 transition-all inline-flex items-center gap-2 shadow-sm border-none cursor-pointer">
           <Compass className="w-3.5 h-3.5" />
           Back to Atlas
         </Link>

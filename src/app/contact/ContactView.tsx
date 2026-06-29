@@ -47,7 +47,7 @@ export default function ContactView() {
             </div>
           </motion.div>
 
-          <motion.div className="bg-cream border border-border/30 rounded-2xl p-6 space-y-4"
+          <motion.div className="bg-secondary-surface border border-border/30 rounded-2xl p-6 space-y-4"
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <h2 className="text-sm font-bold text-night uppercase tracking-wider">Send a Message</h2>
             <p className="text-xs text-muted leading-relaxed">

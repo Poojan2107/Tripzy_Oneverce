@@ -57,7 +57,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
   const accentColor = tour.accents?.primary || '#D6A85F';
 
   return (
-    <div className="pb-32 bg-sand min-h-[100dvh] select-none">
+    <div className="pb-32 bg-background min-h-[100dvh] select-none">
       <TourHero tour={tour} onBack={onBack} onToggleWishlist={onToggleWishlist} isWishlisted={isWishlisted} tagline={cultural?.tagline} copiedLink={copiedLink} onShare={handleShare} />
       <StatsBar tour={tour} />
 
@@ -66,7 +66,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
           <div className="lg:col-span-2 space-y-0">
             <div className="relative flex gap-1.5 overflow-x-auto no-scrollbar pb-4 border-b border-border/50 mb-8">
               {TABS.map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-4 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer border min-h-[40px] transition-all duration-200 ${activeTab === tab.id ? 'text-white border-transparent shadow-sm' : 'text-muted/70 bg-white border-border/50 hover:border-gold/50 hover:text-night'}`}>
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-4 py-2.5 rounded-xl text-micro font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer border min-h-[40px] transition-all duration-200 ${activeTab === tab.id ? 'text-white border-transparent shadow-sm' : 'text-muted/70 bg-white border-border/50 hover:border-gold/50 hover:text-night'}`}>
                   {activeTab === tab.id && (
                     <motion.span layoutId="tourTabActive" className="absolute inset-0 bg-night rounded-xl" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
                   )}
@@ -107,7 +107,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
                     <LocalIntelTab tour={tour} cultural={cultural} dayTrips={dayTrips} accentColor={accentColor} />
                   ) : (
                     <div className="py-16 text-center">
-                      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted/40">Local intel coming soon for this chapter</span>
+                      <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/40">Local intel coming soon for this chapter</span>
                     </div>
                   )}
                 </motion.div>
@@ -144,10 +144,10 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-border shadow-elevated px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom,8px))] flex items-center gap-3">
         <div className="flex-1 min-w-0">
           <span className="text-lg font-display font-bold text-night">{formatINR(tour.price)}</span>
-          <span className="text-[10px] text-muted font-light ml-1">/ person</span>
+          <span className="text-micro text-muted font-light ml-1">/ person</span>
         </div>
-        <button onClick={onPlanClick} className="shrink-0 inline-flex items-center gap-1.5 px-6 py-3 rounded-xl bg-gold text-[#0B1720] text-[10px] font-bold uppercase tracking-wider hover:bg-gold/90 transition-all cursor-pointer min-h-[44px] min-w-[44px] border-none">
-          <Sparkles className="w-3.5 h-3.5 text-[#0B1720]" />
+        <button onClick={onPlanClick} className="shrink-0 inline-flex items-center gap-1.5 px-6 py-3 rounded-xl bg-gold text-night text-micro font-bold uppercase tracking-wider hover:bg-gold/90 transition-all cursor-pointer min-h-[44px] min-w-[44px] border-none">
+          <Sparkles className="w-3.5 h-3.5 text-night" />
           <span>Craft Journey</span>
         </button>
       </div>

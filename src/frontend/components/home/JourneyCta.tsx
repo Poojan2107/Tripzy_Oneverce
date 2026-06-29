@@ -41,10 +41,10 @@ function MagneticButton({ children, onClick, className }: { children: React.Reac
 
 export default function JourneyCta({ onGoToPlanner, onGoToExplore }: JourneyCtaProps) {
   return (
-    <section className="py-20 md:py-28 bg-cream/30 border-t border-border/30">
+    <section className="py-20 md:py-28 bg-secondary-surface/30 border-t border-border/30">
       <div className="max-w-4xl mx-auto px-6 sm:px-12 md:px-16 text-center">
         <motion.div
-          className="relative border border-gold/30 rounded-[32px] p-8 md:p-14 bg-white/60 backdrop-blur-sm overflow-hidden"
+          className="relative border border-gold/30 rounded-3xl p-8 md:p-14 bg-white/60 backdrop-blur-sm overflow-hidden"
           initial={{ opacity: 0, y: 30, scale: 0.98 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true }}
@@ -62,7 +62,7 @@ export default function JourneyCta({ onGoToPlanner, onGoToExplore }: JourneyCtaP
           />
           <div className="relative z-10">
             <motion.span
-              className="font-mono text-[9px] uppercase tracking-[0.3em] text-coral block mb-4 font-bold"
+              className="font-mono text-micro uppercase tracking-[0.3em] text-coral block mb-4 font-bold"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -92,10 +92,10 @@ export default function JourneyCta({ onGoToPlanner, onGoToExplore }: JourneyCtaP
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
             >
-              <MagneticButton onClick={onGoToPlanner} className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-night text-white text-[11px] font-bold uppercase tracking-[0.18em] cursor-pointer shadow-md">
+              <MagneticButton onClick={onGoToPlanner} className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-night text-white text-small font-bold uppercase tracking-[0.18em] cursor-pointer shadow-md">
                 <Sparkles className="w-4 h-4 text-gold" /> Plan Your Journey
               </MagneticButton>
-              <MagneticButton onClick={onGoToExplore} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-night text-night text-[11px] font-bold uppercase tracking-[0.18em] cursor-pointer">
+              <MagneticButton onClick={onGoToExplore} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-night text-night text-small font-bold uppercase tracking-[0.18em] cursor-pointer">
                 <Compass className="w-4 h-4" /> Browse Atlas
               </MagneticButton>
             </motion.div>

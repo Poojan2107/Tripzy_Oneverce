@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { Compass } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Compass, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSession, signIn } from 'next-auth/react';
 import { saveItineraryAction } from '../../backend/actions/shareActions';
 import { TOURS_DATA } from '../data';
@@ -13,7 +13,7 @@ import PlannerWizard from './planner/PlannerWizard';
 import PlannerResult from './planner/PlannerResult';
 
 interface AiPlannerViewProps {
-  onSaveItinerary?: (itin: any) => void;
+  onSaveItinerary?: (itin: any, skipRedirect?: boolean) => void;
   loadedItinerary?: any;
   onClearLoadedItinerary?: () => void;
   allTours?: Tour[];
@@ -38,6 +38,8 @@ export default function AiPlannerView({
   const [saving, setSaving] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
   const { data: session } = useSession();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const [selectedDestination, setSelectedDestination] = useState<string | null>(null);
   const [fromLocation, setFromLocation] = useState('');
@@ -151,19 +153,22 @@ export default function AiPlannerView({
   const handleGenerate = async () => {
     setLoading(true);
     setLoadingStepIndex(0);
+    setLoadingMsg(LOADING_MESSAGES[0]);
 
     let msgIndex = 0;
     const msgInterval = setInterval(() => {
-      msgIndex = (msgIndex + 1) % LOADING_MESSAGES.length;
-      setLoadingMsg(LOADING_MESSAGES[msgIndex]);
-      setLoadingStepIndex(msgIndex);
-    }, 1800);
+      if (msgIndex < LOADING_MESSAGES.length - 1) {
+        msgIndex++;
+        setLoadingMsg(LOADING_MESSAGES[msgIndex]);
+        setLoadingStepIndex(msgIndex);
+      }
+    }, 2800);
 
     let timeoutId: ReturnType<typeof setTimeout>;
     try {
       const destName = selectedDestination ? (TOURS_DATA.find(t => t.id === selectedDestination)?.title || selectedDestination) : 'Unknown';
       const controller = new AbortController();
-      timeoutId = setTimeout(() => controller.abort(), 90000);
+      timeoutId = setTimeout(() => controller.abort(), 12000);
       const res = await fetch('/api/plan-trip', {
         signal: controller.signal,
         method: 'POST',
@@ -175,12 +180,12 @@ export default function AiPlannerView({
           companion: travelers || 'solo',
           budget: derivedBudgetTier,
           budgetAmount: customBudgetAmount,
-          travelStyle: mood,
+          travelStyle: mood || 'Relaxation',
           fromDate: new Date().toISOString(),
           toDate: new Date(Date.now() + customDuration * 24 * 60 * 60 * 1000).toISOString(),
           travelPace: 'Moderate',
           interests: energy || '',
-          experience: '',
+          experience: notes,
         })
       });
       clearTimeout(timeoutId);
@@ -204,10 +209,48 @@ export default function AiPlannerView({
     }
   };
 
+  const handleContinueWithGoogle = () => {
+    setShowAuthModal(false);
+    signIn('google', { callbackUrl: window.location.href });
+  };
+
+  const handleMaybeLater = () => {
+    setShowAuthModal(false);
+    const destId = itineraryResult.destinationId || selectedDestination || '';
+    const destPrettyName = getDestinationPrettyName(destId);
+    const localId = 'local-' + Date.now();
+    
+    const localItin = {
+      id: localId,
+      title: `Journal: Escape to ${destPrettyName} (Local Draft)`,
+      destination: destId,
+      budget: customBudgetAmount,
+      duration: customDuration,
+      companions: travelers || 'solo',
+      itinerary: {
+        days: itineraryResult.itinerary || [],
+        costs: itineraryResult.costs || {},
+        weather: itineraryResult.weather || {},
+        nearbyPlaces: itineraryResult.nearbyPlaces || [],
+        notes: notes,
+        recommendationScore: itineraryResult.recommendationScore || 96,
+        recommendationReasoning: itineraryResult.recommendationReasoning || "",
+      },
+      destinationName: destPrettyName,
+    };
+    
+    setSavedId(localId);
+    if (onSaveItinerary) {
+      onSaveItinerary(localItin, true);
+    }
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   const handleSave = async () => {
     if (!itineraryResult || itineraryResult.error) return;
     if (!session) {
-      signIn('google', { callbackUrl: window.location.href });
+      setShowAuthModal(true);
       return;
     }
     setSaving(true);
@@ -250,10 +293,12 @@ export default function AiPlannerView({
             destinationName: destPrettyName,
           });
         }
+      } else {
+        alert(result.error || "Your journey could not be saved right now. Your explorer journal remains safe locally. Please try again shortly.");
       }
     } catch (err) {
       console.error("Failed to save:", err);
-      alert("Could not save your journey. Check your connection and try again.");
+      alert("Your journey could not be saved right now. Your explorer journal remains safe locally. Please try again shortly.");
     } finally {
       setSaving(false);
     }
@@ -314,16 +359,46 @@ export default function AiPlannerView({
           </svg>
         </div>
         <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-coral block mb-2 font-bold animate-pulse">
-          Crafting Journey
+          Journey Companion
         </span>
-        <h2 className="font-display text-3xl font-light text-night lowercase leading-none mb-3">
+        <h2 className="font-display text-3xl font-light text-night lowercase leading-none mb-6">
           {loadingMsg}
         </h2>
-        <div className="w-full bg-border h-1 rounded-full overflow-hidden max-w-[200px]">
-          <div
-            className="bg-teal h-full transition-all duration-700 ease-out"
-            style={{ width: `${((loadingStepIndex + 1) / LOADING_MESSAGES.length) * 100}%` }}
-          />
+
+        {/* Dynamic Checklist Loader */}
+        <div className="w-full max-w-xs space-y-3.5 text-left border-t border-border/40 pt-6">
+          {LOADING_MESSAGES.map((msg, i) => {
+            const isDone = loadingStepIndex > i;
+            const isCurrent = loadingStepIndex === i;
+            return (
+              <motion.div
+                key={i}
+                className="flex items-center gap-3"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300 ${
+                  isDone 
+                    ? 'bg-gold border-gold text-night font-bold shadow-[0_0_8px_rgba(244,182,61,0.2)]' 
+                    : isCurrent 
+                      ? 'bg-teal border-teal text-white shadow-[0_0_10px_rgba(24,182,201,0.3)]' 
+                      : 'border-border/60 bg-background text-transparent'
+                }`}>
+                  {isDone ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 stroke-[3] text-night" />
+                  ) : isCurrent ? (
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                  ) : null}
+                </div>
+                <span className={`text-xs font-sans transition-colors duration-300 ${
+                  isDone ? 'text-muted/50 line-through font-light' : isCurrent ? 'text-night font-bold' : 'text-muted/30 font-light'
+                }`}>
+                  {msg}
+                </span>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     );
@@ -331,23 +406,109 @@ export default function AiPlannerView({
 
   if (itineraryResult) {
     return (
-      <PlannerResult
-        itineraryResult={itineraryResult}
-        customDuration={customDuration}
-        travelers={travelers}
-        derivedBudgetTier={derivedBudgetTier}
-        customBudgetAmount={customBudgetAmount}
-        fromLocation={fromLocation}
-        selectedDestination={selectedDestination}
-        savedId={savedId}
-        saving={saving}
-        activeDayTab={activeDayTab}
-        onActiveDayTabChange={setActiveDayTab}
-        onSave={handleSave}
-        onReset={handleReset}
-        getJourneyPersona={getJourneyPersona}
-        getDestinationPrettyName={getDestinationPrettyName}
-      />
+      <>
+        <PlannerResult
+          itineraryResult={itineraryResult}
+          customDuration={customDuration}
+          travelers={travelers}
+          derivedBudgetTier={derivedBudgetTier}
+          customBudgetAmount={customBudgetAmount}
+          fromLocation={fromLocation}
+          selectedDestination={selectedDestination}
+          savedId={savedId}
+          saving={saving}
+          activeDayTab={activeDayTab}
+          onActiveDayTabChange={setActiveDayTab}
+          onSave={handleSave}
+          onReset={handleReset}
+          getJourneyPersona={getJourneyPersona}
+          getDestinationPrettyName={getDestinationPrettyName}
+        />
+
+        {/* LIGHTWEIGHT AUTH EXPLANATION MODAL */}
+        <AnimatePresence>
+          {showAuthModal && (
+            <motion.div className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.div onClick={() => setShowAuthModal(false)} className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+              
+              <motion.div className="bg-white border border-warm-gray/50 rounded-3xl shadow-elevated p-6 max-w-sm w-full relative z-10 text-night text-left space-y-5"
+                initial={{ opacity: 0, y: 20, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 15, scale: 0.96 }}
+                transition={{ type: "spring", stiffness: 200, damping: 25 }}>
+                
+                <div className="flex items-center gap-3 border-b border-warm-gray/30 pb-3">
+                  <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold shrink-0">
+                    <Compass className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-lg font-light lowercase leading-tight">Save this journey to your Passport</h3>
+                    <p className="text-[8px] font-mono text-muted uppercase tracking-widest mt-0.5">Explorer Passport Sync</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2.5 py-1">
+                  <p className="text-xs text-muted/80 leading-relaxed font-sans font-light">
+                    Save your AI-crafted odyssey to access it anytime and build your explorer achievements.
+                  </p>
+                  <ul className="text-xs space-y-2 text-night/85 font-sans font-light">
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
+                      <span>Sync across all your devices</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-teal shrink-0" />
+                      <span>Preserve your explorer journal</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-coral shrink-0" />
+                      <span>Build your travel collection</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="flex flex-col gap-2.5 pt-2">
+                  <button
+                    onClick={handleContinueWithGoogle}
+                    className="w-full py-3 rounded-xl bg-night text-white text-[10px] font-bold uppercase tracking-wider hover:bg-[#0B1720] transition-colors cursor-pointer flex items-center justify-center gap-2 border-none shadow-sm min-h-[44px]"
+                  >
+                    <svg className="w-3.5 h-3.5 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                    </svg>
+                    Continue with Google
+                  </button>
+                  <button
+                    onClick={handleMaybeLater}
+                    className="w-full py-3 rounded-xl border border-warm-gray/40 bg-white hover:bg-[#F8F4EE] text-muted hover:text-night text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
+                  >
+                    Maybe Later
+                  </button>
+                </div>
+
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* SUCCESS TOAST */}
+        <AnimatePresence>
+          {showToast && (
+            <motion.div
+              className="fixed bottom-5 right-5 z-[100] bg-night text-white px-5 py-3 rounded-2xl shadow-elevated border border-white/10 flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 15 }}
+            >
+              <CheckCircle2 className="w-4 h-4 text-gold" />
+              <span>Journey saved locally to your Passport!</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </>
     );
   }
 

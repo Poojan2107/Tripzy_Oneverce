@@ -30,10 +30,9 @@ export const DURATION_OPTIONS = [
 ];
 
 export const LOADING_MESSAGES = [
-  "Plotting coordinates for your explorer log...",
-  "Consulting local archives for hidden gems...",
-  "Weaving your journey chapters together...",
-  "Adding photography spots and local secrets...",
+  "Connecting to explorer archives...",
+  "Consulting local knowledge...",
+  "Crafting your journey...",
 ];
 
 export const PLANNER_STEPS = [

@@ -11,7 +11,7 @@ export async function checkRateLimit(req: Request): Promise<boolean> {
     const { success } = await rateLimit.limit(ip);
     return success;
   } catch (error) {
-    console.error("Rate limit check failed:", error);
+    console.warn("Rate limit check failed (Redis outage - failing open):", error);
     return true;
   }
 }

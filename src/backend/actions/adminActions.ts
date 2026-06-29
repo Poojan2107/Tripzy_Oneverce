@@ -1,9 +1,18 @@
 "use server";
 
 import { db } from "../lib/db";
+import { auth } from "../lib/auth";
+
+async function verifyAdmin() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    throw new Error("Access Denied: Admin authorization required.");
+  }
+}
 
 export async function getAdminUsers() {
   try {
+    await verifyAdmin();
     const users = await db.user.findMany({
       select: {
         id: true,

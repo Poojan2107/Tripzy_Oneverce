@@ -65,6 +65,31 @@ export default function PlannerResult({
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
+  const handleCopyItineraryText = () => {
+    try {
+      const textParts: string[] = [];
+      textParts.push(`JOURNEY ODYSSEY: ${getDestinationPrettyName(destId).toUpperCase()}`);
+      textParts.push(`Duration: ${customDuration} Days | Mode: ${travelers === 'solo' ? 'Solo' : travelers === 'couple' ? 'Couple' : travelers === 'family' ? 'Family' : 'Group'}`);
+      textParts.push('');
+      itin.forEach((day: any, idx: number) => {
+        textParts.push(`DAY ${idx + 1}: ${day.title}`);
+        textParts.push(day.description);
+        if (day.activities && day.activities.length > 0) {
+          textParts.push('Activities:');
+          day.activities.forEach((act: string) => {
+            textParts.push(`- ${act}`);
+          });
+        }
+        textParts.push('');
+      });
+      navigator.clipboard.writeText(textParts.join('\n'));
+      alert("Journal itinerary copied as text to clipboard!");
+    } catch (e) {
+      console.error(e);
+      alert("Failed to copy itinerary text.");
+    }
+  };
+
   if (itineraryResult.error) {
     return (
       <div className="pt-28 pb-32 px-6 max-w-md mx-auto min-h-[100dvh] bg-[#F8F4EE] flex items-center justify-center">
@@ -128,7 +153,7 @@ export default function PlannerResult({
               <div className="space-y-2 text-left">
                 <div className="flex items-center gap-1.5">
                   <Compass className="w-4 h-4 text-gold animate-spin-slow" />
-                  <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-gold font-bold">tripzy.ai · companion journal</span>
+                  <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-gold font-bold">travebie.ai · companion journal</span>
                 </div>
                 <h1 className="font-display text-night font-light lowercase leading-none mt-1" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
                   your <em className="text-gold not-italic">{getDestinationPrettyName(destId).toLowerCase()}</em> odyssey
@@ -143,7 +168,7 @@ export default function PlannerResult({
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 shrink-0">
+              <div className="flex flex-wrap items-center gap-2.5 shrink-0 print:hidden">
                 {!savedId ? (
                   <motion.button
                     onClick={onSave}
@@ -165,6 +190,46 @@ export default function PlannerResult({
                     <CheckCircle2 className="w-3.5 h-3.5 text-gold" /> Archived
                   </motion.span>
                 )}
+
+                {savedId && !savedId.startsWith('local-') && (
+                  <motion.button
+                    onClick={() => {
+                      const url = `${window.location.origin}/share/${savedId}`;
+                      navigator.clipboard.writeText(url);
+                      alert("Shareable Journey link copied to clipboard:\n" + url);
+                    }}
+                    className="px-4 py-3 rounded-xl border border-teal/20 bg-teal/10 hover:bg-teal/20 text-teal text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    Share Journey
+                  </motion.button>
+                )}
+
+                <div className="relative group">
+                  <motion.button
+                    className="px-4 py-3 rounded-xl border border-border bg-background text-[10px] font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-surface transition-colors cursor-pointer min-h-[44px] flex items-center gap-1"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <span>Export Journal</span>
+                  </motion.button>
+                  <div className="absolute right-0 mt-1 w-32 bg-white border border-border rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50 py-1 font-mono text-[9px] uppercase tracking-wider">
+                    <button
+                      onClick={() => window.print()}
+                      className="w-full text-left px-3 py-2 hover:bg-[#F8F4EE] text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
+                    >
+                      Print / PDF
+                    </button>
+                    <button
+                      onClick={handleCopyItineraryText}
+                      className="w-full text-left px-3 py-2 hover:bg-[#F8F4EE] text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
+                    >
+                      Copy Text
+                    </button>
+                  </div>
+                </div>
+
                 <motion.button
                   onClick={onReset}
                   className="px-4 py-3 rounded-xl border border-border bg-background text-[10px] font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-surface transition-colors cursor-pointer min-h-[44px]"
@@ -357,12 +422,12 @@ export default function PlannerResult({
             {/* Ticket Header */}
             <div className="bg-[#132533] px-6 py-4 flex items-center justify-between border-b border-[#1A3142]">
               <div className="text-left">
-                <span className="font-mono text-[7px] uppercase tracking-[0.3em] text-gold block">tripzy.ai · atlas vivant</span>
+                <span className="font-mono text-[7px] uppercase tracking-[0.3em] text-gold block">travebie.ai · atlas vivant</span>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#DCE5EC]">Journey Boarding Pass</span>
               </div>
               <div className="text-right">
                 <span className="text-[7px] font-mono text-[#8FA0AB] block uppercase">Pass No.</span>
-                <span className="text-[10px] font-mono font-bold text-gold">TZ-{destId.slice(0,3).toUpperCase()}-{customDuration}D</span>
+                <span className="text-[10px] font-mono font-bold text-gold">TB-{destId.slice(0,3).toUpperCase()}-{customDuration}D</span>
               </div>
             </div>
 

@@ -30,7 +30,13 @@ function AnimatedStat({ value, label, suffix = '' }: { value: number; label: str
   );
 }
 
-export default function AtlasPassportPreview() {
+export default function AtlasPassportPreview({
+  onGoToExplore,
+  onGoToPassport,
+}: {
+  onGoToExplore?: () => void;
+  onGoToPassport?: () => void;
+}) {
   return (
     <section className="py-16 md:py-20 border-y border-warm-gray/30 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
@@ -51,22 +57,22 @@ export default function AtlasPassportPreview() {
               <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-gold font-bold">the atlas</span>
             </div>
             <div className="grid grid-cols-3 gap-4 mb-6">
-              <AnimatedStat value={87} label="destinations" />
-              <AnimatedStat value={250} label="chapters" />
-              <AnimatedStat value={15} label="explorers" suffix="K" />
+              <AnimatedStat value={12} label="chapters" />
+              <AnimatedStat value={5} label="explorers" suffix="K+" />
+              <AnimatedStat value={100} label="local secrets" suffix="+" />
             </div>
             <p className="text-xs text-muted/80 font-light leading-relaxed font-sans mb-6">
               Every destination in India is a living chapter. Explore curated stories, local secrets, and photography guides across the atlas.
             </p>
-            <motion.a
-              href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-night text-white text-[9px] font-bold uppercase tracking-[0.18em] hover:bg-night/80 transition-all"
+            <motion.button
+              onClick={onGoToExplore}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-night text-white text-[9px] font-bold uppercase tracking-[0.18em] hover:bg-night/80 transition-all cursor-pointer border-none"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
               <Compass className="w-3.5 h-3.5 text-gold" />
               Explore Atlas
-            </motion.a>
+            </motion.button>
           </motion.div>
 
           {/* Passport Preview */}
@@ -101,15 +107,15 @@ export default function AtlasPassportPreview() {
             <p className="text-xs text-muted/80 font-light leading-relaxed font-sans mb-6">
               Your personal travel journal. Collect chapters, save stories, and track your journey across India.
             </p>
-            <motion.a
-              href="/trips"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-night text-night text-[9px] font-bold uppercase tracking-[0.18em] hover:bg-night hover:text-white transition-all"
+            <motion.button
+              onClick={onGoToPassport}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-night text-night text-[9px] font-bold uppercase tracking-[0.18em] hover:bg-night hover:text-white transition-all cursor-pointer bg-transparent"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
               <BookOpen className="w-3.5 h-3.5" />
               View Passport
-            </motion.a>
+            </motion.button>
           </motion.div>
         </div>
       </div>

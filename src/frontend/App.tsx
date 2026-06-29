@@ -53,7 +53,7 @@ export default function App() {
   const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
   
   const [tours, setTours] = useState<Tour[]>([]);
-  const [wishlistIds, setWishlistIds] = useState<string[]>(['varanasi-spiritual', 'kerala-houseboats']);
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [savedItineraries, setSavedItineraries] = useState<any[]>([]);
   const [isClient, setIsClient] = useState(false);
   const [loadingDestinations, setLoadingDestinations] = useState(true);
@@ -184,7 +184,7 @@ export default function App() {
     });
   };
 
-  const handleSaveItinerary = (newItin: any) => {
+  const handleSaveItinerary = (newItin: any, skipRedirect = false) => {
     setSavedItineraries((prev) => {
       const exists = prev.some((i) => i.id === newItin.id);
       if (exists) return prev;
@@ -192,7 +192,9 @@ export default function App() {
       if (isClient) localStorage.setItem('tripzy_itineraries', JSON.stringify(updated));
       return updated;
     });
-    setCurrentTab('saved');
+    if (!skipRedirect) {
+      setCurrentTab('saved');
+    }
   };
 
   const handleDeleteItinerary = (itinId: string) => {
@@ -243,26 +245,28 @@ export default function App() {
   return (
     <ErrorBoundary>
     <div className="w-full min-h-[100dvh] flex flex-col bg-transparent text-ink antialiased relative overflow-x-clip">
-      <GlassNavbar
-        currentTab={currentTab}
-        onTabChange={(tab) => {
-          if (tab !== 'ai-planner') {
-            setLoadedItinerary(null);
-          }
-          setCurrentTab(tab);
-          handleSelectTour(null);
-          window.scrollTo({ top: 0, behavior: 'instant' });
-          window.history.pushState(null, '', `#${tab}`);
-        }}
-        onSearchClick={() => setSearchModalOpen(true)}
-        wishlistCount={wishlistIds.length}
-      />
+      <div className="print:hidden">
+        <GlassNavbar
+          currentTab={currentTab}
+          onTabChange={(tab) => {
+            if (tab !== 'ai-planner') {
+              setLoadedItinerary(null);
+            }
+            setCurrentTab(tab);
+            handleSelectTour(null);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.history.pushState(null, '', `#${tab}`);
+          }}
+          onSearchClick={() => setSearchModalOpen(true)}
+          wishlistCount={wishlistIds.length}
+        />
+      </div>
 
       {/* Mobile Brand Bar — logo only, no duplicate auth/nav */}
-      <header className={`md:hidden w-full sticky top-0 z-50 px-4 py-2.5 flex items-center justify-between border-b select-none transition-all duration-300 ${
+      <header className={`print:hidden md:hidden w-full z-50 px-4 py-2.5 flex items-center justify-between select-none transition-all duration-300 ${
         currentTab === 'home' && selectedTour === null
-          ? 'bg-sand/90 backdrop-blur-md border-warm-gray/25'
-          : 'bg-[#081A24]/90 backdrop-blur-md border-white/5'
+          ? 'absolute top-0 left-0 bg-transparent border-none'
+          : 'sticky top-0 border-b bg-[#081A24]/90 backdrop-blur-md border-white/5'
       }`}>
         <button
           onClick={() => {
@@ -274,10 +278,8 @@ export default function App() {
           className="flex items-center gap-2 border-none bg-transparent cursor-pointer text-left min-h-[40px]"
         >
           <Compass className="w-5 h-5 text-gold animate-spin-slow" />
-          <span className={`font-display text-lg font-bold tracking-tight lowercase ${
-            currentTab === 'home' && selectedTour === null ? 'text-night' : 'text-white'
-          }`}>
-            tripzy<span className="text-gold">.ai</span>
+          <span className="font-display text-lg font-bold tracking-tight lowercase text-white">
+            travebie<span className="text-gold">.ai</span>
           </span>
         </button>
       </header>
@@ -401,20 +403,22 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <BottomNavbar
-        currentTab={currentTab}
-        onTabChange={(tab) => {
-          if (tab !== 'ai-planner') {
-            setLoadedItinerary(null);
-          }
-          setCurrentTab(tab);
-          handleSelectTour(null);
-          window.scrollTo({ top: 0, behavior: 'instant' });
-          window.history.pushState(null, '', `#${tab}`);
-        }}
-        wishlistCount={wishlistIds.length}
-        visible={selectedTour === null}
-      />
+      <div className="print:hidden">
+        <BottomNavbar
+          currentTab={currentTab}
+          onTabChange={(tab) => {
+            if (tab !== 'ai-planner') {
+              setLoadedItinerary(null);
+            }
+            setCurrentTab(tab);
+            handleSelectTour(null);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.history.pushState(null, '', `#${tab}`);
+          }}
+          wishlistCount={wishlistIds.length}
+          visible={selectedTour === null}
+        />
+      </div>
 
       <SearchModal
         isOpen={searchModalOpen}
@@ -435,7 +439,7 @@ export default function App() {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.2 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-[calc(84px+env(safe-area-inset-bottom,0px))] right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-night text-white shadow-lg hover:bg-gold hover:text-night transition-colors cursor-pointer"
+            className="fixed bottom-[calc(76px+env(safe-area-inset-bottom,12px))] md:bottom-6 right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-night text-white shadow-lg hover:bg-gold hover:text-night transition-colors cursor-pointer"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-4 h-4" />

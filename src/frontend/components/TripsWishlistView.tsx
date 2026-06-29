@@ -11,7 +11,16 @@ import { TOURS_DATA } from '../data';
 import { formatINR } from '../utils/currency';
 import SafeImage from './ui/SafeImage';
 import Footer from './Footer';
+import dynamic from 'next/dynamic';
 
+const PassportMap = dynamic(() => import('./map/PassportMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[300px] bg-secondary-surface animate-pulse flex flex-col items-center justify-center border border-border rounded-2xl">
+      <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-muted/50">Loading Map...</span>
+    </div>
+  )
+});
 
 interface TripsWishlistViewProps {
   wishlistTours: Tour[];
@@ -51,10 +60,10 @@ function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove
         <p className="text-[11px] text-muted/80 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
         <div className="pt-3 flex justify-between items-center text-xs font-bold text-night border-t border-border mt-3">
           <span className="text-[8px] font-mono font-bold text-teal bg-teal/10 border border-teal/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            {tour.moods?.[0] || 'Chapter'}
+            {tour.moods?.[0] || 'Explore'}
           </span>
-          <span className="text-[8px] font-mono font-bold text-coral bg-coral/10 border border-coral/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            {tour.duration}
+          <span className="text-[8px] font-mono font-bold text-gold bg-gold/10 border border-gold/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            {tour.category || 'Chapter'}
           </span>
         </div>
       </div>
@@ -87,7 +96,7 @@ function EmptyPassportState({
       )
     },
     itineraries: {
-      tag: "journey chapters",
+      tag: "journey collection",
       title: "your passport awaits its first chapter",
       desc: "Begin exploring India and start collecting stories.",
       btnText: "Craft First Journey",
@@ -150,6 +159,7 @@ export default function TripsWishlistView({
     return allTours.length > 0 ? allTours : TOURS_DATA;
   }, [allTours]);
 
+  // Determine Checked Locations
   const checkedDestinationIds = useMemo(() => {
     const ids = new Set<string>();
     savedItineraries.forEach(i => {
@@ -171,12 +181,100 @@ export default function TripsWishlistView({
     return ids;
   }, [savedItineraries]);
 
+  // Calculate Enhanced Stats
+  const daysTraveled = useMemo(() => {
+    return savedItineraries.reduce((sum, itin) => sum + (itin.duration || 5), 0);
+  }, [savedItineraries]);
+
+  const regionsExplored = useMemo(() => {
+    const regions = new Set<string>();
+    wishlistTours.forEach(t => {
+      const parts = t.location.split(',');
+      const region = parts[parts.length - 2]?.trim() || parts[parts.length - 1]?.trim();
+      if (region) regions.add(region);
+    });
+    savedItineraries.forEach(itin => {
+      const tour = displayTours.find(t => t.id === itin.destination || t.dbId === itin.destination) || TOURS_DATA.find(t => t.id === itin.destination);
+      if (tour) {
+        const parts = tour.location.split(',');
+        const region = parts[parts.length - 2]?.trim() || parts[parts.length - 1]?.trim();
+        if (region) regions.add(region);
+      }
+    });
+    return regions.size;
+  }, [wishlistTours, savedItineraries, displayTours]);
+
+  // Compute Travel Preferences Badges
+  const preferences = useMemo(() => {
+    if (savedItineraries.length === 0) return null;
+
+    // Companion
+    const compCounts: Record<string, number> = {};
+    savedItineraries.forEach(i => {
+      const c = i.companions || 'solo';
+      compCounts[c] = (compCounts[c] || 0) + 1;
+    });
+    const topCompanion = Object.entries(compCounts).sort((a,b) => b[1] - a[1])[0]?.[0] || 'solo';
+    const companionLabel = topCompanion === 'solo' ? 'Solo Nomad' : topCompanion === 'couple' ? 'Romantic Duo' : topCompanion === 'family' ? 'Family Clan' : 'Group Explorers';
+
+    // Duration style
+    const avgDuration = Math.round(savedItineraries.reduce((sum, i) => sum + (i.duration || 5), 0) / savedItineraries.length);
+    const durationLabel = avgDuration <= 3 ? 'Weekend Resets' : avgDuration <= 7 ? 'Mid-length Odysseys' : 'Extended Journeys';
+
+    // Budget
+    const avgBudget = Math.round(savedItineraries.reduce((sum, i) => sum + (i.budget || 15000), 0) / savedItineraries.length);
+    const budgetLabel = avgBudget <= 15000 ? 'Explorer Budgets' : avgBudget <= 40000 ? 'Curated Comfort' : 'Floating Oases';
+
+    return {
+      companion: companionLabel,
+      duration: durationLabel,
+      budget: budgetLabel,
+      avgDuration,
+      avgBudget
+    };
+  }, [savedItineraries]);
+
+  // Travel Badges Progress
+  const getBadgeProgress = (badgeId: string) => {
+    switch (badgeId) {
+      case 'first_journey':
+        return {
+          current: savedItineraries.length,
+          target: 1,
+          label: `${savedItineraries.length}/1 journeys`
+        };
+      case 'storyteller':
+        return {
+          current: wishlistTours.length,
+          target: 3,
+          label: `${wishlistTours.length}/3 chapters`
+        };
+      case 'mountain_nomad':
+        const mountainCount = (checkedDestinationIds.has('kashmir-meadows') ? 1 : 0) + (checkedDestinationIds.has('ladakh-passes') ? 1 : 0);
+        return {
+          current: mountainCount,
+          target: 2,
+          label: `${mountainCount}/2 peaks`
+        };
+      case 'heritage_hunter':
+        const heritageCount = (checkedDestinationIds.has('varanasi-spiritual') ? 1 : 0) + (checkedDestinationIds.has('udaipur-mewar') ? 1 : 0) + (checkedDestinationIds.has('hampi-ruins') ? 1 : 0);
+        return {
+          current: heritageCount,
+          target: 3,
+          label: `${heritageCount}/3 heritage`
+        };
+      default:
+        return null;
+    }
+  };
+
   const badgesList = useMemo(() => {
     return [
       {
         id: 'first_journey',
         label: 'First Journey',
         desc: 'collected travel journal',
+        lockedDesc: 'save 1 itinerary',
         unlocked: savedItineraries.length > 0,
         icon: Compass,
       },
@@ -184,6 +282,7 @@ export default function TripsWishlistView({
         id: 'solo_explorer',
         label: 'Solo Explorer',
         desc: 'solo expedition through the atlas',
+        lockedDesc: 'travel as a solo nomad',
         unlocked: savedItineraries.some(i => i.companions === 'solo'),
         icon: User,
       },
@@ -191,6 +290,7 @@ export default function TripsWishlistView({
         id: 'storyteller',
         label: 'Storyteller',
         desc: 'local chapters documented',
+        lockedDesc: 'wishlist 3 chapters',
         unlocked: wishlistTours.length >= 3,
         icon: BookOpen,
       },
@@ -198,6 +298,7 @@ export default function TripsWishlistView({
         id: 'early_bird',
         label: 'Early Bird',
         desc: 'registered in the atlas',
+        lockedDesc: 'sign in to passport',
         unlocked: !!session,
         icon: Sparkles,
       },
@@ -205,6 +306,7 @@ export default function TripsWishlistView({
         id: 'mountain_nomad',
         label: 'Mountain Nomad',
         desc: 'northern peaks explored',
+        lockedDesc: 'explore kashmir or ladakh',
         unlocked: checkedDestinationIds.has('kashmir-meadows') || checkedDestinationIds.has('ladakh-passes'),
         icon: Mountain,
       },
@@ -212,11 +314,45 @@ export default function TripsWishlistView({
         id: 'heritage_hunter',
         label: 'Heritage Hunter',
         desc: 'historic centers visited',
+        lockedDesc: 'explore varanasi, udaipur or hampi',
         unlocked: checkedDestinationIds.has('varanasi-spiritual') || checkedDestinationIds.has('udaipur-mewar') || checkedDestinationIds.has('hampi-ruins'),
         icon: Award,
       },
     ];
   }, [savedItineraries, wishlistTours.length, checkedDestinationIds, session]);
+
+  // Group Itineraries by Year dynamically
+  const timelineGroups = useMemo(() => {
+    const groups: Record<number, any[]> = {};
+    savedItineraries.forEach(itin => {
+      let date = new Date();
+      if (itin.createdAt) {
+        date = new Date(itin.createdAt);
+      } else if (itin.id && typeof itin.id === 'string' && itin.id.startsWith('local-')) {
+        const ts = parseInt(itin.id.split('-')[1]);
+        if (!isNaN(ts)) date = new Date(ts);
+      }
+      const year = date.getFullYear();
+      if (!groups[year]) groups[year] = [];
+      
+      const tour = displayTours.find(t => t.id === itin.destination || t.dbId === itin.destination) || TOURS_DATA.find(t => t.id === itin.destination);
+      groups[year].push({
+        ...itin,
+        date,
+        location: tour?.location || 'India',
+        chapterName: tour?.chapterName || 'Chapter',
+        bannerImage: tour?.bannerImage || '/images/tours/varanasi-banner.jpg'
+      });
+    });
+
+    return Object.keys(groups)
+      .map(Number)
+      .sort((a, b) => b - a)
+      .map(year => ({
+        year,
+        items: groups[year].sort((a, b) => b.date.getTime() - a.date.getTime())
+      }));
+  }, [savedItineraries, displayTours]);
 
   return (
     <div className="pt-8 md:pt-10 pb-32 px-4 md:px-6 max-w-6xl mx-auto select-none bg-background text-night min-h-[100dvh] text-left animate-page-enter">
@@ -237,7 +373,7 @@ export default function TripsWishlistView({
       )}
 
       {/* ── 1. PASSPORT HERO ── */}
-      <div className="relative mb-10 bg-surface border border-border rounded-3xl p-7 md:p-10 shadow-card overflow-hidden">
+      <div className="relative mb-8 bg-surface border border-border rounded-3xl p-7 md:p-10 shadow-card overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-gold/5 to-transparent rounded-bl-full pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-teal/5 to-transparent rounded-tr-full pointer-events-none" />
 
@@ -256,192 +392,195 @@ export default function TripsWishlistView({
 
           <div className="flex-1 text-left">
             <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-teal font-bold block mb-1">Explorer Passport</span>
-            <h1 className="font-display text-3xl md:text-4xl text-night font-light lowercase leading-tight">
-              {session?.user?.name || "Guest Explorer"}
+            <h1 className="font-display text-3xl md:text-4xl text-night font-light lowercase leading-tight flex flex-wrap items-center gap-3">
+              <span>{session?.user?.name || "Guest Explorer"}</span>
+              {session?.user?.id && (
+                <button
+                  onClick={() => {
+                    const url = `${window.location.origin}/passport/share/${session.user.id}`;
+                    navigator.clipboard.writeText(url);
+                    alert("Public Passport link copied to clipboard:\n" + url);
+                  }}
+                  className="px-2.5 py-1 rounded-xl bg-teal/10 border border-teal/20 text-teal text-[8.5px] font-mono font-bold uppercase tracking-wider hover:bg-teal/20 transition-all cursor-pointer border-none shadow-sm"
+                >
+                  Share Passport
+                </button>
+              )}
             </h1>
             <span className="text-[10px] font-mono text-muted/50 block lowercase mt-0.5">
               Explorer Since 2026 · {session?.user?.email || "guest@tripzy.ai"}
             </span>
           </div>
 
-          <div className="grid grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 shrink-0">
-            <div className="text-center">
+          {/* Enhanced Stats grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 shrink-0 w-full md:w-auto">
+            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-warm-gray/15">
               <span className="block font-display text-2xl font-light text-night leading-none">{savedItineraries.length}</span>
-              <span className="text-[7px] font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Journeys</span>
+              <span className="text-[7.5px] font-mono uppercase tracking-widest text-muted/60 block mt-1">Journeys</span>
             </div>
-            <div className="text-center">
+            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-warm-gray/15">
               <span className="block font-display text-2xl font-light text-gold leading-none">{wishlistTours.length}</span>
-              <span className="text-[7px] font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Saved</span>
+              <span className="text-[7.5px] font-mono uppercase tracking-widest text-muted/60 block mt-1">Saved Chapters</span>
             </div>
-            <div className="text-center">
-              <span className="block font-display text-2xl font-light text-coral leading-none">{/* rough: count unique locations from wishlist */}{new Set(wishlistTours.map(t => t.location.split(',')[1]?.trim())).size || 0}</span>
-              <span className="text-[7px] font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Regions</span>
+            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-warm-gray/15">
+              <span className="block font-display text-2xl font-light text-coral leading-none">{regionsExplored}</span>
+              <span className="text-[7.5px] font-mono uppercase tracking-widest text-muted/60 block mt-1">Regions</span>
             </div>
-            <div className="text-center hidden md:block">
-              <span className="block font-display text-2xl font-light text-teal leading-none">{badgesList.filter(b => b.unlocked).length}</span>
-              <span className="text-[7px] font-mono uppercase tracking-widest text-muted/70 block mt-0.5">Seals</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 2. TRAVEL TIMELINE ── */}
-      <div className="mb-10 bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-card space-y-5">
-        <div className="flex items-center gap-2 pb-3 border-b border-border">
-          <BookOpen className="w-4 h-4 text-gold" />
-          <h3 className="font-display text-xl text-night font-light lowercase leading-none">travel timeline journal</h3>
-        </div>
-
-        <div className="relative pl-8 border-l-2 border-border/60 space-y-8 pt-2">
-          {/* 2026 */}
-          <div className="relative">
-            <div className="absolute -left-[36px] top-0 w-5 h-5 rounded-full bg-gold border-[3px] border-surface shadow-[0_0_0_2px_rgba(244,182,61,0.3)]" />
-            <span className="font-display text-xl text-night font-light block leading-none mb-3">2026</span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-background border border-border p-3.5 rounded-2xl flex items-center gap-3 hover:shadow-sm transition-shadow">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary-surface shrink-0">
-                  <img src="/images/tours/varanasi-banner.jpg" alt="Varanasi ghats at sunrise" loading="lazy" className="w-full h-full object-cover" />
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[11px] font-bold text-night lowercase block truncate">varanasi, uttar pradesh</span>
-                  <span className="text-[8px] font-mono text-muted uppercase tracking-wider block truncate">sacred ganga chapters</span>
-                </div>
-              </div>
-              <div className="bg-background border border-border p-3.5 rounded-2xl flex items-center gap-3 hover:shadow-sm transition-shadow">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary-surface shrink-0">
-                  <img src="/images/tours/kerala-banner.jpg" alt="Kerala backwaters with houseboat" loading="lazy" className="w-full h-full object-cover" />
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[11px] font-bold text-night lowercase block truncate">alleppey, kerala</span>
-                  <span className="text-[8px] font-mono text-muted uppercase tracking-wider block truncate">backwater houseboat drift</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 2025 */}
-          <div className="relative">
-            <div className="absolute -left-[36px] top-0 w-5 h-5 rounded-full bg-teal border-[3px] border-surface shadow-[0_0_0_2px_rgba(24,182,201,0.3)]" />
-            <span className="font-display text-xl text-night font-light block leading-none mb-3">2025</span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-background border border-border p-3.5 rounded-2xl flex items-center gap-3 hover:shadow-sm transition-shadow">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary-surface shrink-0">
-                  <img src="/images/tours/ladakh-banner.jpg" alt="Ladakh mountain landscape" loading="lazy" className="w-full h-full object-cover" />
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[11px] font-bold text-night lowercase block truncate">leh, ladakh</span>
-                  <span className="text-[8px] font-mono text-muted uppercase tracking-wider block truncate">high desert road trip</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 2024 */}
-          <div className="relative">
-            <div className="absolute -left-[36px] top-0 w-5 h-5 rounded-full bg-coral border-[3px] border-surface shadow-[0_0_0_2px_rgba(233,92,116,0.3)]" />
-            <span className="font-display text-xl text-night font-light block leading-none mb-3">2024</span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-background border border-border p-3.5 rounded-2xl flex items-center gap-3 hover:shadow-sm transition-shadow">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary-surface shrink-0">
-                  <img src="/images/tours/jaisalmer-banner.jpg" alt="Jaisalmer fort in golden hour" loading="lazy" className="w-full h-full object-cover" />
-                </div>
-                <div className="min-w-0">
-                  <span className="text-[11px] font-bold text-night lowercase block truncate">jaisalmer, rajasthan</span>
-                  <span className="text-[8px] font-mono text-muted uppercase tracking-wider block truncate">thar desert stone dunes</span>
-                </div>
-              </div>
+            <div className="text-center bg-[#F2ECE3]/30 p-2.5 rounded-2xl border border-warm-gray/15">
+              <span className="block font-display text-2xl font-light text-teal leading-none">{daysTraveled}</span>
+              <span className="text-[7.5px] font-mono uppercase tracking-widest text-muted/60 block mt-1">Days Traveled</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── 3. JOURNEY COLLECTION ── */}
-      {savedItineraries.length > 0 && (
-        <div className="mb-10 space-y-5">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-gold" />
-            <h3 className="font-display text-xl text-night font-light lowercase leading-none">journey collection</h3>
-            <div className="h-px flex-1 bg-border/40" />
+      {/* Grid Split layout: Left logs, Right visualizations */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10 items-start">
+        
+        {/* Left Side: Timeline Journal & Seals (col-span-2) */}
+        <div className="lg:col-span-2 space-y-8">
+          
+          {/* Dynamic Travel Timeline */}
+          <div className="bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-card space-y-5">
+            <div className="flex items-center gap-2 pb-3 border-b border-border">
+              <BookOpen className="w-4 h-4 text-gold" />
+              <h3 className="font-display text-xl text-night font-light lowercase leading-none">travel timeline journal</h3>
+            </div>
+
+            {timelineGroups.length > 0 ? (
+              <div className="relative pl-8 border-l-2 border-border/60 space-y-8 pt-2">
+                {timelineGroups.map((group) => (
+                  <div key={group.year} className="relative">
+                    <div className="absolute -left-[36px] top-0.5 w-5 h-5 rounded-full bg-gold border-[3px] border-surface shadow-[0_0_0_2px_rgba(244,182,61,0.3)]" />
+                    <span className="font-display text-xl text-night font-light block leading-none mb-3">{group.year}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {group.items.map((item) => (
+                        <div key={item.id} className="bg-background border border-border p-3.5 rounded-2xl flex items-center gap-3 hover:shadow-sm transition-shadow">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary-surface shrink-0">
+                            <img src={item.bannerImage} alt={item.title} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="min-w-0 flex-1 text-left">
+                            <span className="text-[11px] font-bold text-night lowercase block truncate">{item.title || 'Untitled Journey'}</span>
+                            <span className="text-[8px] font-mono text-muted uppercase tracking-wider block truncate">{item.location}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-muted/50 font-light italic py-6 text-center">
+                Your travel timeline is currently empty. Plan a journey to record your first milestone.
+              </p>
+            )}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {savedItineraries.slice(0, 4).map((itin: any) => {
-              const tour = displayTours.find(t => t.id === itin.destination || t.dbId === itin.destination) || TOURS_DATA.find(t => t.id === itin.destination);
-              const bannerImage = tour?.bannerImage || '/images/tours/varanasi-banner.jpg';
-              const durationDays = itin.duration || 5;
-              const companionLabel = itin.companions === 'solo' ? 'Solo Explorer' : itin.companions === 'couple' ? 'Couple Escape' : itin.companions === 'family' ? 'Family Journey' : 'Explorer';
-              const chaptersCount = durationDays;
-              return (
-                <div key={itin.id} onClick={() => onInspectItinerary?.(itin)}
-                  className="relative rounded-3xl overflow-hidden group shadow-card hover:shadow-card-hover border border-border transition-all duration-300 min-h-[280px] cursor-pointer flex flex-col justify-between p-6"
+
+          {/* Travel Seals (collected badges) */}
+          <div className="bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-card">
+            <div className="flex items-center gap-2 pb-3 border-b border-border mb-5">
+              <Award className="w-4 h-4 text-teal" />
+              <h3 className="font-display text-xl text-night font-light lowercase leading-none">travel seals — collected artifacts</h3>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {badgesList.map((badge) => (
+                <div key={badge.id}
+                  className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all duration-300 relative group overflow-hidden ${
+                    badge.unlocked
+                      ? 'bg-background border-border shadow-sm hover:shadow-md hover:border-gold/50 cursor-pointer'
+                      : 'bg-secondary-surface/40 border-dashed border-border/60 opacity-60 select-none'
+                  }`}
                 >
-                  <div className="absolute inset-0 z-0">
-                    <SafeImage src={bannerImage} alt={itin.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent z-10" />
+                  {badge.unlocked && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.03] to-teal/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  )}
+                  
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center relative mb-3 transition-all duration-500 ${
+                    badge.unlocked
+                      ? 'bg-gradient-to-tr from-gold/15 via-gold/5 to-surface border-2 border-gold/30 shadow-inner group-hover:scale-110 group-hover:rotate-6'
+                      : 'border border-dashed border-border bg-background'
+                  }`}>
+                    {badge.unlocked && (
+                      <div className="absolute inset-1 rounded-full border border-dashed border-gold/25 pointer-events-none" />
+                    )}
+                    <badge.icon className={`w-5 h-5 ${badge.unlocked ? 'text-gold drop-shadow-sm' : 'text-muted/30'}`} />
                   </div>
-                  <div className="flex justify-between items-start z-20 relative">
-                    <div className="flex gap-2">
-                      <span className="text-[8px] font-mono font-bold text-night bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-full uppercase tracking-wider border border-border">{durationDays} Days</span>
-                      <span className="text-[8px] font-mono font-bold text-gold bg-gold/15 border border-gold/30 backdrop-blur-md px-2.5 py-1 rounded-full uppercase tracking-wider">{companionLabel}</span>
+                  
+                  <span className="text-[10px] font-bold text-night leading-tight block w-full">{badge.label}</span>
+                  
+                  {badge.unlocked ? (
+                    <span className="text-[7.5px] font-mono text-gold uppercase tracking-wider block mt-1 line-clamp-1 w-full">{badge.desc}</span>
+                  ) : (
+                    <div className="w-full mt-1.5 space-y-1">
+                      <span className="text-[7px] font-mono text-muted/50 uppercase tracking-wider block line-clamp-1 w-full">{badge.lockedDesc}</span>
+                      {getBadgeProgress(badge.id) && (
+                        <div className="w-full bg-[#F2ECE3] h-1 rounded-full overflow-hidden">
+                          <div 
+                            className="bg-gold h-full transition-all duration-350" 
+                            style={{ width: `${Math.min(100, (getBadgeProgress(badge.id)!.current / getBadgeProgress(badge.id)!.target) * 100)}%` }} 
+                          />
+                        </div>
+                      )}
                     </div>
-                    <button onClick={(e) => { e.stopPropagation(); onDeleteItinerary(itin.id); }}
-                      className="w-8 h-8 rounded-full bg-surface/95 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 border border-border cursor-pointer transition-colors">
-                      <Trash2 className="w-3 h-3" />
-                    </button>
-                  </div>
-                  <div className="z-20 relative text-left">
-                    <div className="flex items-center gap-1 text-[8px] font-mono text-gold uppercase tracking-[0.2em] font-bold mb-1">
-                      <Sparkles className="w-3 h-3 text-gold" />
-                      <span>Companion Journal</span>
-                    </div>
-                    <h3 className="font-display text-xl md:text-2xl text-night font-light lowercase leading-tight group-hover:text-gold transition-colors line-clamp-1 mb-2">
-                      {itin.title || 'Untitled Itinerary'}
-                    </h3>
-                    <div className="flex justify-between items-center text-[9px] text-muted font-mono uppercase tracking-wider pt-2 border-t border-border">
-                      <span className="flex items-center gap-1.5">
-                        <BookOpen className="w-3 h-3 text-teal" />
-                        {chaptersCount} Chapters
-                      </span>
-                      <span className="flex items-center gap-1 text-teal font-bold group-hover:text-gold transition-colors">
-                        View <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
-                      </span>
-                    </div>
-                  </div>
+                  )}
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
 
-      {/* ── 4. TRAVEL SEALS ── */}
-      {badgesList.length > 0 && (
-        <div className="mb-10 bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-card">
-          <div className="flex items-center gap-2 pb-3 border-b border-border mb-5">
-            <Award className="w-4 h-4 text-teal" />
-            <h3 className="font-display text-xl text-night font-light lowercase leading-none">travel seals — collected artifacts</h3>
+        </div>
+
+        {/* Right Side: Map & Preferences (col-span-1) */}
+        <div className="space-y-6">
+          
+          {/* Destination Map Card */}
+          <div className="bg-surface border border-border rounded-3xl p-5 shadow-card space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b border-border">
+              <Compass className="w-4 h-4 text-gold animate-spin-slow" />
+              <h4 className="font-display text-lg text-night font-light lowercase leading-none">footprints map</h4>
+            </div>
+            
+            <div className="h-[300px] w-full rounded-2xl overflow-hidden shadow-inner relative">
+              <PassportMap 
+                wishlistTours={wishlistTours} 
+                savedItineraries={savedItineraries} 
+                allTours={displayTours}
+              onTourSelect={(tour) => onTourSelect(tour)}
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-            {badgesList.map((badge) => (
-              <div key={badge.id}
-                className={`p-3 rounded-xl border flex flex-col items-center text-center transition-all ${
-                  badge.unlocked
-                    ? 'bg-background border-border shadow-sm'
-                    : 'bg-secondary-surface/40 border-dashed border-border/60 opacity-30'
-                }`}
-              >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center relative mb-2 transition-all ${
-                  badge.unlocked ? 'bg-gold/10 border border-gold/20' : 'border border-border bg-background'
-                }`}>
-                  <badge.icon className={`w-4 h-4 ${badge.unlocked ? 'text-gold' : 'text-muted/40'}`} />
+
+          {/* Travel Preferences Card */}
+          <div className="bg-surface border border-border rounded-3xl p-6 shadow-card space-y-4">
+            <div className="flex items-center gap-2 pb-3 border-b border-border">
+              <Sparkles className="w-4 h-4 text-gold" />
+              <h4 className="font-display text-lg text-night font-light lowercase leading-none">travel preferences</h4>
+            </div>
+            {preferences ? (
+              <div className="space-y-3 font-sans text-xs">
+                <div className="flex justify-between items-center py-2 border-b border-border/20">
+                  <span className="text-muted">style cadence</span>
+                  <span className="font-bold text-night bg-secondary-surface px-2.5 py-0.5 rounded-full text-[9.5px]">{preferences.duration}</span>
                 </div>
-                <span className="text-[8px] font-bold text-night leading-tight block truncate w-full">{badge.label}</span>
+                <div className="flex justify-between items-center py-2 border-b border-border/20">
+                  <span className="text-muted">fellowship mode</span>
+                  <span className="font-bold text-gold bg-gold/10 px-2.5 py-0.5 rounded-full text-[9.5px]">{preferences.companion}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-muted">average budget</span>
+                  <span className="font-bold text-teal bg-teal/10 px-2.5 py-0.5 rounded-full text-[9.5px]">{preferences.budget}</span>
+                </div>
               </div>
-            ))}
+            ) : (
+              <p className="text-[10px] text-muted/50 font-light italic text-center py-4">Preferences will form as you plan journeys.</p>
+            )}
           </div>
-        </div>
-      )}
 
-      {/* ── 5. SAVED CHAPTERS ── */}
+        </div>
+
+      </div>
+
+      {/* ── 2. SAVED CHAPTERS / COLLECTION TABS ── */}
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -454,8 +593,8 @@ export default function TripsWishlistView({
               const count = tab === 'chapters' ? wishlistTours.length : savedItineraries.length;
               return (
                 <button key={tab} onClick={() => setActiveSubTab(tab as any)}
-                  className={`px-4 py-2 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer min-h-[34px] shrink-0 relative ${
-                    isActive ? 'text-white shadow-sm' : 'text-muted hover:text-night'
+                  className={`px-4 py-2 rounded-xl text-[9px] font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer min-h-[34px] shrink-0 relative border-none bg-transparent ${
+                    isActive ? 'text-white shadow-sm font-bold' : 'text-muted hover:text-night'
                   }`}
                 >
                   {isActive && (
@@ -479,14 +618,24 @@ export default function TripsWishlistView({
           <div className="animate-scale-in">
             {wishlistTours.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-                {wishlistTours.map((tour) => (
-                  <ScrapbookPostcard
-                    key={tour.id}
-                    tour={tour}
-                    onRemove={() => onRemoveWishlist(tour.id)}
-                    onInspect={() => onTourSelect(tour)}
-                  />
-                ))}
+                <AnimatePresence mode="popLayout">
+                  {wishlistTours.map((tour) => (
+                    <motion.div
+                      key={tour.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9, y: 15 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                    >
+                      <ScrapbookPostcard
+                        tour={tour}
+                        onRemove={() => onRemoveWishlist(tour.id)}
+                        onInspect={() => onTourSelect(tour)}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
             ) : (
               <EmptyPassportState type="wishlist" onNavigate={onNavigateExplore} />
@@ -498,41 +647,48 @@ export default function TripsWishlistView({
           <div className="animate-scale-in">
             {savedItineraries.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {savedItineraries.map((itin: any) => {
-                  const tour = displayTours.find(t => t.id === itin.destination || t.dbId === itin.destination) || TOURS_DATA.find(t => t.id === itin.destination);
-                  const bannerImage = tour?.bannerImage || '/images/tours/varanasi-banner.jpg';
-                  const durationDays = itin.duration || 5;
-                  const companionLabel = itin.companions === 'solo' ? 'Solo Explorer' : itin.companions === 'couple' ? 'Couple Escape' : itin.companions === 'family' ? 'Family Journey' : itin.companions === 'friends' ? 'Group Expedition' : 'Explorer';
-                  return (
-                    <div key={itin.id} onClick={() => onInspectItinerary?.(itin)}
-                      className="relative rounded-3xl overflow-hidden group shadow-card hover:shadow-card-hover border border-border transition-all duration-300 min-h-[260px] cursor-pointer flex flex-col justify-between p-5"
-                    >
-                      <div className="absolute inset-0 z-0">
-                        <SafeImage src={bannerImage} alt={itin.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent z-10" />
-                      </div>
-                      <div className="flex justify-between items-start z-20 relative">
-                        <span className="text-[8px] font-mono font-bold text-night bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-full uppercase tracking-wider border border-border">{durationDays} Days</span>
-                        <button onClick={(e) => { e.stopPropagation(); onDeleteItinerary(itin.id); }}
-                          className="w-8 h-8 rounded-full bg-surface/95 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 border border-border cursor-pointer transition-colors">
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
-                      <div className="z-20 relative text-left">
-                        <div className="flex items-center gap-1 text-[8px] font-mono text-gold uppercase tracking-[0.2em] font-bold mb-1">
-                          <Sparkles className="w-3 h-3 text-gold" />
-                          <span>Companion Journal</span>
+                <AnimatePresence mode="popLayout">
+                  {savedItineraries.map((itin: any) => {
+                    const tour = displayTours.find(t => t.id === itin.destination || t.dbId === itin.destination) || TOURS_DATA.find(t => t.id === itin.destination);
+                    const bannerImage = tour?.bannerImage || '/images/tours/varanasi-banner.jpg';
+                    const durationDays = itin.duration || 5;
+                    const companionLabel = itin.companions === 'solo' ? 'Solo Explorer' : itin.companions === 'couple' ? 'Couple Escape' : itin.companions === 'family' ? 'Family Journey' : itin.companions === 'friends' ? 'Group Expedition' : 'Explorer';
+                    return (
+                      <motion.div key={itin.id} onClick={() => onInspectItinerary?.(itin)}
+                        layout
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 15 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        className="relative rounded-3xl overflow-hidden group shadow-card hover:shadow-card-hover border border-border transition-all duration-300 min-h-[260px] cursor-pointer flex flex-col justify-between p-5"
+                      >
+                        <div className="absolute inset-0 z-0">
+                          <SafeImage src={bannerImage} alt={itin.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent z-10" />
                         </div>
-                        <h3 className="font-display text-lg text-night font-light lowercase leading-tight group-hover:text-gold transition-colors line-clamp-1">{itin.title || 'Untitled Itinerary'}</h3>
-                        <div className="flex justify-between items-center text-[9px] text-muted font-mono uppercase tracking-wider pt-2 mt-2 border-t border-border">
-                          <span className="flex items-center gap-1 text-teal font-bold group-hover:text-gold transition-colors">
-                            View <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
-                          </span>
+                        <div className="flex justify-between items-start z-20 relative">
+                          <span className="text-[8px] font-mono font-bold text-night bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-full uppercase tracking-wider border border-border">{durationDays} Days</span>
+                          <button onClick={(e) => { e.stopPropagation(); onDeleteItinerary(itin.id); }}
+                            className="w-8 h-8 rounded-full bg-surface/95 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 border border-border cursor-pointer transition-colors">
+                            <Trash2 className="w-3 h-3" />
+                          </button>
                         </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                        <div className="z-20 relative text-left">
+                          <div className="flex items-center gap-1 text-[8px] font-mono text-gold uppercase tracking-[0.25em] font-bold mb-1">
+                            <Sparkles className="w-3 h-3 text-gold" />
+                            <span>Companion Journal</span>
+                          </div>
+                          <h3 className="font-display text-lg text-night font-light lowercase leading-tight group-hover:text-gold transition-colors line-clamp-1">{itin.title || 'Untitled Itinerary'}</h3>
+                          <div className="flex justify-between items-center text-[9px] text-muted font-mono uppercase tracking-wider pt-2 mt-2 border-t border-border">
+                            <span className="flex items-center gap-1 text-teal font-bold group-hover:text-gold transition-colors">
+                              View <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
               </div>
             ) : (
               <EmptyPassportState type="itineraries" onNavigate={onNavigatePlanner || onNavigateExplore} />

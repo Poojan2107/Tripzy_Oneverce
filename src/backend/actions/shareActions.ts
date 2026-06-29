@@ -39,7 +39,10 @@ export async function saveItineraryAction(data: {
     return { success: true, id: result.id };
   } catch (err: any) {
     console.error("Failed to save itinerary in server action:", err);
-    return { success: false, error: err?.message || "Failed to save itinerary" };
+    return {
+      success: false,
+      error: "Your journey could not be saved right now. Your explorer journal remains safe locally. Please try again shortly."
+    };
   }
 }
 

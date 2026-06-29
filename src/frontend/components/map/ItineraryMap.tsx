@@ -42,8 +42,8 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
     mapInstanceRef.current = map;
 
-    // Light map tiles (CartoDB Positron)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    // CartoDB Voyager map tiles
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 20
@@ -72,7 +72,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
       const marker = L.marker([lat, lng], { icon: dayMarkerIcon }).addTo(map);
       marker.bindPopup(`
-        <div style="font-family: 'Inter', sans-serif; font-size: 11px; color: #0E1B26; padding: 4px;">
+        <div style="font-family: var(--font-sans), sans-serif; font-size: 11px; color: #0E1B26; padding: 4px;">
           <strong style="font-size: 12px; display: block; margin-bottom: 2px;">Day ${index + 1}: ${day.title}</strong>
           <span style="color: #64748B; font-size: 10px;">${day.activities?.[0] || 'Activities scheduled'}</span>
         </div>

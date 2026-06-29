@@ -49,7 +49,7 @@ function Card({ item, index }: { item: typeof items[0]; index: number }) {
   );
 }
 
-export default function WhyTripzy() {
+export default function WhyTravebie() {
   return (
     <section className="py-12 md:py-16 border-y border-warm-gray/30 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">

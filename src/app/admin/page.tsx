@@ -84,7 +84,7 @@ export default function AdminPage() {
         </div>
         <h1 className="text-4xl font-light font-display lowercase">access denied</h1>
         <p className="text-xs text-stone max-w-xs mx-auto leading-relaxed">
-          The section of Tripzy India you are trying to reach is restricted to administrators.
+          The section of Travebie India you are trying to reach is restricted to administrators.
         </p>
         <a
           href="/"

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Admin Panel',
-  description: 'Manage destinations, experiences, users, and view analytics for Tripzy India.',
+  description: 'Manage destinations, experiences, users, and view analytics for Travebie India.',
   robots: { index: false },
 };
 

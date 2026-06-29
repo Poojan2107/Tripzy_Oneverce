@@ -33,7 +33,7 @@ const steps = [
   },
 ];
 
-export default function HowTripzyWorks() {
+export default function HowTravebieWorks() {
   return (
     <section className="py-20 md:py-28 bg-white border-b border-warm-gray/30">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">

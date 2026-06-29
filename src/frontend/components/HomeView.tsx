@@ -6,8 +6,7 @@ import FeaturedChapters from "./home/FeaturedChapters";
 import TravelerStories from "./home/TravelerStories";
 import AtlasPassportPreview from "./home/AtlasPassportPreview";
 import CompanionPreview from "./home/CompanionPreview";
-import HowTripzyWorks from "./home/HowTripzyWorks";
-import WhyTripzy from "./home/WhyTripzy";
+import WhyTravebie from "./home/WhyTravebie";
 import Footer from "./Footer";
 
 interface HomeViewProps {
@@ -29,12 +28,11 @@ export default function HomeView(props: HomeViewProps) {
     <div className="bg-sand min-h-[100dvh] text-night selection:bg-coral/20 selection:text-night">
       <HeroCarousel tours={tours} onGoToPlanner={onGoToPlanner} onGoToExplore={onGoToExplore} onSelectTour={onSelectTour} />
       <CategoryScroller onQuickCategoryClick={onQuickCategoryClick} />
-      <AtlasPassportPreview />
-      <WhyTripzy />
+      <AtlasPassportPreview onGoToExplore={onGoToExplore} onGoToPassport={onGoToExplore} />
+      <WhyTravebie />
       <FeaturedChapters tours={tours} wishlistIds={wishlistIds} loadingDestinations={loadingDestinations} onSelectTour={onSelectTour} onToggleWishlist={onToggleWishlist} onGoToExplore={onGoToExplore} />
-      <HowTripzyWorks />
       <TravelerStories tours={tours} onSelectTour={onSelectTour} />
-      <CompanionPreview />
+      <CompanionPreview onGoToPlanner={onGoToPlanner} />
       <Footer />
     </div>
   );

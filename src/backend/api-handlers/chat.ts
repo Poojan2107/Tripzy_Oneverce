@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const apiKey = getGeminiApiKey();
     if (!apiKey) {
       return new Response(
-        "Tripzy AI is running in offline mode. Add a GEMINI_API_KEY to your .env file to enable live responses.",
+        "Travebie AI is running in offline mode. Add a GEMINI_API_KEY to your .env file to enable live responses.",
         { status: 200, headers: { "Content-Type": "text/plain; charset=utf-8" } }
       );
     }
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
       contents,
       config: {
         systemInstruction: {
-          parts: [{ text: "You are the Tripzy AI Travel Assistant. Your job is to help users discover, plan, and optimize their travel itineraries. Be helpful, concise, and prioritize recommending our featured and trending destinations. Provide budget breakdowns when asked." }]
+          parts: [{ text: "You are the Travebie AI Travel Assistant. Your job is to help users discover, plan, and optimize their travel itineraries. Be helpful, concise, and prioritize recommending our featured and trending destinations. Provide budget breakdowns when asked." }]
         }
       },
     });

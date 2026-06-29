@@ -55,7 +55,7 @@ export default function ContactView() {
             </p>
             <a
               href="mailto:tripzy.travell@gmail.com"
-              className="inline-block px-5 py-2.5 bg-gold text-night font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-gold-light transition-all"
+              className="inline-block px-5 py-2.5 bg-gold text-night font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-gold/90 transition-all"
             >
               Email Us
             </a>

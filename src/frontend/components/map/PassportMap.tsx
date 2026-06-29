@@ -117,11 +117,11 @@ export default function PassportMap({
       const marker = L.marker([item.lat, item.lng], { icon: customIcon }).addTo(markerGroup);
       
       marker.bindPopup(`
-        <div style="font-family: var(--font-sans), sans-serif; font-size: 11px; min-width: 140px; text-align: left; padding: 2px; color: #0E1B26;">
-          <img src="${item.bannerImage}" alt="${item.title}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 12px; margin-bottom: 6px; border: 1px solid #E7DED3;" />
-          <h5 style="font-family: var(--font-sans), sans-serif; font-size: 14px; font-weight: 700; color: #0E1B26; margin: 0 0 2px 0; text-transform: lowercase;">${item.title}</h5>
-          <p style="color: #64748B; font-size: 8px; margin: 0 0 6px 0; font-family: monospace;">📍 ${item.location}</p>
-          <button id="passport-inspect-btn-${item.id}" style="width: 100%; background: #0E1B26; color: #FFFDF9; border: none; font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">Inspect Chapter</button>
+        <div style="font-family: var(--font-sans), sans-serif; font-size: 11px; min-width: 140px; text-align: left; padding: 2px; color: var(--color-night, #0E1B26);">
+          <img src="${item.bannerImage}" alt="${item.title}" style="width: 100%; height: 75px; object-fit: cover; border-radius: 12px; margin-bottom: 6px; border: 1px solid var(--color-border, #E7DED3);" />
+          <h5 style="font-family: var(--font-sans), sans-serif; font-size: 14px; font-weight: 700; color: var(--color-night, #0E1B26); margin: 0 0 2px 0; text-transform: lowercase;">${item.title}</h5>
+          <p style="color: var(--color-muted, #64748B); font-size: 8px; margin: 0 0 6px 0; font-family: monospace;">📍 ${item.location}</p>
+          <button id="passport-inspect-btn-${item.id}" style="width: 100%; background: var(--color-night, #0E1B26); color: var(--color-surface, #FFFDF9); border: none; font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 5px 0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">Inspect Chapter</button>
         </div>
       `, { closeButton: false });
 

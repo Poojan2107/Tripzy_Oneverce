@@ -414,19 +414,19 @@ export default function PlannerResult({
             <h3 className="font-display text-xl text-night font-light lowercase">journey pass</h3>
             <div className="h-px flex-1 bg-border/65" />
           </div>
-          <div className="bg-[#0E1B26] border border-[#1A3142] rounded-3xl relative overflow-hidden shadow-card text-[#DCE5EC]">
+          <div className="bg-dark-bg border border-dark-card rounded-3xl relative overflow-hidden shadow-card text-dark-text">
             {/* Punch Holes for Ticket Aesthetic */}
             <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-background rounded-full border border-r-0 border-border z-20" />
             <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-background rounded-full border border-l-0 border-border z-20" />
 
             {/* Ticket Header */}
-            <div className="bg-[#132533] px-6 py-4 flex items-center justify-between border-b border-[#1A3142]">
+            <div className="bg-dark-surface px-6 py-4 flex items-center justify-between border-b border-dark-card">
               <div className="text-left">
                 <span className="font-mono text-[7px] uppercase tracking-[0.3em] text-gold block">travebie.ai · atlas vivant</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#DCE5EC]">Journey Boarding Pass</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-dark-text">Journey Boarding Pass</span>
               </div>
               <div className="text-right">
-                <span className="text-[7px] font-mono text-[#8FA0AB] block uppercase">Pass No.</span>
+                <span className="text-[7px] font-mono text-dark-muted block uppercase">Pass No.</span>
                 <span className="text-[10px] font-mono font-bold text-gold">TB-{destId.slice(0,3).toUpperCase()}-{customDuration}D</span>
               </div>
             </div>
@@ -435,36 +435,36 @@ export default function PlannerResult({
               {/* Journey Cities */}
               <div className="flex items-center gap-3">
                 <div className="text-left">
-                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-[#8FA0AB] block">from</span>
-                  <span className="font-display text-2xl font-light leading-none text-[#DCE5EC]">{fromLocation ? fromLocation.split(',')[0].slice(0,3).toUpperCase() : 'DEL'}</span>
+                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-dark-muted block">from</span>
+                  <span className="font-display text-2xl font-light leading-none text-dark-text">{fromLocation ? fromLocation.split(',')[0].slice(0,3).toUpperCase() : 'DEL'}</span>
                 </div>
                 <div className="flex-1 flex items-center gap-1">
-                  <div className="h-px flex-1 border-t border-dashed border-[#1A3142]" />
+                  <div className="h-px flex-1 border-t border-dashed border-dark-card" />
                   <Compass className="w-4 h-4 text-gold animate-spin-slow" />
-                  <div className="h-px flex-1 border-t border-dashed border-[#1A3142]" />
+                  <div className="h-px flex-1 border-t border-dashed border-dark-card" />
                 </div>
                 <div className="text-right">
-                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-[#8FA0AB] block">to</span>
+                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-dark-muted block">to</span>
                   <span className="font-display text-2xl font-light text-gold leading-none">{getDestinationPrettyName(destId).slice(0,3).toUpperCase()}</span>
                 </div>
               </div>
 
               {/* Dashed Line */}
-              <div className="border-t border-dashed border-[#1A3142] w-full" />
+              <div className="border-t border-dashed border-dark-card w-full" />
 
               {/* Cost Breakdowns */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-xs text-left">
                 <div>
-                  <span className="text-[#8FA0AB] font-light font-sans block text-[10px] lowercase">Transit & transfers</span>
-                  <span className="font-semibold font-mono text-[#DCE5EC] text-sm">₹{costs.transit.toLocaleString('en-IN')}</span>
+                  <span className="text-dark-muted font-light font-sans block text-[10px] lowercase">Transit & transfers</span>
+                  <span className="font-semibold font-mono text-dark-text text-sm">₹{costs.transit.toLocaleString('en-IN')}</span>
                 </div>
                 <div>
-                  <span className="text-[#8FA0AB] font-light font-sans block text-[10px] lowercase">Accommodations</span>
-                  <span className="font-semibold font-mono text-[#DCE5EC] text-sm">₹{costs.stay.toLocaleString('en-IN')}</span>
+                  <span className="text-dark-muted font-light font-sans block text-[10px] lowercase">Accommodations</span>
+                  <span className="font-semibold font-mono text-dark-text text-sm">₹{costs.stay.toLocaleString('en-IN')}</span>
                 </div>
                 <div>
-                  <span className="text-[#8FA0AB] font-light font-sans block text-[10px] lowercase">Food & experiences</span>
-                  <span className="font-semibold font-mono text-[#DCE5EC] text-sm">₹{costs.food.toLocaleString('en-IN')}</span>
+                  <span className="text-dark-muted font-light font-sans block text-[10px] lowercase">Food & experiences</span>
+                  <span className="font-semibold font-mono text-dark-text text-sm">₹{costs.food.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
@@ -476,12 +476,12 @@ export default function PlannerResult({
                 const foodPct = (costs.food / total) * 100;
                 return (
                   <div className="space-y-1.5">
-                    <div className="flex h-2 rounded-full overflow-hidden bg-[#1A3142]">
+                    <div className="flex h-2 rounded-full overflow-hidden bg-dark-card">
                       <motion.div className="bg-teal/70 h-full" initial={{ width: 0 }} animate={{ width: `${transitPct}%` }} transition={{ duration: 0.8, delay: 0.2 }} />
                       <motion.div className="bg-gold/70 h-full" initial={{ width: 0 }} animate={{ width: `${stayPct}%` }} transition={{ duration: 0.8, delay: 0.4 }} />
                       <motion.div className="bg-coral/70 h-full" initial={{ width: 0 }} animate={{ width: `${foodPct}%` }} transition={{ duration: 0.8, delay: 0.6 }} />
                     </div>
-                    <div className="flex justify-between text-[7px] font-mono text-[#8FA0AB]">
+                    <div className="flex justify-between text-[7px] font-mono text-dark-muted">
                       <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-teal/70 inline-block" />Transit</span>
                       <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-gold/70 inline-block" />Stay</span>
                       <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-coral/70 inline-block" />Food</span>
@@ -491,19 +491,19 @@ export default function PlannerResult({
               })()}
 
               {/* Total / Tier */}
-              <div className="border-t border-dashed border-[#1A3142] pt-4 flex justify-between items-end text-left">
+              <div className="border-t border-dashed border-dark-card pt-4 flex justify-between items-end text-left">
                 <div>
-                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-[#8FA0AB] block mb-1">estimated total cost</span>
+                  <span className="text-[7.5px] font-mono uppercase tracking-wider text-dark-muted block mb-1">estimated total cost</span>
                   <span className="font-display text-3xl font-light text-gold leading-none">₹{costs.total.toLocaleString('en-IN')}</span>
                 </div>
-                <span className="px-3 py-1 rounded bg-[#18B6C9]/10 text-teal text-[9px] font-bold uppercase tracking-wider border border-teal/20">
+                <span className="px-3 py-1 rounded bg-teal/10 text-teal text-[9px] font-bold uppercase tracking-wider border border-teal/20">
                   {derivedBudgetTier}
                 </span>
               </div>
 
               {/* Barcode */}
-              <div className="border-t border-dashed border-[#1A3142] pt-4 mt-2 flex flex-col items-center gap-1.5">
-                <div className="w-full h-8 bg-[#132533] flex items-center justify-center px-4 py-1.5 rounded opacity-75 hover:opacity-95 transition-opacity duration-300">
+              <div className="border-t border-dashed border-dark-card pt-4 mt-2 flex flex-col items-center gap-1.5">
+                <div className="w-full h-8 bg-dark-surface flex items-center justify-center px-4 py-1.5 rounded opacity-75 hover:opacity-95 transition-opacity duration-300">
                   <svg className="w-full h-5 text-gold/60" fill="currentColor" viewBox="0 0 100 20" preserveAspectRatio="none">
                     <rect x="0" y="0" width="2.5" height="20" /><rect x="4" y="0" width="1.2" height="20" />
                     <rect x="6" y="0" width="3.5" height="20" /><rect x="11" y="0" width="1.2" height="20" />
@@ -521,7 +521,7 @@ export default function PlannerResult({
                     <rect x="96" y="0" width="1.2" height="20" /><rect x="98" y="0" width="2.5" height="20" />
                   </svg>
                 </div>
-                <span className="font-mono text-[7px] tracking-[0.25em] text-[#8FA0AB] uppercase">TZ-{destId.slice(0,3).toUpperCase()}-{customBudgetAmount}-{customDuration}D</span>
+                <span className="font-mono text-[7px] tracking-[0.25em] text-dark-muted uppercase">TZ-{destId.slice(0,3).toUpperCase()}-{customBudgetAmount}-{customDuration}D</span>
               </div>
             </div>
           </div>

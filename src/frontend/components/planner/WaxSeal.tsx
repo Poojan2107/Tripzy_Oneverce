@@ -11,11 +11,11 @@ export default function WaxSeal({ text = "TRAVEBIE SEAL", subtext = "ATLAS VIVAN
       style={{ transformOrigin: 'center' }}
     >
       <motion.div
-        className="absolute inset-0 rounded-full bg-[#E6355A] border border-[#a01f37] opacity-95 shadow-inner flex items-center justify-center"
+        className="absolute inset-0 rounded-full bg-coral border border-coral/60 opacity-95 shadow-inner flex items-center justify-center"
         animate={{ scale: [1, 1.04, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className="w-[84%] h-[84%] rounded-full border-2 border-dashed border-white/25 flex flex-col items-center justify-center bg-[#a01f37]/10 text-white text-center font-display relative">
+        <div className="w-[84%] h-[84%] rounded-full border-2 border-dashed border-white/25 flex flex-col items-center justify-center bg-coral/15 text-white text-center font-display relative">
           <div className="absolute inset-0 flex items-center justify-center rounded-full border-2 border-white/10 scale-95" />
           <span className="text-[5px] font-mono font-bold uppercase tracking-widest leading-none block mb-0.5 text-white/90">travebie ai</span>
           <span className="text-[7.5px] font-bold uppercase tracking-wide leading-none block text-white/95">{text}</span>

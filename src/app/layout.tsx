@@ -7,7 +7,7 @@ import PageTransition from "../frontend/components/PageTransition";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
-  weight: ["400", "600", "800"],
+  weight: ["300", "400", "600", "800"],
   variable: "--font-sans",
   display: "swap",
 });

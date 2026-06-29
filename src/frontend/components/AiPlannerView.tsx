@@ -168,7 +168,7 @@ export default function AiPlannerView({
     try {
       const destName = selectedDestination ? (TOURS_DATA.find(t => t.id === selectedDestination)?.title || selectedDestination) : 'Unknown';
       const controller = new AbortController();
-      timeoutId = setTimeout(() => controller.abort(), 12000);
+      timeoutId = setTimeout(() => controller.abort(), 30000);
       const res = await fetch('/api/plan-trip', {
         signal: controller.signal,
         method: 'POST',

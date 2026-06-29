@@ -130,10 +130,10 @@ export default function PlannerWizard({
                           alt={tour.title}
                           loading="lazy"
                           className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
-                            isSelected ? 'opacity-45' : 'opacity-25'
+                            isSelected ? 'opacity-80' : 'opacity-60'
                           }`}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/35 to-transparent z-0" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-night/80 via-night/20 to-transparent z-0" />
                         
                         {isSelected && (
                           <div className="absolute top-2 right-2 z-10 bg-gold text-night rounded-full p-0.5 shadow-sm">

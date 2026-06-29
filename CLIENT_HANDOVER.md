@@ -1,27 +1,30 @@
-# Tripzy — Final Client Handover Package (V10)
+# Travebie — Final Client Handover Package (V11)
 
-Welcome to the official handover package for **Tripzy**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform.
+Welcome to the official handover package for **Travebie**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform.
 
 * **Production URL**: [https://tripzy-oneverce.vercel.app](https://tripzy-oneverce.vercel.app)
-* **Local Development**: `http://localhost:3000`
+* **Local Development**: `http://localhost:3030`
 
 ---
 
 ## 1. Project Overview
 
-Tripzy is a highly premium, interactive travel web application built to help curious explorers discover India through **12 Handcrafted Chapters**. Departing from standard travel booking catalogs and generic search grids, Tripzy focuses on:
+Travebie is a highly premium, interactive travel web application built to help curious explorers discover India through **12 Handcrafted Chapters**. Departing from standard travel booking catalogs and generic search grids, Travebie focuses on:
 - **Storytelling and Heritage**: Highlighting cultural contexts, regional secrets, and local etiquette.
-- **Passport Identity**: Replaced game-like "status level" mechanics with a dedicated **Explorer Passport** showcasing Chapters, Regions, and Journeys.
-- **AI-Powered Personalization**: Dynamically constructing custom itineraries, day-by-day route maps, and estimated travel passes using the Google Gemini API.
-- **Visual Excellence**: Implementing modern glassmorphism, responsive grid systems, and smooth animations using Tailwind CSS and Framer Motion.
+- **Passport Identity**: A dedicated **Explorer Passport** showcasing Chapters, Regions, and Journeys — with progress badges, a dynamic timeline, and an interactive footprints map.
+- **AI-Powered Personalization**: A simplified single-page AI Planner crafts immersive, day-by-day itineraries, weather predictions, and travel passes using the Google Gemini API.
+- **Visual Excellence**: Implementing modern glassmorphism, responsive grid systems, and smooth animations using Tailwind CSS v4 and Framer Motion. Fonts: **Nunito Sans** (body) + **Pacifico** (brand display).
 
 ---
 
 ## 2. Delivered Features
 
 ### 📖 The Explorer Passport
-- **Explorer Badges & Seals**: Users collect digital stamps (e.g. *First Journey*, *Solo Explorer*, *Heritage Hunter*, *Mountain Nomad*) as they explore and save travel logs.
-- **Travel Timeline Journal**: An elegant vertical timeline displaying past and planned trips organized by year.
+- **Dynamic Stats Bar**: Live counts of saved Journeys, Chapters, Regions Explored, and Days Traveled.
+- **Interactive Footprints Map**: Leaflet-powered map with gold pin markers for all saved and wishlisted destinations, with popup cards.
+- **Explorer Badges & Seals**: Progress-tracked gamified stamps (e.g. *First Journey*, *Solo Explorer*, *Heritage Hunter*, *Mountain Nomad*) with progress bars for locked badges.
+- **Travel Timeline Journal**: Elegant vertical timeline displaying past trips organized by year.
+- **Travel Preferences Card**: Auto-computed companion mode, duration style, and budget bracket from saved logs.
 - **Saved Chapters & Itineraries**: Persistent lists of bookmarked chapters and personalized journey plans.
 - **Google Authentication**: Synchronizes passports across devices using NextAuth.
 
@@ -30,11 +33,11 @@ Tripzy is a highly premium, interactive travel web application built to help cur
 - **Category Filtering**: Fast navigation by mood/experience (Nature, Luxury, Food, Spiritual, Heritage, Beaches, Adventure, Photography).
 - **Responsive Layout**: Designed to prevent duplicate footers and layout overflows on full-screen map views.
 
-### 🔮 AI Planner & Journey Companion
-- **Multi-Step Planner Wizard**: Gathers starting location, travel duration (1–14 days), budget parameters, travel companions, and preferred style.
+### 🔮 AI Planner — Simplified Single-Page Companion
+- **One-Page Form**: Destination search grid, accompaniment selector, duration picker, and an open-ended custom prompt (maps to Gemini `experience` field).
 - **Gemini API Engine**: Communicates with Google's LLM to generate granular day-by-day itineraries, weather predictions, and photography spots.
 - **Journey Boarding Pass**: A gorgeous ticket-style layout showing estimated costs (Transit, Accommodations, Food) with a dynamic breakdown chart and custom barcodes.
-- **Branded Recovery States**: Protects the user experience with branded error messages ("*We're consulting our explorer archive and preparing an alternative journey.*") and easy retry actions.
+- **Branded Recovery States**: Protects the user experience with branded error messages and easy retry actions.
 
 ### 🏨 Curated Stays & Affiliate System
 - **Affiliate Links**: Integration with major travel providers (Agoda, Goibibo, MakeMyTrip).
@@ -45,7 +48,7 @@ Tripzy is a highly premium, interactive travel web application built to help cur
 
 ## 3. Architecture
 
-Tripzy is built on a modern, decoupled web architecture:
+Travebie is built on a modern, decoupled web architecture:
 
 ```mermaid
 graph TD
@@ -115,7 +118,7 @@ Define the following environment keys in your production environment:
 
 ## 6. Admin Guide
 
-Tripzy features a secure admin dashboard where operators can inspect platform telemetry, search queries, view event charts, and check rate limit quotas.
+Travebie features a secure admin dashboard where operators can inspect platform telemetry, search queries, view event charts, and check rate limit quotas.
 
 ### Creating an Admin Account
 To promote an explorer account to the `ADMIN` role:
@@ -170,4 +173,4 @@ All partner buttons have telemetry attached via `trackAffiliateClick` inside [Ho
 
 ---
 
-*Handover checklist completed. Tripzy is ready to ship to client.*
+*Handover checklist completed. Travebie is ready to ship to client.*

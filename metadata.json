@@ -1,6 +1,6 @@
 {
-  "name": "Tripzy",
-  "description": "A premium, modern travel and tour booking platform featuring highly responsive Netflix-inspired visual carousels, glassmorphic interfaces, and immersive trip planning.",
+  "name": "Travebie",
+  "description": "A premium, storytelling-first AI Travel Companion for India — featuring 12 curated destination chapters, an AI itinerary planner powered by Gemini, Explorer Passport, and an interactive Leaflet Atlas.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

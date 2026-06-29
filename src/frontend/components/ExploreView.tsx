@@ -77,7 +77,7 @@ export default function ExploreView({
   return (
     <div className="h-[calc(100dvh-56px)] md:h-[calc(100dvh-76px)] min-h-0 bg-[#F8F4EE] flex flex-col md:flex-row select-none relative overflow-hidden text-night">
       {/* Mobile toggle */}
-      <div className={`md:hidden fixed bottom-[calc(68px+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-warm-gray/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
+      <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+env(safe-area-inset-bottom,8px))] left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-warm-gray/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         {(['list', 'map'] as const).map(view => {
           const Icon = view === 'list' ? List : Map;
           return (
@@ -142,7 +142,7 @@ export default function ExploreView({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background scrollbar-thin pb-[calc(96px+env(safe-area-inset-bottom,8px))] md:pb-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background scrollbar-thin pb-[calc(var(--nav-bottom-height)+8px+env(safe-area-inset-bottom,8px))] md:pb-4">
           {loading ? (
             Array(5).fill(null).map((_, i) => (
               <div key={i} className="h-24 rounded-2xl bg-secondary-surface animate-pulse border border-border" />

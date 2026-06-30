@@ -35,17 +35,17 @@ const steps = [
 
 export default function HowTravebieWorks() {
   return (
-    <section className="py-20 md:py-28 bg-white border-b border-border/30">
+    <section className="py-16 md:py-24 bg-white border-b border-border/25">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <ScrollReveal>
           <div className="mb-14 text-center">
-            <span className="font-mono text-micro uppercase tracking-[0.3em] text-gold block mb-3 font-bold">how it works</span>
-            <h2 className="font-display text-4xl sm:text-5xl text-night lowercase font-light tracking-[-0.03em]">
+            <span className="text-meta font-mono text-gold block mb-3">how it works</span>
+            <h2 className="font-display text-heading text-night lowercase font-light tracking-[-0.03em]">
               your explorer&rsquo;s <em className="italic font-light text-teal">journey</em>
             </h2>
           </div>
         </ScrollReveal>
-
+ 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {steps.map((step, i) => {
             const Icon = step.icon;
@@ -59,19 +59,19 @@ export default function HowTravebieWorks() {
                 transition={{ delay: i * 0.12, type: "spring", stiffness: 80, damping: 20 }}
               >
                 {i < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-12 left-[60%] w-[80%] h-px border-t border-dashed border-border/50" />
+                  <div className="hidden md:block absolute top-10 left-[60%] w-[80%] h-px border-t border-dashed border-border/40" />
                 )}
-                <div className={`w-20 h-20 rounded-2xl ${step.bgColor} border ${step.borderColor} flex items-center justify-center mx-auto mb-5 transition-transform duration-300 hover:scale-105`}>
-                  <Icon className={`w-8 h-8 ${step.color}`} />
+                <div className={`w-20 h-20 rounded-lg ${step.bgColor} border ${step.borderColor} flex items-center justify-center mx-auto mb-5 transition-transform duration-300 hover:scale-105 shadow-sm`}>
+                  <Icon className={`w-7 h-7 ${step.color}`} />
                 </div>
-                <span className="font-mono text-micro uppercase tracking-[0.25em] text-muted/40 block mb-2 font-bold">{step.number}</span>
-                <h3 className="font-display text-2xl text-night font-light lowercase mb-2">{step.title}</h3>
-                <p className="text-xs text-muted/70 font-light leading-relaxed max-w-xs mx-auto">{step.desc}</p>
+                <span className="text-meta font-mono text-muted/40 block mb-2">{step.number}</span>
+                <h3 className="font-display text-card text-night font-light lowercase mb-2">{step.title}</h3>
+                <p className="text-body text-muted/60 font-light max-w-xs mx-auto leading-normal">{step.desc}</p>
               </motion.div>
             );
           })}
         </div>
-
+ 
         <motion.div
           className="mt-14 text-center"
           initial={{ opacity: 0 }}
@@ -79,10 +79,10 @@ export default function HowTravebieWorks() {
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
         >
-          <div className="inline-flex items-center gap-2 text-micro font-mono uppercase tracking-[0.2em] text-muted/40">
-            <span className="w-8 h-px bg-border" />
+          <div className="inline-flex items-center gap-2 text-meta font-mono text-muted/40">
+            <span className="w-8 h-px bg-border/40" />
             <span>three steps to your story</span>
-            <span className="w-8 h-px bg-border" />
+            <span className="w-8 h-px bg-border/40" />
           </div>
         </motion.div>
       </div>

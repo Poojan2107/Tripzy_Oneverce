@@ -23,7 +23,7 @@ function Card({ item, index }: { item: typeof items[0]; index: number }) {
   const Icon = item.icon;
   return (
     <motion.div
-      className="group relative p-8 rounded-3xl bg-white/60 backdrop-blur-sm border border-border/30 card-lift"
+      className="group relative p-8 rounded-lg bg-white/60 backdrop-blur-sm border border-border/30 card-lift"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -31,15 +31,15 @@ function Card({ item, index }: { item: typeof items[0]; index: number }) {
     >
       <div className="relative z-10 space-y-4">
         <FloatIcon>
-          <div className={`w-12 h-12 rounded-2xl ${item.bg} flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform duration-300`}>
-            <Icon className="w-6 h-6 stroke-[1.5]" />
+          <div className={`w-12 h-12 rounded-md ${item.bg} flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform duration-300`}>
+            <Icon className="w-5.5 h-5.5 stroke-[1.5]" />
           </div>
         </FloatIcon>
-        <h3 className="font-display text-2xl text-night font-light lowercase">{item.title}</h3>
-        <p className="text-small text-muted/90 leading-relaxed font-light font-sans">{item.desc}</p>
+        <h3 className="font-display text-card text-night font-light lowercase">{item.title}</h3>
+        <p className="text-body text-muted/80 leading-relaxed font-light">{item.desc}</p>
       </div>
       <motion.div
-        className="absolute -inset-[2px] rounded-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        className="absolute -inset-[2px] rounded-lg -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
         style={{
           background: 'linear-gradient(135deg, rgba(253,182,47,0.08), rgba(230,53,90,0.04), rgba(59,130,246,0.06))',
           filter: 'blur(8px)',
@@ -48,10 +48,10 @@ function Card({ item, index }: { item: typeof items[0]; index: number }) {
     </motion.div>
   );
 }
-
+ 
 export default function WhyTravebie() {
   return (
-    <section className="py-12 md:py-16 border-y border-border/30 bg-white">
+    <section className="py-16 border-y border-border/30 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {items.map((item, i) => <Card key={i} item={item} index={i} />)}

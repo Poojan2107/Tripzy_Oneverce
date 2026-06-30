@@ -9,7 +9,7 @@ if (!email) {
   process.exit(1);
 }
 
-const url = process.env.VERCEL_URL || "https://tripzy-oneverce.vercel.app";
+const url = process.env.VERCEL_URL || "https://travebie-oneverce.vercel.app";
 const setupKey = process.env.ADMIN_SETUP_KEY;
 
 if (!setupKey) {

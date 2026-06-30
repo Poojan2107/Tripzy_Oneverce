@@ -14,26 +14,26 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                 <Compass className="w-4 h-4 text-gold" />
               </div>
-              <span className="font-logo text-xl text-white font-bold tracking-tight lowercase">
+              <span className="font-logo text-card text-white font-bold tracking-tight lowercase">
                 travebie<span className="text-gold">.ai</span>
               </span>
             </div>
-            <p className="text-micro font-mono uppercase tracking-[0.2em] text-white/40">Atlas Vivant</p>
-            <p className="text-micro text-white/30 font-light leading-relaxed max-w-xs font-sans">
+            <p className="text-meta font-mono text-white/40">Atlas Vivant</p>
+            <p className="text-meta text-white/35 leading-relaxed max-w-xs">
               Every destination tells a story. Explore chapter by chapter, journey by journey.
             </p>
           </div>
 
           {/* Explore */}
           <div className="text-left space-y-3">
-            <span className="text-micro font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Navigate</span>
-            <div className="space-y-1.5">
+            <span className="text-meta font-mono text-white/50 block">Navigate</span>
+            <div className="space-y-2">
               {[
                 { label: 'Explore Atlas', href: '#explore' },
                 { label: 'AI Companion', href: '#ai-planner' },
                 { label: 'Passport', href: '#saved' },
               ].map(link => (
-                <a key={link.label} href={link.href} className="block text-small text-white/40 hover:text-gold transition-colors font-light">
+                <a key={link.label} href={link.href} className="block text-caption text-white/40 hover:text-gold transition-colors font-medium">
                   {link.label}
                 </a>
               ))}
@@ -42,28 +42,28 @@ export default function Footer() {
 
           {/* Legal */}
           <div className="text-left space-y-3">
-            <span className="text-micro font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Info</span>
-            <div className="space-y-1.5">
-              <a href="/privacy" className="block text-small text-white/40 hover:text-gold transition-colors font-light">Privacy</a>
-              <a href="/terms" className="block text-small text-white/40 hover:text-gold transition-colors font-light">Terms</a>
-              <a href="/contact" className="block text-small text-white/40 hover:text-gold transition-colors font-light">Contact</a>
+            <span className="text-meta font-mono text-white/50 block">Info</span>
+            <div className="space-y-2">
+              <a href="/privacy" className="block text-caption text-white/40 hover:text-gold transition-colors font-medium">Privacy</a>
+              <a href="/terms" className="block text-caption text-white/40 hover:text-gold transition-colors font-medium">Terms</a>
+              <a href="/contact" className="block text-caption text-white/40 hover:text-gold transition-colors font-medium">Contact</a>
             </div>
           </div>
 
           {/* Connect */}
           <div className="text-left space-y-3">
-            <span className="text-micro font-mono uppercase tracking-[0.2em] text-white/50 font-bold block">Journey</span>
-            <div className="space-y-1.5">
+            <span className="text-meta font-mono text-white/50 block">Journey</span>
+            <div className="space-y-2">
               {['Varanasi', 'Kerala', 'Ladakh', 'Rajasthan'].map(dest => (
-                <a key={dest} href="#explore" className="block text-small text-white/40 hover:text-gold transition-colors font-light">{dest}</a>
+                <a key={dest} href="#explore" className="block text-caption text-white/40 hover:text-gold transition-colors font-medium">{dest}</a>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-micro font-mono uppercase tracking-wider text-white/25">
+        <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-meta font-mono text-white/25">
           <span>&copy; {year} travebie.ai — all journeys reserved</span>
-          <span className="flex items-center gap-1">crafted with <Heart className="w-3 h-3 text-coral inline" /> for explorers</span>
+          <span className="flex items-center gap-1.5">crafted with <Heart className="w-3.5 h-3.5 text-coral inline stroke-[2.5]" /> for explorers</span>
         </div>
       </div>
     </footer>

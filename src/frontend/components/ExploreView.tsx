@@ -106,39 +106,39 @@ export default function ExploreView({
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-background border border-border focus-within:border-gold transition-colors">
+          <div className="flex items-center gap-2.5 px-3 py-2 rounded-md bg-background border border-border focus-within:border-gold transition-colors">
             <Search className="w-4 h-4 text-muted/50 shrink-0" />
             <input type="text" placeholder="Search destinations..."
               value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              className="bg-transparent text-base text-night placeholder:text-muted/40 outline-none w-full font-sans font-light"
+              className="bg-transparent text-body text-night placeholder:text-muted/40 outline-none w-full font-light"
             />
             {searchQuery && (
-              <motion.button onClick={() => setSearchQuery('')} aria-label="Clear search" className="shrink-0 w-8 h-8 flex items-center justify-center"
+              <motion.button onClick={() => setSearchQuery('')} aria-label="Clear search" className="shrink-0 w-8 h-8 flex items-center justify-center border-none bg-transparent"
                 initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}>
                 <X className="w-3.5 h-3.5 text-muted/50 hover:text-night" />
               </motion.button>
             )}
           </div>
-
+ 
           <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none -mx-5 px-5">
             {CATEGORY_CHIPS.map((chip) => (
               <motion.button key={chip.id}
                 onClick={() => { setActiveCategory(chip.id); setActiveTourId(null); }}
-                className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-micro font-mono uppercase tracking-wider transition-colors duration-300 border min-h-[36px] flex items-center cursor-pointer ${
+                className={`flex-shrink-0 px-3.5 py-1.5 rounded-md text-meta font-mono transition-colors duration-300 border min-h-[32px] flex items-center cursor-pointer ${
                   activeCategory === chip.id
                     ? 'bg-night text-white border-night'
                     : 'bg-background text-muted border-border hover:border-gold'
                 }`}
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               >
                 {chip.label.replace(' India', '')}
               </motion.button>
             ))}
           </div>
-
+ 
           {/* Real atlas stats */}
           <div className="py-2.5 px-1 border-t border-border pt-3.5 flex justify-center">
-            <span className="text-micro font-mono uppercase tracking-[0.15em] text-muted/70 font-semibold">12 Living Chapters · India's Story Atlas</span>
+            <span className="text-meta font-mono text-muted/70 font-semibold">12 Living Chapters · India's Story Atlas</span>
           </div>
         </div>
 
@@ -182,36 +182,36 @@ export default function ExploreView({
                         setActiveTourId(tour.id);
                       }
                     }}
-                    className={`group rounded-3xl border transition-all duration-300 cursor-pointer overflow-hidden ${
+                    className={`group rounded-md border transition-all duration-300 cursor-pointer overflow-hidden ${
                       isActive
-                        ? 'bg-surface border-teal shadow-card'
-                        : 'bg-surface border-border hover:border-muted/50 hover:shadow-sm'
+                        ? 'bg-surface border-teal shadow-md animate-scale-in'
+                        : 'bg-surface border-border/70 hover:border-muted/30 hover:shadow-sm'
                     }`}
                   >
                     <div className="flex items-center p-2.5 gap-3">
-                      <div className="w-[72px] h-[72px] shrink-0 overflow-hidden bg-secondary-surface rounded-2xl relative">
+                      <div className="w-[72px] h-[72px] shrink-0 overflow-hidden bg-secondary-surface rounded-md relative">
                         <SafeImage src={tour.bannerImage} alt={tour.title}
-                          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110" />
+                          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                       <div className="flex-1 min-w-0 flex flex-col justify-between text-left py-0.5">
                         <div>
-                          <div className="flex items-center gap-1.5 text-micro font-mono text-muted uppercase tracking-widest">
+                          <div className="flex items-center gap-1.5 text-meta font-mono text-muted">
                             <span className="text-gold font-bold">{tour.chapterName || 'Chapter 01'}</span>
                             <span className="text-border/40">·</span>
                             <span className="truncate max-w-[100px]">{tour.location.split(',')[0]}</span>
                           </div>
-                          <h3 className="font-display text-h4 text-night font-light lowercase truncate mt-0.5 leading-tight group-hover:text-gold transition-colors">{tour.title}</h3>
+                          <h3 className="font-display text-card text-night font-light lowercase truncate mt-0.5 leading-tight group-hover:text-gold transition-colors">{tour.title}</h3>
                         </div>
                         <div className="flex items-center justify-between mt-1.5">
-                          <span className="text-micro font-semibold text-night">{formatINR(tour.price)}</span>
+                          <span className="text-meta font-bold text-night">{formatINR(tour.price)}</span>
                           <div className="flex items-center gap-1.5">
                             <div className="flex items-center gap-0.5">
-                              <Star className="w-2.5 h-2.5 fill-gold text-gold" />
-                              <span className="text-small font-bold text-night">{parseFloat(tour.rating.toFixed(1))}</span>
+                              <Star className="w-3.5 h-3.5 fill-gold text-gold" />
+                              <span className="text-meta font-bold text-night">{parseFloat(tour.rating.toFixed(1))}</span>
                             </div>
-                            <span className="text-micro font-bold uppercase tracking-wider text-teal flex items-center gap-0.5 group-hover:gap-1 transition-all">
-                              Explore <ArrowRight className="w-2.5 h-2.5" />
+                            <span className="text-meta font-bold text-teal flex items-center gap-0.5 group-hover:gap-1 transition-all">
+                              Explore <ArrowRight className="w-3.5 h-3.5" />
                             </span>
                           </div>
                         </div>
@@ -224,24 +224,24 @@ export default function ExploreView({
           )}
         </div>
       </div>
-
+ 
       {/* Center: Map panel */}
       <div className={`flex-1 h-full relative ${mobileView === 'map' ? 'block' : 'hidden md:block'}`}>
         <DiscoveryMap tours={tours} activeTourId={activeTourId} onActiveTourChange={setActiveTourId} onSelectTour={onTourSelect} />
       </div>
-
+ 
       {/* Right: Destination Preview card */}
       <div className={`hidden lg:flex w-[28%] flex-col border-l border-border bg-surface h-full overflow-y-auto shrink-0 p-5 ${activeTour ? '' : 'items-center justify-center'}`}>
         {activeTour ? (
-          <motion.div key={activeTour.id} className="space-y-5 w-full"
+          <motion.div key={activeTour.id} className="space-y-5 w-full text-left"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}>
-            <div className="aspect-[3/2] rounded-3xl overflow-hidden bg-secondary-surface shadow-card border border-border group">
+            <div className="aspect-[3/2] rounded-lg overflow-hidden bg-secondary-surface shadow-md border border-border/70 group">
               <img src={activeTour.bannerImage} alt={activeTour.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="space-y-4">
-              <div className="flex items-center gap-1.5 text-micro font-mono text-muted uppercase tracking-widest">
+              <div className="flex items-center gap-1.5 text-meta font-mono text-muted">
                 <span className="font-bold text-gold">{activeTour.chapterName || 'Chapter 01'}</span>
                 {activeTour.chapterTitle && (
                   <>
@@ -250,31 +250,31 @@ export default function ExploreView({
                   </>
                 )}
               </div>
-              <h2 className="font-display text-h2 text-night font-light lowercase leading-[0.95]">{activeTour.title}</h2>
+              <h2 className="font-display text-heading text-night font-light lowercase leading-[1.05]">{activeTour.title}</h2>
               <p className="text-body text-muted/80 font-light leading-relaxed line-clamp-3">{activeTour.storyNarrative || activeTour.subtitle}</p>
-              <div className="flex items-center gap-2 text-small font-mono text-muted">
-                <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{activeTour.duration}</span>
+              <div className="flex items-center gap-2 text-caption font-mono text-muted">
+                <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{activeTour.duration}</span>
                 <span className="text-border/40">·</span>
                 <span className="font-bold text-teal capitalize">{getMoodLabel(activeTour.id)}</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {activeTour.moods?.slice(0, 3).map(m => (
-                  <span key={m} className="px-2.5 py-1 rounded-full bg-background text-micro font-bold uppercase tracking-wider text-muted border border-border/30">{m}</span>
+                  <span key={m} className="px-2.5 py-1 rounded-sm bg-background text-meta text-muted border border-border/30 font-semibold">{m}</span>
                 ))}
               </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">
-                <div className="text-micro text-muted/50 font-light">
-                  <span className="text-small font-medium text-night">{formatINR(activeTour.price)}</span>
+                <div className="text-meta text-muted/50">
+                  <span className="text-body font-semibold text-night">{formatINR(activeTour.price)}</span>
                   <span className="ml-0.5">/ day</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-                  <span className="text-small font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
+                  <span className="text-meta font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
                 </div>
               </div>
               <motion.button onClick={() => onTourSelect(activeTour)}
-                className="w-full py-3.5 rounded-full bg-night text-white text-micro font-bold uppercase tracking-[0.12em] hover:bg-teal transition-all cursor-pointer flex items-center justify-center gap-2"
-                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+                className="btn btn-night w-full h-11 px-6 rounded-md text-caption flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
                 <Compass className="w-4 h-4 text-gold" />
                 View Chapter
               </motion.button>

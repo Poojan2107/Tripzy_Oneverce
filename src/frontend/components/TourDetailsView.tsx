@@ -64,17 +64,17 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
       <div className="max-w-7xl mx-auto px-6 mt-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-0">
-            <div className="relative flex gap-1.5 overflow-x-auto no-scrollbar pb-4 border-b border-border/50 mb-8">
+            <div className="relative flex gap-1.5 overflow-x-auto no-scrollbar pb-4 border-b border-border/20 mb-8">
               {TABS.map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-4 py-2.5 rounded-xl text-micro font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer border min-h-[40px] transition-all duration-200 ${activeTab === tab.id ? 'text-white border-transparent shadow-sm' : 'text-muted/70 bg-white border-border/50 hover:border-gold/50 hover:text-night'}`}>
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-4 py-2.5 rounded-md text-meta font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer border min-h-[38px] transition-all duration-200 ${activeTab === tab.id ? 'text-white border-transparent' : 'text-muted bg-white border-border/40 hover:border-gold/50 hover:text-night shadow-sm'}`}>
                   {activeTab === tab.id && (
-                    <motion.span layoutId="tourTabActive" className="absolute inset-0 bg-night rounded-xl" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
+                    <motion.span layoutId="tourTabActive" className="absolute inset-0 bg-night rounded-md shadow-sm" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
                   )}
                   <span className="relative z-10">{tab.label}</span>
                 </button>
               ))}
             </div>
-
+ 
             <AnimatePresence mode="wait">
               {activeTab === 'story' && (
                 <motion.div key="story"
@@ -107,7 +107,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
                     <LocalIntelTab tour={tour} cultural={cultural} dayTrips={dayTrips} accentColor={accentColor} />
                   ) : (
                     <div className="py-16 text-center">
-                      <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/40">Local intel coming soon for this chapter</span>
+                      <span className="text-meta font-mono text-muted/40">Local intel coming soon for this chapter</span>
                     </div>
                   )}
                 </motion.div>
@@ -134,20 +134,20 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
               )}
             </AnimatePresence>
           </div>
-
+ 
           <Sidebar tour={tour} cultural={cultural} onPlanClick={onPlanClick} />
         </div>
       </div>
-
+ 
       <Footer />
-
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-border shadow-elevated px-4 py-3 pb-[max(12px,env(safe-area-inset-bottom,8px))] flex items-center gap-3">
-        <div className="flex-1 min-w-0">
-          <span className="text-lg font-display font-bold text-night">{formatINR(tour.price)}</span>
-          <span className="text-micro text-muted font-light ml-1">/ person</span>
+ 
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-border shadow-lg px-4 py-3.5 pb-[max(16px,env(safe-area-inset-bottom,12px))] flex items-center justify-between gap-3">
+        <div className="flex-1 min-w-0 text-left">
+          <span className="text-card font-display font-bold text-night">{formatINR(tour.price)}</span>
+          <span className="text-meta text-muted ml-1">/ person</span>
         </div>
-        <button onClick={onPlanClick} className="shrink-0 inline-flex items-center gap-1.5 px-6 py-3 rounded-xl bg-gold text-night text-micro font-bold uppercase tracking-wider hover:bg-gold/90 transition-all cursor-pointer min-h-[44px] min-w-[44px] border-none">
-          <Sparkles className="w-3.5 h-3.5 text-night" />
+        <button onClick={onPlanClick} className="btn btn-primary h-11 px-5 rounded-md text-caption flex items-center gap-1.5 cursor-pointer">
+          <Sparkles className="w-3.5 h-3.5 text-night animate-pulse" />
           <span>Craft Journey</span>
         </button>
       </div>

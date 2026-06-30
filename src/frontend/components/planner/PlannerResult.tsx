@@ -298,34 +298,25 @@ export default function PlannerResult({
           </div>
  
           {/* Day Tabs */}
-           <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-none">
+           <div className="flex gap-2 overflow-x-auto pb-3 scrollbar-none -mx-1 px-1">
              {itin.map((dayItem: any, idx: number) => {
                const isActive = activeDayTab === idx;
                return (
                  <motion.button
                    key={idx}
                    onClick={() => onActiveDayTabChange(idx)}
-                   className={`flex-shrink-0 flex flex-col items-center justify-center px-5 py-3 rounded-full border transition-all duration-300 cursor-pointer outline-none ${
+                   className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-mono font-bold tracking-wide transition-all duration-200 cursor-pointer outline-none select-none ${
                      isActive
-                       ? 'bg-gold text-night border-gold shadow-lg scale-105 z-10 font-bold'
-                       : 'bg-surface text-muted border-border/40 hover:border-gold hover:text-night'
+                       ? 'bg-gold text-night border-gold shadow-md'
+                       : 'bg-surface text-muted/70 border-border/40 hover:border-gold/50 hover:text-night hover:bg-background'
                    }`}
-                   style={{ minWidth: '80px' }}
-                   whileHover={{ y: -2 }}
-                   whileTap={{ scale: 0.95 }}
+                   whileHover={{ y: -1 }}
+                   whileTap={{ scale: 0.96 }}
                  >
-                   <span className={`text-meta font-mono text-current opacity-60 uppercase tracking-tighter leading-none mb-1 ${isActive ? 'text-night' : ''}`}>
-                     {isActive ? 'Active' : 'Day'} {idx + 1}
-                   </span>
-                   <span className={`font-display text-lg leading-none ${isActive ? 'text-night' : 'text-muted'}`}>
+                   <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${isActive ? 'bg-night/20 text-night' : 'bg-secondary-surface text-muted/60'}`}>
                      {idx + 1}
                    </span>
-                   {isActive && (
-                     <motion.div 
-                       layoutId="dayTabIndicator"
-                       className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-night" 
-                     />
-                   )}
+                   <span className="uppercase tracking-widest text-[10px]">{isActive ? dayItem.title?.split(' ').slice(0, 2).join(' ') || `Day ${idx + 1}` : `Day ${idx + 1}`}</span>
                  </motion.button>
                );
              })}
@@ -394,26 +385,34 @@ export default function PlannerResult({
                   )}
                 </div>
               )}
- 
-              {/* Vertical progression line stops */}
-               <div className="relative pl-6 border-l-2 border-gold/30 mt-6 space-y-8">
-                 {currentDay.activities && currentDay.activities.map((act: string, aIdx: number) => (
-                   <div key={aIdx} className="relative group text-left">
-                     {/* Indicator Dot */}
-                     <div className="absolute -left-[31px] top-2 w-4 h-4 rounded-full bg-gold border-2 border-surface shadow-sm transition-all duration-300 group-hover:scale-125 z-10" />
-                     
-                     <div className="bg-background/50 hover:bg-white transition-all duration-300 p-5 rounded-xl border border-border/40 hover:border-gold/30 hover:shadow-sm group">
-                       <div className="flex items-center gap-2 mb-2">
-                         <span className="text-meta font-mono text-gold font-bold uppercase tracking-wider">Explorer Log</span>
-                         <span className="h-px w-3 bg-border/40" />
-                         <span className="text-meta font-mono text-muted/60 uppercase">Stop {aIdx + 1}</span>
+              {/* Activity Stops — vertical timeline */}
+               <div className="relative pl-8 mt-4 space-y-5">
+                 {/* vertical line */}
+                 <div className="absolute left-3 top-0 bottom-0 w-px bg-gradient-to-b from-gold/60 via-gold/20 to-transparent" />
+                 {currentDay.activities && currentDay.activities.map((act: string, aIdx: number) => {
+                   const timeLabels = ['Morning', 'Midday', 'Afternoon', 'Evening', 'Night'];
+                   const timeColors = ['text-amber-600', 'text-gold', 'text-coral', 'text-teal', 'text-indigo-400'];
+                   const dotColors = ['bg-amber-400', 'bg-gold', 'bg-coral', 'bg-teal', 'bg-indigo-400'];
+                   const timeLabel = timeLabels[aIdx % timeLabels.length];
+                   const timeColor = timeColors[aIdx % timeColors.length];
+                   const dotColor = dotColors[aIdx % dotColors.length];
+                   return (
+                     <div key={aIdx} className="relative group text-left">
+                       {/* Timeline dot */}
+                       <div className={`absolute -left-[21px] top-3.5 w-3 h-3 rounded-full ${dotColor} border-2 border-surface shadow transition-all duration-300 group-hover:scale-125 z-10`} />
+                       <div className="bg-background/60 hover:bg-white transition-all duration-300 p-4 rounded-lg border border-border/30 hover:border-border/80 hover:shadow-sm group">
+                         <div className="flex items-center gap-2 mb-2">
+                           <span className={`text-[10px] font-mono font-black uppercase tracking-widest ${timeColor}`}>{timeLabel}</span>
+                           <span className="h-px flex-1 bg-border/30" />
+                           <span className="text-[10px] font-mono text-muted/40 uppercase">Stop {aIdx + 1}</span>
+                         </div>
+                         <p className="text-body text-night/90 font-medium leading-relaxed group-hover:text-night transition-colors">
+                           {act}
+                         </p>
                        </div>
-                       <p className="text-body text-night/90 font-medium leading-relaxed group-hover:text-night transition-colors">
-                         {act}
-                       </p>
                      </div>
-                   </div>
-                 ))}
+                   );
+                 })}
                </div>
             </motion.div>
           </AnimatePresence>

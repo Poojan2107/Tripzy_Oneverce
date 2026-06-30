@@ -25,41 +25,41 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
 
   return (
     <motion.div
-      className={`fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm md:hidden pb-[env(safe-area-inset-bottom,8px)]`}
+      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm md:hidden pb-[env(safe-area-inset-bottom,0px)]`}
       animate={visible ? { y: 0, opacity: 1 } : { y: 80, opacity: 0 }}
       transition={{ type: "spring", stiffness: 200, damping: 25 }}
     >
-      <div className="flex items-center justify-around py-2.5 px-3 rounded-2xl backdrop-blur-lg shadow-elevated border bg-white/95 border-border/50 text-night">
+      <div className="flex items-center justify-around py-2 px-3 rounded-lg backdrop-blur-lg shadow-lg border bg-white/95 border-border/40 text-night">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = currentTab === tab.id;
           return (
             <motion.button key={tab.id}
               onClick={() => tab.href ? window.location.href = tab.href : onTabChange(tab.id)}
-              className="relative py-2 px-3 flex flex-col items-center justify-center rounded-xl cursor-pointer min-h-[44px] min-w-[44px]"
-              whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
+              className="relative py-1.5 px-2.5 flex flex-col items-center justify-center rounded-md cursor-pointer min-h-[44px] min-w-[44px] border-none bg-transparent"
+              whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
             >
               <motion.div
-                animate={isActive ? { scale: [1, 1.15, 1] } : { scale: 1 }}
+                animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <Icon className={`w-5 h-5 transition-colors ${
+                <Icon className={`w-4.5 h-4.5 transition-colors ${
                   isActive ? 'text-gold' : 'text-muted/50'
                 }`} />
               </motion.div>
-              <span className={`text-micro font-bold uppercase tracking-wider mt-0.5 transition-colors ${
+              <span className={`text-meta font-bold mt-1 transition-colors ${
                 isActive ? 'text-night font-bold' : 'text-muted/50'
               }`}>
                 {tab.label}
               </span>
               {tab.badge !== undefined && tab.badge > 0 && (
-                <motion.span className="absolute -top-0.5 right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-micro font-bold text-white"
+                <motion.span className="absolute top-1 right-2 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-gold px-1 text-meta font-bold text-white scale-90"
                   initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 15 }}>
                   {tab.badge}
                 </motion.span>
               )}
               {isActive && (
-                <motion.div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-gold"
+                <motion.div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 rounded-full bg-gold"
                   layoutId="bottomNavIndicator" transition={{ type: "spring", stiffness: 300, damping: 25 }} />
               )}
             </motion.button>

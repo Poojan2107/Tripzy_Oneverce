@@ -20,7 +20,7 @@ const pacifico = Pacifico({
 });
 
 
-const baseUrl = "https://tripzy-oneverce.vercel.app";
+const baseUrl = "https://travebie-oneverce.vercel.app";
 
 export const metadata: Metadata = {
   title: {

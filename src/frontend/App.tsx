@@ -68,10 +68,23 @@ export default function App() {
   useEffect(() => {
     setIsClient(true);
     try {
-      const savedWishlist = localStorage.getItem('tripzy_wishlist');
+      // Legacy fallback check for maximum compatibility
+      let savedWishlist = localStorage.getItem('tripzy_wishlist');
+      if (!savedWishlist) {
+        savedWishlist = localStorage.getItem('wishlist') || localStorage.getItem('travebie_wishlist');
+        if (savedWishlist) {
+          localStorage.setItem('tripzy_wishlist', savedWishlist);
+        }
+      }
       if (savedWishlist) setWishlistIds(JSON.parse(savedWishlist));
       
-      const savedItins = localStorage.getItem('tripzy_itineraries');
+      let savedItins = localStorage.getItem('tripzy_itineraries');
+      if (!savedItins) {
+        savedItins = localStorage.getItem('itineraries') || localStorage.getItem('travebie_itineraries');
+        if (savedItins) {
+          localStorage.setItem('tripzy_itineraries', savedItins);
+        }
+      }
       if (savedItins) setSavedItineraries(JSON.parse(savedItins));
 
     } catch (e) {
@@ -263,26 +276,30 @@ export default function App() {
       </div>
 
       {/* Mobile Brand Bar — logo only, no duplicate auth/nav */}
-      <header className={`print:hidden md:hidden w-full z-50 px-4 py-2.5 flex items-center justify-between select-none transition-all duration-300 ${
-        currentTab === 'home' && selectedTour === null
-          ? 'absolute top-0 left-0 bg-transparent border-none'
-          : 'sticky top-0 border-b bg-background/90 backdrop-blur-md border-border/40'
-      }`}>
-        <button
-          onClick={() => {
-            setSelectedTour(null);
-            setCurrentTab('home');
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            window.history.pushState(null, '', '#home');
-          }}
-          className="flex items-center gap-2 border-none bg-transparent cursor-pointer text-left min-h-[40px]"
-        >
-          <Compass className="w-5 h-5 text-gold animate-spin-slow" />
-          <span className="font-logo text-lg font-bold tracking-tight lowercase text-white">
-            travebie<span className="text-gold">.ai</span>
-          </span>
-        </button>
-      </header>
+      {selectedTour === null && (
+        <header className={`print:hidden md:hidden w-full z-50 px-4 py-2.5 flex items-center justify-between select-none transition-all duration-300 ${
+          currentTab === 'home'
+            ? 'absolute top-0 left-0 bg-transparent border-none'
+            : 'sticky top-0 border-b bg-background/90 backdrop-blur-md border-border/40'
+        }`}>
+          <button
+            onClick={() => {
+              setSelectedTour(null);
+              setCurrentTab('home');
+              window.scrollTo({ top: 0, behavior: 'instant' });
+              window.history.pushState(null, '', '#home');
+            }}
+            className="flex items-center gap-2 border-none bg-transparent cursor-pointer text-left min-h-[40px]"
+          >
+            <Compass className="w-5 h-5 text-gold animate-spin-slow" />
+            <span className={`font-logo text-lg font-bold tracking-tight lowercase ${
+              currentTab === 'home' ? 'text-white' : 'text-night'
+            }`}>
+              travebie<span className="text-gold">.ai</span>
+            </span>
+          </button>
+        </header>
+      )}
 
       <main className="w-full flex-grow">
         <AnimatePresence mode="wait">

@@ -36,7 +36,7 @@ const MOCK_MESSAGES = [
 export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: () => void }) {
   const [visibleMessages, setVisibleMessages] = useState(1);
   const [isTyping, setIsTyping] = useState(false);
-
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       setVisibleMessages(prev => {
@@ -50,9 +50,9 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
     }, 3000);
     return () => clearInterval(interval);
   }, []);
-
+ 
   return (
-    <section className="py-20 md:py-28 bg-background border-t border-border/20">
+    <section className="py-16 md:py-24 bg-background border-t border-border/15">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Messaging mockup */}
@@ -63,21 +63,21 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 80, damping: 20 }}
           >
-            <div className="relative border border-border/30 rounded-3xl p-5 bg-white/90 backdrop-blur-sm shadow-card overflow-hidden">
+            <div className="relative border border-border/20 rounded-lg p-5 bg-white/90 backdrop-blur-sm shadow-md overflow-hidden">
               {/* Chat header */}
-              <div className="flex items-center gap-3 pb-4 mb-4 border-b border-border/20">
+              <div className="flex items-center gap-3 pb-4 mb-4 border-b border-border/15">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-coral flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1 text-left">
-                  <span className="font-bold text-small text-night tracking-wide block">travebie companion</span>
-                  <span className="text-micro text-muted font-mono flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+                  <span className="font-bold text-caption text-night block">travebie companion</span>
+                  <span className="text-meta text-muted font-mono flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block animate-pulse" />
                     Ready to craft your journey
                   </span>
                 </div>
               </div>
-
+ 
               {/* Chat messages */}
               <div className="space-y-3 min-h-[220px]">
                 <AnimatePresence mode="popLayout">
@@ -89,14 +89,14 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
                       transition={{ type: "spring", stiffness: 200, damping: 20 }}
                       className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div className={`max-w-[85%] px-4 py-3 rounded-2xl text-left ${
+                      <div className={`max-w-[85%] px-4 py-2.5 rounded-md text-left ${
                         msg.role === 'user'
-                          ? 'bg-night text-white rounded-br-md'
-                          : 'bg-secondary-surface/80 text-night rounded-bl-md border border-border/20'
+                          ? 'bg-night text-white rounded-br-none shadow-sm'
+                          : 'bg-secondary-surface/80 text-night rounded-bl-none border border-border/15 shadow-sm'
                       }`}>
-                        <p className={`text-small leading-relaxed font-sans ${msg.role === 'user' ? 'text-white/90' : 'text-night/80'}`}>
+                        <p className={`text-body leading-relaxed font-sans ${msg.role === 'user' ? 'text-white/90' : 'text-night/80'}`}>
                           {msg.role === 'companion' && (
-                            <Sparkles className="w-3 h-3 text-gold inline mr-1.5" />
+                            <Sparkles className="w-3.5 h-3.5 text-gold inline mr-1.5" />
                           )}
                           {msg.text}
                         </p>
@@ -110,8 +110,8 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
                     animate={{ opacity: 1 }}
                     className="flex justify-start"
                   >
-                    <div className="px-4 py-3 rounded-2xl bg-secondary-surface/80 border border-border/20 rounded-bl-md">
-                      <div className="flex gap-1">
+                    <div className="px-4 py-2.5 rounded-md bg-secondary-surface/80 border border-border/15 rounded-bl-none shadow-sm">
+                      <div className="flex gap-1 py-1">
                         {[0, 1, 2].map(i => (
                           <motion.div key={i} className="w-1.5 h-1.5 rounded-full bg-muted/40"
                             animate={{ y: [0, -4, 0] }}
@@ -123,18 +123,18 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
                   </motion.div>
                 )}
               </div>
-
+ 
               {/* Chat input */}
-              <div className="mt-4 pt-3 border-t border-border/20 flex items-center gap-2">
-                <div className="flex-1 px-4 py-2.5 rounded-xl bg-secondary-surface/60 text-micro text-muted/60 text-left cursor-text border border-border/20">
+              <div className="mt-4 pt-3 border-t border-border/15 flex items-center gap-2">
+                <div className="flex-1 px-4 py-2.5 rounded-md bg-secondary-surface/60 text-meta text-muted/60 text-left cursor-text border border-border/20">
                   Tell me about your dream journey...
                 </div>
-                <div className="w-9 h-9 rounded-xl bg-gold flex items-center justify-center">
+                <div className="w-9 h-9 rounded-md bg-gold flex items-center justify-center cursor-pointer shadow-sm">
                   <SendHorizonal className="w-4 h-4 text-night" />
                 </div>
               </div>
             </div>
-
+ 
             {/* Decorative element */}
             <motion.div
               className="absolute -bottom-4 -right-4 -z-10 w-32 h-32 rounded-full bg-gold/5 blur-2xl"
@@ -142,7 +142,7 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
               transition={{ duration: 6, repeat: Infinity }}
             />
           </motion.div>
-
+ 
           {/* Right: Content */}
           <motion.div className="order-1 lg:order-2 text-left"
             initial={{ opacity: 0, x: 20 }}
@@ -151,19 +151,19 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
             transition={{ type: "spring", stiffness: 80, damping: 20 }}
           >
             <motion.span
-              className="font-mono text-micro uppercase tracking-[0.3em] text-coral block mb-3 font-bold"
+              className="text-meta font-mono text-coral block mb-3"
             >
               travel companion
             </motion.span>
             <motion.h2
-              className="font-display text-4xl sm:text-5xl lg:text-6xl text-night lowercase font-light tracking-[-0.04em] leading-[1.05] mb-4"
+              className="font-display text-heading text-night lowercase font-light leading-[1.05] mb-4"
             >
               craft your <span className="italic font-light text-gold">next chapter</span>
             </motion.h2>
-            <motion.p className="text-sm text-muted/80 leading-relaxed font-light max-w-md font-sans mb-6">
+            <motion.p className="text-body text-muted/80 font-light max-w-md mb-6 leading-relaxed">
               Tell the companion about your travel style, who is joining, and your pace. A custom journey chapter will be crafted around your story.
             </motion.p>
-
+ 
             <motion.div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 max-w-lg mb-8">
               {[
                 { icon: User, label: 'Solo Explorer', color: 'text-teal', bg: 'bg-teal/10', border: 'border-teal/15' },
@@ -174,21 +174,21 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
                 const Icon = item.icon;
                 return (
                   <motion.div key={item.label}
-                    className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-white/70 ${item.border} border cursor-default`}
-                    whileHover={{ y: -3, scale: 1.02 }}
+                    className={`flex flex-col items-center gap-1.5 p-3 rounded-md bg-white/70 border ${item.border} cursor-default shadow-sm`}
+                    whileHover={{ y: -3, scale: 1.01 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   >
                     <div className={`w-9 h-9 rounded-full ${item.bg} ${item.color} flex items-center justify-center`}>
-                      <Icon className="w-4.5 h-4.5" />
+                      <Icon className="w-4 h-4" />
                     </div>
-                    <span className="text-micro font-mono uppercase tracking-wider text-muted/80">{item.label}</span>
+                    <span className="text-meta font-mono text-muted/80">{item.label}</span>
                   </motion.div>
                 );
               })}
             </motion.div>
-
+ 
             <MagneticButton onClick={() => onGoToPlanner?.()}
-              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-night text-white text-small font-bold uppercase tracking-[0.18em] cursor-pointer shadow-md border-none">
+              className="btn btn-night h-12 px-6 rounded-md text-caption flex items-center gap-2 cursor-pointer shadow-md">
               <Sparkles className="w-4 h-4 text-gold" /> Craft Journey
             </MagneticButton>
           </motion.div>

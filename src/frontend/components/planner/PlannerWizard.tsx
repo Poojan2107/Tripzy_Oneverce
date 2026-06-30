@@ -73,28 +73,28 @@ export default function PlannerWizard({
         
         {/* Header Block */}
         <div className="text-center space-y-3 max-w-xl mx-auto">
-          <span className="font-mono text-micro uppercase tracking-[0.25em] text-gold font-bold block mb-1">AI Travel Companion</span>
-          <h1 className="font-display text-4xl sm:text-5xl font-light text-night lowercase tracking-tight">
+          <span className="text-meta font-mono text-gold block mb-1">AI Travel Companion</span>
+          <h1 className="font-display text-heading text-night lowercase font-light tracking-tight">
             design your dream journey
           </h1>
-          <p className="text-xs text-muted/70 font-light leading-relaxed">
+          <p className="text-body text-muted/80 font-light leading-relaxed">
             Let our regional intelligence curate an immersive, day-wise route tailored precisely to your pacing and accompaniment.
           </p>
         </div>
-
+ 
         {/* Main single-page form */}
-        <div className="bg-surface border border-border rounded-3xl p-6 sm:p-10 shadow-card space-y-8 text-left relative overflow-hidden">
+        <div className="bg-surface border border-border/70 rounded-lg p-6 sm:p-10 shadow-md space-y-8 text-left relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.01] to-teal/[0.01] pointer-events-none" />
-
+ 
           {/* Grid Split */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
             
             {/* Left Column: Destination selection & search */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <label className="text-micro font-mono uppercase tracking-wider text-night font-bold">1. Select Destination</label>
+                <label className="text-meta font-mono text-night font-bold">1. Select Destination</label>
                 {selectedDestination && (
-                  <span className="text-micro font-mono text-gold bg-gold/15 border border-gold/30 px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold">
+                  <span className="text-meta font-mono text-gold bg-gold/15 border border-gold/30 px-2.5 py-0.5 rounded-sm uppercase font-bold">
                     selected
                   </span>
                 )}
@@ -107,11 +107,11 @@ export default function PlannerWizard({
                   placeholder="Search chapters (e.g. Varanasi, Kerala...)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border/40 bg-background text-xs text-night placeholder:text-muted/30 outline-none focus:border-teal focus:ring-1 focus:ring-teal/30 transition-all font-sans"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans"
                 />
               </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar border border-border/20 rounded-2xl p-2 bg-background/35">
+ 
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar border border-border/15 rounded-md p-2 bg-background/35">
                 {filteredTours.length > 0 ? (
                   filteredTours.map((tour) => {
                     const isSelected = selectedDestination === tour.id;
@@ -119,7 +119,7 @@ export default function PlannerWizard({
                       <button
                         key={tour.id}
                         onClick={() => onDestinationChange(tour.id)}
-                        className={`group p-2.5 rounded-xl border text-left cursor-pointer flex flex-col justify-between aspect-[4/3] relative overflow-hidden outline-none transition-all duration-300 ${
+                        className={`group p-2.5 rounded-md border text-left cursor-pointer flex flex-col justify-between aspect-[4/3] relative overflow-hidden outline-none transition-all duration-300 ${
                           isSelected
                             ? 'border-gold shadow-[0_0_15px_rgba(244,182,61,0.25)]'
                             : 'border-border/30 hover:border-border/80'
@@ -142,26 +142,26 @@ export default function PlannerWizard({
                         )}
                         
                         <div className="relative z-10 w-full mt-auto text-left">
-                          <span className="text-small font-mono uppercase tracking-wider text-gold block mb-0.5">{tour.chapterName || 'Chapter'}</span>
-                          <span className="text-small font-bold text-white block truncate">{tour.title}</span>
+                          <span className="text-meta font-mono text-gold block mb-0.5">{tour.chapterName || 'Chapter'}</span>
+                          <span className="text-body font-bold text-white block truncate">{tour.title}</span>
                         </div>
                       </button>
                     );
                   })
                 ) : (
-                  <div className="col-span-full py-8 text-center text-xs text-muted/50 font-light">
+                  <div className="col-span-full py-8 text-center text-meta text-muted/50 font-light">
                     No matching chapters found.
                   </div>
                 )}
               </div>
             </div>
-
+ 
             {/* Right Column: Companion, Duration & Custom Prompt */}
             <div className="space-y-6">
               
               {/* Accompaniment selection */}
               <div className="space-y-3">
-                <label className="text-micro font-mono uppercase tracking-wider text-night font-bold block">2. Who are you traveling with?</label>
+                <label className="text-meta font-mono text-night font-bold block">2. Who are you traveling with?</label>
                 <div className="grid grid-cols-2 gap-3">
                   {COMPANION_OPTIONS.map((opt) => {
                     const Icon = getCompanionIcon(opt.id);
@@ -170,7 +170,7 @@ export default function PlannerWizard({
                       <button
                         key={opt.id}
                         onClick={() => onTravelersChange(opt.id)}
-                        className={`p-3 rounded-xl border text-left cursor-pointer flex items-center gap-3 outline-none transition-all duration-300 ${
+                        className={`p-3 rounded-md border text-left cursor-pointer flex items-center gap-3 outline-none transition-all duration-300 ${
                           isSelected
                             ? 'bg-secondary-surface border-gold text-night shadow-sm'
                             : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'
@@ -182,17 +182,17 @@ export default function PlannerWizard({
                           <Icon className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                          <span className={`text-small font-bold block ${isSelected ? 'text-night' : 'text-muted/80'}`}>{opt.label}</span>
+                          <span className={`text-body font-semibold block ${isSelected ? 'text-night' : 'text-muted/80'}`}>{opt.label}</span>
                         </div>
                       </button>
                     );
                   })}
                 </div>
               </div>
-
+ 
               {/* Duration Selection */}
               <div className="space-y-3">
-                <label className="text-micro font-mono uppercase tracking-wider text-night font-bold block">3. Duration of stay</label>
+                <label className="text-meta font-mono text-night font-bold block">3. Duration of stay</label>
                 <div className="grid grid-cols-4 gap-2">
                   {DURATION_OPTIONS.map((opt) => {
                     const isSelected = duration === opt.id;
@@ -200,40 +200,40 @@ export default function PlannerWizard({
                       <button
                         key={opt.id}
                         onClick={() => onDurationChange(opt.id)}
-                        className={`py-2 px-1 rounded-xl border text-center cursor-pointer flex flex-col justify-center items-center outline-none transition-all duration-300 min-h-[54px] ${
+                        className={`py-2 px-1 rounded-md border text-center cursor-pointer flex flex-col justify-center items-center outline-none transition-all duration-300 min-h-[54px] ${
                           isSelected
                             ? 'bg-secondary-surface border-gold text-night shadow-sm'
                             : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'
                         }`}
                       >
-                        <span className={`text-micro font-bold ${isSelected ? 'text-night' : 'text-muted/80'}`}>{opt.days} Days</span>
-                        <span className="text-micro text-muted/50 font-mono uppercase tracking-wider mt-0.5">{opt.id === 'weekend' ? '2-3d' : opt.id === 'short' ? '4-6d' : opt.id === 'week' ? '1wk' : '2wk'}</span>
+                        <span className={`text-body font-semibold ${isSelected ? 'text-night' : 'text-muted/80'}`}>{opt.days} Days</span>
+                        <span className="text-meta text-muted/50 font-mono uppercase mt-0.5">{opt.id === 'weekend' ? '2-3d' : opt.id === 'short' ? '4-6d' : opt.id === 'week' ? '1wk' : '2wk'}</span>
                       </button>
                     );
                   })}
                 </div>
               </div>
-
+ 
               {/* From Location (Optional) */}
               <div className="space-y-2">
-                <label className="text-micro font-mono uppercase tracking-wider text-night font-bold block">Departing From (Optional)</label>
+                <label className="text-meta font-mono text-night font-bold block">Departing From (Optional)</label>
                 <input
                   type="text"
                   placeholder="e.g. Mumbai, Delhi, Bengaluru"
                   value={fromLocation}
                   onChange={(e) => onFromLocationChange(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-border/40 bg-background text-xs text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans"
+                  className="w-full px-3 py-2.5 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans"
                 />
               </div>
-
+ 
             </div>
           </div>
-
+ 
           <div className="h-px bg-border/40 my-6 z-10 relative" />
-
+ 
           {/* Full-width Prompt text area */}
           <div className="space-y-3 z-10 relative">
-            <label className="text-micro font-mono uppercase tracking-wider text-night font-bold block">
+            <label className="text-meta font-mono text-night font-bold block">
               4. Describe your dream journey
             </label>
             <textarea
@@ -241,19 +241,19 @@ export default function PlannerWizard({
               value={notes}
               onChange={(e) => onNotesChange(e.target.value)}
               placeholder="Describe what you want to seek... e.g. I want to experience sunset ghat ceremonies, visit ancient weaving guilds, try local street foods, and capture sunrise vistas, keeping the itinerary relaxed and photogenic."
-              className="w-full p-4 rounded-2xl border border-border/40 bg-background text-xs text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans resize-none leading-relaxed"
+              className="w-full p-4 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans resize-none leading-relaxed"
             />
           </div>
-
+ 
           {/* CTA Area */}
           <div className="pt-4 flex flex-col items-center justify-center space-y-4 z-10 relative">
             <button
               onClick={handleGenerate}
               disabled={!isFormValid || generating}
-              className={`px-8 py-3.5 rounded-full font-bold text-micro uppercase tracking-[0.2em] shadow-md transition-all duration-300 inline-flex items-center gap-2 cursor-pointer border-none min-h-[46px] ${
+              className={`btn h-12 px-6 rounded-md text-caption inline-flex items-center gap-2 cursor-pointer transition-all duration-300 ${
                 isFormValid && !generating
-                  ? 'bg-night text-white hover:bg-gold hover:text-night hover:scale-102 shadow-lg'
-                  : 'bg-secondary-surface text-muted/40 cursor-not-allowed'
+                  ? 'btn-night text-white hover:bg-gold hover:text-night shadow-lg'
+                  : 'bg-secondary-surface text-muted/30 cursor-not-allowed'
               }`}
             >
               {generating ? (
@@ -263,19 +263,19 @@ export default function PlannerWizard({
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 animate-pulse" />
+                  <Sparkles className="w-4 h-4 text-gold animate-pulse" />
                   <span>Craft Journey</span>
                 </>
               )}
             </button>
-
+ 
             {!isFormValid && (
-              <span className="text-small font-mono text-muted/50 uppercase tracking-wider">
+              <span className="text-meta font-mono text-muted/50 uppercase">
                 Select destination, accompaniment, and duration to unlock crafting
               </span>
             )}
           </div>
-
+ 
         </div>
       </div>
     </div>

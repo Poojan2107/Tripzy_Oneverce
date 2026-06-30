@@ -11,21 +11,21 @@ interface HotelsTabProps {
 
 export default function HotelsTab({ tour, loadingHotels, onPlanClick }: HotelsTabProps) {
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-5 animate-fade-in text-left">
       <div>
-        <h2 className="font-display text-2xl text-night font-bold mb-1">Where to Stay</h2>
-        <p className="text-xs text-muted font-light">Curated hotels and stays in {tour.title}. Compare and reserve via our partner sites.</p>
+        <h2 className="font-display text-section text-night font-bold mb-1">Where to Stay</h2>
+        <p className="text-body text-muted/80 font-light">Curated hotels and stays in {tour.title}. Compare and reserve via our partner sites.</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {loadingHotels ? (
           Array(2).fill(null).map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl border border-border/60 p-5 flex flex-col sm:flex-row gap-5 animate-pulse text-left">
-              <div className="sm:w-52 h-44 sm:h-32 bg-secondary-surface rounded-xl shrink-0" />
+            <div key={i} className="bg-white rounded-md border border-border/70 p-5 flex flex-col sm:flex-row gap-5 animate-pulse text-left">
+              <div className="sm:w-52 h-44 sm:h-32 bg-secondary-surface rounded-md shrink-0" />
               <div className="flex-1 space-y-3">
                 <div className="flex justify-between"><div className="w-1/3 h-5 bg-secondary-surface rounded" /><div className="w-1/6 h-5 bg-secondary-surface rounded" /></div>
                 <div className="w-1/4 h-3 bg-secondary-surface rounded" />
                 <div className="w-full h-12 bg-secondary-surface rounded" />
-                <div className="flex gap-2"><div className="w-16 h-8 bg-secondary-surface rounded-xl" /><div className="w-16 h-8 bg-secondary-surface rounded-xl" /></div>
+                <div className="flex gap-2"><div className="w-16 h-8 bg-secondary-surface rounded-md" /><div className="w-16 h-8 bg-secondary-surface rounded-md" /></div>
               </div>
             </div>
           ))
@@ -34,18 +34,18 @@ export default function HotelsTab({ tour, loadingHotels, onPlanClick }: HotelsTa
             <HotelCard key={hotel.id} hotel={hotel} />
           ))
         ) : (
-          <div className="p-8 py-10 rounded-3xl bg-white border border-border/60 text-center max-w-md mx-auto space-y-4 shadow-soft">
+          <div className="p-8 py-10 rounded-lg bg-white border border-border/70 text-center max-w-md mx-auto space-y-4 shadow-sm">
             <div className="w-12 h-12 rounded-full bg-teal/10 text-teal flex items-center justify-center mx-auto">
               <Compass className="w-5 h-5 text-teal" />
             </div>
             <div>
-              <h4 className="font-display text-xl text-night font-light lowercase">stays are being curated</h4>
-              <p className="text-small text-muted font-light leading-relaxed mt-1 font-sans">
+              <h4 className="font-display text-card text-night font-light lowercase">stays are being curated</h4>
+              <p className="text-body text-muted/85 font-light leading-relaxed mt-1">
                 Our editors are hand-selecting the finest heritage retreats, eco-lodges, and boutique stays for {tour.title}. In the meantime, you can customize your daily logs in our journey builder.
               </p>
             </div>
-            <button onClick={onPlanClick} className="px-5 py-2.5 bg-teal hover:bg-teal/90 text-white text-micro font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-1.5 min-h-[38px] shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-gold" />
+            <button onClick={onPlanClick} className="btn btn-primary h-10 px-5 rounded-md text-caption inline-flex items-center gap-1.5 cursor-pointer shadow-md">
+              <Sparkles className="w-3.5 h-3.5 text-night" />
               <span>Launch Journey Builder</span>
             </button>
           </div>

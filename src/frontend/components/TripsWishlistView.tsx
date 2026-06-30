@@ -38,32 +38,32 @@ function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove
   return (
     <motion.div
       onClick={onInspect}
-      className="bg-surface border border-border p-5 pb-6 rounded-3xl cursor-pointer group flex flex-col justify-between text-left relative shadow-card hover:shadow-card-hover transition-all"
+      className="bg-surface border border-border/70 p-5 pb-6 rounded-lg cursor-pointer group flex flex-col justify-between text-left relative shadow-md hover:shadow-lg transition-all"
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
       whileHover={{ y: -4 }}
     >
-      <div className="relative aspect-[3/2] rounded-2xl overflow-hidden bg-secondary-surface mb-4">
+      <div className="relative aspect-[3/2] rounded-md overflow-hidden bg-secondary-surface mb-4">
         <SafeImage src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" />
         <button 
           onClick={(e) => { e.stopPropagation(); onRemove(); }}
           aria-label="Remove from wishlist"
-          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface/90 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 shadow-sm border border-border cursor-pointer transition-colors"
+          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface/90 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 shadow-sm border border-border/70 cursor-pointer transition-colors"
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>
       </div>
       <div className="space-y-2">
-        <span className="text-micro font-mono text-gold uppercase tracking-widest block font-bold">{tour.location}</span>
-        <h3 className="font-display text-2xl text-night font-light leading-none lowercase group-hover:text-gold transition-colors">{tour.title}</h3>
-        <p className="text-small text-muted/80 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
-        <div className="pt-3 flex justify-between items-center text-xs font-bold text-night border-t border-border mt-3">
-          <span className="text-micro font-mono font-bold text-teal bg-teal/10 border border-teal/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+        <span className="text-meta font-mono text-gold block mb-1">{tour.location}</span>
+        <h3 className="font-display text-card text-night font-light lowercase group-hover:text-gold transition-colors leading-tight">{tour.title}</h3>
+        <p className="text-body text-muted/80 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
+        <div className="pt-3 flex justify-between items-center text-meta font-bold text-night border-t border-border mt-3">
+          <span className="text-meta font-mono font-bold text-teal bg-teal/10 border border-teal/20 px-2.5 py-0.5 rounded-sm uppercase">
             {tour.moods?.[0] || 'Explore'}
           </span>
-          <span className="text-micro font-mono font-bold text-gold bg-gold/10 border border-gold/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+          <span className="text-meta font-mono font-bold text-gold bg-gold/10 border border-gold/20 px-2.5 py-0.5 rounded-sm uppercase">
             {tour.category || 'Chapter'}
           </span>
         </div>
@@ -71,7 +71,7 @@ function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove
     </motion.div>
   );
 }
-
+ 
 function EmptyPassportState({ 
   onNavigate, 
   type 
@@ -112,28 +112,28 @@ function EmptyPassportState({
       )
     }
   }[type];
-
+ 
   return (
-    <div className="text-center py-16 bg-white border border-border/50 rounded-3xl max-w-lg mx-auto p-8 shadow-card relative overflow-hidden w-full">
+    <div className="text-center py-16 bg-white border border-border/70 rounded-lg max-w-lg mx-auto p-8 shadow-md relative overflow-hidden w-full">
       <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.02] to-teal/[0.02] pointer-events-none" />
       
-      <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-background rounded-2xl border border-border/50 transition-transform duration-500 hover:rotate-2">
+      <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-background rounded-md border border-border/20 transition-transform duration-500 hover:rotate-2">
         {content.illustration}
       </div>
       
-      <span className="font-mono text-micro uppercase tracking-[0.25em] text-gold block mb-2 font-bold animate-pulse">
+      <span className="text-meta font-mono text-gold block mb-2">
         {content.tag}
       </span>
-      <h3 className="font-display text-2.5xl font-light text-night lowercase leading-none mb-3">
+      <h3 className="font-display text-heading text-night lowercase font-light leading-none mb-3">
         {content.title}
       </h3>
-      <p className="text-small text-muted/60 font-light max-w-xs mx-auto leading-relaxed font-sans mb-8">
+      <p className="text-body text-muted/65 font-light max-w-xs mx-auto leading-relaxed mb-8">
         {content.desc}
       </p>
       
       <button
         onClick={onNavigate}
-        className="px-6 py-3 bg-night text-white text-micro font-bold uppercase tracking-[0.18em] rounded-full hover:bg-night/80 transition-all duration-300 cursor-pointer inline-flex items-center gap-2 hover:scale-102 shadow-sm"
+        className="btn btn-night h-11 px-5 rounded-md text-caption flex items-center gap-2 cursor-pointer shadow-md"
       >
         <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />
         <span>{content.btnText}</span>
@@ -359,25 +359,25 @@ export default function TripsWishlistView({
     <div className="pt-8 md:pt-10 pb-32 px-4 md:px-6 max-w-6xl mx-auto select-none bg-background text-night min-h-[100dvh] text-left animate-page-enter">
 
       {!session && (
-        <div className="mb-6 p-4 rounded-3xl bg-surface border border-border flex items-center justify-between gap-4 shadow-sm">
-          <p className="text-micro text-muted/65 font-light leading-relaxed">
+        <div className="mb-6 p-4 rounded-lg bg-surface border border-border/70 flex items-center justify-between gap-4 shadow-sm">
+          <p className="text-meta text-muted/65 font-light leading-relaxed">
             Sign in to sync your Passport across devices.
           </p>
           <button
             onClick={() => signIn('google', { callbackUrl: window.location.href })}
-            className="shrink-0 px-4 py-2.5 rounded-full bg-night text-white text-micro font-bold uppercase tracking-wider hover:bg-night/80 transition-all cursor-pointer inline-flex items-center gap-1.5 min-h-[40px] shadow-sm"
+            className="btn btn-night h-10 px-4 rounded-md text-caption inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
           >
             <LogIn className="w-3.5 h-3.5" />
             Sign In
           </button>
         </div>
       )}
-
+ 
       {/* ── 1. PASSPORT HERO ── */}
-      <div className="relative mb-8 bg-surface border border-border rounded-3xl p-7 md:p-10 shadow-card overflow-hidden">
+      <div className="relative mb-8 bg-surface border border-border/70 rounded-lg p-7 md:p-10 shadow-md overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-gold/5 to-transparent rounded-bl-full pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-teal/5 to-transparent rounded-tr-full pointer-events-none" />
-
+ 
         <div className="flex flex-col md:flex-row md:items-center gap-6 relative z-10">
           <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-tr from-teal via-teal/70 to-gold p-0.5 shadow-sm shrink-0">
             <div className="w-full h-full rounded-full overflow-hidden bg-surface flex items-center justify-center">
@@ -390,10 +390,10 @@ export default function TripsWishlistView({
               )}
             </div>
           </div>
-
+ 
           <div className="flex-1 text-left">
-            <span className="font-mono text-micro uppercase tracking-[0.25em] text-teal font-bold block mb-1">Explorer Passport</span>
-            <h1 className="font-display text-3xl md:text-4xl text-night font-light lowercase leading-tight flex flex-wrap items-center gap-3">
+            <span className="text-meta font-mono text-teal block mb-1">Explorer Passport</span>
+            <h1 className="font-display text-heading text-night font-light lowercase leading-tight flex flex-wrap items-center gap-3">
               <span>{session?.user?.name || "Guest Explorer"}</span>
               {session?.user?.id && (
                 <button
@@ -402,34 +402,34 @@ export default function TripsWishlistView({
                     navigator.clipboard.writeText(url);
                     alert("Public Passport link copied to clipboard:\n" + url);
                   }}
-                  className="px-2.5 py-1 rounded-xl bg-teal/10 border border-teal/20 text-teal text-small font-mono font-bold uppercase tracking-wider hover:bg-teal/20 transition-all cursor-pointer border-none shadow-sm"
+                  className="btn btn-outline border-teal/20 bg-teal/5 text-teal hover:bg-teal/10 h-8 px-3 rounded-md text-caption flex items-center justify-center cursor-pointer shadow-sm"
                 >
                   Share Passport
                 </button>
               )}
             </h1>
-            <span className="text-micro font-mono text-muted/50 block lowercase mt-0.5">
+            <span className="text-meta font-mono text-muted/50 block lowercase mt-0.5">
               Explorer Since 2026 · {session?.user?.email || "guest@tripzy.ai"}
             </span>
           </div>
-
+ 
           {/* Enhanced Stats grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 shrink-0 w-full md:w-auto">
-            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-2xl border border-border/15">
-              <span className="block font-display text-2xl font-light text-night leading-none">{savedItineraries.length}</span>
-              <span className="text-micro font-mono uppercase tracking-widest text-muted/60 block mt-1">Journeys</span>
+            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-md border border-border/10 shadow-sm">
+              <span className="block font-display text-section font-light text-night leading-none">{savedItineraries.length}</span>
+              <span className="text-meta font-mono text-muted/60 block mt-1">Journeys</span>
             </div>
-            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-2xl border border-border/15">
-              <span className="block font-display text-2xl font-light text-gold leading-none">{wishlistTours.length}</span>
-              <span className="text-micro font-mono uppercase tracking-widest text-muted/60 block mt-1">Saved Chapters</span>
+            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-md border border-border/10 shadow-sm">
+              <span className="block font-display text-section font-light text-gold leading-none">{wishlistTours.length}</span>
+              <span className="text-meta font-mono text-muted/60 block mt-1">Saved Chapters</span>
             </div>
-            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-2xl border border-border/15">
-              <span className="block font-display text-2xl font-light text-coral leading-none">{regionsExplored}</span>
-              <span className="text-micro font-mono uppercase tracking-widest text-muted/60 block mt-1">Regions</span>
+            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-md border border-border/10 shadow-sm">
+              <span className="block font-display text-section font-light text-coral leading-none">{regionsExplored}</span>
+              <span className="text-meta font-mono text-muted/60 block mt-1">Regions</span>
             </div>
-            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-2xl border border-border/15">
-              <span className="block font-display text-2xl font-light text-teal leading-none">{daysTraveled}</span>
-              <span className="text-micro font-mono uppercase tracking-widest text-muted/60 block mt-1">Days Traveled</span>
+            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-md border border-border/10 shadow-sm">
+              <span className="block font-display text-section font-light text-teal leading-none">{daysTraveled}</span>
+              <span className="text-meta font-mono text-muted/60 block mt-1">Days Traveled</span>
             </div>
           </div>
         </div>
@@ -442,27 +442,27 @@ export default function TripsWishlistView({
         <div className="lg:col-span-2 space-y-8">
           
           {/* Dynamic Travel Timeline */}
-          <div className="bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-card space-y-5">
-            <div className="flex items-center gap-2 pb-3 border-b border-border">
-              <BookOpen className="w-4 h-4 text-gold" />
-              <h3 className="font-display text-xl text-night font-light lowercase leading-none">travel timeline journal</h3>
+          <div className="bg-surface border border-border/70 rounded-lg p-6 md:p-8 shadow-md space-y-5">
+            <div className="flex items-center gap-2 pb-3 border-b border-border/15">
+               <BookOpen className="w-4 h-4 text-gold" />
+               <h3 className="font-display text-section text-night font-light lowercase leading-none">travel timeline journal</h3>
             </div>
-
+ 
             {timelineGroups.length > 0 ? (
               <div className="relative pl-8 border-l-2 border-border/60 space-y-8 pt-2">
                 {timelineGroups.map((group) => (
                   <div key={group.year} className="relative">
-                    <div className="absolute -left-[36px] top-0.5 w-5 h-5 rounded-full bg-gold border-[3px] border-surface shadow-[0_0_0_2px_rgba(244,182,61,0.3)]" />
-                    <span className="font-display text-xl text-night font-light block leading-none mb-3">{group.year}</span>
+                    <div className="absolute -left-[35px] top-0.5 w-4 h-4 rounded-full bg-gold border-[2px] border-surface shadow-sm" />
+                    <span className="font-display text-section text-night font-light block leading-none mb-3">{group.year}</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {group.items.map((item) => (
-                        <div key={item.id} className="bg-background border border-border p-3.5 rounded-2xl flex items-center gap-3 hover:shadow-sm transition-shadow">
-                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary-surface shrink-0">
+                        <div key={item.id} className="bg-background border border-border/70 p-3.5 rounded-md flex items-center gap-3 hover:shadow-sm transition-shadow shadow-sm">
+                          <div className="w-12 h-12 rounded-md overflow-hidden bg-secondary-surface shrink-0">
                             <img src={item.bannerImage} alt={item.title} className="w-full h-full object-cover" />
                           </div>
                           <div className="min-w-0 flex-1 text-left">
-                            <span className="text-small font-bold text-night lowercase block truncate">{item.title || 'Untitled Journey'}</span>
-                            <span className="text-micro font-mono text-muted uppercase tracking-wider block truncate">{item.location}</span>
+                            <span className="text-body font-bold text-night lowercase block truncate">{item.title || 'Untitled Journey'}</span>
+                            <span className="text-meta font-mono text-muted block truncate">{item.location}</span>
                           </div>
                         </div>
                       ))}
@@ -471,22 +471,22 @@ export default function TripsWishlistView({
                 ))}
               </div>
             ) : (
-              <p className="text-small text-muted/50 font-light italic py-6 text-center">
+              <p className="text-body text-muted/50 font-light italic py-6 text-center">
                 Your travel timeline is currently empty. Plan a journey to record your first milestone.
               </p>
             )}
           </div>
-
+ 
           {/* Travel Seals (collected badges) */}
-          <div className="bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-card">
-            <div className="flex items-center gap-2 pb-3 border-b border-border mb-5">
+          <div className="bg-surface border border-border/70 rounded-lg p-6 md:p-8 shadow-md">
+            <div className="flex items-center gap-2 pb-3 border-b border-border/15 mb-5">
               <Award className="w-4 h-4 text-teal" />
-              <h3 className="font-display text-xl text-night font-light lowercase leading-none">travel seals — collected artifacts</h3>
+               <h3 className="font-display text-section text-night font-light lowercase leading-none">travel seals — collected artifacts</h3>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {badgesList.map((badge) => (
                 <div key={badge.id}
-                  className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all duration-300 relative group overflow-hidden ${
+                  className={`p-4 rounded-md border flex flex-col items-center text-center transition-all duration-300 relative group overflow-hidden ${
                     badge.unlocked
                       ? 'bg-background border-border shadow-sm hover:shadow-md hover:border-gold/50 cursor-pointer'
                       : 'bg-secondary-surface/40 border-dashed border-border/60 opacity-60 select-none'
@@ -507,13 +507,13 @@ export default function TripsWishlistView({
                     <badge.icon className={`w-5 h-5 ${badge.unlocked ? 'text-gold drop-shadow-sm' : 'text-muted/30'}`} />
                   </div>
                   
-                  <span className="text-micro font-bold text-night leading-tight block w-full">{badge.label}</span>
+                  <span className="text-meta font-bold text-night leading-tight block w-full">{badge.label}</span>
                   
                   {badge.unlocked ? (
-                    <span className="text-micro font-mono text-gold uppercase tracking-wider block mt-1 line-clamp-1 w-full">{badge.desc}</span>
+                    <span className="text-meta font-mono text-gold block mt-1 line-clamp-1 w-full">{badge.desc}</span>
                   ) : (
                     <div className="w-full mt-1.5 space-y-1">
-                      <span className="text-micro font-mono text-muted/50 uppercase tracking-wider block line-clamp-1 w-full">{badge.lockedDesc}</span>
+                      <span className="text-meta font-mono text-muted/50 block line-clamp-1 w-full">{badge.lockedDesc}</span>
                       {getBadgeProgress(badge.id) && (
                         <div className="w-full bg-secondary-surface h-1 rounded-full overflow-hidden">
                           <div 
@@ -535,13 +535,13 @@ export default function TripsWishlistView({
         <div className="space-y-6">
           
           {/* Destination Map Card */}
-          <div className="bg-surface border border-border rounded-3xl p-5 shadow-card space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-border">
+          <div className="bg-surface border border-border/70 rounded-lg p-5 shadow-sm space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b border-border/15">
               <Compass className="w-4 h-4 text-gold animate-spin-slow" />
-              <h4 className="font-display text-lg text-night font-light lowercase leading-none">footprints map</h4>
+              <h4 className="font-display text-section text-night font-light lowercase leading-none">footprints map</h4>
             </div>
             
-            <div className="h-[300px] w-full rounded-2xl overflow-hidden shadow-inner relative">
+            <div className="h-[300px] w-full rounded-md overflow-hidden shadow-inner relative">
               <PassportMap 
                 wishlistTours={wishlistTours} 
                 savedItineraries={savedItineraries} 
@@ -550,30 +550,30 @@ export default function TripsWishlistView({
               />
             </div>
           </div>
-
+ 
           {/* Travel Preferences Card */}
-          <div className="bg-surface border border-border rounded-3xl p-6 shadow-card space-y-4">
-            <div className="flex items-center gap-2 pb-3 border-b border-border">
+          <div className="bg-surface border border-border/70 rounded-lg p-6 shadow-sm space-y-4">
+            <div className="flex items-center gap-2 pb-3 border-b border-border/15">
               <Sparkles className="w-4 h-4 text-gold" />
-              <h4 className="font-display text-lg text-night font-light lowercase leading-none">travel preferences</h4>
+              <h4 className="font-display text-section text-night font-light lowercase leading-none">travel preferences</h4>
             </div>
             {preferences ? (
               <div className="space-y-3 font-sans text-xs">
-                <div className="flex justify-between items-center py-2 border-b border-border/20">
-                  <span className="text-muted">style cadence</span>
-                  <span className="font-bold text-night bg-secondary-surface px-2.5 py-0.5 rounded-full text-small">{preferences.duration}</span>
+                <div className="flex justify-between items-center py-2 border-b border-border/15">
+                  <span className="text-meta text-muted">style cadence</span>
+                  <span className="font-bold text-night bg-secondary-surface px-2.5 py-0.5 rounded-sm text-meta font-mono">{preferences.duration}</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-border/20">
-                  <span className="text-muted">fellowship mode</span>
-                  <span className="font-bold text-gold bg-gold/10 px-2.5 py-0.5 rounded-full text-small">{preferences.companion}</span>
+                <div className="flex justify-between items-center py-2 border-b border-border/15">
+                  <span className="text-meta text-muted">fellowship mode</span>
+                  <span className="font-bold text-gold bg-gold/10 px-2.5 py-0.5 rounded-sm text-meta font-mono">{preferences.companion}</span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-muted">average budget</span>
-                  <span className="font-bold text-teal bg-teal/10 px-2.5 py-0.5 rounded-full text-small">{preferences.budget}</span>
+                  <span className="text-meta text-muted">average budget</span>
+                  <span className="font-bold text-teal bg-teal/10 px-2.5 py-0.5 rounded-sm text-meta font-mono">{preferences.budget}</span>
                 </div>
               </div>
             ) : (
-              <p className="text-micro text-muted/50 font-light italic text-center py-4">Preferences will form as you plan journeys.</p>
+              <p className="text-meta text-muted/50 font-light italic text-center py-4">Preferences will form as you plan journeys.</p>
             )}
           </div>
 
@@ -586,20 +586,20 @@ export default function TripsWishlistView({
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-gold" />
-            <h3 className="font-display text-xl text-night font-light lowercase leading-none">saved chapters</h3>
+            <h3 className="font-display text-section text-night font-light lowercase leading-none">saved chapters</h3>
           </div>
-          <div className="bg-secondary-surface p-0.5 rounded-2xl flex gap-0.5 border border-border relative">
+          <div className="bg-secondary-surface p-0.5 rounded-md flex gap-0.5 border border-border/70 relative">
             {['chapters', 'journeys'].map((tab) => {
               const isActive = activeSubTab === tab;
               const count = tab === 'chapters' ? wishlistTours.length : savedItineraries.length;
               return (
                 <button key={tab} onClick={() => setActiveSubTab(tab as any)}
-                  className={`px-4 py-2 rounded-xl text-micro font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer min-h-[34px] shrink-0 relative border-none bg-transparent ${
+                  className={`px-4 py-2 rounded-md text-meta font-mono uppercase transition-colors flex items-center gap-2 cursor-pointer min-h-[34px] shrink-0 relative border-none bg-transparent ${
                     isActive ? 'text-white shadow-sm font-bold' : 'text-muted hover:text-night'
                   }`}
                 >
                   {isActive && (
-                    <motion.span className="absolute inset-0 rounded-xl bg-night"
+                    <motion.span className="absolute inset-0 rounded-md bg-night"
                       layoutId="subTabActive" transition={{ type: "spring", stiffness: 300, damping: 25 }} />
                   )}
                   <span className="relative z-10">{tab === 'chapters' ? 'Saved Chapters' : 'Journey Collection'}</span>
@@ -614,7 +614,7 @@ export default function TripsWishlistView({
             })}
           </div>
         </div>
-
+ 
         {activeSubTab === 'chapters' && (
           <div className="animate-scale-in">
             {wishlistTours.length > 0 ? (
@@ -643,7 +643,7 @@ export default function TripsWishlistView({
             )}
           </div>
         )}
-
+ 
         {activeSubTab === 'journeys' && (
           <div className="animate-scale-in">
             {savedItineraries.length > 0 ? (
@@ -653,7 +653,6 @@ export default function TripsWishlistView({
                     const tour = displayTours.find(t => t.id === itin.destination || t.dbId === itin.destination) || TOURS_DATA.find(t => t.id === itin.destination);
                     const bannerImage = tour?.bannerImage || '/images/tours/varanasi-banner.jpg';
                     const durationDays = itin.duration || 5;
-                    const companionLabel = itin.companions === 'solo' ? 'Solo Explorer' : itin.companions === 'couple' ? 'Couple Escape' : itin.companions === 'family' ? 'Family Journey' : itin.companions === 'friends' ? 'Group Expedition' : 'Explorer';
                     return (
                       <motion.div key={itin.id} onClick={() => onInspectItinerary?.(itin)}
                         layout
@@ -661,27 +660,27 @@ export default function TripsWishlistView({
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9, y: 15 }}
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                        className="relative rounded-3xl overflow-hidden group shadow-card hover:shadow-card-hover border border-border transition-all duration-300 min-h-[260px] cursor-pointer flex flex-col justify-between p-5"
+                        className="relative rounded-lg overflow-hidden group shadow-md border border-border/70 transition-all duration-300 min-h-[260px] cursor-pointer flex flex-col justify-between p-5"
                       >
                         <div className="absolute inset-0 z-0">
                           <SafeImage src={bannerImage} alt={itin.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                           <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent z-10" />
                         </div>
                         <div className="flex justify-between items-start z-20 relative">
-                          <span className="text-micro font-mono font-bold text-night bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-full uppercase tracking-wider border border-border">{durationDays} Days</span>
+                          <span className="text-meta font-mono font-bold text-night bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-sm uppercase border border-border/70">{durationDays} Days</span>
                           <button onClick={(e) => { e.stopPropagation(); onDeleteItinerary(itin.id); }}
                             aria-label="Delete itinerary"
-                            className="w-8 h-8 rounded-full bg-surface/95 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 border border-border cursor-pointer transition-colors">
+                            className="w-8 h-8 rounded-full bg-surface/95 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 border border-border/70 cursor-pointer transition-colors">
                             <Trash2 className="w-3 h-3" />
                           </button>
                         </div>
                         <div className="z-20 relative text-left">
-                          <div className="flex items-center gap-1 text-micro font-mono text-gold uppercase tracking-[0.25em] font-bold mb-1">
+                          <div className="flex items-center gap-1 text-meta font-mono text-gold mb-1">
                             <Sparkles className="w-3 h-3 text-gold" />
                             <span>Companion Journal</span>
                           </div>
-                          <h3 className="font-display text-lg text-night font-light lowercase leading-tight group-hover:text-gold transition-colors line-clamp-1">{itin.title || 'Untitled Itinerary'}</h3>
-                          <div className="flex justify-between items-center text-micro text-muted font-mono uppercase tracking-wider pt-2 mt-2 border-t border-border">
+                          <h3 className="font-display text-card text-night font-light lowercase leading-tight group-hover:text-gold transition-colors line-clamp-1">{itin.title || 'Untitled Itinerary'}</h3>
+                          <div className="flex justify-between items-center text-meta text-muted font-mono uppercase pt-2 mt-2 border-t border-border/15">
                             <span className="flex items-center gap-1 text-teal font-bold group-hover:text-gold transition-colors">
                               View <ArrowRight className="w-3 h-3 transform group-hover:translate-x-1 transition-transform" />
                             </span>

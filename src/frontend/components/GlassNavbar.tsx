@@ -38,15 +38,15 @@ export default function GlassNavbar({
   ];
 
   const getNavContainerClass = () => {
-    if (isTransparent) return 'absolute top-0 left-0 w-full z-50 bg-transparent py-3 px-6';
-    return 'sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/30 py-2 px-6';
+    if (isTransparent) return 'absolute top-0 left-0 w-full z-50 bg-transparent py-4 px-6';
+    return 'sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/20 py-2.5 px-6';
   };
-
+ 
   const getInnerClass = () => {
-    if (isTransparent) return 'bg-white/[0.07] backdrop-blur-[12px] border-white/10 text-white py-2.5';
-    return 'bg-white/95 border-border/40 shadow-sm text-night py-2';
+    if (isTransparent) return 'bg-white/[0.07] backdrop-blur-[12px] border-white/10 text-white py-2';
+    return 'bg-white border-border/40 shadow-md text-night py-1.5';
   };
-
+ 
   return (
     <motion.nav
       className={`${getNavContainerClass()} hidden md:block select-none`}
@@ -55,26 +55,26 @@ export default function GlassNavbar({
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
       <motion.div
-        className={`max-w-7xl mx-auto flex items-center justify-between px-6 rounded-2xl border ${getInnerClass()}`}
+        className={`max-w-7xl mx-auto flex items-center justify-between px-6 rounded-lg border ${getInnerClass()}`}
         layout
         transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
       >
         <motion.button onClick={() => onTabChange('home')}
           className="flex items-center gap-2.5 cursor-pointer group shrink-0 border-none bg-transparent min-h-[44px]"
-          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <motion.div className="w-9 h-9 rounded-full bg-night flex items-center justify-center text-white group-hover:bg-gold group-hover:scale-110 transition-all duration-500"
-            whileHover={{ rotate: 10 }}>
-            <Compass className="w-4.5 h-4.5 stroke-[1.5] animate-spin-slow" />
+          whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+          <motion.div className="w-8.5 h-8.5 rounded-full bg-night flex items-center justify-center text-white group-hover:bg-gold transition-all duration-500"
+            whileHover={{ rotate: 12 }}>
+            <Compass className="w-4 h-4 stroke-[1.5] animate-spin-slow" />
           </motion.div>
           <div className="flex flex-col text-left">
-            <span className={`font-logo text-h3 font-bold tracking-tight lowercase leading-tight ${isTransparent ? 'text-white' : 'text-night'}`}>
+            <span className={`font-logo text-card font-bold tracking-tight lowercase leading-none ${isTransparent ? 'text-white' : 'text-night'}`}>
               travebie<span className="text-gold">.ai</span>
             </span>
-            <span className={`text-micro font-mono uppercase tracking-[0.2em] mt-0.5 ${isTransparent ? 'text-white/60' : 'text-night/60'}`}>Atlas Vivant</span>
+            <span className={`text-meta font-mono uppercase tracking-[0.2em] mt-0.5 scale-90 origin-left ${isTransparent ? 'text-white/60' : 'text-night/60'}`}>Atlas Vivant</span>
           </div>
         </motion.button>
-
-        <motion.div className={`flex items-center gap-0.5 rounded-lg px-1 py-1 border ${
+ 
+        <motion.div className={`flex items-center gap-0.5 rounded-md px-1 py-1 border ${
           isTransparent ? 'bg-white/[0.06] border-white/10' : 'bg-secondary-surface/60 border-border/40'
         }`} layout>
           {tabs.map((tab) => {
@@ -82,18 +82,18 @@ export default function GlassNavbar({
             const isActive = currentTab === tab.id;
             return (
               <motion.button key={tab.id} onClick={() => onTabChange(tab.id)} layout
-                className={`relative px-4 py-2.5 rounded-lg text-small font-bold uppercase tracking-[0.12em] flex items-center gap-2 cursor-pointer min-h-[44px] ${
+                className={`relative px-4.5 py-2 rounded-md text-caption font-bold flex items-center gap-2 cursor-pointer min-h-[38px] border-none ${
                   isActive
-                    ? 'text-gold bg-transparent border-none'
+                    ? 'text-gold bg-transparent'
                     : isTransparent ? 'text-white/70 hover:text-white hover:bg-white/10'
-                      : 'text-muted/80 hover:text-night hover:bg-secondary-surface'
+                      : 'text-muted hover:text-night hover:bg-secondary-surface'
                 }`}
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               >
-                <Icon className={`w-3.5 h-3.5 transition-transform duration-300 ${isActive ? 'text-gold scale-110' : ''}`} />
+                <Icon className={`w-4 h-4 transition-transform duration-300 ${isActive ? 'text-gold scale-110' : ''}`} />
                 <span>{tab.label}</span>
                 {tab.badge !== undefined && tab.badge > 0 && (
-                  <motion.span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-micro font-bold text-white"
+                  <motion.span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-meta font-bold text-white"
                     initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 15 }}>
                     {tab.badge}
                   </motion.span>
@@ -106,26 +106,26 @@ export default function GlassNavbar({
             );
           })}
         </motion.div>
-
+ 
         <motion.div className="flex items-center gap-3 shrink-0" layout>
           <motion.button onClick={onSearchClick}
-            className={`p-3 rounded-lg transition-colors cursor-pointer ${
+            className={`p-2.5 rounded-md transition-colors cursor-pointer border-none bg-transparent ${
               isTransparent ? 'text-white/70 hover:text-white hover:bg-white/10'
-                : 'text-muted/80 hover:text-night hover:bg-secondary-surface'
+                : 'text-muted hover:text-night hover:bg-secondary-surface'
             }`}
-            whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Search className="w-4 h-4" />
           </motion.button>
-
+ 
           <div className={`h-4 w-px ${isTransparent ? 'bg-white/20' : 'bg-border/50'}`} />
-
+ 
           {session ? (
-            <div className="flex items-center gap-3.5">
+            <div className="flex items-center gap-3">
               {isAdmin && (
                 <motion.a href="/admin"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border ${isTransparent ? 'border-gold/50 bg-gold/10 text-gold' : 'border-gold/30 bg-gold/5 text-gold'}`}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-caption font-bold ${isTransparent ? 'border-gold/50 bg-gold/10 text-gold' : 'border-gold/30 bg-gold/5 text-gold'}`}
                   initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }}>
-                  <Shield className="w-3.5 h-3.5" />
+                  <Shield className="w-4 h-4" />
                   <span>Admin</span>
                 </motion.a>
               )}
@@ -134,10 +134,10 @@ export default function GlassNavbar({
                 <div className="flex items-center gap-2 cursor-pointer">
                   {session.user.image ? (
                     <img src={session.user.image} alt={session.user.name || "User"} loading="lazy"
-                      className={`w-7 h-7 rounded-full object-cover border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${isTransparent ? 'border-white/30' : 'border-border/50'}`} />
+                      className={`w-7 h-7 rounded-full object-cover border border-border/50 transition-all group-hover:ring-2 group-hover:ring-gold/30`} />
                   ) : (
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-small font-bold border transition-all group-hover:ring-2 group-hover:ring-gold/50 ${
-                      isTransparent ? 'bg-white/20 text-white border-white/30' : 'bg-night text-white border-border/50'
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-caption font-bold border border-border/50 transition-all group-hover:ring-2 group-hover:ring-gold/30 ${
+                      isTransparent ? 'bg-white/20 text-white' : 'bg-night text-white'
                     }`}>
                       {session.user.name ? session.user.name[0].toUpperCase() : "U"}
                     </div>
@@ -145,22 +145,22 @@ export default function GlassNavbar({
                 </div>
               </motion.div>
               <motion.button onClick={() => signOut()}
-                className={`min-w-[44px] min-h-[44px] px-2 rounded-lg cursor-pointer flex items-center justify-center gap-1 text-micro font-bold uppercase tracking-wider ${
+                className={`px-3 py-2 rounded-md cursor-pointer flex items-center justify-center gap-1.5 text-meta font-bold border-none bg-transparent ${
                   isTransparent ? 'text-white/70 hover:text-rose-400 hover:bg-white/10'
-                    : 'text-muted/80 hover:text-rose-500 hover:bg-rose-50'
+                    : 'text-muted hover:text-rose-500 hover:bg-rose-50'
                 }`}
-                whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <LogOut className="w-3.5 h-3.5" />
+                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                <LogOut className="w-4 h-4" />
                 <span className="hidden lg:inline">Sign Out</span>
               </motion.button>
             </div>
           ) : (
             <motion.button onClick={() => signIn("google", { callbackUrl: window.location.href })}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-micro font-bold uppercase tracking-wider cursor-pointer min-h-[38px] ${
+              className={`inline-flex items-center gap-1.5 px-4.5 py-2.5 rounded-md text-meta font-bold cursor-pointer border-none ${
                 isTransparent ? 'bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm' : 'bg-night text-white hover:bg-gold hover:text-night'
               }`}
-              whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-              <LogIn className="w-3.5 h-3.5" />
+              whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <LogIn className="w-4 h-4" />
               <span>Sign In</span>
             </motion.button>
           )}

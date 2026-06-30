@@ -141,7 +141,7 @@ export default function PlannerResult({
     >
       <div className="max-w-4xl mx-auto px-6 space-y-12">
         {/* 1. Journey Hero */}
-        <motion.div className="bg-surface relative overflow-hidden border border-border rounded-3xl shadow-card" variants={sectionVariants} custom={0}>
+        <motion.div className="bg-surface relative overflow-hidden border border-border/70 rounded-lg shadow-md" variants={sectionVariants} custom={0}>
           {tour?.bannerImage && (
             <div className="absolute inset-0 opacity-[0.08]">
               <img src={tour.bannerImage} alt="" loading="lazy" className="w-full h-full object-cover" />
@@ -149,31 +149,31 @@ export default function PlannerResult({
             </div>
           )}
           <div className="relative z-10 p-6 sm:p-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-border/60">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-border/15">
               <div className="space-y-2 text-left">
                 <div className="flex items-center gap-1.5">
                   <Compass className="w-4 h-4 text-gold animate-spin-slow" />
-                  <span className="font-mono text-micro uppercase tracking-[0.3em] text-gold font-bold">travebie.ai · companion journal</span>
+                  <span className="text-meta font-mono text-gold block">travebie.ai · companion journal</span>
                 </div>
                 <h1 className="font-display text-night font-light lowercase leading-none mt-1" style={{ fontSize: 'clamp(28px, 4vw, 48px)' }}>
                   your <em className="text-gold not-italic">{getDestinationPrettyName(destId).toLowerCase()}</em> odyssey
                 </h1>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  <span className="px-2.5 py-1 rounded-full bg-background border border-border text-micro font-mono font-bold uppercase tracking-wider text-night">{customDuration} Days</span>
-                  <span className="px-2.5 py-1 rounded-full bg-background border border-border text-micro font-mono font-bold uppercase tracking-wider text-night">{itin.length} Chapters</span>
+                  <span className="px-2.5 py-1 rounded-sm bg-background border border-border text-meta font-mono font-bold uppercase text-night">{customDuration} Days</span>
+                  <span className="px-2.5 py-1 rounded-sm bg-background border border-border text-meta font-mono font-bold uppercase text-night">{itin.length} Chapters</span>
                   {itineraryResult.recommendationScore && (
-                    <span className="px-2.5 py-1 rounded-full bg-coral/10 border border-coral/20 text-micro font-mono font-bold uppercase tracking-wider text-coral">{itineraryResult.recommendationScore}% Match</span>
+                    <span className="px-2.5 py-1 rounded-sm bg-coral/10 border border-coral/20 text-meta font-mono font-bold uppercase text-coral">{itineraryResult.recommendationScore}% Match</span>
                   )}
-                  <span className="px-2.5 py-1 rounded-full bg-teal/10 border border-teal/20 text-micro font-mono font-bold uppercase tracking-wider text-teal">Crafted For {travelers === 'solo' ? 'Solo' : travelers === 'couple' ? 'Couple' : travelers === 'family' ? 'Family' : travelers === 'friends' ? 'Group' : 'Explorer'}</span>
+                  <span className="px-2.5 py-1 rounded-sm bg-teal/10 border border-teal/20 text-meta font-mono font-bold uppercase text-teal">Crafted For {travelers === 'solo' ? 'Solo' : travelers === 'couple' ? 'Couple' : travelers === 'family' ? 'Family' : travelers === 'friends' ? 'Group' : 'Explorer'}</span>
                 </div>
               </div>
-
+ 
               <div className="flex flex-wrap items-center gap-2.5 shrink-0 print:hidden">
                 {!savedId ? (
                   <motion.button
                     onClick={onSave}
                     disabled={saving}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gold text-night text-micro font-bold uppercase tracking-wider cursor-pointer disabled:opacity-50 shadow-lg min-h-[46px] border-none hover:bg-gold/90"
+                    className="btn btn-primary h-11 px-5 rounded-md text-caption flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 shadow-md"
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
                   >
@@ -182,7 +182,7 @@ export default function PlannerResult({
                   </motion.button>
                 ) : (
                   <motion.span
-                    className="px-5 py-3 rounded-xl bg-secondary-surface text-muted text-micro font-bold uppercase tracking-wider border border-border flex items-center gap-1.5 min-h-[46px]"
+                    className="px-4 py-2.5 rounded-md bg-secondary-surface text-muted text-meta font-mono border border-border flex items-center gap-1.5 min-h-[40px]"
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 200, damping: 15 }}
@@ -190,7 +190,7 @@ export default function PlannerResult({
                     <CheckCircle2 className="w-3.5 h-3.5 text-gold" /> Archived
                   </motion.span>
                 )}
-
+ 
                 {savedId && !savedId.startsWith('local-') && (
                   <motion.button
                     onClick={() => {
@@ -198,23 +198,23 @@ export default function PlannerResult({
                       navigator.clipboard.writeText(url);
                       alert("Shareable Journey link copied to clipboard:\n" + url);
                     }}
-                    className="px-4 py-3 rounded-xl border border-teal/20 bg-teal/10 hover:bg-teal/20 text-teal text-micro font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
+                    className="btn btn-outline border-teal/20 bg-teal/5 text-teal hover:bg-teal/10 h-11 px-4 rounded-md text-caption flex items-center justify-center cursor-pointer"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                   >
                     Share Journey
                   </motion.button>
                 )}
-
+ 
                 <div className="relative group">
                   <motion.button
-                    className="px-4 py-3 rounded-xl border border-border bg-background text-micro font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-surface transition-colors cursor-pointer min-h-[44px] flex items-center gap-1"
+                    className="btn btn-outline border-border bg-background text-muted hover:text-night h-11 px-4 rounded-md text-caption flex items-center gap-1 cursor-pointer"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                   >
                     <span>Export Journal</span>
                   </motion.button>
-                  <div className="absolute right-0 mt-1 w-32 bg-white border border-border rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50 py-1 font-mono text-micro uppercase tracking-wider">
+                  <div className="absolute right-0 mt-1 w-32 bg-white border border-border rounded-md shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50 py-1 font-mono text-meta uppercase">
                     <button
                       onClick={() => window.print()}
                       className="w-full text-left px-3 py-2 hover:bg-background text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
@@ -229,10 +229,10 @@ export default function PlannerResult({
                     </button>
                   </div>
                 </div>
-
+ 
                 <motion.button
                   onClick={onReset}
-                  className="px-4 py-3 rounded-xl border border-border bg-background text-micro font-bold uppercase tracking-wider text-muted hover:text-night hover:bg-surface transition-colors cursor-pointer min-h-[44px]"
+                  className="btn btn-outline border-border bg-background text-muted hover:text-night h-11 px-4 rounded-md text-caption cursor-pointer"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
@@ -240,10 +240,10 @@ export default function PlannerResult({
                 </motion.button>
               </div>
             </div>
-
+ 
             {itineraryResult.recommendationReasoning && (
-              <div className="border-t border-border/50 pt-4 mt-6">
-                <p className="text-small text-muted leading-relaxed font-light italic">
+              <div className="border-t border-border/15 pt-4 mt-6">
+                <p className="text-body text-muted/80 leading-relaxed font-light italic">
                   &ldquo;{itineraryResult.recommendationReasoning}&rdquo;
                 </p>
               </div>
@@ -254,92 +254,92 @@ export default function PlannerResult({
         {/* 2. Story Timeline */}
         <motion.div className="space-y-6" variants={sectionVariants} custom={1}>
           <div className="flex items-center gap-3">
-            <h3 className="font-display text-xl text-night font-light lowercase">story timeline</h3>
-            <div className="h-px flex-1 bg-border/65" />
+            <h3 className="font-display text-section text-night font-light lowercase">story timeline</h3>
+            <div className="h-px flex-1 bg-border/20" />
           </div>
-
+ 
           {/* Day Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
             {itin.map((dayItem: any, idx: number) => (
               <motion.button
                 key={idx}
                 onClick={() => onActiveDayTabChange(idx)}
-                className={`flex-shrink-0 flex flex-col items-center px-4 py-2.5 rounded-xl transition-colors duration-300 cursor-pointer border relative overflow-hidden outline-none ${
+                className={`flex-shrink-0 flex flex-col items-center px-4 py-2 rounded-md transition-colors duration-300 cursor-pointer border relative overflow-hidden outline-none ${
                   activeDayTab === idx
                     ? 'bg-gold text-night border-gold shadow-md font-bold'
                     : 'bg-surface text-muted border-border hover:border-gold'
                 }`}
                 style={{ minWidth: '64px' }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
               >
-                <span className="font-display text-lg font-light leading-none">{idx + 1}</span>
-                <span className="text-micro font-mono uppercase tracking-wider mt-0.5">day</span>
+                <span className="font-display text-card font-light leading-none">{idx + 1}</span>
+                <span className="text-meta font-mono uppercase mt-0.5">day</span>
               </motion.button>
             ))}
           </div>
-
+ 
           {/* Active Day timeline panel */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeDayTab}
-              className="bg-surface border border-border rounded-3xl p-6 md:p-8 shadow-card space-y-6 relative overflow-hidden"
+              className="bg-surface border border-border/70 rounded-lg p-6 md:p-8 shadow-md space-y-6 relative overflow-hidden"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ type: "spring", stiffness: 120, damping: 20 }}
             >
               <div>
-                <span className="text-micro font-mono uppercase tracking-[0.3em] text-coral font-bold block mb-1">
+                <span className="text-meta font-mono text-coral block mb-1">
                   chapter {activeDayTab + 1} of {itin.length}
                 </span>
-                <h3 className="font-display text-2xl sm:text-3xl font-light text-night lowercase">
+                <h3 className="font-display text-section text-night font-light lowercase">
                   {currentDay.title}
                 </h3>
               </div>
-
-              <p className="text-small text-muted leading-relaxed font-sans font-light">
+ 
+              <p className="text-body text-muted/80 leading-relaxed font-light">
                 {currentDay.description}
               </p>
-
+ 
               {/* Local Secret */}
               {tour?.localSecret && (
-                <div className="bg-background/60 border border-border/50 rounded-2xl p-4 space-y-1">
-                  <span className="font-mono text-micro uppercase tracking-wider text-coral font-bold block">local secret</span>
-                  <p className="text-small text-night/85 leading-relaxed font-sans font-light">{tour.localSecret}</p>
+                <div className="bg-background/60 border border-border/20 rounded-md p-4 space-y-1 shadow-sm">
+                  <span className="text-meta font-mono text-coral block">local secret</span>
+                  <p className="text-body text-night/80 font-light leading-relaxed">{tour.localSecret}</p>
                 </div>
               )}
-
+ 
               {/* Photography Spot */}
               {tour?.photographySpot && (
-                <div className="bg-background/60 border border-border/50 rounded-2xl p-4 space-y-1">
-                  <span className="font-mono text-micro uppercase tracking-wider text-gold font-bold block">photography spot</span>
-                  <p className="text-small text-night/85 leading-relaxed font-sans font-light">{tour.photographySpot}</p>
+                <div className="bg-background/60 border border-border/20 rounded-md p-4 space-y-1 shadow-sm">
+                  <span className="text-meta font-mono text-gold block">photography spot</span>
+                  <p className="text-body text-night/80 font-light leading-relaxed">{tour.photographySpot}</p>
                 </div>
               )}
-
+ 
               {/* Signature Experience */}
               {tour?.signatureExperience && (
-                <div className="bg-background/60 border border-border/50 rounded-2xl p-4 space-y-1">
-                  <span className="font-mono text-micro uppercase tracking-wider text-teal font-bold block">signature experience</span>
-                  <p className="text-small text-night/85 leading-relaxed font-sans font-light">{tour.signatureExperience}</p>
+                <div className="bg-background/60 border border-border/20 rounded-md p-4 space-y-1 shadow-sm">
+                  <span className="text-meta font-mono text-teal block">signature experience</span>
+                  <p className="text-body text-night/80 font-light leading-relaxed">{tour.signatureExperience}</p>
                 </div>
               )}
-
+ 
               {/* Vertical progression line stops */}
               <div className="relative pl-6 border-l border-border mt-6 space-y-6">
                 {currentDay.activities && currentDay.activities.map((act: string, aIdx: number) => (
                   <div key={aIdx} className="relative group text-left">
                     {/* Indicator Dot */}
-                    <div className="absolute -left-[30px] top-1.5 w-3 h-3 rounded-full bg-gold border border-surface shadow-[0_0_8px_rgba(244,182,61,0.4)] transition-all duration-300 group-hover:scale-125" />
-
-                    <div className="bg-background/40 hover:bg-surface transition-all duration-300 p-4 rounded-2xl border border-border/50 hover:border-border hover:shadow-sm">
+                    <div className="absolute -left-[29px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold border border-surface shadow-sm transition-all duration-300 group-hover:scale-125" />
+ 
+                    <div className="bg-background/40 hover:bg-surface transition-all duration-300 p-4 rounded-md border border-border/20 hover:border-border hover:shadow-sm">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <span className="font-mono text-micro uppercase tracking-wider text-gold font-bold">explorer log</span>
-                        <span className="h-px w-3 bg-border/40" />
-                        <span className="text-micro font-mono text-muted/40 uppercase">stop {aIdx + 1}</span>
+                        <span className="text-meta font-mono text-gold">explorer log</span>
+                        <span className="h-px w-3 bg-border/20" />
+                        <span className="text-meta font-mono text-muted/40">stop {aIdx + 1}</span>
                       </div>
-                      <p className="text-small text-night/95 leading-relaxed font-sans font-light">{act}</p>
+                      <p className="text-body text-night/95 font-light leading-relaxed">{act}</p>
                     </div>
                   </div>
                 ))}
@@ -347,23 +347,23 @@ export default function PlannerResult({
             </motion.div>
           </AnimatePresence>
         </motion.div>
-
+ 
         {/* 3. Route Map */}
         <motion.div className="space-y-4" variants={sectionVariants} custom={2}>
           <div className="flex items-center gap-3">
-            <h3 className="font-display text-xl text-night font-light lowercase">route map</h3>
-            <div className="h-px flex-1 bg-border/65" />
+            <h3 className="font-display text-section text-night font-light lowercase">route map</h3>
+            <div className="h-px flex-1 bg-border/20" />
           </div>
-          <div className="bg-surface border border-border rounded-3xl overflow-hidden shadow-card h-44 w-full relative">
+          <div className="bg-surface border border-border/70 rounded-lg overflow-hidden shadow-md h-44 w-full relative">
             <ItineraryMap days={itin} activeDay={activeDayTab} />
           </div>
         </motion.div>
-
+ 
         {/* 4. Hotels */}
         <motion.div className="space-y-4" variants={sectionVariants} custom={3}>
           <div className="flex items-center gap-3">
-            <h3 className="font-display text-xl text-night font-light lowercase">where to stay</h3>
-            <div className="h-px flex-1 bg-border/65" />
+            <h3 className="font-display text-section text-night font-light lowercase">where to stay</h3>
+            <div className="h-px flex-1 bg-border/20" />
           </div>
           {getHotelsByDestination(destId).length > 0 ? (
             <div className="grid grid-cols-1 gap-4">
@@ -372,8 +372,8 @@ export default function PlannerResult({
               ))}
             </div>
           ) : (
-            <div className="p-6 rounded-2xl bg-surface border border-border text-center">
-              <p className="text-small text-muted font-light font-sans">Stay recommendations for this chapter are currently being hand-selected.</p>
+            <div className="p-6 rounded-md bg-surface border border-border/70 shadow-sm text-center">
+              <p className="text-body text-muted/80 font-light">Stay recommendations for this chapter are currently being hand-selected.</p>
             </div>
           )}
         </motion.div>

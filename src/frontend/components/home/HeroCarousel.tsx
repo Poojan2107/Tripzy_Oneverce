@@ -74,8 +74,8 @@ function CarouselCard({
 
   return (
     <motion.div
-      className={`absolute w-[320px] h-[440px] rounded-3xl overflow-hidden cursor-pointer origin-center border transition-colors duration-300 ${
-        isActive ? 'border-gold/40 shadow-[0_0_30px_rgba(244,182,61,0.15)]' : 'border-white/10 hover:border-white/25'
+      className={`absolute w-[320px] h-[430px] rounded-lg overflow-hidden cursor-pointer origin-center border transition-colors duration-300 ${
+        isActive ? 'border-gold/40 shadow-lg' : 'border-white/10 hover:border-white/25 shadow-md'
       }`}
       variants={variants}
       animate={position}
@@ -92,11 +92,11 @@ function CarouselCard({
       whileTap={isActive ? { scale: 0.98 } : undefined}
     >
       <motion.div
-        className="w-full h-full rounded-3xl overflow-hidden"
+        className="w-full h-full rounded-lg overflow-hidden"
         style={{
           boxShadow: isActive
-            ? `0 20px 60px rgba(0,0,0,0.25), 0 0 0 1px ${accentColor}`
-            : '0 12px 40px rgba(0,0,0,0.08)',
+            ? `0 20px 48px rgba(0,0,0,0.25), 0 0 0 1px ${accentColor}`
+            : 'var(--shadow-md)',
         }}
       >
         <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">
@@ -110,41 +110,41 @@ function CarouselCard({
               animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <span className={`absolute top-4 left-4 px-3 py-1 rounded-full text-small font-mono font-bold text-white uppercase tracking-[0.16em] border border-white/20 backdrop-blur-md shadow-sm bg-opacity-80 ${slide.badgeColor}`}>{slide.category}</span>
+            <span className={`absolute top-4 left-4 px-3 py-1 rounded-sm text-caption font-mono font-bold text-white uppercase border border-white/20 backdrop-blur-md shadow-sm bg-opacity-80 ${slide.badgeColor}`}>{slide.category}</span>
             <div className="absolute bottom-3 left-4 right-4 flex justify-between items-end">
-              <span className="text-micro font-mono uppercase tracking-[0.2em] text-white/95">{slide.subtitle}</span>
+              <span className="text-meta font-mono text-white/95">{slide.subtitle}</span>
             </div>
           </div>
           <div className="flex-1 p-5 flex flex-col justify-between text-left bg-surface/95 paper-grain border-t border-border/40">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <h3 className="font-display text-2.5xl text-night font-light lowercase leading-tight">{slide.title}</h3>
+                <h3 className="font-display text-card text-night font-light lowercase leading-tight">{slide.title}</h3>
                 <motion.div
                   className="flex items-center gap-1"
                   animate={isActive ? { rotate: [0, -10, 10, 0] } : {}}
                   transition={{ duration: 0.6, delay: 2 }}
                 >
                   <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-                  <span className="text-micro font-bold text-night mt-0.5">{slide.rating}</span>
+                  <span className="text-meta font-bold text-night mt-0.5">{slide.rating}</span>
                 </motion.div>
               </div>
-              <p className="text-small text-muted/80 leading-relaxed font-sans font-light line-clamp-3">{slide.storyHook}</p>
+              <p className="text-body text-muted/80 leading-relaxed font-sans font-light line-clamp-3">{slide.storyHook}</p>
             </div>
             <div className="pt-3 border-t border-border/60 flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-micro font-mono text-muted">
+              <div className="flex items-center gap-1.5 text-meta font-mono text-muted">
                 <Users className="w-3.5 h-3.5 text-teal" />
                 <span>{slide.explorers} explorers loved this</span>
               </div>
               {isActive && (
                 <motion.button
                   onClick={(e) => { e.stopPropagation(); onClick(); }}
-                  className="px-3.5 py-2 rounded-xl bg-night hover:bg-teal text-white text-micro font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+                  className="btn h-8.5 min-h-[34px] px-3.5 rounded-md bg-night hover:bg-teal text-white text-meta font-bold uppercase flex items-center gap-1 cursor-pointer transition-all duration-300"
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                 >
                   Explore Chapter <ArrowRight className="w-3 h-3 text-gold" />
                 </motion.button>
@@ -295,13 +295,13 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
             {/* Left: Editorial text panel */}
             <motion.div className="flex-1 space-y-6 text-left relative z-10 w-full lg:max-w-[42%]" variants={itemVariants}>
               <div className="space-y-6">
-                <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10" variants={itemVariants}>
+                <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm bg-white/10 backdrop-blur-md border border-white/10" variants={itemVariants}>
                   <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                  <span className="font-mono text-micro uppercase tracking-[0.25em] text-white/80 font-bold">travebie · atlas vivant</span>
+                  <span className="text-meta font-mono text-white/80">travebie · atlas vivant</span>
                 </motion.div>
-
+ 
                 <motion.div className="relative inline-block" variants={itemVariants}>
-                  <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl text-white font-light leading-[0.95] tracking-tight lowercase">
+                  <h1 className="font-display text-display text-white leading-none tracking-tight lowercase">
                     explore india<br />as living<br /><em className="italic font-light text-gold font-normal">chapters</em>
                   </h1>
                   <motion.div
@@ -312,18 +312,18 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                     <svg width="50" height="50" viewBox="0 0 60 60" fill="none"><path d="M10 20C22 14 36 16 46 26M46 26L38 24M46 26L44 34" stroke="#F4B63D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </motion.div>
                 </motion.div>
-
-                <motion.p className="text-sm md:text-base text-white/60 max-w-md font-sans font-light leading-relaxed" variants={itemVariants}>
+ 
+                <motion.p className="text-body text-white/60 max-w-md font-light leading-relaxed" variants={itemVariants}>
                   Every destination tells a story. Explore chapter by chapter, journey by journey.
                 </motion.p>
               </div>
-
+ 
               <motion.div className="flex flex-wrap items-center gap-4 pt-2" variants={itemVariants}>
                 <motion.button
                   onClick={onGoToPlanner}
-                  className="px-8 py-4 rounded-full bg-gold hover:bg-gold/90 text-night text-small font-bold uppercase tracking-[0.16em] flex items-center gap-2 cursor-pointer shadow-lg shadow-gold/20"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
+                  className="btn btn-primary h-12 px-6 rounded-md text-caption tracking-wider flex items-center gap-2 cursor-pointer shadow-lg"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <Sparkles className="w-4 h-4" />
@@ -331,9 +331,9 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 </motion.button>
                 <motion.button
                   onClick={onGoToExplore}
-                  className="px-6 py-4 rounded-full border border-white/20 hover:border-white/60 text-white/80 hover:text-white text-small font-bold uppercase tracking-[0.16em] flex items-center gap-2 cursor-pointer backdrop-blur-sm bg-white/5"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
+                  className="btn btn-outline border-white/20 hover:border-white/50 text-white/80 hover:text-white h-12 px-5 rounded-md text-caption bg-white/5 backdrop-blur-sm shadow-sm flex items-center gap-2 cursor-pointer transition-all duration-300"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <motion.div
@@ -344,10 +344,10 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                   Explore Chapters
                 </motion.button>
               </motion.div>
-
+ 
               {/* Slide-specific metadata inline */}
               <motion.div key={`meta-${activeIndex}`}
-                className="flex flex-wrap items-center gap-4 text-xs text-white/50 font-sans tracking-wide pt-2"
+                className="flex flex-wrap items-center gap-4 text-caption text-white/50 pt-2"
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
@@ -358,20 +358,20 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 <span className="text-white/20">•</span>
                 <span className="text-gold font-medium">{getMoodLabel(activeSlide.id)}</span>
                 <span className="text-white/20">•</span>
-                <span className="px-2 py-0.5 rounded-full bg-white/10 text-micro uppercase font-bold tracking-wider text-gold">{activeSlide.style}</span>
+                <span className="px-2 py-0.5 rounded-sm bg-white/10 text-meta text-gold font-bold">{activeSlide.style}</span>
               </motion.div>
             </motion.div>
-
+ 
             {/* Right: Carousel area */}
             <motion.div className="flex-grow w-full lg:w-1/2 flex flex-col items-center justify-center relative min-h-[520px]" variants={itemVariants}>
               {/* Floating Passport Badge */}
               <motion.div
-                className="absolute top-0 right-2 lg:right-8 z-40 flex flex-col items-start gap-1 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl px-4.5 py-3 shadow-xl select-none text-left"
+                className="absolute top-0 right-2 lg:right-8 z-40 flex flex-col items-start gap-1 bg-white/10 backdrop-blur-xl border border-white/10 rounded-lg px-4.5 py-3 shadow-lg select-none text-left"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <span className="text-small font-mono uppercase tracking-[0.2em] text-gold font-bold">Explorer Passport</span>
+                <span className="text-caption text-gold font-bold">Atlas Chronicles</span>
                 <div className="flex gap-4 mt-1">
                   {[
                     { value: '12', label: 'Chapters' },
@@ -379,8 +379,8 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                     { value: '3', label: 'Journeys' },
                   ].map((s) => (
                     <div key={s.label} className="text-left">
-                      <span className="text-sm font-bold text-white leading-none block font-display">{s.value}</span>
-                      <span className="text-micro font-mono uppercase tracking-wider text-white/40 block mt-0.5">{s.label}</span>
+                      <span className="text-card font-bold text-white block font-display leading-none">{s.value}</span>
+                      <span className="text-meta font-mono text-white/40 block mt-0.5">{s.label}</span>
                     </div>
                   ))}
                 </div>

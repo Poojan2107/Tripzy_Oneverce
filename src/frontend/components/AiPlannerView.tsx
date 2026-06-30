@@ -330,9 +330,7 @@ export default function AiPlannerView({
     else if (mood === 'Food') moodLabel = 'Epicurean';
     else if (mood === 'Culture') moodLabel = 'Philosopher';
     return `${compLabel} ${moodLabel}`;
-  };
-
-  if (loading) {
+  };  if (loading) {
     return (
       <div className="pt-28 pb-32 px-6 max-w-lg mx-auto min-h-[100dvh] bg-background flex flex-col items-center justify-center text-center">
         <div className="relative w-32 h-20 mb-6 flex items-center justify-center">
@@ -358,13 +356,13 @@ export default function AiPlannerView({
               animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 1 }} />
           </svg>
         </div>
-        <span className="font-mono text-micro uppercase tracking-[0.25em] text-coral block mb-2 font-bold animate-pulse">
+        <span className="text-meta font-mono text-coral block mb-2 font-bold">
           Journey Companion
         </span>
-        <h2 className="font-display text-3xl font-light text-night lowercase leading-none mb-6">
+        <h2 className="font-display text-heading text-night font-light lowercase leading-none mb-6">
           {loadingMsg}
         </h2>
-
+ 
         {/* Dynamic Checklist Loader */}
         <div className="w-full max-w-xs space-y-3.5 text-left border-t border-border/40 pt-6">
           {LOADING_MESSAGES.map((msg, i) => {
@@ -380,9 +378,9 @@ export default function AiPlannerView({
               >
                 <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300 ${
                   isDone 
-                    ? 'bg-gold border-gold text-night font-bold shadow-[0_0_8px_rgba(244,182,61,0.2)]' 
+                    ? 'bg-gold border-gold text-night font-bold shadow-sm' 
                     : isCurrent 
-                      ? 'bg-teal border-teal text-white shadow-[0_0_10px_rgba(24,182,201,0.3)]' 
+                      ? 'bg-teal border-teal text-white shadow-sm' 
                       : 'border-border/60 bg-background text-transparent'
                 }`}>
                   {isDone ? (
@@ -391,7 +389,7 @@ export default function AiPlannerView({
                     <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
                   ) : null}
                 </div>
-                <span className={`text-xs font-sans transition-colors duration-300 ${
+                <span className={`text-body transition-colors duration-300 ${
                   isDone ? 'text-muted/50 line-through font-light' : isCurrent ? 'text-night font-bold' : 'text-muted/30 font-light'
                 }`}>
                   {msg}
@@ -403,7 +401,7 @@ export default function AiPlannerView({
       </div>
     );
   }
-
+ 
   if (itineraryResult) {
     return (
       <>
@@ -424,7 +422,7 @@ export default function AiPlannerView({
           getJourneyPersona={getJourneyPersona}
           getDestinationPrettyName={getDestinationPrettyName}
         />
-
+ 
         {/* LIGHTWEIGHT AUTH EXPLANATION MODAL */}
         <AnimatePresence>
           {showAuthModal && (
@@ -432,27 +430,27 @@ export default function AiPlannerView({
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <motion.div onClick={() => setShowAuthModal(false)} className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
               
-              <motion.div className="bg-white border border-border/50 rounded-3xl shadow-elevated p-6 max-w-sm w-full relative z-10 text-night text-left space-y-5"
+              <motion.div className="bg-white border border-border/70 rounded-lg shadow-lg p-6 max-w-sm w-full relative z-10 text-night text-left space-y-5"
                 initial={{ opacity: 0, y: 20, scale: 0.96 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 15, scale: 0.96 }}
                 transition={{ type: "spring", stiffness: 200, damping: 25 }}>
                 
-                <div className="flex items-center gap-3 border-b border-border/30 pb-3">
+                <div className="flex items-center gap-3 border-b border-border/15 pb-3">
                   <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold shrink-0">
                     <Compass className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-display text-lg font-light lowercase leading-tight">Save this journey to your Passport</h3>
-                    <p className="text-micro font-mono text-muted uppercase tracking-widest mt-0.5">Explorer Passport Sync</p>
+                    <h3 className="font-display text-section text-night font-light lowercase leading-tight">Save this journey to your Passport</h3>
+                    <p className="text-meta font-mono text-muted mt-0.5">Explorer Passport Sync</p>
                   </div>
                 </div>
-
+ 
                 <div className="space-y-2.5 py-1">
-                  <p className="text-small text-muted/80 leading-relaxed font-sans font-light">
+                  <p className="text-body text-muted/80 leading-relaxed font-light">
                     Save your AI-crafted odyssey to access it anytime and build your explorer achievements.
                   </p>
-                  <ul className="text-xs space-y-2 text-night/85 font-sans font-light">
+                  <ul className="text-body space-y-2 text-night/85 font-light">
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
                       <span>Sync across all your devices</span>
@@ -467,11 +465,11 @@ export default function AiPlannerView({
                     </li>
                   </ul>
                 </div>
-
+ 
                 <div className="flex flex-col gap-2.5 pt-2">
                   <button
                     onClick={handleContinueWithGoogle}
-                    className="w-full py-3 rounded-xl bg-night text-white text-micro font-bold uppercase tracking-wider hover:bg-night transition-colors cursor-pointer flex items-center justify-center gap-2 border-none shadow-sm min-h-[44px]"
+                    className="btn btn-night w-full h-11 rounded-md text-caption flex items-center justify-center gap-2 cursor-pointer shadow-md"
                   >
                     <svg className="w-3.5 h-3.5 mr-1" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -483,22 +481,22 @@ export default function AiPlannerView({
                   </button>
                   <button
                     onClick={handleMaybeLater}
-                    className="w-full py-3 rounded-xl border border-border/40 bg-white hover:bg-background text-muted hover:text-night text-micro font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px]"
+                    className="btn btn-outline w-full h-11 rounded-md text-caption border-border/40 bg-white text-muted hover:text-night cursor-pointer"
                   >
                     Maybe Later
                   </button>
                 </div>
-
+ 
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-
+ 
         {/* SUCCESS TOAST */}
         <AnimatePresence>
           {showToast && (
             <motion.div
-              className="fixed bottom-5 right-5 z-[100] bg-night text-white px-5 py-3 rounded-2xl shadow-elevated border border-white/10 flex items-center gap-2 font-mono text-micro uppercase tracking-widest"
+              className="fixed bottom-5 right-5 z-[100] bg-night text-white px-5 py-3 rounded-md shadow-lg border border-white/10 flex items-center gap-2 font-mono text-meta uppercase"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 15 }}

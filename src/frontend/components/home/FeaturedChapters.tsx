@@ -90,7 +90,7 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                       {/* Wishlist button */}
                       <motion.button
                         onClick={e => { e.stopPropagation(); onToggleWishlist(tour.id); }}
-                        className="absolute top-5 right-5 w-8.5 h-8.5 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center shadow-sm cursor-pointer border border-white/20 hover:bg-white/20 transition-all"
+                        className="absolute top-5 right-5 btn-ghost w-8.5 h-8.5"
                         whileHover={{ scale: 1.08 }}
                         whileTap={{ scale: 0.92 }}
                         transition={{ type: "spring", stiffness: 400, damping: 17 }}

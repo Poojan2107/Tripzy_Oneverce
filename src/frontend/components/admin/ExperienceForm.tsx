@@ -52,7 +52,7 @@ export default function ExperienceForm({ state, actions, onSubmit }: ExperienceF
             </h3>
             <p className="text-micro text-stone font-mono uppercase tracking-[0.25em] mt-1">experience content model</p>
           </div>
-          <button type="button" onClick={() => actions.setOpen(false)} className="w-11 h-11 flex items-center justify-center rounded-full bg-secondary-surface/30 hover:bg-secondary-surface text-stone hover:text-night transition-all cursor-pointer shrink-0 touch-action-manipulation select-none">
+          <button type="button" onClick={() => actions.setOpen(false)} className="w-11 h-11 flex items-center justify-center btn-ghost text-stone hover:text-night cursor-pointer shrink-0 touch-action-manipulation select-none">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -111,7 +111,7 @@ export default function ExperienceForm({ state, actions, onSubmit }: ExperienceF
           </div>
 
           <div className="pt-6 flex gap-4">
-            <button type="button" onClick={() => actions.setOpen(false)} className="flex-1 py-3.5 rounded-xl bg-white border border-border text-stone hover:bg-secondary-surface/30 text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center touch-action-manipulation select-none">
+            <button type="button" onClick={() => actions.setOpen(false)} className="flex-1 py-3.5 btn-outline text-stone text-micro font-bold uppercase tracking-[0.18em] cursor-pointer text-center touch-action-manipulation select-none">
               cancel
             </button>
             <button type="submit" className="flex-1 py-3.5 rounded-xl bg-gold text-night hover:bg-gold/90 text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center shadow-md">

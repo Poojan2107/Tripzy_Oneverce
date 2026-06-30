@@ -82,7 +82,7 @@ export default function ExploreView({
           const Icon = view === 'list' ? List : Map;
           return (
             <button key={view} onClick={() => setMobileView(view)}
-              className={`flex items-center gap-1.5 min-h-[44px] min-w-[52px] justify-center rounded-full px-3 transition-all ${mobileView === view ? 'bg-gold/10 text-gold font-bold' : 'opacity-60 hover:opacity-100'}`}
+              className={`flex items-center gap-1.5 btn-ghost min-h-[44px] min-w-[52px] justify-center px-3 ${mobileView === view ? 'bg-gold/10 text-gold font-bold' : 'opacity-60 hover:opacity-100'}`}
             >
               <Icon className="w-4 h-4" />{view === 'list' ? 'List' : 'Map'}
             </button>
@@ -113,7 +113,7 @@ export default function ExploreView({
               className="bg-transparent text-body text-night placeholder:text-muted/40 outline-none w-full font-light"
             />
             {searchQuery && (
-              <motion.button onClick={() => setSearchQuery('')} aria-label="Clear search" className="shrink-0 w-8 h-8 flex items-center justify-center border-none bg-transparent"
+              <motion.button onClick={() => setSearchQuery('')} aria-label="Clear search" className="shrink-0 w-8 h-8 flex items-center justify-center btn-ghost"
                 initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}>
                 <X className="w-3.5 h-3.5 text-muted/50 hover:text-night" />
               </motion.button>
@@ -124,10 +124,10 @@ export default function ExploreView({
             {CATEGORY_CHIPS.map((chip) => (
               <motion.button key={chip.id}
                 onClick={() => { setActiveCategory(chip.id); setActiveTourId(null); }}
-                className={`flex-shrink-0 px-3.5 py-1.5 rounded-md text-meta font-mono transition-colors duration-300 border min-h-[32px] flex items-center cursor-pointer ${
+                className={`flex-shrink-0 px-3.5 py-1.5 btn-ghost text-meta font-mono min-h-[32px] flex items-center ${
                   activeCategory === chip.id
                     ? 'bg-night text-white border-night'
-                    : 'bg-background text-muted border-border hover:border-gold'
+                    : 'bg-background text-muted border-border'
                 }`}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
               >
@@ -162,7 +162,7 @@ export default function ExploreView({
                 <p className="text-small text-muted/40 font-light mt-1 max-w-xs mx-auto">try a different category or search query.</p>
               </div>
               <motion.button onClick={() => { setSearchQuery(''); setActiveCategory('all'); }}
-                className="px-5 py-2.5 bg-teal text-white text-micro font-bold uppercase tracking-wider rounded-full hover:bg-teal/80 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                className="px-5 py-2.5 btn-primary text-micro font-bold uppercase tracking-wider rounded-full inline-flex items-center gap-1.5"
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                 <Compass className="w-3 h-3" />
                 <span>Clear Filters</span>

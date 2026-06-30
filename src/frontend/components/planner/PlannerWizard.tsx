@@ -119,7 +119,7 @@ export default function PlannerWizard({
                       <button
                         key={tour.id}
                         onClick={() => onDestinationChange(tour.id)}
-                        className={`group p-2.5 rounded-md border text-left cursor-pointer flex flex-col justify-between aspect-[4/3] relative overflow-hidden outline-none transition-all duration-300 ${
+                        className={`btn-ghost group p-2.5 text-left cursor-pointer flex flex-col justify-between aspect-[4/3] relative overflow-hidden outline-none ${
                           isSelected
                             ? 'border-gold shadow-[0_0_15px_rgba(244,182,61,0.25)]'
                             : 'border-border/30 hover:border-border/80'
@@ -170,7 +170,7 @@ export default function PlannerWizard({
                       <button
                         key={opt.id}
                         onClick={() => onTravelersChange(opt.id)}
-                        className={`p-3 rounded-md border text-left cursor-pointer flex items-center gap-3 outline-none transition-all duration-300 ${
+                        className={`btn-ghost p-3 text-left cursor-pointer flex items-center gap-3 outline-none ${
                           isSelected
                             ? 'bg-secondary-surface border-gold text-night shadow-sm'
                             : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'
@@ -200,7 +200,7 @@ export default function PlannerWizard({
                       <button
                         key={opt.id}
                         onClick={() => onDurationChange(opt.id)}
-                        className={`py-2 px-1 rounded-md border text-center cursor-pointer flex flex-col justify-center items-center outline-none transition-all duration-300 min-h-[54px] ${
+                        className={`btn-ghost py-2 px-1 text-center cursor-pointer flex flex-col justify-center items-center outline-none min-h-[54px] ${
                           isSelected
                             ? 'bg-secondary-surface border-gold text-night shadow-sm'
                             : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'

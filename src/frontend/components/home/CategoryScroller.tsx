@@ -43,7 +43,7 @@ export default function CategoryScroller({ onQuickCategoryClick }: CategoryScrol
                 <motion.button
                   key={cat.id}
                   onClick={() => onQuickCategoryClick(cat.id)}
-                  className="snap-card flex-shrink-0 w-72 h-44 relative rounded-lg overflow-hidden cursor-pointer group text-left border-none"
+                  className="btn-ghost snap-card flex-shrink-0 w-72 h-44 relative rounded-lg overflow-hidden cursor-pointer group text-left"
                   initial={{ opacity: 0, x: 30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}

@@ -76,7 +76,7 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
             </h3>
             <p className="text-micro text-stone font-mono uppercase tracking-[0.25em] mt-1">destination content model</p>
           </div>
-          <button onClick={() => actions.setOpen(false)} className="w-11 h-11 flex items-center justify-center rounded-full bg-secondary-surface/30 hover:bg-secondary-surface text-stone hover:text-night transition-all cursor-pointer shrink-0 touch-action-manipulation select-none">
+          <button onClick={() => actions.setOpen(false)} className="w-11 h-11 flex items-center justify-center btn-ghost text-stone hover:text-night cursor-pointer shrink-0 touch-action-manipulation select-none">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -185,19 +185,19 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
           </div>
 
           <div className="flex gap-3 pt-4">
-            <button type="button" onClick={() => { actions.setFeatured(!state.featured); if (state.featured) actions.setTrending(false); }} className={`flex-1 py-3.5 rounded-xl border text-micro font-bold uppercase tracking-[0.18em] text-center transition-all cursor-pointer touch-action-manipulation select-none ${state.featured ? 'bg-teal/10 border-teal text-teal' : 'bg-white border-border text-stone'}`}>
+            <button type="button" onClick={() => { actions.setFeatured(!state.featured); if (state.featured) actions.setTrending(false); }} className={`flex-1 py-3.5 btn-outline text-micro font-bold uppercase tracking-[0.18em] text-center cursor-pointer touch-action-manipulation select-none ${state.featured ? 'bg-teal/10 border-teal text-teal' : ''}`}>
               featured
             </button>
-            <button type="button" onClick={() => { actions.setTrending(!state.trending); if (state.trending) actions.setFeatured(false); }} className={`flex-1 py-3.5 rounded-xl border text-micro font-bold uppercase tracking-[0.18em] text-center transition-all cursor-pointer touch-action-manipulation select-none ${state.trending ? 'bg-gold/10 border-gold text-gold' : 'bg-white border-border text-stone'}`}>
+            <button type="button" onClick={() => { actions.setTrending(!state.trending); if (state.trending) actions.setFeatured(false); }} className={`flex-1 py-3.5 btn-outline text-micro font-bold uppercase tracking-[0.18em] text-center cursor-pointer touch-action-manipulation select-none ${state.trending ? 'bg-gold/10 border-gold text-gold' : ''}`}>
               trending
             </button>
           </div>
 
           <div className="pt-6 flex gap-4">
-            <button type="button" onClick={() => actions.setOpen(false)} className="flex-1 py-3.5 rounded-xl bg-white border border-border text-stone hover:bg-secondary-surface/30 text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center touch-action-manipulation select-none">
+            <button type="button" onClick={() => actions.setOpen(false)} className="flex-1 py-3.5 btn-outline text-stone text-micro font-bold uppercase tracking-[0.18em] cursor-pointer text-center touch-action-manipulation select-none">
               cancel
             </button>
-            <button type="submit" className="flex-1 py-3.5 rounded-xl bg-gold text-night hover:bg-gold/90 text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer text-center shadow-md">
+            <button type="submit" className="flex-1 py-3.5 btn-primary text-micro font-bold uppercase tracking-[0.18em] cursor-pointer text-center">
               save destination
             </button>
           </div>

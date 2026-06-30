@@ -36,7 +36,7 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
           return (
             <motion.button key={tab.id}
               onClick={() => tab.href ? window.location.href = tab.href : onTabChange(tab.id)}
-              className="relative py-1.5 px-2.5 flex flex-col items-center justify-center rounded-md cursor-pointer min-h-[44px] min-w-[44px] border-none bg-transparent"
+              className="relative py-1.5 px-2.5 flex flex-col items-center justify-center btn-ghost cursor-pointer min-h-[44px] min-w-[44px]"
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
             >
               <motion.div

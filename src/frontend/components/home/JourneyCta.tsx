@@ -92,10 +92,10 @@ export default function JourneyCta({ onGoToPlanner, onGoToExplore }: JourneyCtaP
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
             >
-              <MagneticButton onClick={onGoToPlanner} className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-night text-white text-small font-bold uppercase tracking-[0.18em] cursor-pointer shadow-md">
+              <MagneticButton onClick={onGoToPlanner} className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 btn-night text-small font-bold uppercase tracking-[0.18em] cursor-pointer">
                 <Sparkles className="w-4 h-4 text-gold" /> Plan Your Journey
               </MagneticButton>
-              <MagneticButton onClick={onGoToExplore} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border border-night text-night text-small font-bold uppercase tracking-[0.18em] cursor-pointer">
+              <MagneticButton onClick={onGoToExplore} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 btn-outline text-small font-bold uppercase tracking-[0.18em] cursor-pointer">
                 <Compass className="w-4 h-4" /> Browse Atlas
               </MagneticButton>
             </motion.div>

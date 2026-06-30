@@ -377,7 +377,7 @@ export default function DiscoveryMap({
         {!isMobile && (
           <button
             onClick={() => setCircuitsVisible(v => !v)}
-            className={`px-3 py-2 rounded-2xl border text-micro font-mono uppercase tracking-widest transition-all cursor-pointer shadow-sm min-h-[44px] ${
+            className={`btn-outline px-3 py-2 text-micro font-mono uppercase tracking-widest cursor-pointer shadow-sm min-h-[44px] ${
               circuitsVisible
                 ? 'bg-surface border-gold/40 text-gold'
                 : 'bg-surface/70 border-border text-muted hover:border-gold'

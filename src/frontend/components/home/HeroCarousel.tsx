@@ -143,7 +143,7 @@ function CarouselCard({
               {isActive && (
                 <motion.button
                   onClick={(e) => { e.stopPropagation(); onClick(); }}
-                  className="btn h-8.5 min-h-[34px] px-3.5 rounded-md bg-night hover:bg-teal text-white text-meta font-bold uppercase flex items-center gap-1 cursor-pointer transition-all duration-300"
+                  className="btn-night h-8.5 min-h-[34px] px-3.5 rounded-md text-meta font-bold uppercase flex items-center gap-1 cursor-pointer"
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
@@ -421,7 +421,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 <motion.button
                   onClick={() => goTo('prev')}
                   aria-label="Previous slide"
-                  className="w-9 h-9 rounded-full border border-white/15 bg-white/5 text-white/60 flex items-center justify-center cursor-pointer backdrop-blur-sm shrink-0"
+                  className="w-9 h-9 rounded-full btn-ghost text-white/60 flex items-center justify-center cursor-pointer shrink-0"
                   whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.15)' }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -453,7 +453,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 <motion.button
                   onClick={() => goTo('next')}
                   aria-label="Next slide"
-                  className="w-9 h-9 rounded-full border border-white/15 bg-white/5 text-white/60 flex items-center justify-center cursor-pointer backdrop-blur-sm shrink-0"
+                  className="w-9 h-9 rounded-full btn-ghost text-white/60 flex items-center justify-center cursor-pointer shrink-0"
                   whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.15)' }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}

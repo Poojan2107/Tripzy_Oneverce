@@ -107,7 +107,7 @@ export default function PlannerResult({
           <div className="flex flex-col gap-2 pt-2">
             <motion.button
               onClick={onReset}
-              className="w-full px-6 py-2.5 rounded-xl bg-gold hover:bg-gold/90 text-night text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer min-h-[44px] border-none"
+              className="btn-primary w-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer min-h-[44px]"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -115,7 +115,7 @@ export default function PlannerResult({
             </motion.button>
             <motion.button
               onClick={onReset}
-              className="w-full px-6 py-2.5 rounded-xl border border-border/40 bg-background text-xs font-bold uppercase tracking-wider text-muted/70 hover:text-night transition-colors cursor-pointer min-h-[44px]"
+              className="btn-outline w-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer min-h-[44px]"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -217,13 +217,13 @@ export default function PlannerResult({
                   <div className="absolute right-0 mt-1 w-32 bg-white border border-border rounded-md shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50 py-1 font-mono text-meta uppercase">
                     <button
                       onClick={() => window.print()}
-                      className="w-full text-left px-3 py-2 hover:bg-background text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
+                      className="btn-ghost w-full text-left px-3 py-2 cursor-pointer block font-bold"
                     >
                       Print / PDF
                     </button>
                     <button
                       onClick={handleCopyItineraryText}
-                      className="w-full text-left px-3 py-2 hover:bg-background text-night transition-colors cursor-pointer block border-none bg-transparent font-bold"
+                      className="btn-ghost w-full text-left px-3 py-2 cursor-pointer block font-bold"
                     >
                       Copy Text
                     </button>
@@ -264,7 +264,7 @@ export default function PlannerResult({
               <motion.button
                 key={idx}
                 onClick={() => onActiveDayTabChange(idx)}
-                className={`flex-shrink-0 flex flex-col items-center px-4 py-2 rounded-md transition-colors duration-300 cursor-pointer border relative overflow-hidden outline-none ${
+                className={`btn-ghost flex-shrink-0 flex flex-col items-center px-4 py-2 cursor-pointer relative overflow-hidden outline-none ${
                   activeDayTab === idx
                     ? 'bg-gold text-night border-gold shadow-md font-bold'
                     : 'bg-surface text-muted border-border hover:border-gold'

@@ -488,7 +488,7 @@ export default function TripsWishlistView({
               const count = tab === 'chapters' ? wishlistTours.length : savedItineraries.length;
               return (
                 <button key={tab} onClick={() => setActiveSubTab(tab as any)}
-                  className={`px-4 py-2 rounded-md text-meta font-mono uppercase transition-colors flex items-center gap-2 cursor-pointer min-h-[34px] shrink-0 relative border-none bg-transparent ${
+                  className={`px-4 py-2 btn-ghost text-meta font-mono uppercase flex items-center gap-2 cursor-pointer min-h-[34px] shrink-0 relative ${
                     isActive ? 'text-white shadow-sm font-bold' : 'text-muted hover:text-night'
                   }`}
                 >
@@ -562,7 +562,7 @@ export default function TripsWishlistView({
                           <span className="text-meta font-mono font-bold text-night bg-surface/90 backdrop-blur-md px-2.5 py-1 rounded-sm uppercase border border-border/70">{durationDays} Days</span>
                           <button onClick={(e) => { e.stopPropagation(); onDeleteItinerary(itin.id); }}
                             aria-label="Delete itinerary"
-                            className="w-8 h-8 rounded-full bg-surface/95 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 border border-border/70 cursor-pointer transition-colors">
+                            className="btn-ghost w-8 h-8 flex items-center justify-center text-muted hover:text-coral cursor-pointer">
                             <Trash2 className="w-3 h-3" />
                           </button>
                         </div>

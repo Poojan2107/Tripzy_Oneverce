@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans, Pacifico } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "../frontend/styles/globals.css";
 import Providers from "./providers";
 import PageTransition from "../frontend/components/PageTransition";
@@ -101,6 +102,7 @@ export default function RootLayout({
             <PageTransition>{children}</PageTransition>
           </div>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );

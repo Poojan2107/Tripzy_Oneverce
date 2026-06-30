@@ -44,7 +44,7 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
       <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent" />
 
       <motion.button onClick={onBack}
-        className="absolute top-6 left-6 flex items-center gap-2 px-5 py-3 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-white text-small font-bold uppercase tracking-widest hover:bg-white/25 transition-colors cursor-pointer z-20 min-h-[44px]"
+        className="absolute top-6 left-6 flex items-center gap-2 px-5 py-3 rounded-full btn-ghost text-white text-small font-bold uppercase tracking-widest cursor-pointer z-20 min-h-[44px]"
         initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15, type: "spring", stiffness: 100, damping: 20 }}
         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
         <ArrowLeft className="w-3.5 h-3.5" /> Back
@@ -52,10 +52,10 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
 
       <motion.div className="absolute top-6 right-6 flex items-center gap-2 z-20"
         initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, type: "spring", stiffness: 100, damping: 20 }}>
-        <motion.button onClick={onShare} className="w-11 h-11 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center text-white hover:bg-white/25 transition-colors cursor-pointer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+        <motion.button onClick={onShare} className="w-11 h-11 rounded-full btn-ghost flex items-center justify-center text-white cursor-pointer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
           {copiedLink ? <CheckCircle2 className="w-4 h-4 text-green-400" /> : <Share2 className="w-4 h-4" />}
         </motion.button>
-        <motion.button onClick={() => onToggleWishlist(tour.id)} className="w-11 h-11 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center text-white hover:bg-white/25 transition-colors cursor-pointer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+        <motion.button onClick={() => onToggleWishlist(tour.id)} className="w-11 h-11 rounded-full btn-ghost flex items-center justify-center text-white cursor-pointer" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
           <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-rose-400 text-rose-400' : ''}`} />
         </motion.button>
       </motion.div>

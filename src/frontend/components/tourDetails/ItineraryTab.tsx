@@ -23,7 +23,7 @@ export default function ItineraryTab({ tour, activeDay, onDayChange, accentColor
  
       <motion.div variants={fadeUp} className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
         {(tour.itinerary || []).map((day) => (
-          <button key={day.day} onClick={() => onDayChange(day.day)} className={`px-4 py-2.5 rounded-md text-meta font-bold uppercase tracking-wider whitespace-nowrap transition-colors duration-200 border cursor-pointer min-h-[38px] flex items-center ${activeDay === day.day ? 'bg-night text-white border-night' : 'bg-white text-muted border-border hover:border-teal/30 shadow-sm'}`}>
+          <button key={day.day} onClick={() => onDayChange(day.day)} className={`px-4 py-2.5 btn-ghost text-meta font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer min-h-[38px] flex items-center ${activeDay === day.day ? 'bg-night text-white border-night' : 'bg-white text-muted border-border shadow-sm'}`}>
             Day {day.day}
           </button>
         ))}

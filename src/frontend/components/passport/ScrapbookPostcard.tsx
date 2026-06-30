@@ -26,7 +26,7 @@ export default function ScrapbookPostcard({ tour, onRemove, onInspect }: Scrapbo
         <button 
           onClick={(e) => { e.stopPropagation(); onRemove(); }}
           aria-label="Remove from wishlist"
-          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface/90 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 shadow-sm border border-border/70 cursor-pointer transition-colors"
+          className="absolute top-3 right-3 btn-ghost w-9 h-9 flex items-center justify-center text-muted hover:text-coral cursor-pointer"
         >
           <Trash2 className="w-3.5 h-3.5" />
         </button>

@@ -33,7 +33,7 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
         </div>
         <button
           onClick={onCreate}
-          className="px-5 py-3 sm:py-2.5 rounded-xl bg-night text-white hover:bg-ink text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer touch-action-manipulation select-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none"
+          className="px-5 py-3 sm:py-2.5 btn-night text-micro font-bold uppercase tracking-[0.18em] flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer touch-action-manipulation select-none focus-visible:ring-2 focus-visible:ring-gold/40 focus-visible:outline-none"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
           <span>Add Destination</span>
@@ -94,10 +94,10 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                   </td>
                   <td className="py-4 px-6 text-right font-semibold text-night font-mono text-small">{formatINR(tour.price)}</td>
                   <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
-                    <button onClick={() => onEdit(tour)} className="w-11 h-11 rounded-lg bg-secondary-surface/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-border/60 touch-action-manipulation select-none" title="Edit">
+                    <button onClick={() => onEdit(tour)} className="w-11 h-11 btn-ghost inline-flex items-center justify-center active:scale-95 cursor-pointer touch-action-manipulation select-none" title="Edit">
                       <Edit3 className="w-4 h-4" />
                     </button>
-                    <button onClick={() => onDelete(tour.id, tour.title)} className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200 touch-action-manipulation select-none" title="Delete">
+                    <button onClick={() => onDelete(tour.id, tour.title)} className="w-11 h-11 btn-ghost inline-flex items-center justify-center active:scale-95 cursor-pointer touch-action-manipulation select-none" title="Delete">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </td>
@@ -134,10 +134,10 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                 <span className="text-micro text-red-400">No coords</span>
               )}
               <div className="ml-auto flex gap-2">
-                <button onClick={() => onEdit(tour)} className="w-11 h-11 rounded-lg bg-secondary-surface/30 text-stone hover:bg-gold hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-border/60" title="Edit">
+                <button onClick={() => onEdit(tour)} className="w-11 h-11 btn-ghost inline-flex items-center justify-center active:scale-95 cursor-pointer" title="Edit">
                   <Edit3 className="w-3.5 h-3.5" />
                 </button>
-                <button onClick={() => onDelete(tour.id, tour.title)} className="w-11 h-11 rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white active:scale-95 transition-all duration-200 cursor-pointer inline-flex items-center justify-center border border-red-200" title="Delete">
+                <button onClick={() => onDelete(tour.id, tour.title)} className="w-11 h-11 btn-ghost inline-flex items-center justify-center active:scale-95 cursor-pointer" title="Delete">
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>

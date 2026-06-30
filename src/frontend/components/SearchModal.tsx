@@ -143,7 +143,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                     className="w-full pl-10 pr-4 py-3 bg-background text-night text-sm md:text-base rounded-xl border border-border/40 outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all duration-200 placeholder:text-muted/30 font-light" />
                 </div>
                 <motion.button onClick={onClose} aria-label="Close search"
-                  className="md:hidden p-3 rounded-xl hover:bg-secondary-surface transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center border border-border/40"
+                  className="md:hidden p-3 btn-ghost shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <X className="w-4 h-4 text-muted/60" />
                 </motion.button>
@@ -157,7 +157,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                       if (selectedTag === tag) { setSelectedTag(null); setQuery(''); }
                       else { setSelectedTag(tag); trackEvent('search_tag_click', { tag }); }
                     }}
-                      className={`px-3 py-2 rounded-full text-micro font-mono uppercase tracking-wider transition-colors duration-200 border min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'bg-background text-muted/70 border-border/40'}`}
+                      className={`px-3 py-2 btn-ghost text-micro font-mono uppercase tracking-wider min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'text-muted/70'}`}
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       {tag}
                     </motion.button>
@@ -175,7 +175,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                     <div className="flex flex-wrap gap-1.5">
                       {SUGGESTED_DESTINATIONS.map((dest) => (
                         <motion.button key={dest} onClick={() => { setQuery(dest); setSelectedTag(null); trackEvent('search_suggestion_click', { destination: dest }); }}
-                          className="px-3 py-1.5 bg-background text-micro font-semibold text-muted/80 border border-border/40 rounded-lg cursor-pointer"
+                          className="px-3 py-1.5 btn-ghost text-micro font-semibold text-muted/80 cursor-pointer"
                           whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                           {dest}
                         </motion.button>
@@ -193,7 +193,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                             <Clock className="w-2.5 h-2.5 text-muted/40" />
                             <span>{term}</span>
                             <button onClick={(e) => removeRecentSearch(e, term)}
-                              className="p-0.5 rounded-full hover:bg-secondary-surface text-muted/40 hover:text-coral shrink-0 ml-1 transition-colors"
+                              className="btn-ghost text-muted/40 hover:text-coral shrink-0 ml-1"
                               aria-label={`Remove recent search ${term}`}>
                               <X className="w-2 h-2" />
                             </button>

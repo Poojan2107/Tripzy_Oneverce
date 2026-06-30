@@ -287,7 +287,7 @@ export default function App() {
               window.scrollTo({ top: 0, behavior: 'instant' });
               window.history.pushState(null, '', '#home');
             }}
-            className="flex items-center gap-2 border-none bg-transparent cursor-pointer text-left min-h-[40px]"
+            className="flex items-center gap-2 btn-ghost cursor-pointer text-left min-h-[40px]"
           >
             <Compass className="w-5 h-5 text-gold animate-spin-slow" />
             <span className={`font-logo text-lg font-bold tracking-tight lowercase ${
@@ -317,7 +317,7 @@ export default function App() {
                     <p className="text-xs text-muted/60 font-light mb-4">This destination details are temporarily unavailable.</p>
                     <button
                       onClick={() => handleSelectTour(null)}
-                      className="px-5 py-2.5 bg-night text-white text-micro font-bold uppercase tracking-wider rounded-xl hover:opacity-90 transition-all"
+                      className="px-5 py-2.5 btn-night text-micro font-bold uppercase tracking-wider rounded-xl"
                     >
                       Back to Explore
                     </button>
@@ -454,7 +454,7 @@ export default function App() {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.2 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-[calc(var(--nav-bottom-height)-12px+env(safe-area-inset-bottom,12px))] md:bottom-6 right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-night text-white shadow-lg hover:bg-gold hover:text-night transition-colors cursor-pointer"
+            className="fixed bottom-[calc(var(--nav-bottom-height)-12px+env(safe-area-inset-bottom,12px))] md:bottom-6 right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full btn-night shadow-lg"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-4 h-4" />

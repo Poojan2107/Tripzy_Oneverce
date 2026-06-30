@@ -83,7 +83,7 @@ export default function AdminSetupPage() {
             </div>
             <button
               onClick={() => signIn('google', { callbackUrl: window.location.href })}
-              className="w-full py-3.5 rounded-xl bg-night text-white text-micro font-bold uppercase tracking-wider hover:bg-coral transition-all cursor-pointer inline-flex items-center justify-center gap-2 min-h-[44px]"
+              className="btn-night w-full py-3.5 text-micro font-bold uppercase tracking-wider hover:bg-coral transition-all cursor-pointer inline-flex items-center justify-center gap-2 min-h-[44px]"
             >
               <LogIn className="w-4 h-4" />
               Sign in with Google
@@ -134,10 +134,10 @@ export default function AdminSetupPage() {
               <button
                 onClick={handleSetupAdmin}
                 disabled={loading}
-                className="w-full py-3.5 rounded-xl bg-night text-white text-micro font-bold uppercase tracking-wider hover:bg-coral transition-all cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-2 min-h-[44px]"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                {loading ? 'Setting up...' : 'Grant Admin Access'}
+              className="btn-night w-full py-3.5 text-micro font-bold uppercase tracking-wider hover:bg-coral transition-all cursor-pointer disabled:opacity-50 inline-flex items-center justify-center gap-2 min-h-[44px]"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              {loading ? 'Setting up...' : 'Grant Admin Access'}
               </button>
             </div>
           </div>

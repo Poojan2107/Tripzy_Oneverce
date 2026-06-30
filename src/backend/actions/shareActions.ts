@@ -66,6 +66,6 @@ export async function getSharedItineraryAction(id: string) {
     return { success: true, data: itinerary };
   } catch (err: any) {
     console.error("Failed to fetch shared itinerary in server action:", err);
-    return { success: false, error: err?.message || "Failed to fetch shared itinerary" };
+    return { success: false, error: "Failed to fetch shared itinerary" };
   }
 }

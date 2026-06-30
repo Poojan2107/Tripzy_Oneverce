@@ -2,7 +2,10 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowLeft, Heart, Share2, CheckCircle2, MapPin, Star } from 'lucide-react';
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { Tour } from '../../types';
+
+const MotionImage = motion(Image);
 
 function getMoodLabel(id: string): string {
   if (id === 'varanasi-spiritual') return 'Spiritual Chapter';
@@ -37,9 +40,11 @@ export default function TourHero({ tour, onBack, onToggleWishlist, isWishlisted,
           <span className="text-micro font-mono text-white/30 uppercase tracking-widest">Loading panorama...</span>
         </div>
       )}
-      <motion.img src={tour.bannerImage} alt={tour.title} className={`w-full h-full object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-        onLoad={() => setImageLoaded(true)} onError={e => { e.currentTarget.style.opacity = '0'; setImageLoaded(true); }}
-        style={{ y: parallaxY }} />
+      <div className="absolute inset-0">
+        <MotionImage src={tour.bannerImage} alt={tour.title} fill className={`object-cover transition-opacity duration-500 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+          onLoad={() => setImageLoaded(true)} onError={() => setImageLoaded(true)}
+          style={{ y: parallaxY }} priority sizes="100vw" />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent" />
 

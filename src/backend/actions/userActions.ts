@@ -119,20 +119,6 @@ export async function deleteSavedItinerary(id: string) {
   }
 }
 
-export async function getUserTrips() {
-  try {
-    const userId = await getUserId();
-    const trips = await db.trip.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
-    return { success: true, data: trips };
-  } catch (error) {
-    console.error("Fetch trips failed:", error);
-    return { success: false, error: "Failed to load trips." };
-  }
-}
-
 export async function getSharedPassportAction(userId: string) {
   try {
     const user = await db.user.findUnique({

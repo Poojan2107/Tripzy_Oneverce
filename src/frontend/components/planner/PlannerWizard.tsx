@@ -276,9 +276,11 @@ export default function PlannerWizard({
                   />
                   <IndianRupee className="w-4 h-4 text-muted/40 shrink-0" />
                 </div>
-                <div className="flex justify-between text-micro font-mono text-muted/50">
+                <div className="flex justify-between text-micro font-mono text-muted/50 mt-1">
                   <span>{formatBudget(budgetSliderMin)}</span>
-                  <span className="text-gold font-bold">{customBudgetAmount <= 15000 ? 'Small (≤₹15k)' : customBudgetAmount <= 40000 ? 'Medium (≤₹40k)' : 'Luxury (>₹40k)'}</span>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${customBudgetAmount <= 15000 ? 'bg-teal/10 border-teal/30 text-teal' : customBudgetAmount <= 40000 ? 'bg-gold/10 border-gold/30 text-gold' : 'bg-coral/10 border-coral/30 text-coral'}`}>
+                    {customBudgetAmount <= 15000 ? 'Budget' : customBudgetAmount <= 40000 ? 'Comfort' : 'Luxury'}
+                  </span>
                   <span>{formatBudget(Math.max(budgetSliderMax, 200000))}</span>
                 </div>
               </div>

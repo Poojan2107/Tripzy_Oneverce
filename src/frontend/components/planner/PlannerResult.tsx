@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, CheckCircle2 } from 'lucide-react';
+import { Compass, CheckCircle2, Camera, Sparkles, KeyRound, MapPin, ArrowUpRight } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { TOURS_DATA } from '../../data';
 import { getHotelsByDestination } from '../../data/hotels';
 import HotelCard from '../HotelCard';
-import Footer from '../Footer';
 
 
 const ItineraryMap = dynamic(() => import('../map/ItineraryMap'), {
@@ -139,7 +138,47 @@ export default function PlannerResult({
       initial="hidden"
       animate={mounted ? "visible" : "hidden"}
     >
+      {itineraryResult.isOfflineFallback && (
+        <div className="max-w-4xl mx-auto px-6 mb-6">
+          <div className="bg-gold/10 border border-gold/30 rounded-lg p-3 flex items-center gap-3 text-night">
+            <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center shrink-0">
+              <Compass className="w-4 h-4 text-night" />
+            </div>
+            <div className="text-left">
+              <p className="text-small font-bold uppercase tracking-wider text-night">Offline Archive Active</p>
+              <p className="text-xs text-muted/80 leading-relaxed">
+                {itineraryResult.fallbackErrorType === 'timeout' 
+                  ? "The request timed out. We've provided a curated itinerary from our local archives." 
+                  : "We encountered a connection issue. Here is a curated journey from our regional knowledge base."}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="max-w-4xl mx-auto px-6 space-y-12">
+        {itineraryResult.isOfflineFallback && (
+          <div className="p-5 bg-amber-50/60 border border-amber-200/50 rounded-lg text-left flex gap-3 text-night">
+            <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+              <Compass className="w-4 h-4 animate-pulse" />
+            </div>
+            <div>
+              <span className="text-caption font-mono uppercase tracking-wider text-amber-700 block font-bold">
+                {itineraryResult.fallbackErrorType === 'timeout'
+                  ? 'Connection Timeout (Offline Fallback)'
+                  : itineraryResult.fallbackErrorType === 'network'
+                  ? 'Network Offline (Offline Fallback)'
+                  : 'Server Unreachable (Offline Fallback)'}
+              </span>
+              <p className="text-body text-amber-800/80 font-light mt-0.5 leading-relaxed">
+                {itineraryResult.fallbackErrorType === 'timeout'
+                  ? "Our AI archives took longer than 60s to respond. We've prepared this authentic fallback journey from our local explorer database."
+                  : itineraryResult.fallbackErrorType === 'network'
+                  ? "We couldn't reach the server due to a network connection issue. We've prepared this authentic fallback journey from our local explorer database."
+                  : "We encountered a server error while preparing your itinerary. We've prepared this authentic fallback journey from our local explorer database."}
+              </p>
+            </div>
+          </div>
+        )}
         {/* 1. Journey Hero */}
         <motion.div className="bg-surface relative overflow-hidden border border-border/70 rounded-lg shadow-md" variants={sectionVariants} custom={0}>
           {tour?.bannerImage && (
@@ -259,25 +298,38 @@ export default function PlannerResult({
           </div>
  
           {/* Day Tabs */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-            {itin.map((dayItem: any, idx: number) => (
-              <motion.button
-                key={idx}
-                onClick={() => onActiveDayTabChange(idx)}
-                className={`btn-ghost flex-shrink-0 flex flex-col items-center px-4 py-2 cursor-pointer relative overflow-hidden outline-none ${
-                  activeDayTab === idx
-                    ? 'bg-gold text-night border-gold shadow-md font-bold'
-                    : 'bg-surface text-muted border-border hover:border-gold'
-                }`}
-                style={{ minWidth: '64px' }}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <span className="font-display text-card font-light leading-none">{idx + 1}</span>
-                <span className="text-meta font-mono uppercase mt-0.5">day</span>
-              </motion.button>
-            ))}
-          </div>
+           <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-none">
+             {itin.map((dayItem: any, idx: number) => {
+               const isActive = activeDayTab === idx;
+               return (
+                 <motion.button
+                   key={idx}
+                   onClick={() => onActiveDayTabChange(idx)}
+                   className={`flex-shrink-0 flex flex-col items-center justify-center px-5 py-3 rounded-full border transition-all duration-300 cursor-pointer outline-none ${
+                     isActive
+                       ? 'bg-gold text-night border-gold shadow-lg scale-105 z-10 font-bold'
+                       : 'bg-surface text-muted border-border/40 hover:border-gold hover:text-night'
+                   }`}
+                   style={{ minWidth: '80px' }}
+                   whileHover={{ y: -2 }}
+                   whileTap={{ scale: 0.95 }}
+                 >
+                   <span className={`text-meta font-mono text-current opacity-60 uppercase tracking-tighter leading-none mb-1 ${isActive ? 'text-night' : ''}`}>
+                     {isActive ? 'Active' : 'Day'} {idx + 1}
+                   </span>
+                   <span className={`font-display text-lg leading-none ${isActive ? 'text-night' : 'text-muted'}`}>
+                     {idx + 1}
+                   </span>
+                   {isActive && (
+                     <motion.div 
+                       layoutId="dayTabIndicator"
+                       className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-night" 
+                     />
+                   )}
+                 </motion.button>
+               );
+             })}
+           </div>
  
           {/* Active Day timeline panel */}
           <AnimatePresence mode="wait">
@@ -298,52 +350,71 @@ export default function PlannerResult({
                 </h3>
               </div>
  
-              <p className="text-body text-muted/80 leading-relaxed font-light">
+              <p className="text-base text-night/85 leading-relaxed font-light">
                 {currentDay.description}
               </p>
  
-              {/* Local Secret */}
-              {tour?.localSecret && (
-                <div className="bg-background/60 border border-border/20 rounded-md p-4 space-y-1 shadow-sm">
-                  <span className="text-meta font-mono text-coral block">local secret</span>
-                  <p className="text-body text-night/80 font-light leading-relaxed">{tour.localSecret}</p>
-                </div>
-              )}
- 
-              {/* Photography Spot */}
-              {tour?.photographySpot && (
-                <div className="bg-background/60 border border-border/20 rounded-md p-4 space-y-1 shadow-sm">
-                  <span className="text-meta font-mono text-gold block">photography spot</span>
-                  <p className="text-body text-night/80 font-light leading-relaxed">{tour.photographySpot}</p>
-                </div>
-              )}
- 
-              {/* Signature Experience */}
-              {tour?.signatureExperience && (
-                <div className="bg-background/60 border border-border/20 rounded-md p-4 space-y-1 shadow-sm">
-                  <span className="text-meta font-mono text-teal block">signature experience</span>
-                  <p className="text-body text-night/80 font-light leading-relaxed">{tour.signatureExperience}</p>
+              {/* Highlights Row */}
+              {(tour?.localSecret || tour?.photographySpot || tour?.signatureExperience) && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                  {/* Local Secret */}
+                  {tour?.localSecret && (
+                    <div className="bg-amber-50/20 border border-gold/15 rounded-md p-4 space-y-2 shadow-sm relative overflow-hidden group hover:border-gold/40 transition-colors">
+                      <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.02] to-transparent pointer-events-none" />
+                      <div className="flex items-center gap-2">
+                        <KeyRound className="w-4 h-4 text-gold shrink-0" />
+                        <span className="text-meta font-mono text-gold uppercase tracking-wider block font-bold">local secret</span>
+                      </div>
+                      <p className="text-body text-night/80 font-light leading-relaxed">{tour.localSecret}</p>
+                    </div>
+                  )}
+
+                  {/* Photography Spot */}
+                  {tour?.photographySpot && (
+                    <div className="bg-rose-50/20 border border-coral/15 rounded-md p-4 space-y-2 shadow-sm relative overflow-hidden group hover:border-coral/40 transition-colors">
+                      <div className="absolute inset-0 bg-gradient-to-br from-coral/[0.02] to-transparent pointer-events-none" />
+                      <div className="flex items-center gap-2">
+                        <Camera className="w-4 h-4 text-coral shrink-0" />
+                        <span className="text-meta font-mono text-coral uppercase tracking-wider block font-bold">photography spot</span>
+                      </div>
+                      <p className="text-body text-night/80 font-light leading-relaxed">{tour.photographySpot}</p>
+                    </div>
+                  )}
+
+                  {/* Signature Experience */}
+                  {tour?.signatureExperience && (
+                    <div className="bg-cyan-50/20 border border-teal/15 rounded-md p-4 space-y-2 shadow-sm relative overflow-hidden group hover:border-teal/40 transition-colors">
+                      <div className="absolute inset-0 bg-gradient-to-br from-teal/[0.02] to-transparent pointer-events-none" />
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-teal shrink-0" />
+                        <span className="text-meta font-mono text-teal uppercase tracking-wider block font-bold">signature experience</span>
+                      </div>
+                      <p className="text-body text-night/80 font-light leading-relaxed">{tour.signatureExperience}</p>
+                    </div>
+                  )}
                 </div>
               )}
  
               {/* Vertical progression line stops */}
-              <div className="relative pl-6 border-l border-border mt-6 space-y-6">
-                {currentDay.activities && currentDay.activities.map((act: string, aIdx: number) => (
-                  <div key={aIdx} className="relative group text-left">
-                    {/* Indicator Dot */}
-                    <div className="absolute -left-[29px] top-1.5 w-2.5 h-2.5 rounded-full bg-gold border border-surface shadow-sm transition-all duration-300 group-hover:scale-125" />
- 
-                    <div className="bg-background/40 hover:bg-surface transition-all duration-300 p-4 rounded-md border border-border/20 hover:border-border hover:shadow-sm">
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <span className="text-meta font-mono text-gold">explorer log</span>
-                        <span className="h-px w-3 bg-border/20" />
-                        <span className="text-meta font-mono text-muted/40">stop {aIdx + 1}</span>
-                      </div>
-                      <p className="text-body text-night/95 font-light leading-relaxed">{act}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+               <div className="relative pl-6 border-l-2 border-gold/30 mt-6 space-y-8">
+                 {currentDay.activities && currentDay.activities.map((act: string, aIdx: number) => (
+                   <div key={aIdx} className="relative group text-left">
+                     {/* Indicator Dot */}
+                     <div className="absolute -left-[31px] top-2 w-4 h-4 rounded-full bg-gold border-2 border-surface shadow-sm transition-all duration-300 group-hover:scale-125 z-10" />
+                     
+                     <div className="bg-background/50 hover:bg-white transition-all duration-300 p-5 rounded-xl border border-border/40 hover:border-gold/30 hover:shadow-sm group">
+                       <div className="flex items-center gap-2 mb-2">
+                         <span className="text-meta font-mono text-gold font-bold uppercase tracking-wider">Explorer Log</span>
+                         <span className="h-px w-3 bg-border/40" />
+                         <span className="text-meta font-mono text-muted/60 uppercase">Stop {aIdx + 1}</span>
+                       </div>
+                       <p className="text-body text-night/90 font-medium leading-relaxed group-hover:text-night transition-colors">
+                         {act}
+                       </p>
+                     </div>
+                   </div>
+                 ))}
+               </div>
             </motion.div>
           </AnimatePresence>
         </motion.div>
@@ -526,9 +597,6 @@ export default function PlannerResult({
             </div>
           </div>
         </motion.div>
-      </div>
-      <div className="mt-16">
-        <Footer />
       </div>
     </motion.div>
   );

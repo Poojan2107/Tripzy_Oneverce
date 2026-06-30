@@ -590,7 +590,8 @@ export function buildOfflineResponse(finalDest: any, destination: string, budget
       energy: true,
       season: true,
       companion: true
-    }
+    },
+    isOfflineFallback: true,
+    fallbackErrorType: 'server'
   };
 }
-

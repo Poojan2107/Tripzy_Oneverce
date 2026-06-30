@@ -454,7 +454,7 @@ export default function App() {
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.2 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-[calc(var(--nav-bottom-height)-12px+env(safe-area-inset-bottom,12px))] md:bottom-6 right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full btn-night shadow-lg"
+            className="fixed bottom-[calc(var(--nav-bottom-height)-12px+var(--safe-bottom))] md:bottom-6 right-5 z-[100] w-10 h-10 flex items-center justify-center rounded-full btn-night shadow-lg"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-4 h-4" />

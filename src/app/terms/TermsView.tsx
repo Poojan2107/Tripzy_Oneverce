@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import Link from "next/link";
 import { Compass } from "lucide-react";
-import Footer from "../../frontend/components/Footer";
+
 
 const stagger = { visible: { transition: { staggerChildren: 0.05 } } };
 const fadeUp = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 80, damping: 20 } } };
@@ -78,7 +78,6 @@ export default function TermsView() {
           </p>
         </motion.div>
       </main>
-      <Footer />
     </div>
   );
 }

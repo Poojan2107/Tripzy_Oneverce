@@ -18,7 +18,7 @@ export default function CategoryScroller({ onQuickCategoryClick }: CategoryScrol
   const scrollRef = useRef<HTMLDivElement>(null);
  
   return (
-    <section className="py-16 md:py-24 bg-background relative">
+    <section className="py-16 md:py-24 bg-background relative border-t border-border/15">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <ScrollReveal>
           <div className="mb-8 text-left">

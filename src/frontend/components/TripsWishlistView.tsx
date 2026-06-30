@@ -12,7 +12,6 @@ import { formatINR } from '../utils/currency';
 import SafeImage from './ui/SafeImage';
 import ScrapbookPostcard from './passport/ScrapbookPostcard';
 import EmptyPassportState from './passport/EmptyPassportState';
-import Footer from './Footer';
 import dynamic from 'next/dynamic';
 
 const PassportMap = dynamic(() => import('./map/PassportMap'), {
@@ -589,8 +588,6 @@ export default function TripsWishlistView({
           </div>
         )}
       </div>
-
-      <Footer />
     </div>
   );
 }

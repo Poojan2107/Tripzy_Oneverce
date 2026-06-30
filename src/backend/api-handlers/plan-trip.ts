@@ -35,6 +35,11 @@ export async function POST(req: Request) {
       experience 
     } = body;
 
+    // Sanitize user-supplied prompt input — strip control chars, truncate, prevent injection
+    const sanitizedInterests = typeof interests === 'string'
+      ? interests.replace(/[\x00-\x1f\x7f-\x9f]/g, '').slice(0, 500)
+      : '';
+
     // 1. Calculate trip duration in days
     let tripDuration = 5;
     if (fromDate && toDate) {
@@ -130,7 +135,7 @@ export async function POST(req: Request) {
       - Budget Tier: ${budget}
       - Budget Amount (INR per person per day): ${budgetAmount || 'Not specified'}
       - Travel Style: ${travelStyle}
-      - Key Interests: ${interests}
+      - Key Interests: ${sanitizedInterests}
       - Travelers: ${guests}
       - Travel Pace: ${travelPace}
       

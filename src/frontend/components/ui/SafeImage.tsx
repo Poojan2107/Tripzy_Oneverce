@@ -1,5 +1,6 @@
 "use client";
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface SafeImageProps {
   src: string;
@@ -28,15 +29,15 @@ export default function SafeImage({ src, alt, className = '', fallbackColor }: S
   }
 
   return (
-    <img
+    <Image
       src={src}
       alt={alt}
+      fill
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       className={`${className} transition-all duration-500 ease-out ${loaded ? 'blur-none' : 'blur-md bg-secondary-surface/40'}`}
       onLoad={() => setLoaded(true)}
       onError={() => setFailed(true)}
       loading="lazy"
-      decoding="async"
     />
   );
 }
-

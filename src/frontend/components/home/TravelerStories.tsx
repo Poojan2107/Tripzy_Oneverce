@@ -43,7 +43,7 @@ function StoryCard({ story, index, onClick }: { story: any; index: number; onCli
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         suppressHydrationWarning
       >
-        <div className="aspect-[4/3] rounded-md overflow-hidden bg-secondary-surface mb-4">
+        <div className="relative aspect-[4/3] rounded-md overflow-hidden bg-secondary-surface mb-4">
           <SafeImage src={story.image} alt={story.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
         <div className="space-y-2 px-0.5">
@@ -51,7 +51,9 @@ function StoryCard({ story, index, onClick }: { story: any; index: number; onCli
           <h3 className="font-display text-card text-night font-light lowercase leading-tight group-hover:text-coral transition-colors line-clamp-2">{story.title}</h3>
           <p className="text-body text-muted/80 font-light leading-relaxed line-clamp-3">{story.excerpt}</p>
           <div className="flex items-center gap-2 pt-3 border-t border-border mt-3">
-            <SafeImage src={story.avatar} alt={story.author} className="w-6 h-6 rounded-full object-cover" />
+            <div className="relative w-6 h-6 rounded-full overflow-hidden shrink-0">
+              <SafeImage src={story.avatar} alt={story.author} className="w-full h-full object-cover" />
+            </div>
             <span className="text-meta font-mono text-night/70">{story.author}</span>
             <span className="ml-auto text-meta text-muted/50">· {story.readTime}</span>
           </div>

@@ -25,14 +25,18 @@ async function callGeminiWithRetry(
       return response;
     } catch (err: any) {
       clearTimeout(timeout);
-      if (attempt < retries && err?.name !== "AbortError") {
-        await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
-        continue;
+      // 429 rate limit or timeout — no point retrying, fall through to offline immediately
+      const is429 = err?.status === 429 || err?.message?.includes('429') || err?.message?.includes('quota');
+      const isAbort = err?.name === 'AbortError';
+      if (is429 || isAbort || attempt >= retries) {
+        throw err;
       }
-      throw err;
+      // Brief backoff before next attempt
+      await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
     }
   }
 }
+
 
 export async function POST(req: Request) {
   let body: any = {};

@@ -83,7 +83,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
   const loadData = useCallback(async () => {
     try { setLoadingMetrics(true); const r = await getDashboardMetrics(); if (r.success) setMetrics(r.data); } catch (e) { console.error("[admin] Failed to load dashboard metrics:", e); } finally { setLoadingMetrics(false); }
     try { setLoadingExperiences(true); const r = await getAllExperiences(); if (r.success && r.data) setExperiences(r.data as any); } catch (e) { console.error("[admin] Failed to load experiences:", e); } finally { setLoadingExperiences(false); }
-    try { setLoadingUsers(true); const r = await getAdminUsers(); if (r.success) setUsers(r.data); } catch (e) { console.error("[admin] Failed to load users:", e); } finally { setLoadingUsers(false); }
+    try { setLoadingUsers(true); const r = await getAdminUsers(); if (r.success) setUsers(r.data || []); } catch (e) { console.error("[admin] Failed to load users:", e); } finally { setLoadingUsers(false); }
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);

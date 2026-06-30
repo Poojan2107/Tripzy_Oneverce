@@ -227,7 +227,7 @@ export default function ExploreView({
  
       {/* Center: Map panel */}
       <div className={`flex-1 h-full relative ${mobileView === 'map' ? 'block' : 'hidden md:block'}`}>
-        <DiscoveryMap tours={tours} activeTourId={activeTourId} onActiveTourChange={setActiveTourId} onSelectTour={onTourSelect} />
+        <DiscoveryMap tours={tours} activeTourId={activeTourId} onActiveTourChange={setActiveTourId} onSelectTour={(t) => t && onTourSelect(t)} />
       </div>
  
       {/* Right: Destination Preview card */}

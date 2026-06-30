@@ -1,48 +1,65 @@
-# Tripzy Performance Audit Report
+# Performance Report — Travebie V14
 
-This report evaluates Tripzy's frontend bundle, hydration timeline, image handling, and rendering performance, focusing on high-impact wins.
+## Bundle Size
 
----
+### Dependencies (925 MB node_modules)
+| Package | Size | Notes |
+|---------|------|-------|
+| Prisma | 306 MB | Engine binaries for multiple platforms |
+| Next.js | 278 MB | Framework + Turbopack |
+| @sentry | 40 MB | Error monitoring |
+| lucide-react | 34 MB | SVG icon library |
+| framer-motion | 4.6 MB | Animation |
 
-## 1. Bundle Size & Component Loading
+### Bundle Analysis
+- Not yet set up (no `@next/bundle-analyzer`)
+- All map components correctly use `next/dynamic` with `ssr: false`
+- No webpack chunk naming configured
 
-The largest dependencies in Tripzy are:
-- **Leaflet**: Map rendering library (used in Atlas view and Journey results).
-- **Framer Motion**: Controls page and card animations.
-- **Lucide React**: Heavy SVG icon package.
+## Code Splitting
 
-### Core Optimization Strategy (Current Status)
-- **Dynamic Imports**:
-  - The heavy Leaflet map component (`DiscoveryMap.tsx` and `ItineraryMap.tsx`) and views like `AiPlannerView` and `TripsWishlistView` are loaded dynamically using Next.js `dynamic()` with `ssr: false`.
-  - This successfully prevents Leaflet from trying to reference client-only window APIs during server-side pre-rendering, ensuring no hydration mismatches occur.
-- **Lucide Icons**:
-  - All icons are imported individually. The tree-shaking capabilities of Next.js Turbopack optimize the compiled Lucide React bundles.
+### Dynamic Imports (6 instances)
+| Component | File | Loading Fallback |
+|-----------|------|------------------|
+| `AiPlannerView` | `App.tsx` | Spinner |
+| `TripsWishlistView` | `App.tsx` | Spinner |
+| `DiscoveryMap` | `ExploreView.tsx` | Skeleton |
+| `ItineraryMap` | `PlannerResult.tsx` | Skeleton |
+| `PassportMap` | `TripsWishlistView.tsx` | Skeleton |
+| `ItineraryMap` | `SharedMap.tsx` | Skeleton |
 
----
+## Image Optimization
 
-## 2. Image Optimization & Hydration
+### Using next/image (✅)
+- `SafeImage.tsx` wrapper (fill, sizes, lazy loading)
+- HeroCarousel background and card images
 
-- **Hydration**: Next.js 16 compiles and executes quickly. No major hydration blocking code identified in initial layout rendering.
-- **Image Performance**:
-  - The application uses `SafeImage.tsx` to handle fallback images.
-  - However, standard `<img>` tags are used for hero banners and postcards instead of Next.js `<Image>` from `next/image`.
-  - **Issue**: Standard `<img>` tags do not automatically serve compressed formats (e.g. WebP, AVIF) or handle responsive sizing (srcsets), which results in large image payload downloads on mobile devices.
+### Using raw `<img>` tags (⚠ 20 instances)
+- TourHero.tsx main banner (highest impact — full-viewport image)
+- Navigation avatars, admin thumbnails, search results, category cards
+- These miss WebP/AVIF conversion, responsive srcsets, and lazy loading
 
----
+## Font Loading
 
-## 3. Recommended Performance Wins
+### Strategy: ✅ Optimal
+- `next/font` with `display: swap`
+- Nunito Sans (300/400/600/800) and Pacifico (400) as CSS variables
+- No third-party font loaders
 
-### Quick Wins (High Impact, Low Effort)
-1. **Convert to Next.js Image Component**:
-   - Replace standard `<img>` tags with `<Image>` from `next/image` in `TourHero.tsx`, `HeroCarousel.tsx`, and `ScrapbookPostcard`.
-   - **Benefit**: Auto-compresses images, scales size dynamically based on display, and implements native lazy-loading, saving up to 60-80% of bandwidth on image-heavy pages.
+## Rendering
 
-### Medium Wins (Moderate Effort)
-1. **Framer Motion Layout Animations**:
-   - Limit the use of `layout` and `layoutId` props on complex lists in `ExploreView.tsx` and `TripsWishlistView.tsx`.
-   - **Benefit**: Reduces the browser recalculation overhead during tab switching, preventing frame drops on low-end mobile devices.
+### Memoization
+- 0 `React.memo` components — all re-render unconditionally
+- 22 `useMemo` instances (mostly derived data)
+- 5 `useCallback` instances
+- Acceptable for current page complexity; revisit if rendering becomes a bottleneck
 
-### Major Refactors (High Effort)
-1. **Mapbox / Vector Maps Migration**:
-   - Migrate from Leaflet (which renders heavy tile images) to a lightweight vector map solution or a lighter static map generator for simple static route previews.
-   - **Benefit**: Reduces bundle size by ~40KB and decreases memory overhead.
+## Lighthouse Targets
+- Desktop: ≥ 95 (achievable with image migration)
+- Mobile: ≥ 90 (achievable with image migration)
+
+## Recommendations (Priority Order)
+1. Migrate TourHero.tsx main banner to `next/image` (LCP impact)
+2. Install `@next/bundle-analyzer` and audit bundle composition
+3. Migrate remaining 19 raw `<img>` tags to `SafeImage` wrapper
+4. Add `React.memo` to `HeroCarousel` card and `ExploreView` list items if profiling shows churn

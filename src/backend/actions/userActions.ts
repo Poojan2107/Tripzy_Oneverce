@@ -19,29 +19,32 @@ async function findDestinationBySlugOrId(slugOrId: string) {
 export async function toggleBookmark(destinationId: string) {
   try {
     const userId = await getUserId();
-    const existing = await db.bookmark.findUnique({
-      where: {
-        userId_destinationId: {
+    const result = await db.$transaction(async (tx) => {
+      const existing = await tx.bookmark.findUnique({
+        where: {
+          userId_destinationId: {
+            userId,
+            destinationId,
+          },
+        },
+      });
+
+      if (existing) {
+        await tx.bookmark.delete({
+          where: { id: existing.id },
+        });
+        return { success: true, bookmarked: false } as const;
+      }
+
+      await tx.bookmark.create({
+        data: {
           userId,
           destinationId,
         },
-      },
-    });
-
-    if (existing) {
-      await db.bookmark.delete({
-        where: { id: existing.id },
       });
-      return { success: true, bookmarked: false };
-    }
-
-    await db.bookmark.create({
-      data: {
-        userId,
-        destinationId,
-      },
+      return { success: true, bookmarked: true } as const;
     });
-    return { success: true, bookmarked: true };
+    return result;
   } catch (error) {
     console.error("Toggle bookmark failed:", error);
     return { success: false, error: "Operation failed." };
@@ -107,12 +110,15 @@ export async function getUserSavedItineraries() {
 export async function deleteSavedItinerary(id: string) {
   try {
     const userId = await getUserId();
-    const item = await db.savedItinerary.findUnique({ where: { id } });
-    if (!item || item.userId !== userId) {
-      return { success: false, error: "Not found" };
-    }
-    await db.savedItinerary.delete({ where: { id } });
-    return { success: true };
+    const result = await db.$transaction(async (tx) => {
+      const item = await tx.savedItinerary.findUnique({ where: { id } });
+      if (!item || item.userId !== userId) {
+        return { success: false, error: "Not found" } as const;
+      }
+      await tx.savedItinerary.delete({ where: { id } });
+      return { success: true } as const;
+    });
+    return result;
   } catch (error) {
     console.error("Delete saved itinerary failed:", error);
     return { success: false, error: "Failed to delete itinerary." };

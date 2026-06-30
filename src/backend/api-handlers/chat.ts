@@ -2,6 +2,29 @@ import { GoogleGenAI } from "@google/genai";
 import { getGeminiApiKey } from "../lib/gemini";
 import { checkRateLimit } from "../lib/rate-limit";
 
+async function callGeminiStreamWithTimeout(
+  genAI: GoogleGenAI,
+  model: string,
+  contents: any,
+  config: any,
+  timeoutMs = 20000
+) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const stream = await genAI.models.generateContentStream({
+      model,
+      contents,
+      config,
+    });
+    clearTimeout(timeout);
+    return stream;
+  } catch (err) {
+    clearTimeout(timeout);
+    throw err;
+  }
+}
+
 export async function POST(req: Request) {
   try {
     if (!(await checkRateLimit(req))) {
@@ -28,15 +51,24 @@ export async function POST(req: Request) {
         parts: [{ text: m.content }]
       }));
 
-    const stream = await genAI.models.generateContentStream({
-      model: "gemini-2.0-flash",
-      contents,
-      config: {
-        systemInstruction: {
-          parts: [{ text: "You are the Travebie AI Travel Assistant. Your job is to help users discover, plan, and optimize their travel itineraries. Be helpful, concise, and prioritize recommending our featured and trending destinations. Provide budget breakdowns when asked." }]
+    let stream;
+    try {
+      stream = await callGeminiStreamWithTimeout(
+        genAI,
+        "gemini-2.0-flash",
+        contents,
+        {
+          systemInstruction: {
+            parts: [{ text: "You are the Travebie AI Travel Assistant. Your job is to help users discover, plan, and optimize their travel itineraries. Be helpful, concise, and prioritize recommending our featured and trending destinations. Provide budget breakdowns when asked." }]
+          }
         }
-      },
-    });
+      );
+    } catch {
+      return new Response(
+        "I'm having trouble connecting right now. Please try again in a moment.",
+        { status: 200, headers: { "Content-Type": "text/plain; charset=utf-8" } }
+      );
+    }
 
     const encoder = new TextEncoder();
     const readableStream = new ReadableStream({
@@ -60,6 +92,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("Chat API Error:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return new Response("I'm having trouble connecting right now. Please try again in a moment.", { status: 200 });
   }
 }

@@ -1,7 +1,17 @@
 import { auth } from "../../../backend/lib/auth";
 import { db } from "../../../backend/lib/db";
+import { checkRateLimit } from "../../../backend/lib/rate-limit";
 
 const ADMIN_SETUP_KEY = process.env.ADMIN_SETUP_KEY;
+
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
 
 export async function GET() {
   try {
@@ -23,8 +33,15 @@ export async function GET() {
       });
     }
 
+    if (user.role !== "ADMIN") {
+      return new Response(JSON.stringify({ error: "Forbidden." }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     return new Response(JSON.stringify({ 
-      isAdmin: user.role === "ADMIN",
+      isAdmin: true,
       email: user.email,
       role: user.role
     }), {
@@ -42,6 +59,23 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    if (!(await checkRateLimit(request))) {
+      return new Response(JSON.stringify({ error: "Too many requests." }), {
+        status: 429,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const origin = request.headers.get("origin");
+    const referer = request.headers.get("referer");
+    const allowedHost = process.env.NEXTAUTH_URL || "https://travebie-oneverce.vercel.app";
+    if (origin && !origin.startsWith(allowedHost.replace(/\/$/, '')) && referer && !referer.startsWith(allowedHost.replace(/\/$/, ''))) {
+      return new Response(JSON.stringify({ error: "Forbidden." }), {
+        status: 403,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
     const body = await request.json();
     const { email, setupKey } = body;
 
@@ -52,14 +86,14 @@ export async function POST(request: Request) {
       });
     }
 
-    if (setupKey !== ADMIN_SETUP_KEY) {
+    if (typeof setupKey !== 'string' || !timingSafeEqual(setupKey, ADMIN_SETUP_KEY)) {
       return new Response(JSON.stringify({ error: "Invalid setup key." }), {
         status: 403,
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    if (!email) {
+    if (!email || typeof email !== 'string') {
       return new Response(JSON.stringify({ error: "Email is required." }), {
         status: 400,
         headers: { "Content-Type": "application/json" },

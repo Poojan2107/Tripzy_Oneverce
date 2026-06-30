@@ -44,18 +44,21 @@ export async function getDashboardMetrics() {
       take: 5,
     });
 
-    const destinationPopularity = await Promise.all(
-      rawViews.map(async (v) => {
-        const dest = await db.destination.findUnique({
-          where: { id: v.destinationId },
-          select: { name: true, city: true, country: true },
-        });
-        return {
-          name: dest ? `${dest.city}, ${dest.country}` : "Unknown Spot",
-          count: v._count.id,
-        };
-      })
-    );
+    const destIds = rawViews.map((v) => v.destinationId);
+    const dests = destIds.length > 0
+      ? await db.destination.findMany({
+          where: { id: { in: destIds } },
+          select: { id: true, name: true, city: true, country: true },
+        })
+      : [];
+    const destMap = new Map(dests.map((d) => [d.id, d]));
+    const destinationPopularity = rawViews.map((v) => {
+      const dest = destMap.get(v.destinationId);
+      return {
+        name: dest ? `${dest.city}, ${dest.country}` : "Unknown Spot",
+        count: v._count.id,
+      };
+    });
 
     // 4. Planner Insights (Budgets, Durations, Styles)
     const totalItineraries = await db.plannerEvent.count();

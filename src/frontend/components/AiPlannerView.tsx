@@ -164,7 +164,7 @@ export default function AiPlannerView({
       }
     }, 2800);
 
-    let timeoutId: ReturnType<typeof setTimeout>;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     try {
       const destName = selectedDestination ? (TOURS_DATA.find(t => t.id === selectedDestination)?.title || selectedDestination) : 'Unknown';
       const controller = new AbortController();
@@ -199,8 +199,8 @@ export default function AiPlannerView({
       setItineraryResult(data);
       trackPlannerCompletion(selectedDestination || '', customDuration, derivedBudgetTier);
     } catch (err: any) {
-      clearTimeout(timeoutId);
-      clearInterval(msgInterval);
+      if (timeoutId) clearTimeout(timeoutId);
+      if (msgInterval) clearInterval(msgInterval);
       if (!mountedRef.current) return;
       setLoading(false);
       console.error("AI Generation failed:", err);

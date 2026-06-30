@@ -4,6 +4,36 @@ import { checkRateLimit } from "../lib/rate-limit";
 import { GoogleGenAI } from "@google/genai";
 import { buildOfflineResponse } from "../data/offlineItineraries";
 
+async function callGeminiWithRetry(
+  genAI: GoogleGenAI,
+  model: string,
+  contents: any,
+  config: any,
+  retries = 2
+): Promise<any> {
+  const TIMEOUT_MS = 20000;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    try {
+      const response = await genAI.models.generateContent({
+        model,
+        contents,
+        config,
+      });
+      clearTimeout(timeout);
+      return response;
+    } catch (err: any) {
+      clearTimeout(timeout);
+      if (attempt < retries && err?.name !== "AbortError") {
+        await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+        continue;
+      }
+      throw err;
+    }
+  }
+}
+
 export async function POST(req: Request) {
   let body: any = {};
   try {
@@ -158,12 +188,9 @@ export async function POST(req: Request) {
 
     try {
       const genAI = new GoogleGenAI({ apiKey });
-      const response = await genAI.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
+      const response = await callGeminiWithRetry(genAI, "gemini-2.0-flash", prompt, {
+        responseMimeType: "application/json",
+        responseSchema: {
             type: "object",
             properties: {
               itinerary: {
@@ -214,7 +241,6 @@ export async function POST(req: Request) {
             },
             required: ["itinerary", "costs", "weather", "nearbyPlaces"]
           }
-        }
       });
 
       const data = JSON.parse(response.text);

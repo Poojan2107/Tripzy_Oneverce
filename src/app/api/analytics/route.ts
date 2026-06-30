@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "../../../backend/lib/db";
+import { checkRateLimit } from "../../../backend/lib/rate-limit";
 
 export async function POST(req: Request) {
   try {
+    if (!(await checkRateLimit(req))) {
+      return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+    }
+
     const body = await req.json();
     const { type, payload } = body;
 
@@ -82,6 +87,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, data: result }, { status: 200 });
   } catch (error: any) {
     console.error("Analytics Tracking API Error:", error);
-    return NextResponse.json({ error: error?.message || "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

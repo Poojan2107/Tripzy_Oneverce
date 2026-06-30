@@ -43,8 +43,6 @@ check-*.cjs
 *.bak
 *.bak.*
 
-# Generated audit / report files
-*_REPORT.md
-*_AUDIT.md
-*_SCORECARD.md
-*_SUMMARY.md
+# CCG auto-generated audit files (not committed) — use scripts/ directory
+scripts/*_REPORT.md
+scripts/*_AUDIT.md

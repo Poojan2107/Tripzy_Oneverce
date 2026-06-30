@@ -231,14 +231,14 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
 
   useEffect(() => {
     intervalRef.current = setInterval(() => goTo('next'), 5000);
-    return () => clearInterval(intervalRef.current);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [goTo]);
 
   useEffect(() => {
     progressRef.current = setInterval(() => {
       setProgress(prev => Math.min(prev + 1, 100));
     }, 50);
-    return () => clearInterval(progressRef.current);
+    return () => { if (progressRef.current) clearInterval(progressRef.current); };
   }, [activeIndex]);
 
   const staggerVariants = {

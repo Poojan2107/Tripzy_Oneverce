@@ -1,5 +1,6 @@
 "use client";
 import { Component, ReactNode } from 'react';
+import * as Sentry from "@sentry/nextjs";
 import { Compass } from 'lucide-react';
 
 interface Props {
@@ -22,8 +23,9 @@ export default class ErrorBoundary extends Component<Props, State> {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("ErrorBoundary caught:", error);
+    Sentry.captureException(error, { extra: { componentStack: errorInfo.componentStack } });
     this.props.onError?.();
   }
 

@@ -139,46 +139,15 @@ export default function PlannerResult({
       animate={mounted ? "visible" : "hidden"}
     >
       {itineraryResult.isOfflineFallback && (
-        <div className="max-w-4xl mx-auto px-6 mb-6">
-          <div className="bg-gold/10 border border-gold/30 rounded-lg p-3 flex items-center gap-3 text-night">
-            <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center shrink-0">
-              <Compass className="w-4 h-4 text-night" />
-            </div>
-            <div className="text-left">
-              <p className="text-small font-bold uppercase tracking-wider text-night">Offline Archive Active</p>
-              <p className="text-xs text-muted/80 leading-relaxed">
-                {itineraryResult.fallbackErrorType === 'timeout' 
-                  ? "The request timed out. We've provided a curated itinerary from our local archives." 
-                  : "We encountered a connection issue. Here is a curated journey from our regional knowledge base."}
-              </p>
-            </div>
+        <div className="max-w-4xl mx-auto px-6 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/10 border border-gold/25 text-gold">
+            <Compass className="w-3 h-3" />
+            <span className="text-[10px] font-mono font-black uppercase tracking-widest">Curated Explorer Edition</span>
           </div>
         </div>
       )}
       <div className="max-w-4xl mx-auto px-6 space-y-12">
-        {itineraryResult.isOfflineFallback && (
-          <div className="p-5 bg-amber-50/60 border border-amber-200/50 rounded-lg text-left flex gap-3 text-night">
-            <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-              <Compass className="w-4 h-4 animate-pulse" />
-            </div>
-            <div>
-              <span className="text-caption font-mono uppercase tracking-wider text-amber-700 block font-bold">
-                {itineraryResult.fallbackErrorType === 'timeout'
-                  ? 'Connection Timeout (Offline Fallback)'
-                  : itineraryResult.fallbackErrorType === 'network'
-                  ? 'Network Offline (Offline Fallback)'
-                  : 'Server Unreachable (Offline Fallback)'}
-              </span>
-              <p className="text-body text-amber-800/80 font-light mt-0.5 leading-relaxed">
-                {itineraryResult.fallbackErrorType === 'timeout'
-                  ? "Our AI archives took longer than 60s to respond. We've prepared this authentic fallback journey from our local explorer database."
-                  : itineraryResult.fallbackErrorType === 'network'
-                  ? "We couldn't reach the server due to a network connection issue. We've prepared this authentic fallback journey from our local explorer database."
-                  : "We encountered a server error while preparing your itinerary. We've prepared this authentic fallback journey from our local explorer database."}
-              </p>
-            </div>
-          </div>
-        )}
+
         {/* 1. Journey Hero */}
         <motion.div className="bg-surface relative overflow-hidden border border-border/70 rounded-lg shadow-md" variants={sectionVariants} custom={0}>
           {tour?.bannerImage && (

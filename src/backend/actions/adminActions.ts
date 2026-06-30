@@ -25,7 +25,7 @@ export async function getAdminUsers() {
           select: {
             bookmarks: true,
             savedItineraries: true,
-            trips: true,
+
             reviews: true,
             conversations: true,
             sessions: true,

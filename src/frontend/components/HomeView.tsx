@@ -7,7 +7,6 @@ import TravelerStories from "./home/TravelerStories";
 import AtlasPassportPreview from "./home/AtlasPassportPreview";
 import CompanionPreview from "./home/CompanionPreview";
 import WhyTravebie from "./home/WhyTravebie";
-import Footer from "./Footer";
 
 interface HomeViewProps {
   tours: Tour[];
@@ -33,7 +32,6 @@ export default function HomeView(props: HomeViewProps) {
       <FeaturedChapters tours={tours} wishlistIds={wishlistIds} loadingDestinations={loadingDestinations} onSelectTour={onSelectTour} onToggleWishlist={onToggleWishlist} onGoToExplore={onGoToExplore} />
       <TravelerStories tours={tours} onSelectTour={onSelectTour} />
       <CompanionPreview onGoToPlanner={onGoToPlanner} />
-      <Footer />
     </div>
   );
 }

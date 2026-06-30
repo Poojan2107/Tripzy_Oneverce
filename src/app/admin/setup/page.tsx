@@ -53,7 +53,8 @@ export default function AdminSetupPage() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-background flex items-center justify-center p-6 font-sans">
+    <div className="min-h-[100dvh] bg-background flex flex-col p-6 font-sans">
+      <div className="flex-1 flex items-center justify-center">
       <div className="max-w-md w-full bg-white rounded-3xl border border-border shadow-sm p-8 text-center space-y-6">
         
         <div className="w-16 h-16 rounded-full bg-night flex items-center justify-center mx-auto">
@@ -142,6 +143,7 @@ export default function AdminSetupPage() {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

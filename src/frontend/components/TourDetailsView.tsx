@@ -14,7 +14,6 @@ import LocalIntelTab from './tourDetails/LocalIntelTab';
 import LogisticsTab from './tourDetails/LogisticsTab';
 import HotelsTab from './tourDetails/HotelsTab';
 import Sidebar from './tourDetails/Sidebar';
-import Footer from './Footer';
 
 
 interface TourDetailsViewProps {
@@ -61,7 +60,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
       <TourHero tour={tour} onBack={onBack} onToggleWishlist={onToggleWishlist} isWishlisted={isWishlisted} tagline={cultural?.tagline} copiedLink={copiedLink} onShare={handleShare} />
       <StatsBar tour={tour} />
 
-      <div className="max-w-7xl mx-auto px-6 mt-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 mt-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-0">
             <div className="relative flex gap-1.5 overflow-x-auto no-scrollbar pb-4 border-b border-border/20 mb-8">
@@ -138,10 +137,8 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
           <Sidebar tour={tour} cultural={cultural} onPlanClick={onPlanClick} />
         </div>
       </div>
- 
-      <Footer />
- 
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-border shadow-lg px-4 py-3.5 pb-[max(16px,env(safe-area-inset-bottom,12px))] flex items-center justify-between gap-3">
+
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-border shadow-lg px-4 py-3.5 pb-[max(16px,var(--safe-bottom))] flex items-center justify-between gap-3">
         <div className="flex-1 min-w-0 text-left">
           <span className="text-card font-display font-bold text-night">{formatINR(tour.price)}</span>
           <span className="text-meta text-muted ml-1">/ person</span>

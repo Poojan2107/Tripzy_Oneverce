@@ -38,7 +38,7 @@ export default function AtlasPassportPreview({
   onGoToPassport?: () => void;
 }) {
   return (
-    <section className="py-16 md:py-24 border-y border-border/20 bg-white">
+    <section className="py-16 md:py-24 border-t border-border/20 bg-white">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Atlas Stats */}

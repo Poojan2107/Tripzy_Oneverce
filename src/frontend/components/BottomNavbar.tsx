@@ -25,7 +25,7 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
 
   return (
     <motion.div
-      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm md:hidden pb-[env(safe-area-inset-bottom,0px)]`}
+      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm md:hidden pb-[var(--safe-bottom)]`}
       animate={visible ? { y: 0, opacity: 1 } : { y: 80, opacity: 0 }}
       transition={{ type: "spring", stiffness: 200, damping: 25 }}
     >

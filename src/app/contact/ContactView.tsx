@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import Link from "next/link";
 import { Compass, Mail, MapPin } from "lucide-react";
-import Footer from "../../frontend/components/Footer";
+
 
 const fadeUp = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 80, damping: 20 } } };
 
@@ -62,7 +62,6 @@ export default function ContactView() {
           </motion.div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

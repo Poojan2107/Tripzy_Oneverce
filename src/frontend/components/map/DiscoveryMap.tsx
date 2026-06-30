@@ -369,7 +369,7 @@ export default function DiscoveryMap({
         </div>
       )}
 
-      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center gap-2 p-3 pb-[max(12px,env(safe-area-inset-bottom,8px))]">
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center gap-2 p-3 pb-[max(12px,var(--safe-bottom))]">
         <div className="bg-surface/90 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-border shadow-sm pointer-events-none text-micro text-night/70 font-mono uppercase tracking-widest flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#E95C74] inline-block animate-pulse"></span>
           <span>Living Atlas</span>

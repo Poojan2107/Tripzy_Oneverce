@@ -9,8 +9,10 @@ import { Tour } from '../types';
 import { parseBudgetRange } from '../utils/budget';
 import { trackPlannerCompletion } from '../utils/analytics';
 import { LOADING_MESSAGES, DURATION_OPTIONS } from './planner/constants';
+import { buildOfflineResponse } from '../../backend/data/offlineItineraries';
 import PlannerWizard from './planner/PlannerWizard';
 import PlannerResult from './planner/PlannerResult';
+import PlannerLoadingSkeleton from './planner/PlannerLoadingSkeleton';
 
 interface AiPlannerViewProps {
   onSaveItinerary?: (itin: any, skipRedirect?: boolean) => void;
@@ -144,13 +146,104 @@ export default function AiPlannerView({
 
   const handleDurationSelect = (id: string) => {
     setDuration(id);
+    if (id === 'custom') return;
     const found = DURATION_OPTIONS.find(o => o.id === id);
     if (found) {
       setCustomDuration(found.days);
     }
   };
 
-  const handleGenerate = async () => {
+  const buildClientOfflineResponse = (
+    destination: string | null,
+    selectedTour: any,
+    derivedBudgetTier: string,
+    customBudgetAmount: number,
+    customDuration: number,
+    travelers: string | null,
+    mood: string | null,
+    fromLocation: string,
+    notes: string
+  ) => {
+    const fallbackDestName = selectedTour ? selectedTour.title : (destination || "Varanasi");
+    const fallbackLat = selectedTour?.latitude || 25.3176;
+    const fallbackLng = selectedTour?.longitude || 82.9739;
+
+    const itinerary = [];
+    const baseDays = selectedTour?.itinerary || [
+      {
+        title: `Arrival & Heritage Walk in ${fallbackDestName}`,
+        description: `Welcome to ${fallbackDestName}! Check into your accommodation and head out for a gentle orientation walking tour. Discover the local streets, hidden culinary spots, and meet welcoming locals.`,
+        activities: ["Check-in & relax", "Guided orientation walk", "Welcome regional dinner"]
+      },
+      {
+        title: `Cultural Immersive Experience`,
+        description: `Dive deeper into the local art, history, and craft traditions of ${fallbackDestName}. Visit major landmarks, museums, and workshop areas to watch local artisans at work.`,
+        activities: ["Landmark sightseeing tour", "Artisan workshop visit", "Sunset viewpoint hike"]
+      },
+      {
+        title: `Nature & Surrounding Excursion`,
+        description: `Explore the scenic countryside or natural wonders surrounding ${fallbackDestName}. Enjoy a quiet morning hike or lake boat cruise, and sample traditional farm-to-table delicacies.`,
+        activities: ["Nature park exploration", "Scenic countryside drive", "Farm-to-table lunch"]
+      },
+      {
+        title: `Signature Experience & Farewell`,
+        description: `Spend your final day checking out local secrets, picking up artisan souvenirs, and enjoying a signature cooking class or musical performance to close your trip.`,
+        activities: ["Local secret discovery", "Souvenir shopping in craft market", "Farewell dinner & show"]
+      }
+    ];
+
+    for (let i = 0; i < customDuration; i++) {
+      const baseDay = baseDays[i % baseDays.length];
+      const cycle = Math.floor(i / baseDays.length);
+      const dayIndex = i + 1;
+      itinerary.push({
+        day: `Day ${dayIndex}`,
+        title: baseDay.title,
+        description: baseDay.description,
+        activities: baseDay.activities || [],
+        latitude: fallbackLat + (cycle * 0.012) + (i * 0.003),
+        longitude: fallbackLng - (cycle * 0.012) - (i * 0.003)
+      });
+    }
+
+    const dailyBudget = customBudgetAmount || (derivedBudgetTier === "Luxury" ? 35000 : derivedBudgetTier === "Medium" ? 15000 : 5000);
+    const transitCost = Math.round(dailyBudget * customDuration * 0.25);
+    const stayCost = Math.round(dailyBudget * customDuration * 0.45);
+    const foodCost = Math.round(dailyBudget * customDuration * 0.20);
+    const totalCost = transitCost + stayCost + foodCost;
+
+    return {
+      itinerary,
+      costs: {
+        transit: transitCost,
+        stay: stayCost,
+        food: foodCost,
+        total: totalCost
+      },
+      weather: {
+        temperature: "22°C - 26°C",
+        conditions: "Pleasant & Clear"
+      },
+      nearbyPlaces: [
+        {
+          name: "Historic Heritage Quarter",
+          distance: "2km",
+          description: "An ancient enclave rich in classical vernacular architecture."
+        }
+      ],
+      destinationId: selectedTour?.id || destination || undefined,
+      recommendationScore: 92,
+      recommendationReasoning: "Curated from our offline explorer archive.",
+      isOfflineFallback: true
+    };
+  };
+
+  const handleGenerate = () => {
+    // Launch async work as a detached IIFE so it fires-and-forgets.
+    // PlannerWizard calls onGenerate() without await \u2014 matching () => void.
+    // The parent sets loading=true synchronously, which unmounts the wizard cleanly.
+    (async () => {
+
     setLoading(true);
     setLoadingStepIndex(0);
     setLoadingMsg(LOADING_MESSAGES[0]);
@@ -164,49 +257,101 @@ export default function AiPlannerView({
       }
     }, 2800);
 
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    try {
+    const makeAttempt = async (): Promise<any> => {
       const destName = selectedDestination ? (TOURS_DATA.find(t => t.id === selectedDestination)?.title || selectedDestination) : 'Unknown';
       const controller = new AbortController();
-      timeoutId = setTimeout(() => controller.abort(), 30000);
-      const res = await fetch('/api/plan-trip', {
-        signal: controller.signal,
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          destination: destName,
-          fromLocation: fromLocation || undefined,
-          guests: travelers === 'solo' ? 1 : travelers === 'couple' ? 2 : travelers === 'family' ? 4 : 6,
-          companion: travelers || 'solo',
-          budget: derivedBudgetTier,
-          budgetAmount: customBudgetAmount,
-          travelStyle: mood || 'Relaxation',
-          fromDate: new Date().toISOString(),
-          toDate: new Date(Date.now() + customDuration * 24 * 60 * 60 * 1000).toISOString(),
-          travelPace: 'Moderate',
-          interests: energy || '',
-          experience: notes,
-        })
-      });
-      clearTimeout(timeoutId);
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
 
-      const data = await res.json();
+      try {
+        const res = await fetch('/api/plan-trip', {
+          signal: controller.signal,
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            destination: destName,
+            fromLocation: fromLocation || undefined,
+            guests: travelers === 'solo' ? 1 : travelers === 'couple' ? 2 : travelers === 'family' ? 4 : 6,
+            companion: travelers || 'solo',
+            budget: derivedBudgetTier,
+            budgetAmount: customBudgetAmount,
+            travelStyle: mood || 'Relaxation',
+            fromDate: new Date().toISOString(),
+            toDate: new Date(Date.now() + customDuration * 24 * 60 * 60 * 1000).toISOString(),
+            travelPace: 'Moderate',
+            interests: energy || '',
+            experience: notes,
+          })
+        });
+        clearTimeout(timeoutId);
+        
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || `Server error: ${res.status}`);
+        }
+        
+        return await res.json();
+      } catch (err: any) {
+        clearTimeout(timeoutId);
+        throw err;
+      }
+    };
+
+    try {
+      const data = await makeAttempt();
       clearInterval(msgInterval);
       if (!mountedRef.current) return;
       setLoading(false);
-
-      if (!res.ok) throw new Error(data.error || "Failed to generate");
       setItineraryResult(data);
       trackPlannerCompletion(selectedDestination || '', customDuration, derivedBudgetTier);
     } catch (err: any) {
-      if (timeoutId) clearTimeout(timeoutId);
-      if (msgInterval) clearInterval(msgInterval);
-      if (!mountedRef.current) return;
-      setLoading(false);
-      console.error("AI Generation failed:", err);
-      const friendlyMsg = "We're consulting our explorer archive and preparing an alternative journey.";
-      setItineraryResult({ error: friendlyMsg });
+      console.warn("AI Generation attempt 1 failed:", err);
+      if (!mountedRef.current) {
+        clearInterval(msgInterval);
+        return;
+      }
+
+      // First failure: Wait slightly and trigger auto-retry with visual indicator
+      setLoadingMsg("Consulting alternative archives... Retrying (Attempt 2/2)...");
+      await new Promise(r => setTimeout(r, 1500));
+
+      try {
+        const data = await makeAttempt();
+        clearInterval(msgInterval);
+        if (!mountedRef.current) return;
+        setLoading(false);
+        setItineraryResult(data);
+        trackPlannerCompletion(selectedDestination || '', customDuration, derivedBudgetTier);
+      } catch (retryErr: any) {
+        clearInterval(msgInterval);
+        if (!mountedRef.current) return;
+        setLoading(false);
+        console.error("AI Generation attempt 2 failed:", retryErr);
+
+        // Fall back to client-side offline response
+        let errorType: "timeout" | "server" | "network" = "server";
+        if (retryErr.name === "AbortError" || err.name === "AbortError") {
+          errorType = "timeout";
+        } else if (retryErr.message?.includes("Failed to fetch") || !window.navigator.onLine) {
+          errorType = "network";
+        }
+
+        const fallback = buildClientOfflineResponse(
+          selectedDestination,
+          selectedTour,
+          derivedBudgetTier,
+          customBudgetAmount,
+          customDuration,
+          travelers,
+          mood,
+          fromLocation,
+          notes
+        );
+
+        (fallback as any).fallbackErrorType = errorType;
+        setItineraryResult(fallback);
+      }
     }
+    })(); // end detached async IIFE
   };
 
   const handleContinueWithGoogle = () => {
@@ -332,71 +477,127 @@ export default function AiPlannerView({
     return `${compLabel} ${moodLabel}`;
   };  if (loading) {
     return (
-      <div className="pt-28 pb-32 px-6 max-w-lg mx-auto min-h-[100dvh] bg-background flex flex-col items-center justify-center text-center">
-        <div className="relative w-32 h-20 mb-6 flex items-center justify-center">
-          <svg width="120" height="60" viewBox="0 0 120 60" fill="none" className="text-teal">
-            <motion.path
-              d="M 10 30 Q 30 10 60 30 T 110 30"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeDasharray="4 4"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Start Node */}
-            <motion.circle cx="10" cy="30" r="4.5" fill="var(--color-gold)" 
-              animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
-            {/* Mid Node */}
-            <motion.circle cx="60" cy="30" r="4.5" fill="var(--color-teal)" 
-              animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }} />
-            {/* End Node */}
-            <motion.circle cx="110" cy="30" r="4.5" fill="var(--color-coral)" 
-              animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 1 }} />
-          </svg>
-        </div>
-        <span className="text-meta font-mono text-coral block mb-2 font-bold">
-          Journey Companion
-        </span>
-        <h2 className="font-display text-heading text-night font-light lowercase leading-none mb-6">
-          {loadingMsg}
-        </h2>
- 
-        {/* Dynamic Checklist Loader */}
-        <div className="w-full max-w-xs space-y-3.5 text-left border-t border-border/40 pt-6">
-          {LOADING_MESSAGES.map((msg, i) => {
-            const isDone = loadingStepIndex > i;
-            const isCurrent = loadingStepIndex === i;
-            return (
-              <motion.div
-                key={i}
-                className="flex items-center gap-3"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300 ${
-                  isDone 
-                    ? 'bg-gold border-gold text-night font-bold shadow-sm' 
-                    : isCurrent 
-                      ? 'bg-teal border-teal text-white shadow-sm' 
-                      : 'border-border/60 bg-background text-transparent'
-                }`}>
-                  {isDone ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 stroke-[3] text-night" />
-                  ) : isCurrent ? (
-                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                  ) : null}
+      <div className="bg-background text-night select-none text-left pt-24 pb-24 min-h-[100dvh] font-sans">
+        <div className="max-w-4xl mx-auto px-6 space-y-12">
+          
+          {/* Skeleton Hero / Header */}
+          <div className="bg-surface border border-border/70 rounded-lg p-6 sm:p-8 shadow-md relative overflow-hidden animate-pulse">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-border/15">
+              <div className="space-y-3 text-left w-full sm:w-2/3">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-4 h-4 rounded-full bg-border/80 animate-ping" />
+                  <div className="h-3 w-40 bg-border rounded-sm" />
                 </div>
-                <span className={`text-body transition-colors duration-300 ${
-                  isDone ? 'text-muted/50 line-through font-light' : isCurrent ? 'text-night font-bold' : 'text-muted/30 font-light'
-                }`}>
-                  {msg}
-                </span>
-              </motion.div>
-            );
-          })}
+                <div className="h-8 w-3/4 bg-border rounded-md mt-2" />
+                <div className="flex gap-2 mt-3">
+                  <div className="h-6 w-16 bg-border rounded-sm" />
+                  <div className="h-6 w-20 bg-border rounded-sm" />
+                  <div className="h-6 w-24 bg-border rounded-sm" />
+                </div>
+              </div>
+              <div className="h-10 w-32 bg-border rounded-md shrink-0 self-start sm:self-center" />
+            </div>
+            <div className="h-4 w-5/6 bg-border/60 rounded-sm mt-4" />
+          </div>
+
+          {/* Skeleton Story Timeline Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="h-6 w-28 bg-border rounded-sm animate-pulse" />
+              <div className="h-px flex-1 bg-border/20" />
+            </div>
+
+            {/* Skeleton Day Tabs */}
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+              {Array(customDuration || 4).fill(null).map((_, idx) => (
+                <div
+                  key={idx}
+                  className="flex-shrink-0 flex flex-col items-center justify-center w-16 h-14 rounded-md border border-border/40 bg-surface/50 animate-pulse"
+                >
+                  <div className="h-5 w-5 bg-border rounded-full" />
+                  <div className="h-2.5 w-8 bg-border rounded-sm mt-1.5" />
+                </div>
+              ))}
+            </div>
+
+            {/* Skeleton Active Day Timeline Card containing the Progress Loader */}
+            <div className="bg-surface border border-border/70 rounded-lg p-6 md:p-8 shadow-md space-y-6 relative overflow-hidden text-center flex flex-col items-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.005] to-teal/[0.005] pointer-events-none" />
+              
+              {/* Dynamic Checklist Loader integrated inside the Day Card */}
+              <div className="relative w-32 h-16 flex items-center justify-center">
+                <svg width="120" height="60" viewBox="0 0 120 60" fill="none" className="text-teal">
+                  <motion.path
+                    d="M 10 30 Q 30 10 60 30 T 110 30"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeDasharray="4 4"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  <motion.circle cx="10" cy="30" r="4" fill="var(--color-gold)" animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
+                  <motion.circle cx="60" cy="30" r="4" fill="var(--color-teal)" animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }} />
+                  <motion.circle cx="110" cy="30" r="4" fill="var(--color-coral)" animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1.5, repeat: Infinity, delay: 1 }} />
+                </svg>
+              </div>
+
+              <span className="text-meta font-mono text-coral block mb-1 font-bold uppercase tracking-widest animate-pulse">
+                Journey Companion
+              </span>
+              <h2 className="font-display text-2xl text-night font-light lowercase leading-none mb-4 max-w-sm">
+                {loadingMsg}
+              </h2>
+
+              <div className="w-full max-w-xs space-y-3.5 text-left border-t border-border/40 pt-5 mt-2">
+                {LOADING_MESSAGES.map((msg, i) => {
+                  const isDone = loadingStepIndex > i;
+                  const isCurrent = loadingStepIndex === i;
+                  return (
+                    <motion.div
+                      key={i}
+                      className="flex items-center gap-3"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border transition-all duration-300 ${
+                        isDone 
+                          ? 'bg-gold border-gold text-night font-bold shadow-sm' 
+                          : isCurrent 
+                            ? 'bg-teal border-teal text-white shadow-sm' 
+                            : 'border-border/60 bg-background text-transparent'
+                      }`}>
+                        {isDone ? (
+                          <CheckCircle2 className="w-3.5 h-3.5 stroke-[3] text-night" />
+                        ) : isCurrent ? (
+                          <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                        ) : null}
+                      </div>
+                      <span className={`text-body transition-colors duration-300 ${
+                        isDone ? 'text-muted/40 line-through font-light' : isCurrent ? 'text-night font-bold' : 'text-muted/20 font-light'
+                      }`}>
+                        {msg}
+                      </span>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Skeleton Map Section */}
+          <div className="space-y-4 animate-pulse">
+            <div className="flex items-center gap-3">
+              <div className="h-6 w-20 bg-border rounded-sm" />
+              <div className="h-px flex-1 bg-border/20" />
+            </div>
+            <div className="bg-surface/50 border border-border/40 rounded-lg h-44 w-full flex items-center justify-center">
+              <div className="text-micro font-mono uppercase tracking-[0.2em] text-muted/30">Plotting Route Map...</div>
+            </div>
+          </div>
+          
         </div>
       </div>
     );
@@ -542,9 +743,11 @@ export default function AiPlannerView({
       onEnergyChange={setEnergy}
       onDurationChange={(id) => {
         setDuration(id);
+        if (id === 'custom') return;
         const found = DURATION_OPTIONS.find(o => o.id === id);
         if (found) setCustomDuration(found.days);
       }}
+      onCustomDurationChange={setCustomDuration}
       onBudgetChange={setCustomBudgetAmount}
       onNotesChange={setNotes}
       onStart={() => setHasStarted(true)}

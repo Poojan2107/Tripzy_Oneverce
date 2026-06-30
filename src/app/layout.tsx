@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "../frontend/styles/globals.css";
 import Providers from "./providers";
 import PageTransition from "../frontend/components/PageTransition";
+import Footer from "../frontend/components/Footer";
 
 
 const nunitoSans = Nunito_Sans({
@@ -96,10 +97,13 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <body className="antialiased" style={{ paddingBottom: 'var(--safe-bottom)' }}>
         <Providers>
           <div className="flex flex-col min-h-[100dvh]">
-            <PageTransition>{children}</PageTransition>
+            <PageTransition>
+              <div className="flex-1">{children}</div>
+            </PageTransition>
+            <Footer />
           </div>
         </Providers>
         <Analytics />

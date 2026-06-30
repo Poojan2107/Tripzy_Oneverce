@@ -8,7 +8,7 @@ import { trackPageView, trackWishlistSave, trackDestinationClick } from './utils
 import ErrorBoundary from './components/ErrorBoundary';
 
 import { TabType, Tour } from './types';
-import { TOURS_DATA } from './data';
+import { TOURS_DATA, INDIA_CHAPTER_SLUGS } from './data';
 import { getAllDestinations } from '../backend/actions/tourActions';
 
 import GlassNavbar from './components/GlassNavbar';
@@ -41,11 +41,9 @@ export default function App() {
   const { setActiveLocation } = useAtmosphere();
   const { data: session } = useSession();
 
-  // Sort: Indian destinations always surface first
-  const INDIA_IDS = ['varanasi-spiritual','udaipur-mewar','kerala-houseboats','ladakh-passes','jaisalmer-fort','goa-beach','hampi-ruins','kashmir-meadows','munnar-tea','kutch-salt','cherrapunji-roots','andaman-reefs'];
   const sortToursIndiaFirst = (list: Tour[]) => {
-    const india = INDIA_IDS.map(id => list.find(t => t.id === id)).filter(Boolean) as Tour[];
-    const rest = list.filter(t => !INDIA_IDS.includes(t.id));
+    const india = INDIA_CHAPTER_SLUGS.map(id => list.find(t => t.id === id)).filter(Boolean) as Tour[];
+    const rest = list.filter(t => !INDIA_CHAPTER_SLUGS.includes(t.id));
     return [...india, ...rest];
   };
 

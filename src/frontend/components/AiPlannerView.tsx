@@ -448,20 +448,20 @@ export default function AiPlannerView({
  
                 <div className="space-y-2.5 py-1">
                   <p className="text-body text-muted/80 leading-relaxed font-light">
-                    Save your AI-crafted odyssey to access it anytime and build your explorer achievements.
+                    Your journey is already saved locally. Sign in to sync it across devices and unlock your explorer achievements.
                   </p>
                   <ul className="text-body space-y-2 text-night/85 font-light">
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
-                      <span>Sync across all your devices</span>
+                      <span>Access your Passport on any device</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-teal shrink-0" />
-                      <span>Preserve your explorer journal</span>
+                      <span>Never lose your saved journeys</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-coral shrink-0" />
-                      <span>Build your travel collection</span>
+                      <span>Unlock explorer badges & seals</span>
                     </li>
                   </ul>
                 </div>
@@ -483,7 +483,7 @@ export default function AiPlannerView({
                     onClick={handleMaybeLater}
                     className="btn btn-outline w-full h-11 rounded-md text-caption border-border/40 bg-white text-muted hover:text-night cursor-pointer"
                   >
-                    Maybe Later
+                    Save Locally
                   </button>
                 </div>
  

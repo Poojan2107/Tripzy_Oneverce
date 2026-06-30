@@ -12,53 +12,6 @@ async function verifyAdmin() {
   }
 }
 
-export async function getTrendingDestinations() {
-  try {
-    const destinations = await db.destination.findMany({
-      where: { trending: true },
-      take: 6,
-    });
-    return { success: true, data: destinations };
-  } catch (error) {
-    console.error("Failed to fetch trending destinations:", error);
-    return { success: false, error: "Failed to load destinations." };
-  }
-}
-
-export async function searchDestinations(query: string) {
-  try {
-    const destinations = await db.destination.findMany({
-      where: {
-        OR: [
-          { name: { contains: query } },
-          { country: { contains: query } },
-          { city: { contains: query } },
-        ],
-      },
-      take: 10,
-    });
-    return { success: true, data: destinations };
-  } catch (error) {
-    console.error("Search failed:", error);
-    return { success: false, error: "Search failed." };
-  }
-}
-
-export async function getDestinationDetails(slug: string) {
-  try {
-    const destination = await db.destination.findUnique({
-      where: { slug },
-      include: {
-        reviews: true,
-      },
-    });
-    return { success: true, data: destination };
-  } catch (error) {
-    console.error("Failed to load details:", error);
-    return { success: false, error: "Failed to load destination." };
-  }
-}
-
 export async function getAllDestinations() {
   try {
     const destinations = await db.destination.findMany({
@@ -130,7 +83,7 @@ export async function createDestination(data: any) {
     return { success: true, data: destination };
   } catch (error: any) {
     console.error("Failed to create destination:", error);
-    return { success: false, error: error?.message || "Failed to create destination" };
+    return { success: false, error: "Failed to create destination" };
   }
 }
 
@@ -174,7 +127,7 @@ export async function updateDestination(id: string, data: any) {
     return { success: true, data: destination };
   } catch (error: any) {
     console.error("Failed to update destination:", error);
-    return { success: false, error: error?.message || "Failed to update destination" };
+    return { success: false, error: "Failed to update destination" };
   }
 }
 
@@ -187,7 +140,7 @@ export async function deleteDestination(id: string) {
     return { success: true };
   } catch (error: any) {
     console.error("Failed to delete destination:", error);
-    return { success: false, error: error?.message || "Failed to delete destination" };
+    return { success: false, error: "Failed to delete destination" };
   }
 }
 
@@ -217,7 +170,7 @@ export async function createExperience(data: any) {
     return { success: true, data: experience };
   } catch (error: any) {
     console.error("Failed to create experience:", error);
-    return { success: false, error: error?.message || "Failed to create experience" };
+    return { success: false, error: "Failed to create experience" };
   }
 }
 
@@ -248,7 +201,7 @@ export async function updateExperience(id: string, data: any) {
     return { success: true, data: experience };
   } catch (error: any) {
     console.error("Failed to update experience:", error);
-    return { success: false, error: error?.message || "Failed to update experience" };
+    return { success: false, error: "Failed to update experience" };
   }
 }
 
@@ -261,6 +214,6 @@ export async function deleteExperience(id: string) {
     return { success: true };
   } catch (error: any) {
     console.error("Failed to delete experience:", error);
-    return { success: false, error: error?.message || "Failed to delete experience" };
+    return { success: false, error: "Failed to delete experience" };
   }
 }

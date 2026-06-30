@@ -45,8 +45,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { email, setupKey } = body;
 
-    if (!ADMIN_SETUP_KEY) {
-      return new Response(JSON.stringify({ error: "Admin setup key not configured on server." }), {
+    if (!ADMIN_SETUP_KEY || ADMIN_SETUP_KEY.length < 16) {
+      return new Response(JSON.stringify({ error: "Admin setup key not configured or too short (min 16 characters)." }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       });

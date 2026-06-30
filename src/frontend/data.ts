@@ -1,5 +1,12 @@
 import { Tour } from './types';
 
+export const INDIA_CHAPTER_SLUGS = [
+  'varanasi-spiritual', 'udaipur-mewar', 'kerala-houseboats',
+  'ladakh-passes', 'jaisalmer-fort', 'goa-beach', 'hampi-ruins',
+  'kashmir-meadows', 'munnar-tea', 'kutch-salt',
+  'cherrapunji-roots', 'andaman-reefs'
+];
+
 export const TOURS_DATA: Tour[] = [
   {
     id: 'varanasi-spiritual',

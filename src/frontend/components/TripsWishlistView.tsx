@@ -10,6 +10,8 @@ import { Tour } from '../types';
 import { TOURS_DATA } from '../data';
 import { formatINR } from '../utils/currency';
 import SafeImage from './ui/SafeImage';
+import ScrapbookPostcard from './passport/ScrapbookPostcard';
+import EmptyPassportState from './passport/EmptyPassportState';
 import Footer from './Footer';
 import dynamic from 'next/dynamic';
 
@@ -32,114 +34,6 @@ interface TripsWishlistViewProps {
   onDeleteItinerary: (id: string) => void;
   onInspectItinerary?: (itin: any) => void;
   allTours?: Tour[];
-}
-
-function ScrapbookPostcard({ tour, onRemove, onInspect }: { tour: Tour; onRemove: () => void; onInspect: () => void; }) {
-  return (
-    <motion.div
-      onClick={onInspect}
-      className="bg-surface border border-border/70 p-5 pb-6 rounded-lg cursor-pointer group flex flex-col justify-between text-left relative shadow-md hover:shadow-lg transition-all"
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      whileHover={{ y: -4 }}
-    >
-      <div className="relative aspect-[3/2] rounded-md overflow-hidden bg-secondary-surface mb-4">
-        <SafeImage src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" />
-        <button 
-          onClick={(e) => { e.stopPropagation(); onRemove(); }}
-          aria-label="Remove from wishlist"
-          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-surface/90 backdrop-blur-md flex items-center justify-center text-muted hover:text-coral hover:bg-coral/10 shadow-sm border border-border/70 cursor-pointer transition-colors"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-        </button>
-      </div>
-      <div className="space-y-2">
-        <span className="text-meta font-mono text-gold block mb-1">{tour.location}</span>
-        <h3 className="font-display text-card text-night font-light lowercase group-hover:text-gold transition-colors leading-tight">{tour.title}</h3>
-        <p className="text-body text-muted/80 font-light line-clamp-2 mt-1 leading-relaxed">{tour.subtitle}</p>
-        <div className="pt-3 flex justify-between items-center text-meta font-bold text-night border-t border-border mt-3">
-          <span className="text-meta font-mono font-bold text-teal bg-teal/10 border border-teal/20 px-2.5 py-0.5 rounded-sm uppercase">
-            {tour.moods?.[0] || 'Explore'}
-          </span>
-          <span className="text-meta font-mono font-bold text-gold bg-gold/10 border border-gold/20 px-2.5 py-0.5 rounded-sm uppercase">
-            {tour.category || 'Chapter'}
-          </span>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
- 
-function EmptyPassportState({ 
-  onNavigate, 
-  type 
-}: { 
-  onNavigate: () => void; 
-  type: 'wishlist' | 'itineraries'; 
-}) {
-  const content = {
-    wishlist: {
-      tag: "saved chapters",
-      title: "your passport awaits its first chapter",
-      desc: "Begin exploring India and start collecting stories.",
-      btnText: "Explore Atlas",
-      illustration: (
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="text-teal/40">
-          <rect x="6" y="10" width="52" height="44" rx="4" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3,3"/>
-          <rect x="42" y="16" width="10" height="12" stroke="currentColor" strokeWidth="1.2" fill="rgba(24,182,201,0.05)"/>
-          <circle cx="28" cy="32" r="10" fill="#18B6C9" fillOpacity={0.08} stroke="#18B6C9" strokeWidth={1.5}/>
-          <circle cx="28" cy="32" r="7" stroke="#18B6C9" strokeWidth={0.75} strokeDasharray="2,2"/>
-          <path d="M28 28C28 28 25.5 31.5 28 35.5C30.5 31.5 28 28 28 28Z" fill="#18B6C9" fillOpacity={0.25}/>
-          <path d="M28 30.5C28 30.5 24 32 28 35C32 32 28 30.5 28 30.5Z" fill="#18B6C9" fillOpacity={0.25}/>
-        </svg>
-      )
-    },
-    itineraries: {
-      tag: "journey collection",
-      title: "your passport awaits its first chapter",
-      desc: "Begin exploring India and start collecting stories.",
-      btnText: "Craft First Journey",
-      illustration: (
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="text-teal/35">
-          <path d="M10 12H30V52H10C8.89543 52 8 51.1046 8 50V14C8 12.8954 8.89543 12 10 12Z" stroke="currentColor" strokeWidth={1.2}/>
-          <path d="M54 12H34V52H54C55.1046 52 56 51.1046 56 50V14C56 12.8954 55.1046 12 54 12Z" stroke="currentColor" strokeWidth={1.2}/>
-          <path d="M30 16H34M30 24H34M30 32H34M30 40H34M30 48H34" stroke="currentColor" strokeWidth={2}/>
-          <circle cx="44" cy="32" r="8" stroke="currentColor" strokeWidth={0.75}/>
-          <path d="M44 21V43M33 32H55" stroke="currentColor" strokeWidth={0.5} strokeDasharray="2,2"/>
-        </svg>
-      )
-    }
-  }[type];
- 
-  return (
-    <div className="text-center py-16 bg-white border border-border/70 rounded-lg max-w-lg mx-auto p-8 shadow-md relative overflow-hidden w-full">
-      <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.02] to-teal/[0.02] pointer-events-none" />
-      
-      <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-background rounded-md border border-border/20 transition-transform duration-500 hover:rotate-2">
-        {content.illustration}
-      </div>
-      
-      <span className="text-meta font-mono text-gold block mb-2">
-        {content.tag}
-      </span>
-      <h3 className="font-display text-heading text-night lowercase font-light leading-none mb-3">
-        {content.title}
-      </h3>
-      <p className="text-body text-muted/65 font-light max-w-xs mx-auto leading-relaxed mb-8">
-        {content.desc}
-      </p>
-      
-      <button
-        onClick={onNavigate}
-        className="btn btn-night h-11 px-5 rounded-md text-caption flex items-center gap-2 cursor-pointer shadow-md"
-      >
-        <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />
-        <span>{content.btnText}</span>
-      </button>
-    </div>
-  );
 }
 
 export default function TripsWishlistView({

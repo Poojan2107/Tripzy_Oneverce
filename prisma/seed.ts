@@ -11,7 +11,7 @@ async function main() {
   await prisma.plannerEvent.deleteMany({});
   await prisma.recommendationEvent.deleteMany({});
   await prisma.savedItinerary.deleteMany({});
-  await prisma.trip.deleteMany({});
+
   await prisma.destination.deleteMany({});
   await prisma.category.deleteMany({});
   await prisma.experience.deleteMany({});

@@ -219,7 +219,7 @@ export default function PlannerWizard({
                 <label className="text-meta font-mono text-night font-bold block">Departing From (Optional)</label>
                 <input
                   type="text"
-                  placeholder="e.g. Mumbai, Delhi, Bengaluru"
+                  placeholder="(Optional) e.g. Mumbai, Delhi, Bengaluru"
                   value={fromLocation}
                   onChange={(e) => onFromLocationChange(e.target.value)}
                   className="w-full px-3 py-2.5 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans"

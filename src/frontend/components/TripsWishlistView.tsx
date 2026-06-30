@@ -515,10 +515,9 @@ export default function TripsWishlistView({
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                 <AnimatePresence mode="popLayout">
                   {wishlistTours.map((tour) => (
-                    <motion.div
-                      key={tour.id}
-                      layout
-                      initial={{ opacity: 0, scale: 0.95 }}
+                      <motion.div
+                        key={tour.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9, y: 15 }}
                       transition={{ type: "spring", stiffness: 300, damping: 25 }}
@@ -549,7 +548,6 @@ export default function TripsWishlistView({
                     const durationDays = itin.duration || 5;
                     return (
                       <motion.div key={itin.id} onClick={() => onInspectItinerary?.(itin)}
-                        layout
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9, y: 15 }}

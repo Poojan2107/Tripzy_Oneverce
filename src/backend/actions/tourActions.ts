@@ -2,6 +2,7 @@
 
 import { db } from "../lib/db";
 import { auth } from "../lib/auth";
+import { destinationSchema } from "../validation/destination";
 
 async function verifyAdmin() {
   const session = await auth();
@@ -90,32 +91,39 @@ export async function getAllExperiences() {
 export async function createDestination(data: any) {
   try {
     await verifyAdmin();
+    const parsed = destinationSchema.safeParse(data);
+    if (!parsed.success) {
+      return { success: false, error: parsed.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join('; ') };
+    }
+    const v = parsed.data;
     const destination = await db.destination.create({
       data: {
-        name: data.name,
-        slug: data.slug || data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        country: data.country,
-        city: data.city,
-        region: data.region || null,
-        description: data.description,
-        images: data.images || [],
-        metadata: data.metadata || null,
-        price: parseFloat(data.price) || 0,
-        duration: data.duration || null,
-        difficulty: data.difficulty || null,
-        groupSize: data.groupSize || null,
-        featured: !!data.featured,
-        trending: !!data.trending,
-        latitude: parseFloat(data.latitude) || null,
-        longitude: parseFloat(data.longitude) || null,
-        adventureScore: parseInt(data.adventureScore) || 0,
-        culturalScore: parseInt(data.culturalScore) || 0,
-        luxuryScore: parseInt(data.luxuryScore) || 0,
-        familyScore: parseInt(data.familyScore) || 0,
-        bestMonths: data.bestMonths || [],
-        travelStyles: data.travelStyles || [],
-        activities: data.activities || [],
-        tags: data.tags || [],
+        name: v.name,
+        slug: v.slug || v.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        country: v.country,
+        city: v.city,
+        region: v.region || null,
+        description: v.description,
+        images: (v.images as any) || [],
+        metadata: v.metadata || null,
+        price: v.price || 0,
+        duration: v.duration || null,
+        difficulty: v.difficulty || null,
+        groupSize: v.groupSize || null,
+        featured: !!v.featured,
+        trending: !!v.trending,
+        latitude: v.latitude || null,
+        longitude: v.longitude || null,
+        adventureScore: v.adventureScore || 0,
+        culturalScore: v.culturalScore || 0,
+        luxuryScore: v.luxuryScore || 0,
+        familyScore: v.familyScore || 0,
+        foodScore: v.foodScore || 0,
+        hiddenGemScore: v.hiddenGemScore || 0,
+        bestMonths: (v.bestMonths as any) || [],
+        travelStyles: (v.travelStyles as any) || [],
+        activities: (v.activities as any) || [],
+        tags: (v.tags as any) || [],
       }
     });
     return { success: true, data: destination };

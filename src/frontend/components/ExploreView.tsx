@@ -173,7 +173,7 @@ export default function ExploreView({
               {filteredTours.map((tour, idx) => {
                 const isActive = tour.id === activeTourId;
                 return (
-                  <motion.div key={tour.id} layout
+                  <motion.div key={tour.id}
                     variants={listItemVariants} initial="hidden" animate="visible" custom={idx}
                     onClick={() => {
                       if (typeof window !== 'undefined' && window.innerWidth < 768) {

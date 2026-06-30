@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring, PanInfo } from 'framer-motion';
+import Image from 'next/image';
 import { Sparkles, ArrowRight, MapPin, Heart, Compass, BookOpen, Camera, Clock, Star, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { HERO_CAROUSEL_ITEMS } from './data';
 import { Tour } from '../../types';
@@ -63,6 +64,8 @@ function CarouselCard({
 
   const handleMouseLeave = useCallback(() => { x.set(0.5); y.set(0.5); }, [x, y]);
 
+  const MotionImage = motion(Image);
+
   const variants = {
     left: { x: '-35%', y: 0, z: -100, rotateY: 18, scale: 0.80, opacity: 0.45, zIndex: 10 },
     center: { x: '0%', y: 0, z: 20, rotateY: 0, scale: 1.08, opacity: 1, zIndex: 30 },
@@ -101,10 +104,12 @@ function CarouselCard({
       >
         <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">
           <div className="h-[55%] w-full overflow-hidden relative bg-secondary-surface">
-            <motion.img
+            <MotionImage
               src={slide.bannerImage}
               alt={slide.title}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="320px"
               style={{ scale: isActive ? 1.05 : 1 }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
@@ -254,16 +259,18 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
       <AnimatePresence mode="wait">
         <motion.div
           key={`bg-${activeIndex}`}
-          className="absolute inset-0"
+          className="absolute inset-0 relative"
           initial={{ opacity: 0, scale: 1.1 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
         >
-          <img
+          <Image
             src={activeSlide.bannerImage}
             alt=""
-            className="w-full h-full object-cover"
+            fill
+            className="object-cover"
+            sizes="100vw"
           />
           <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass}`} />
           <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/40 to-transparent" />

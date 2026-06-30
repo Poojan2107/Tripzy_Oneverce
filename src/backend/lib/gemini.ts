@@ -6,10 +6,12 @@ export function getGeminiApiKey(): string | undefined {
     return undefined;
   }
 
-  if (!key.startsWith("AIzaSy")) {
-    console.warn("[travebie] Gemini API key does not match expected format (AIzaSy...). Using offline fallback.");
+  // Accept both legacy AIzaSy format and newer AQ. format from Google AI Studio
+  if (!key.startsWith("AIzaSy") && !key.startsWith("AQ.")) {
+    console.warn("[travebie] Gemini API key does not match expected format. Using offline fallback.");
     return undefined;
   }
 
   return key;
 }
+

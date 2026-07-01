@@ -112,6 +112,27 @@ export async function getDashboardMetrics() {
       ? Math.round(((helpfulCount + savedCount + planGeneratedCount) / totalRecommendations) * 100)
       : 0;
 
+    // 7. Daily trends (last 7 days)
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const rawDailyViews = await db.viewEvent.findMany({
+      where: { timestamp: { gte: sevenDaysAgo } },
+      select: { timestamp: true },
+    });
+    const rawDailySearches = await db.searchEvent.findMany({
+      where: { timestamp: { gte: sevenDaysAgo } },
+      select: { timestamp: true },
+    });
+    const dayLabels: string[] = [];
+    const viewCounts: number[] = [];
+    const searchCounts: number[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+      const dayStr = d.toISOString().slice(0, 10);
+      dayLabels.push(dayStr);
+      viewCounts.push(rawDailyViews.filter(v => v.timestamp.toISOString().slice(0, 10) === dayStr).length);
+      searchCounts.push(rawDailySearches.filter(s => s.timestamp.toISOString().slice(0, 10) === dayStr).length);
+    }
+
     return {
       success: true,
       data: {
@@ -141,6 +162,11 @@ export async function getDashboardMetrics() {
           saved: savedCount,
           plans: planGeneratedCount,
           ctr: ctr
+        },
+        dailyTrends: {
+          labels: dayLabels,
+          views: viewCounts,
+          searches: searchCounts,
         }
       },
     };

@@ -3,17 +3,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import {
-  Users,
-  MapPin,
-  Sparkles,
-  BookOpen,
-  Search,
-  Eye,
-  Compass,
-  Brain,
-  DollarSign,
-  Calendar,
+  Users, MapPin, Sparkles, BookOpen, Search, Eye, Compass, Brain, DollarSign, Calendar,
 } from 'lucide-react';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 interface AdminDashboardProps {
   metrics: any;
@@ -31,6 +23,17 @@ export default function AdminDashboard({ metrics, loadingMetrics }: AdminDashboa
   }
 
   const { totals } = metrics || {};
+
+  const dailyData = metrics?.dailyTrends?.labels?.map((label: string, i: number) => ({
+    date: label.slice(5),
+    Views: metrics.dailyTrends.views[i],
+    Searches: metrics.dailyTrends.searches[i],
+  })) || [];
+
+  const budgetData = ['Small', 'Medium', 'Luxury'].map(tier => {
+    const found = metrics?.planning?.budgets?.find((b: any) => b.tier === tier);
+    return { tier, count: found ? found.count : 0 };
+  });
 
   return (
     <div className="space-y-8">
@@ -65,6 +68,29 @@ export default function AdminDashboard({ metrics, loadingMetrics }: AdminDashboa
           );
         })}
       </motion.div>
+
+      <div className="bg-white border border-border rounded-3xl p-5 sm:p-6 shadow-card">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
+          <h3 className="text-micro font-mono font-bold uppercase tracking-[0.25em] text-stone">Daily Activity (Last 7 Days)</h3>
+          <Eye className="w-4 h-4 text-gold" />
+        </div>
+        {dailyData.length > 0 ? (
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={dailyData} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e5e5e5' }} />
+                <Line type="monotone" dataKey="Views" stroke="#c8a66b" strokeWidth={2} dot={{ r: 3, fill: '#c8a66b' }} />
+                <Line type="monotone" dataKey="Searches" stroke="#6b8e7b" strokeWidth={2} dot={{ r: 3, fill: '#6b8e7b' }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <p className="text-xs text-stone py-8 text-center">No activity in the last 7 days.</p>
+        )}
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="bg-white border border-border rounded-3xl p-5 sm:p-6 shadow-card">
@@ -106,7 +132,7 @@ export default function AdminDashboard({ metrics, loadingMetrics }: AdminDashboa
         </div>
 
         <div className="bg-white border border-border rounded-3xl p-5 sm:p-6 shadow-card">
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
+          <div className="flex items-center justify-between mb-4 pb-3 border border-b">
             <h3 className="text-micro font-mono font-bold uppercase tracking-[0.25em] text-stone">AI Recommendation Favorites</h3>
             <Brain className="w-4 h-4 text-sage" />
           </div>
@@ -131,25 +157,21 @@ export default function AdminDashboard({ metrics, loadingMetrics }: AdminDashboa
             <DollarSign className="w-4 h-4 text-gold" />
             Budget Selections Breakdown
           </h3>
-          <div className="space-y-4 pt-2">
-            {['Small', 'Medium', 'Luxury'].map(tier => {
-              const found = metrics?.planning?.budgets?.find((b: any) => b.tier === tier);
-              const count = found ? found.count : 0;
-              const maxVal = Math.max(...(metrics?.planning?.budgets?.map((b: any) => b.count) || [1]));
-              const percentage = maxVal > 0 ? (count / maxVal) * 100 : 0;
-              return (
-                <div key={tier} className="space-y-1">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-stone font-medium">{tier} Tier</span>
-                    <span className="font-bold text-night">{count} planners</span>
-                  </div>
-                  <div className="w-full h-2 bg-secondary-surface rounded-full overflow-hidden">
-                    <div className="h-full rounded-full transition-all duration-1000 ease-out bg-gold" style={{ width: `${Math.max(5, percentage)}%` }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {budgetData.some(b => b.count > 0) ? (
+            <div className="h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={budgetData} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                  <XAxis dataKey="tier" tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: '#8c8c8c' }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e5e5e5' }} />
+                  <Bar dataKey="count" fill="#c8a66b" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p className="text-xs text-stone py-6 text-center">No budget data yet.</p>
+          )}
         </div>
 
         <div className="space-y-5">

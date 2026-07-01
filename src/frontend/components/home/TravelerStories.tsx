@@ -67,7 +67,7 @@ export default function TravelerStories({ tours, onSelectTour }: TravelerStories
   const findTourForStory = (story: any) => {
     return tours.find(t =>
       story.title.toLowerCase().includes(t.title.toLowerCase()) ||
-      t.location.toLowerCase().includes(typeof story.location === 'string' ? story.location.split(',')[0]?.toLowerCase() || '' : '')
+      (t.location || '').toLowerCase().includes(typeof story.location === 'string' ? story.location.split(',')[0]?.toLowerCase() || '' : '')
     );
   };
  

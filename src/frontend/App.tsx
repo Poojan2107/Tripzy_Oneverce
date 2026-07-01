@@ -128,6 +128,7 @@ export default function App() {
             signatureExperience: d.metadata?.signatureExperience,
             budgetRange: d.metadata?.budgetRange,
             accents: d.metadata?.accents || TOURS_DATA.find(t => t.id === (d.slug || d.id))?.accents,
+            status: d.status || 'PUBLISHED',
           }));
           setTours(mapped);
         } else {

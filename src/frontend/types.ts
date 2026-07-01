@@ -59,6 +59,7 @@ export interface Tour {
     primary: string;
     secondary: string;
   };
+  status?: 'DRAFT' | 'REVIEW' | 'PUBLISHED';
 }
 
 export interface BookingState {

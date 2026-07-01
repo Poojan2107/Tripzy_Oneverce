@@ -66,20 +66,41 @@ export default function AiPlannerView({
     }
   }, [selectedDestination]);
 
-  const getDestinationPrettyName = (destId: string | null | undefined): string => {
-    if (!destId) return 'Curated Destination';
-    if (allTours && allTours.length > 0) {
-      const tourObj = allTours.find(t => t.id === destId || t.dbId === destId);
-      if (tourObj) return tourObj.title;
-    }
-    const staticTour = TOURS_DATA.find(t => t.id === destId || t.dbId === destId);
-    if (staticTour) return staticTour.title;
-    if (destId.includes('-')) {
-      const part = destId.split('-')[0];
-      return part.charAt(0).toUpperCase() + part.slice(1);
-    }
-    return destId;
-  };
+const getDestinationPrettyName = (destId: string | null | undefined): string => {
+  if (!destId) return 'Curated Destination';
+  if (allTours && allTours.length > 0) {
+    const tourObj = allTours.find(t => t.id === destId || t.dbId === destId);
+    if (tourObj) return tourObj.title;
+  }
+  const staticTour = TOURS_DATA.find(t => t.id === destId || t.dbId === destId);
+  if (staticTour) return staticTour.title;
+  if (destId.includes('-')) {
+    const part = destId.split('-')[0];
+    return part.charAt(0).toUpperCase() + part.slice(1);
+  }
+  return destId;
+};
+
+const sanitizeUserInput = (input: string) => {
+  // 1. Remove control characters and null bytes
+  let sanitized = input.replace(/[\x00-\x1F\x7F]/g, "");
+  
+  // 2. Basic Prompt Injection shield: detect common hijack patterns
+  const injectionPatterns = [
+    /ignore (all )?previous instructions/i,
+    /forget (everything )?i told you/i,
+    /you are now a/i,
+    /system prompt/i,
+    /act as a/i,
+    /new instructions/i,
+  ];
+  
+  if (injectionPatterns.some(pattern => pattern.test(sanitized))) {
+    return "User requested a custom journey with specific preferences."; // Replace with generic safe string
+  }
+  
+  return sanitized.trim();
+};
 
   const [travelers, setTravelers] = useState<string | null>(null);
   const [mood, setMood] = useState<string | null>(null);
@@ -263,25 +284,25 @@ export default function AiPlannerView({
       const timeoutId = setTimeout(() => controller.abort(), 60000);
 
       try {
-        const res = await fetch('/api/plan-trip', {
-          signal: controller.signal,
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            destination: destName,
-            fromLocation: fromLocation || undefined,
-            guests: travelers === 'solo' ? 1 : travelers === 'couple' ? 2 : travelers === 'family' ? 4 : 6,
-            companion: travelers || 'solo',
-            budget: derivedBudgetTier,
-            budgetAmount: customBudgetAmount,
-            travelStyle: mood || 'Relaxation',
-            fromDate: new Date().toISOString(),
-            toDate: new Date(Date.now() + customDuration * 24 * 60 * 60 * 1000).toISOString(),
-            travelPace: 'Moderate',
-            interests: energy || '',
-            experience: notes,
-          })
-        });
+      const res = await fetch('/api/plan-trip', {
+        signal: controller.signal,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          destination: destName,
+          fromLocation: fromLocation ? sanitizeUserInput(fromLocation) : undefined,
+          guests: travelers === 'solo' ? 1 : travelers === 'couple' ? 2 : travelers === 'family' ? 4 : 6,
+          companion: travelers || 'solo',
+          budget: derivedBudgetTier,
+          budgetAmount: customBudgetAmount,
+          travelStyle: mood || 'Relaxation',
+          fromDate: new Date().toISOString(),
+          toDate: new Date(Date.now() + customDuration * 24 * 60 * 60 * 1000).toISOString(),
+          travelPace: 'Moderate',
+          interests: energy || '',
+          experience: sanitizeUserInput(notes),
+        })
+      });
         clearTimeout(timeoutId);
         
         if (!res.ok) {

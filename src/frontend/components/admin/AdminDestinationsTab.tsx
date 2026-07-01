@@ -10,9 +10,10 @@ interface AdminDestinationsTabProps {
   onEdit: (tour: Tour) => void;
   onDelete: (id: string, name: string) => void;
   onCreate: () => void;
+  onStatusChange: (id: string, status: 'DRAFT' | 'REVIEW' | 'PUBLISHED') => void;
 }
 
-export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange, onEdit, onDelete, onCreate }: AdminDestinationsTabProps) {
+export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange, onEdit, onDelete, onCreate, onStatusChange }: AdminDestinationsTabProps) {
   const filtered = tours.filter(t =>
     t.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     t.location.toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,6 +50,7 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                 <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Location</th>
                 <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Coordinates</th>
                 <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Attributes</th>
+                <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Status</th>
                 <th className="py-4 px-6 text-right text-micro font-mono tracking-[0.25em]">Budget Guide</th>
                 <th className="py-4 px-6 text-right text-micro font-mono tracking-[0.25em]">Actions</th>
               </tr>
@@ -92,6 +94,17 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                       <span className="bg-secondary-surface/30 text-stone px-2 py-0.5 rounded text-micro font-medium">{tour.difficulty}</span>
                     </div>
                   </td>
+                  <td className="py-4 px-6">
+                    <select
+                      value={tour.status || 'DRAFT'}
+                      onChange={(e) => onStatusChange(tour.id, e.target.value as any)}
+                      className="bg-background border border-border rounded-lg px-2 py-1 text-micro font-mono text-night uppercase"
+                    >
+                      <option value="DRAFT">Draft</option>
+                      <option value="REVIEW">Review</option>
+                      <option value="PUBLISHED">Published</option>
+                    </select>
+                  </td>
                   <td className="py-4 px-6 text-right font-semibold text-night font-mono text-small">{formatINR(tour.price)}</td>
                   <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                     <button onClick={() => onEdit(tour)} className="w-11 h-11 btn-ghost inline-flex items-center justify-center active:scale-95 cursor-pointer touch-action-manipulation select-none" title="Edit">
@@ -120,6 +133,7 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                   {tour.category === 'trending' && <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded text-micro font-bold uppercase">Trending</span>}
                   {tour.category === 'popular' && <span className="bg-teal/10 text-teal border border-teal/20 px-2 py-0.5 rounded text-micro font-bold uppercase">Featured</span>}
                   <span className="bg-secondary-surface/30 text-stone px-2 py-0.5 rounded text-micro font-medium">{tour.difficulty}</span>
+                  <span className="bg-night/5 text-night border border-night/10 px-2 py-0.5 rounded text-micro font-bold uppercase">{tour.status || 'DRAFT'}</span>
                 </div>
               </div>
               <div className="text-right shrink-0">

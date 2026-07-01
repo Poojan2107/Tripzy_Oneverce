@@ -15,6 +15,7 @@ interface ExperienceFormState {
   difficultyLevel: string;
   tags: string;
   featured: boolean;
+  status: 'DRAFT' | 'REVIEW' | 'PUBLISHED';
 }
 
 interface ExperienceFormActions {
@@ -29,6 +30,7 @@ interface ExperienceFormActions {
   setDifficultyLevel: (v: string) => void;
   setTags: (v: string) => void;
   setFeatured: (v: boolean) => void;
+  setStatus: (v: 'DRAFT' | 'REVIEW' | 'PUBLISHED') => void;
   setOpen: (v: boolean) => void;
 }
 
@@ -39,6 +41,32 @@ interface ExperienceFormProps {
 }
 
 export default function ExperienceForm({ state, actions, onSubmit }: ExperienceFormProps) {
+  const [imageQuality, setImageQuality] = React.useState<{ status: 'idle' | 'ok' | 'warn' | 'error'; message: string }>({ status: 'idle', message: '' });
+
+  React.useEffect(() => {
+    if (!state.featuredImage) {
+      setImageQuality({ status: 'idle', message: '' });
+      return;
+    }
+    const img = new Image();
+    img.onload = () => {
+      if (img.naturalWidth < 400 || img.naturalHeight < 300) {
+        setImageQuality({ status: 'warn', message: `Image is ${img.naturalWidth}x${img.naturalHeight}. Recommended minimum is 400x300 for card crops.` });
+      } else {
+        setImageQuality({ status: 'ok', message: `Image quality gate passed (${img.naturalWidth}x${img.naturalHeight}).` });
+      }
+    };
+    img.onerror = () => setImageQuality({ status: 'error', message: 'Image could not be loaded. Check the URL/path before publishing.' });
+    img.src = state.featuredImage;
+  }, [state.featuredImage]);
+
+  const genericPhrases = ['hidden gem', 'nestled in', 'tapestry of', 'vibrant culture', 'breathtaking views', 'unforgettable experience'];
+  const editorialWarnings = [
+    state.description.length > 0 && state.description.length < 150 ? 'Description is short. Include specific activities, moods, and what makes this experience unique.' : null,
+    genericPhrases.some((phrase) => state.description.toLowerCase().includes(phrase)) ? 'Description contains generic travel phrasing. Replace with concrete details.' : null,
+    !state.tags.includes(',') && state.tags.length > 0 ? 'Tags should include several comma-separated, specific search terms.' : null,
+  ].filter(Boolean) as string[];
+
   if (!state.isOpen) return null;
 
   return (
@@ -61,11 +89,11 @@ export default function ExperienceForm({ state, actions, onSubmit }: ExperienceF
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Experience Name *</label>
-              <input type="text" required placeholder="e.g. Himalayan Trek" value={state.name} onChange={(e) => actions.setName(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
+               <input type="text" required maxLength={100} placeholder="e.g. Himalayan Trek" value={state.name} onChange={(e) => actions.setName(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
               <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Icon Name *</label>
-              <input type="text" required placeholder="e.g. Mountain, Compass" value={state.icon} onChange={(e) => actions.setIcon(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
+               <input type="text" required maxLength={50} placeholder="e.g. Mountain, Compass" value={state.icon} onChange={(e) => actions.setIcon(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
           </div>
 
@@ -76,22 +104,22 @@ export default function ExperienceForm({ state, actions, onSubmit }: ExperienceF
             </div>
             <div className="space-y-1">
               <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Duration Range</label>
-              <input type="text" placeholder="e.g. 3-5 days" value={state.durationRange} onChange={(e) => actions.setDurationRange(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
+               <input type="text" maxLength={50} placeholder="e.g. 3-5 days" value={state.durationRange} onChange={(e) => actions.setDurationRange(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
               <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Difficulty Level</label>
-              <input type="text" placeholder="e.g. Advanced" value={state.difficultyLevel} onChange={(e) => actions.setDifficultyLevel(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
+               <input type="text" maxLength={50} placeholder="e.g. Advanced" value={state.difficultyLevel} onChange={(e) => actions.setDifficultyLevel(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="space-y-1">
               <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Connected Styles (commas)</label>
-              <input type="text" placeholder="Adventure, Wildlife" value={state.travelStyles} onChange={(e) => actions.setTravelStyles(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
+               <input type="text" maxLength={200} placeholder="Adventure, Wildlife" value={state.travelStyles} onChange={(e) => actions.setTravelStyles(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
             <div className="space-y-1">
               <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Search Tags (commas)</label>
-              <input type="text" placeholder="Winter, Sports" value={state.tags} onChange={(e) => actions.setTags(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
+               <input type="text" maxLength={200} placeholder="Winter, Sports" value={state.tags} onChange={(e) => actions.setTags(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
             </div>
           </div>
 
@@ -102,7 +130,31 @@ export default function ExperienceForm({ state, actions, onSubmit }: ExperienceF
 
           <div className="space-y-1">
             <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Description</label>
-            <textarea rows={4} placeholder="Experience description..." value={state.description} onChange={(e) => actions.setDescription(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none" />
+               <textarea maxLength={1000} rows={4} placeholder="Experience description..." value={state.description} onChange={(e) => actions.setDescription(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none" />
+            <p className="text-micro text-stone/60 text-right">{state.description.length}/1000</p>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Editorial Status</label>
+            <select value={state.status} onChange={(e) => actions.setStatus(e.target.value as any)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors appearance-none">
+              <option value="DRAFT">Draft - not public</option>
+              <option value="REVIEW">Ready for review</option>
+              <option value="PUBLISHED">Published - visible publicly</option>
+            </select>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-4 space-y-3">
+            <span className="text-micro font-mono font-bold text-gold uppercase tracking-[0.25em] block">Editorial Quality Gates</span>
+            <div className={`text-xs leading-relaxed ${imageQuality.status === 'ok' ? 'text-emerald-700' : imageQuality.status === 'error' ? 'text-rose-700' : 'text-stone'}`}>
+              {imageQuality.message || 'Add a featured image to run the visual quality check.'}
+            </div>
+            {editorialWarnings.length > 0 ? (
+              <ul className="space-y-2 text-xs text-amber-700 list-disc pl-4">
+                {editorialWarnings.map((warning) => <li key={warning}>{warning}</li>)}
+              </ul>
+            ) : (
+              <p className="text-xs text-emerald-700">Editorial tone checks passed.</p>
+            )}
           </div>
 
           <div className="flex items-center gap-2 pt-2">

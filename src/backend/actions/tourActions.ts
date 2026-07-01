@@ -14,7 +14,10 @@ async function verifyAdmin() {
 
 export async function getAllDestinations() {
   try {
+    const session = await auth();
+    const isAdmin = session?.user?.role === "ADMIN";
     const destinations = await db.destination.findMany({
+      where: isAdmin ? undefined : { status: "PUBLISHED" },
       include: {
         categories: true,
         experiences: true,
@@ -30,9 +33,12 @@ export async function getAllDestinations() {
 
 export async function getAllExperiences() {
   try {
+    const session = await auth();
+    const isAdmin = session?.user?.role === "ADMIN";
     const experiences = await db.experience.findMany({
+      where: isAdmin ? undefined : { status: "PUBLISHED" },
       include: {
-        destinations: true
+        destination: true
       }
     });
     return { success: true, data: experiences };
@@ -78,6 +84,7 @@ export async function createDestination(data: any) {
         travelStyles: (v.travelStyles as any) || [],
         activities: (v.activities as any) || [],
         tags: (v.tags as any) || [],
+        status: v.status || "DRAFT",
       }
     });
     return { success: true, data: destination };
@@ -118,10 +125,13 @@ export async function updateDestination(id: string, data: any) {
         culturalScore: v.culturalScore || 0,
         luxuryScore: v.luxuryScore || 0,
         familyScore: v.familyScore || 0,
+        foodScore: v.foodScore || 0,
+        hiddenGemScore: v.hiddenGemScore || 0,
         bestMonths: (v.bestMonths as any) || [],
         travelStyles: (v.travelStyles as any) || [],
         activities: (v.activities as any) || [],
         tags: (v.tags as any) || [],
+        status: v.status || "DRAFT",
       }
     });
     return { success: true, data: destination };
@@ -165,6 +175,7 @@ export async function createExperience(data: any) {
         difficultyLevel: v.difficultyLevel || null,
         tags: (v.tags as any) || [],
         featured: !!v.featured,
+        status: v.status || "DRAFT",
       }
     });
     return { success: true, data: experience };
@@ -196,6 +207,7 @@ export async function updateExperience(id: string, data: any) {
         difficultyLevel: v.difficultyLevel || null,
         tags: (v.tags as any) || [],
         featured: !!v.featured,
+        status: v.status || "DRAFT",
       }
     });
     return { success: true, data: experience };
@@ -215,5 +227,33 @@ export async function deleteExperience(id: string) {
   } catch (error: any) {
     console.error("Failed to delete experience:", error);
     return { success: false, error: "Failed to delete experience" };
+  }
+}
+
+export async function updateDestinationStatus(id: string, status: "DRAFT" | "REVIEW" | "PUBLISHED") {
+  try {
+    await verifyAdmin();
+    const destination = await db.destination.update({
+      where: { id },
+      data: { status },
+    });
+    return { success: true, data: destination };
+  } catch (error: any) {
+    console.error("Failed to update destination status:", error);
+    return { success: false, error: "Failed to update destination status" };
+  }
+}
+
+export async function updateExperienceStatus(id: string, status: "DRAFT" | "REVIEW" | "PUBLISHED") {
+  try {
+    await verifyAdmin();
+    const experience = await db.experience.update({
+      where: { id },
+      data: { status },
+    });
+    return { success: true, data: experience };
+  } catch (error: any) {
+    console.error("Failed to update experience status:", error);
+    return { success: false, error: "Failed to update experience status" };
   }
 }

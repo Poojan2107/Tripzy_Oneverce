@@ -79,9 +79,9 @@ model Destination {
   city            String
   region          String?
   description     String
-  images          Json
+  images          String[]
   metadata        Json?
-  price           Float?
+  price           Int
   duration        String?
   difficulty      String?
   groupSize       String?
@@ -107,16 +107,17 @@ model Destination {
   hiddenGemScore  Int      @default(0)
 
   // Curated Travel metadata
-  bestMonths      Json
-  travelStyles    Json
-  activities      Json
-  tags            Json
+  bestMonths      String[]
+  travelStyles    String[]
+  activities      String[]
+  tags            String[]
+  status          String   @default("PUBLISHED") // DRAFT, REVIEW, PUBLISHED
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
   categories      Category[]   @relation("DestinationCategories")
-  experiences     Experience[] @relation("DestinationExperiences")
+  experiences     Experience[]
   bookmarks       Bookmark[]
   reviews         Review[]
   viewEvents      ViewEvent[]
@@ -204,22 +205,26 @@ model Message {
 }
 
 model Experience {
-  id              String        @id @default(cuid())
-  name            String        @unique
-  slug            String        @unique
-  description     String?
-  featuredImage   String?
-  icon            String?
-  travelStyles    Json
-  estimatedBudget Float?
-  durationRange   String?
-  difficultyLevel String?
-  tags            Json
-  featured        Boolean       @default(false)
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id                String   @id @default(cuid())
+  name              String
+  slug              String   @unique
+  description       String?
+  featuredImage     String?
+  icon              String?
+  travelStyles      String[]
+  estimatedBudget   Int?
+  durationRange     String?
+  difficultyLevel   String?
+  tags              String[]
+  featured          Boolean  @default(false)
+  status            String   @default("PUBLISHED") // DRAFT, REVIEW, PUBLISHED
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  destinations    Destination[] @relation("DestinationExperiences")
+  destinationId     String?
+  destination       Destination? @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@index([destinationId])
 }
 
 model SavedItinerary {

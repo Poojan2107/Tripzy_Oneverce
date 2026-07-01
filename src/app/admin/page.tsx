@@ -40,6 +40,7 @@ export default function AdminPage() {
             moods: d.moods || [],
             latitude: d.latitude,
             longitude: d.longitude,
+            status: d.status || 'DRAFT',
           }));
           setTours(mapped);
         } else {

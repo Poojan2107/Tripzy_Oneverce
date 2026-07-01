@@ -348,13 +348,14 @@ export default function PlannerWizard({
             <div className="space-y-6 relative z-10">
               <div className="space-y-2">
                 <label className="text-meta font-mono text-night font-bold block">Departing From (Optional)</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Mumbai, Delhi, Bengaluru"
-                  value={fromLocation}
-                  onChange={(e) => onFromLocationChange(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans"
-                />
+                    <input
+                      type="text"
+                      maxLength={100}
+                      placeholder="e.g. Mumbai, Delhi, Bengaluru"
+                      value={fromLocation}
+                      onChange={(e) => onFromLocationChange(e.target.value)}
+                      className="w-full px-3 py-2.5 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans"
+                    />
               </div>
 
               <div className="space-y-3">
@@ -363,6 +364,7 @@ export default function PlannerWizard({
                 </label>
                 <textarea
                   rows={3}
+                  maxLength={500}
                   value={notes}
                   onChange={(e) => onNotesChange(e.target.value)}
                   placeholder="Describe what you want to seek... e.g. I want to experience sunset ghat ceremonies, visit ancient weaving guilds, try local street foods, and capture sunrise vistas, keeping the itinerary relaxed and photogenic."

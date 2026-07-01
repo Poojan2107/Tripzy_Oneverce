@@ -15,6 +15,7 @@ interface ExperienceItem {
   difficultyLevel: string | null;
   tags: any;
   featured: boolean;
+  status?: 'DRAFT' | 'REVIEW' | 'PUBLISHED';
 }
 
 interface AdminExperiencesTabProps {
@@ -25,9 +26,10 @@ interface AdminExperiencesTabProps {
   onEdit: (exp: ExperienceItem) => void;
   onDelete: (id: string, name: string) => void;
   onCreate: () => void;
+  onStatusChange: (id: string, status: 'DRAFT' | 'REVIEW' | 'PUBLISHED') => void;
 }
 
-export default function AdminExperiencesTab({ experiences, loadingExperiences, searchTerm, onSearchChange, onEdit, onDelete, onCreate }: AdminExperiencesTabProps) {
+export default function AdminExperiencesTab({ experiences, loadingExperiences, searchTerm, onSearchChange, onEdit, onDelete, onCreate, onStatusChange }: AdminExperiencesTabProps) {
   const filtered = experiences.filter(e =>
     e.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (e.description && e.description.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -74,6 +76,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                   <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Budget Target</th>
                   <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Duration</th>
                   <th className="py-4 px-6 text-center text-micro font-mono tracking-[0.25em]">Featured</th>
+                  <th className="py-4 px-6 text-micro font-mono tracking-[0.25em]">Status</th>
                   <th className="py-4 px-6 text-right text-micro font-mono tracking-[0.25em]">Actions</th>
                 </tr>
               </thead>
@@ -104,6 +107,17 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                       ) : (
                         <span className="text-stone/40">—</span>
                       )}
+                    </td>
+                    <td className="py-4 px-6">
+                      <select
+                        value={exp.status || 'DRAFT'}
+                        onChange={(e) => onStatusChange(exp.id, e.target.value as any)}
+                        className="bg-background border border-border rounded-lg px-2 py-1 text-micro font-mono text-night uppercase"
+                      >
+                        <option value="DRAFT">Draft</option>
+                        <option value="REVIEW">Review</option>
+                        <option value="PUBLISHED">Published</option>
+                      </select>
                     </td>
                     <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                       <button onClick={() => onEdit(exp)} className="w-11 h-11 btn-ghost inline-flex items-center justify-center active:scale-95 cursor-pointer touch-action-manipulation select-none" title="Edit">
@@ -145,6 +159,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                     <span className="text-micro text-stone">{exp.estimatedBudget ? formatINR(exp.estimatedBudget) : 'Flexible'}</span>
                     <span className="text-micro text-stone">{exp.durationRange || ''}</span>
                     {exp.featured && <span className="bg-gold/10 text-gold border border-gold/20 px-2 py-0.5 rounded-full text-micro font-bold">Featured</span>}
+                    <span className="bg-night/5 text-night border border-night/10 px-2 py-0.5 rounded-full text-micro font-bold uppercase">{exp.status || 'DRAFT'}</span>
                   </div>
                 </div>
                 <div className="flex gap-2 shrink-0">

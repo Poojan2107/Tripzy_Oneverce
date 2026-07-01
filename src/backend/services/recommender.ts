@@ -31,6 +31,7 @@ export async function rankDestinations(
   try {
     // 1. Fetch all destinations with their experiences
     const destinations = await db.destination.findMany({
+      where: { status: "PUBLISHED" },
       include: {
         experiences: true
       }

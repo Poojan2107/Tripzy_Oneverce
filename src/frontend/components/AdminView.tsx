@@ -13,7 +13,7 @@ import { getAdminUsers } from '../../backend/actions/adminActions';
 import {
   createDestination, updateDestination, deleteDestination,
   createExperience, updateExperience, deleteExperience,
-  getAllExperiences
+  getAllExperiences, updateDestinationStatus, updateExperienceStatus
 } from '../../backend/actions/tourActions';
 import AdminDashboard from './admin/AdminDashboard';
 import AdminUsersTab from './admin/AdminUsersTab';
@@ -35,6 +35,7 @@ interface ExperienceItem {
   difficultyLevel: string | null;
   tags: any;
   featured: boolean;
+  status?: 'DRAFT' | 'REVIEW' | 'PUBLISHED';
 }
 
 interface AdminViewProps {
@@ -54,12 +55,14 @@ const INIT_DEST_STATE = {
   bestMonths: 'May, June, September', travelStyles: 'Luxury, Cultural',
   activities: 'Sightseeing, Local Dining, Museum tours', tags: 'Historic, High-end',
   bannerImage: '/images/tours/varanasi-banner.jpg',
+  status: 'DRAFT' as 'DRAFT' | 'REVIEW' | 'PUBLISHED',
 };
 
 const INIT_EXP_STATE = {
   name: '', icon: 'Sparkles', description: '', featuredImage: '/images/cat-adventure.jpg',
   travelStyles: 'Adventure, Luxury', estimatedBudget: 0, durationRange: '5-8 days',
   difficultyLevel: 'Moderate', tags: 'Exclusive, Nature', featured: false,
+  status: 'DRAFT' as 'DRAFT' | 'REVIEW' | 'PUBLISHED',
 };
 
 export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTour, onDeleteTour }: AdminViewProps) {
@@ -110,6 +113,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
       bestMonths: 'October, November, December', travelStyles: 'Cultural, Adventure',
       activities: 'Guided walks, Local dining, Photography', tags: 'Historic, Scenic',
       bannerImage: tour.bannerImage,
+      status: tour.status || 'DRAFT',
     });
     setIsDestFormOpen(true);
   };
@@ -128,6 +132,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
       estimatedBudget: Math.round((e.estimatedBudget || 2000) * EXCHANGE_RATE),
       durationRange: e.durationRange || '5 days', difficultyLevel: e.difficultyLevel || 'Moderate',
       tags: tagsArr.join(', '), featured: e.featured,
+      status: e.status || 'DRAFT',
     });
     setIsExpFormOpen(true);
   };
@@ -154,6 +159,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
       travelStyles: dest.travelStyles.split(',').map(s => s.trim()).filter(Boolean),
       activities: dest.activities.split(',').map(a => a.trim()).filter(Boolean),
       tags: dest.tags.split(',').map(t => t.trim()).filter(Boolean),
+      status: dest.status,
     };
     try {
       const res = editingDest ? await updateDestination(editingDest.id, payload) : await createDestination(payload);
@@ -170,6 +176,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
           includedServices: (res.data.metadata as any)?.includedServices || [],
           tags: (res.data.tags as string[]) || [], moods: [], bestSeason: undefined,
           latitude: res.data.latitude || undefined, longitude: res.data.longitude || undefined,
+          status: (res.data.status as any) || 'DRAFT',
         };
         editingDest ? onUpdateTour(tour) : onAddTour(tour);
         alert(editingDest ? "Destination updated successfully." : "Destination created.");
@@ -188,6 +195,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
       estimatedBudget: Math.round(Number(exp.estimatedBudget) / EXCHANGE_RATE),
       durationRange: exp.durationRange, difficultyLevel: exp.difficultyLevel,
       tags: exp.tags.split(',').map(t => t.trim()).filter(Boolean), featured: exp.featured,
+      status: exp.status,
     };
     try {
       const res = editingExp ? await updateExperience(editingExp.id, payload) : await createExperience(payload);
@@ -206,6 +214,18 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
     if (confirm(`Delete experience "${name}"?`)) {
       try { const r = await deleteExperience(id); if (r.success) loadData(); else alert("Delete failed: " + r.error); } catch { alert("Failed to delete."); }
     }
+  };
+
+  const handleDestinationStatus = async (id: string, status: 'DRAFT' | 'REVIEW' | 'PUBLISHED') => {
+    const res = await updateDestinationStatus(id, status);
+    if (!res.success) alert(res.error || 'Could not update status.');
+    loadData();
+  };
+
+  const handleExperienceStatus = async (id: string, status: 'DRAFT' | 'REVIEW' | 'PUBLISHED') => {
+    const res = await updateExperienceStatus(id, status);
+    if (!res.success) alert(res.error || 'Could not update status.');
+    loadData();
   };
 
   const tabs = [
@@ -251,12 +271,12 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
         )}
         {activeTab === 'destinations' && (
           <motion.div key="destinations" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-            <AdminDestinationsTab tours={tours} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditDestForm} onDelete={handleDeleteDest} onCreate={openCreateDestForm} />
+            <AdminDestinationsTab tours={tours} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditDestForm} onDelete={handleDeleteDest} onCreate={openCreateDestForm} onStatusChange={handleDestinationStatus} />
           </motion.div>
         )}
         {activeTab === 'experiences' && (
           <motion.div key="experiences" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-            <AdminExperiencesTab experiences={experiences} loadingExperiences={loadingExperiences} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditExpForm} onDelete={handleDeleteExp} onCreate={openCreateExpForm} />
+            <AdminExperiencesTab experiences={experiences} loadingExperiences={loadingExperiences} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditExpForm} onDelete={handleDeleteExp} onCreate={openCreateExpForm} onStatusChange={handleExperienceStatus} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -287,6 +307,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
           setActivities: (v) => setDest(p => ({ ...p, activities: v })),
           setTags: (v) => setDest(p => ({ ...p, tags: v })),
           setBannerImage: (v) => setDest(p => ({ ...p, bannerImage: v })),
+          setStatus: (v) => setDest(p => ({ ...p, status: v })),
         }}
         onSubmit={handleSaveDest}
       />
@@ -305,6 +326,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
           setDifficultyLevel: (v) => setExp(p => ({ ...p, difficultyLevel: v })),
           setTags: (v) => setExp(p => ({ ...p, tags: v })),
           setFeatured: (v) => setExp(p => ({ ...p, featured: v })),
+          setStatus: (v) => setExp(p => ({ ...p, status: v })),
         }}
         onSubmit={handleSaveExp}
       />

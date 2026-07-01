@@ -27,17 +27,17 @@ interface DiscoveryMapProps {
 
 const createIcon = (tour: Tour, isActive: boolean, simple: boolean) => {
   let count = '10';
-  const id = tour.id.toLowerCase();
-  if (id.toLowerCase().includes('kashmir')) count = '12';
-  else if (id.toLowerCase().includes('jaisalmer') || id.toLowerCase().includes('udaipur')) count = '18';
-  else if (id.toLowerCase().includes('varanasi')) count = '14';
-  else if (id.toLowerCase().includes('kerala') || id.toLowerCase().includes('munnar')) count = '16';
-  else if (id.toLowerCase().includes('andaman')) count = '08';
-  else if (id.toLowerCase().includes('ladakh')) count = '12';
-  else if (id.toLowerCase().includes('cherrapunji')) count = '11';
-  else if (id.toLowerCase().includes('hampi')) count = '09';
-  else if (id.toLowerCase().includes('goa')) count = '08';
-  else if (id.toLowerCase().includes('kutch')) count = '10';
+  const id = (tour.id || '').toLowerCase();
+  if (id.includes('kashmir')) count = '12';
+  else if (id.includes('jaisalmer') || id.includes('udaipur')) count = '18';
+  else if (id.includes('varanasi')) count = '14';
+  else if (id.includes('kerala') || id.includes('munnar')) count = '16';
+  else if (id.includes('andaman')) count = '08';
+  else if (id.includes('ladakh')) count = '12';
+  else if (id.includes('cherrapunji')) count = '11';
+  else if (id.includes('hampi')) count = '09';
+  else if (id.includes('goa')) count = '08';
+  else if (id.includes('kutch')) count = '10';
 
   return L.divIcon({
     className: `glowing-marker-teal ${isActive ? 'active' : ''}`,
@@ -46,7 +46,7 @@ const createIcon = (tour: Tour, isActive: boolean, simple: boolean) => {
         ${isActive ? '<div class="absolute inset-0 rounded-full bg-[#18B6C9] opacity-40 animate-ping"></div>' : ''}
         <span class="text-micro font-bold font-sans z-10">${count}</span>
         <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded bg-night text-white font-mono text-micro uppercase tracking-wider whitespace-nowrap border border-border z-10">
-          ${tour.title.toLowerCase().slice(0, 10)}
+          ${(tour.title || '').toLowerCase().slice(0, 10)}
         </div>
       </div>
     `,
@@ -181,9 +181,9 @@ export default function DiscoveryMap({
     const tempMarkers: { [key: string]: L.Marker } = {};
 
     tours.forEach((tour) => {
-      const lat = tour.latitude;
-      const lng = tour.longitude;
-      if (!lat || !lng) return;
+      const lat = parseFloat(tour.latitude as any);
+      const lng = parseFloat(tour.longitude as any);
+      if (isNaN(lat) || isNaN(lng)) return;
 
       const marker = L.marker([lat, lng], { 
         icon: createIcon(tour, tour.id === activeTourId, isMobile) 

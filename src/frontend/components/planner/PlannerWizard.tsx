@@ -185,10 +185,10 @@ export default function PlannerWizard({
                       <button
                         key={tour.id}
                         onClick={() => onDestinationChange(tour.id)}
-                        className={`btn-ghost group p-2.5 text-left cursor-pointer flex flex-col justify-between aspect-[4/3] relative overflow-hidden outline-none ${
+                        className={`group p-2.5 text-left cursor-pointer flex flex-col justify-between aspect-[4/3] relative overflow-hidden rounded-lg border outline-none transition-all duration-300 ${
                           isSelected
-                            ? 'border-gold shadow-[0_0_15px_rgba(244,182,61,0.25)]'
-                            : 'border-border/30 hover:border-border/80'
+                            ? 'border-gold bg-gold/5 shadow-[0_0_15px_rgba(244,182,61,0.25)]'
+                            : 'border-border/30 hover:border-gold/50 bg-surface'
                         }`}
                       >
                         <img

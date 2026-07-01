@@ -154,6 +154,84 @@ const sanitizeUserInput = (input: string) => {
     }
   }, [loadedItinerary]);
 
+  useEffect(() => {
+    if (session) {
+      const pendingDataStr = localStorage.getItem('tripzy_pending_save_itinerary');
+      if (pendingDataStr) {
+        try {
+          const pendingData = JSON.parse(pendingDataStr);
+          localStorage.removeItem('tripzy_pending_save_itinerary');
+          
+          if (pendingData && pendingData.itineraryResult) {
+            setItineraryResult(pendingData.itineraryResult);
+            setCustomBudgetAmount(pendingData.customBudgetAmount || 15000);
+            setCustomDuration(pendingData.customDuration || 5);
+            setTravelers(pendingData.travelers);
+            setMood(pendingData.mood);
+            setNotes(pendingData.notes || "");
+            setSelectedDestination(pendingData.selectedDestination);
+            setStep(5);
+            setHasStarted(true);
+
+            (async () => {
+              setSaving(true);
+              try {
+                const destId = pendingData.itineraryResult.destinationId || pendingData.selectedDestination || '';
+                const destPrettyName = getDestinationPrettyName(destId);
+                const result = await saveItineraryAction({
+                  title: `Journal: Escape to ${destPrettyName}`,
+                  destination: destId,
+                  budget: pendingData.customBudgetAmount || 15000,
+                  duration: pendingData.customDuration || 5,
+                  itinerary: {
+                    days: pendingData.itineraryResult.itinerary || [],
+                    costs: pendingData.itineraryResult.costs || {},
+                    weather: pendingData.itineraryResult.weather || {},
+                    nearbyPlaces: pendingData.itineraryResult.nearbyPlaces || [],
+                    notes: pendingData.notes || "",
+                    recommendationScore: pendingData.itineraryResult.recommendationScore || 96,
+                    recommendationReasoning: pendingData.itineraryResult.recommendationReasoning || "",
+                  },
+                });
+                if (result.success) {
+                  setSavedId(result.id || 'saved');
+                  toast("Journey successfully synced & saved to your Passport!", "success");
+                  if (onSaveItinerary) {
+                    onSaveItinerary({
+                      id: result.id,
+                      title: `Journal: Escape to ${destPrettyName}`,
+                      destination: destId,
+                      budget: pendingData.customBudgetAmount || 15000,
+                      duration: pendingData.customDuration || 5,
+                      itinerary: {
+                        days: pendingData.itineraryResult.itinerary || [],
+                        costs: pendingData.itineraryResult.costs || {},
+                        weather: pendingData.itineraryResult.weather || {},
+                        nearbyPlaces: pendingData.itineraryResult.nearbyPlaces || [],
+                        notes: pendingData.notes || "",
+                        recommendationScore: pendingData.itineraryResult.recommendationScore || 96,
+                        recommendationReasoning: pendingData.itineraryResult.recommendationReasoning || "",
+                      },
+                      destinationName: destPrettyName,
+                    });
+                  }
+                } else {
+                  toast(result.error || "Failed to save synced journey.", "error");
+                }
+              } catch (saveErr) {
+                console.error("Auto save failed:", saveErr);
+              } finally {
+                setSaving(false);
+              }
+            })();
+          }
+        } catch (e) {
+          console.error("Failed to process pending save:", e);
+        }
+      }
+    }
+  }, [session]);
+
   const handleNext = () => {
     if (step < totalSteps) {
       setStep(prev => prev + 1);
@@ -385,6 +463,17 @@ const sanitizeUserInput = (input: string) => {
 
   const handleContinueWithGoogle = () => {
     setShowAuthModal(false);
+    if (itineraryResult && !itineraryResult.error) {
+      localStorage.setItem('tripzy_pending_save_itinerary', JSON.stringify({
+        itineraryResult,
+        customBudgetAmount,
+        customDuration,
+        travelers,
+        mood,
+        notes,
+        selectedDestination
+      }));
+    }
     signIn('google', { callbackUrl: window.location.href });
   };
 

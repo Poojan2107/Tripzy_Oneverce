@@ -111,15 +111,20 @@ export default function ExploreView({
     let list = tours;
     if (activeCategory && activeCategory !== 'all') {
       list = list.filter(t =>
-        t.moods.some(m => m.toLowerCase() === activeCategory.toLowerCase()) ||
-        (t.tags || []).some(tag => tag.toLowerCase() === activeCategory.toLowerCase())
+        (t.moods || []).some(m => {
+          const s = typeof m === 'string' ? m : (m as any)?.mood?.name || (m as any)?.moodId || '';
+          return s.toLowerCase() === activeCategory.toLowerCase();
+        }) ||
+        (t.tags || []).some(tag => tag && typeof tag === 'string' && tag.toLowerCase() === activeCategory.toLowerCase())
       );
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       list = list.filter(t =>
-        t.title.toLowerCase().includes(q) || t.location.toLowerCase().includes(q) ||
-        t.subtitle.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)
+        (t.title || '').toLowerCase().includes(q) || 
+        (t.location || '').toLowerCase().includes(q) ||
+        (t.subtitle || '').toLowerCase().includes(q) || 
+        (t.description || '').toLowerCase().includes(q)
       );
     }
     return list;

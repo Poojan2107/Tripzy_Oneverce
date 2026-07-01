@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Sparkles, Eye, Edit3 } from 'lucide-react';
 import { Tour } from '../../types';
 import RichTextRenderer from '../ui/RichTextRenderer';
+import ImageUploader from '../ui/ImageUploader';
 
 interface DestinationFormState {
   isOpen: boolean;
@@ -221,10 +222,12 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Banner Image URL *</label>
-            <input type="url" required placeholder="/images/tours/varanasi-banner.jpg" value={state.bannerImage} onChange={(e) => actions.setBannerImage(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
-          </div>
+          <ImageUploader
+            currentUrl={state.bannerImage}
+            onUpload={actions.setBannerImage}
+            endpoint="destinationImage"
+            label="Banner Image *"
+          />
 
           <div className="space-y-1">
             <div className="flex items-center justify-between">

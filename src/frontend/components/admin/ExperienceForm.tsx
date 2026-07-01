@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Sparkles, Eye, Edit3 } from 'lucide-react';
 import { EXCHANGE_RATE } from '../../utils/currency';
 import RichTextRenderer from '../ui/RichTextRenderer';
+import ImageUploader from '../ui/ImageUploader';
 
 interface ExperienceFormState {
   isOpen: boolean;
@@ -134,10 +135,12 @@ export default function ExperienceForm({ state, actions, onSubmit }: ExperienceF
             </div>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Featured Image URL *</label>
-            <input type="url" required placeholder="/images/cat-adventure.jpg" value={state.featuredImage} onChange={(e) => actions.setFeaturedImage(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
-          </div>
+          <ImageUploader
+            currentUrl={state.featuredImage}
+            onUpload={actions.setFeaturedImage}
+            endpoint="experienceImage"
+            label="Featured Image *"
+          />
 
           <div className="space-y-1">
             <div className="flex items-center justify-between">

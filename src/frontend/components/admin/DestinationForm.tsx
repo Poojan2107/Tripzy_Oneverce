@@ -1,6 +1,7 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, Sparkles, Eye, Edit3 } from 'lucide-react';
 import { Tour } from '../../types';
+import RichTextRenderer from '../ui/RichTextRenderer';
 
 interface DestinationFormState {
   isOpen: boolean;
@@ -28,6 +29,9 @@ interface DestinationFormState {
   tags: string;
   bannerImage: string;
   status: 'DRAFT' | 'REVIEW' | 'PUBLISHED';
+  metaTitle: string;
+  metaDescription: string;
+  ogImage: string;
 }
 
 interface DestinationFormActions {
@@ -55,6 +59,9 @@ interface DestinationFormActions {
   setTags: (v: string) => void;
   setBannerImage: (v: string) => void;
   setStatus: (v: 'DRAFT' | 'REVIEW' | 'PUBLISHED') => void;
+  setMetaTitle: (v: string) => void;
+  setMetaDescription: (v: string) => void;
+  setOgImage: (v: string) => void;
   setOpen: (v: boolean) => void;
 }
 
@@ -66,6 +73,8 @@ interface DestinationFormProps {
 
 export default function DestinationForm({ state, actions, onSubmit }: DestinationFormProps) {
   const [imageQuality, setImageQuality] = React.useState<{ status: 'idle' | 'ok' | 'warn' | 'error'; message: string }>({ status: 'idle', message: '' });
+  const [showPreview, setShowPreview] = React.useState(false);
+  const [isGenerating, setIsGenerating] = React.useState(false);
 
   React.useEffect(() => {
     if (!state.bannerImage) {
@@ -90,6 +99,16 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
     genericPhrases.some((phrase) => state.description.toLowerCase().includes(phrase)) ? 'Description contains generic travel phrasing. Replace with concrete local details to avoid AI-slop tone.' : null,
     !state.activities.includes(',') ? 'Activities should include several comma-separated, specific activities.' : null,
   ].filter(Boolean) as string[];
+
+  const handleGenerateDescription = async () => {
+    setIsGenerating(true);
+    const { generateDestinationDescription } = await import('../../../backend/lib/generate');
+    const result = await generateDestinationDescription(state.name, state.city, state.country, state.tags);
+    if (result) actions.setDescription(result);
+    setIsGenerating(false);
+  };
+
+  const previewContent = showPreview ? <RichTextRenderer content={state.description} prose="base" /> : null;
 
   if (!state.isOpen) return null;
 
@@ -208,8 +227,26 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
           </div>
 
           <div className="space-y-1">
-            <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Description *</label>
-             <textarea required maxLength={2000} rows={4} placeholder="Destination description..." value={state.description} onChange={(e) => actions.setDescription(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none" />
+            <div className="flex items-center justify-between">
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Description *</label>
+              <div className="flex gap-1.5">
+                <button type="button" onClick={() => setShowPreview(p => !p)} className="px-2.5 py-1 rounded-md text-micro font-bold flex items-center gap-1 border border-border bg-white hover:bg-secondary-surface transition-colors cursor-pointer">
+                  {showPreview ? <Edit3 className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                  {showPreview ? 'edit' : 'preview'}
+                </button>
+                <button type="button" disabled={isGenerating || !state.name} onClick={handleGenerateDescription} className="px-2.5 py-1 rounded-md text-micro font-bold flex items-center gap-1 bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-colors disabled:opacity-40 cursor-pointer">
+                  <Sparkles className={`w-3 h-3 ${isGenerating ? 'animate-pulse' : ''}`} />
+                  {isGenerating ? 'generating...' : 'AI generate'}
+                </button>
+              </div>
+            </div>
+            {showPreview ? (
+              <div className="min-h-[120px] p-3.5 bg-white border border-border rounded-xl text-xs leading-relaxed">
+                {previewContent || <span className="text-stone/50">Nothing to preview yet.</span>}
+              </div>
+            ) : (
+              <textarea required maxLength={2000} rows={4} placeholder="Destination description... Supports **markdown** formatting." value={state.description} onChange={(e) => actions.setDescription(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none" />
+            )}
             <p className="text-micro text-stone/60 text-right">{state.description.length}/2000</p>
           </div>
 
@@ -220,6 +257,22 @@ export default function DestinationForm({ state, actions, onSubmit }: Destinatio
               <option value="REVIEW">Ready for review</option>
               <option value="PUBLISHED">Published - visible publicly</option>
             </select>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-white p-4 space-y-3">
+            <span className="text-micro font-mono font-bold text-gold uppercase tracking-[0.25em] block">SEO Metadata</span>
+            <div className="space-y-1">
+              <label className="text-micro font-medium text-stone">Meta Title (max 70 chars)</label>
+              <input type="text" maxLength={70} placeholder="e.g. Varanasi Travel Guide – Travebie" value={state.metaTitle} onChange={(e) => actions.setMetaTitle(e.target.value)} className="w-full px-3 py-2.5 bg-white border border-border rounded-lg text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-micro font-medium text-stone">Meta Description (max 160 chars)</label>
+              <textarea maxLength={160} rows={2} placeholder="A concise summary for search results..." value={state.metaDescription} onChange={(e) => actions.setMetaDescription(e.target.value)} className="w-full px-3 py-2.5 bg-white border border-border rounded-lg text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-micro font-medium text-stone">OG Image URL (social share)</label>
+              <input type="url" maxLength={500} placeholder="/images/og/varanasi.jpg" value={state.ogImage} onChange={(e) => actions.setOgImage(e.target.value)} className="w-full px-3 py-2.5 bg-white border border-border rounded-lg text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors" />
+            </div>
           </div>
 
           <div className="rounded-2xl border border-border bg-white p-4 space-y-3">

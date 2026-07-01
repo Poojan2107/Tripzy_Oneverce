@@ -44,7 +44,7 @@ export default function CategoryScroller({ onQuickCategoryClick }: CategoryScrol
                 <motion.button
                   key={cat.id}
                   onClick={() => onQuickCategoryClick(cat.id)}
-                  className="btn-ghost snap-card flex-shrink-0 w-[min(18rem,75vw)] h-44 relative rounded-lg overflow-hidden cursor-pointer group text-left"
+                  className="btn-ghost snap-card flex-shrink-0 w-[min(18rem,75vw)] h-56 md:h-64 relative rounded-lg overflow-hidden cursor-pointer group text-left"
                   initial={{ opacity: 0, x: 30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
@@ -52,7 +52,7 @@ export default function CategoryScroller({ onQuickCategoryClick }: CategoryScrol
                   whileHover={{ y: -6 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  <Image src={cat.image} alt={cat.label} fill className="object-cover transition-all duration-700 group-hover:scale-105" sizes="(max-width: 768px) 75vw, 18rem" />
+                  <Image src={cat.image} alt={cat.label} fill className="object-cover group-hover:scale-105" sizes="(max-width: 768px) 75vw, 18rem" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
  

@@ -64,8 +64,6 @@ function CarouselCard({
 
   const handleMouseLeave = useCallback(() => { x.set(0.5); y.set(0.5); }, [x, y]);
 
-  const MotionImage = motion(Image);
-
   const variants = {
     left: { x: '-35%', y: 0, z: -100, rotateY: 18, scale: 0.80, opacity: 0.45, zIndex: 10 },
     center: { x: '0%', y: 0, z: 20, rotateY: 0, scale: 1.08, opacity: 1, zIndex: 30 },
@@ -104,15 +102,13 @@ function CarouselCard({
       >
         <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">
           <div className="h-[55%] w-full overflow-hidden relative bg-secondary-surface">
-            <MotionImage
+            <Image
               src={slide.bannerImage}
               alt={slide.title}
               fill
               className="object-cover"
               sizes="320px"
-              style={{ scale: isActive ? 1.05 : 1 }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              animate={isActive ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+              priority={isActive}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
             <span className={`absolute top-4 left-4 px-3 py-1 rounded-sm text-caption font-mono font-bold text-white uppercase border border-white/20 backdrop-blur-md shadow-sm bg-opacity-80 ${slide.badgeColor}`}>{slide.category}</span>
@@ -255,28 +251,30 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
 
   return (
     <section className="relative w-full min-h-screen overflow-hidden bg-night">
-      {/* Full-bleed background per slide */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`bg-${activeIndex}`}
-          className="absolute inset-0 relative"
-          initial={{ opacity: 0, scale: 1.1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
-        >
-          <Image
-            src={activeSlide.bannerImage}
-            alt=""
-            fill
-            className="object-cover"
-            sizes="100vw"
-          />
-          <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass}`} />
-          <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-night/60 via-transparent to-night/30" />
-        </motion.div>
-      </AnimatePresence>
+      {/* Full-bleed background per slide — crossfade without remount */}
+      <div className="absolute inset-0">
+        {[activeIndex - 1, activeIndex, activeIndex + 1].filter(i => i >= 0 && i < HERO_CAROUSEL_ITEMS.length).map(i => (
+          <motion.div
+            key={i}
+            className="absolute inset-0"
+            initial={false}
+            animate={{ opacity: i === activeIndex ? 1 : 0 }}
+            transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
+          >
+            <Image
+              src={HERO_CAROUSEL_ITEMS[i].bannerImage}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority={i === activeIndex}
+            />
+            <div className={`absolute inset-0 bg-gradient-to-br ${TAG_GRADIENTS[HERO_CAROUSEL_ITEMS[i].tag] || TAG_GRADIENTS.Nature}`} />
+            <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-night/60 via-transparent to-night/30" />
+          </motion.div>
+        ))}
+      </div>
 
       {/* Vignette overlay */}
       <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.4)] pointer-events-none" />

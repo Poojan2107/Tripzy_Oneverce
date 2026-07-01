@@ -74,7 +74,7 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                   <div onClick={() => onSelectTour(tour)} className={`group cursor-pointer text-left ${!isEven ? 'md:mt-16' : ''}`}>
                     {/* Image container with editorial overlay */}
                     <div className="relative min-h-[380px] md:min-h-[420px] rounded-lg overflow-hidden shadow-md bg-secondary-surface mb-0">
-                      <Image src={tour.bannerImage} alt={tour.title} fill className="object-cover transition-all duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" onError={() => {}} />
+                      <Image src={tour.bannerImage} alt={tour.title} fill className="object-cover group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" />
  
                       {/* Dark gradient overlay at bottom for text legibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />

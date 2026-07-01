@@ -39,14 +39,16 @@ export default function PassportMap({
     const list = new Map<string, { id: string; title: string; bannerImage: string; location: string; lat: number; lng: number; tour: Tour }>();
     
     wishlistTours.forEach(tour => {
-      if (tour.latitude && tour.longitude) {
+      const lat = parseFloat(tour.latitude as any);
+      const lng = parseFloat(tour.longitude as any);
+      if (!isNaN(lat) && !isNaN(lng)) {
         list.set(tour.id, {
           id: tour.id,
           title: tour.title,
           bannerImage: tour.bannerImage,
           location: tour.location,
-          lat: tour.latitude,
-          lng: tour.longitude,
+          lat,
+          lng,
           tour
         });
       }
@@ -54,16 +56,20 @@ export default function PassportMap({
 
     savedItineraries.forEach(itin => {
       const tour = allTours.find(t => t.id === itin.destination || t.dbId === itin.destination) || TOURS_DATA.find(t => t.id === itin.destination);
-      if (tour && tour.latitude && tour.longitude) {
-        list.set(tour.id, {
-          id: tour.id,
-          title: tour.title,
-          bannerImage: tour.bannerImage,
-          location: tour.location,
-          lat: tour.latitude,
-          lng: tour.longitude,
-          tour
-        });
+      if (tour) {
+        const lat = parseFloat(tour.latitude as any);
+        const lng = parseFloat(tour.longitude as any);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          list.set(tour.id, {
+            id: tour.id,
+            title: tour.title,
+            bannerImage: tour.bannerImage,
+            location: tour.location,
+            lat,
+            lng,
+            tour
+          });
+        }
       }
     });
 

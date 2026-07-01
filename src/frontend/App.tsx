@@ -34,8 +34,25 @@ const TripsWishlistView = dynamic(() => import('./components/TripsWishlistView')
     </div>
   )
 });
-
 import { useAtmosphere } from './utils/AtmosphereContext';
+
+function LocalTabErrorFallback({ sectionName, onReset }: { sectionName: string; onReset: () => void }) {
+  return (
+    <div className="w-full min-h-[50dvh] flex flex-col items-center justify-center p-6 text-center bg-background border border-border/40 rounded-2xl my-8 max-w-lg mx-auto shadow-sm">
+      <Compass className="w-10 h-10 text-gold mb-3 animate-pulse" />
+      <h3 className="font-display text-lg text-night font-light lowercase mb-1">could not load {sectionName}</h3>
+      <p className="text-xs text-muted/65 font-light mb-4 max-w-sm">
+        An unexpected rendering issue occurred in this section. The rest of the application remains fully functional.
+      </p>
+      <button
+        onClick={onReset}
+        className="px-4 py-2 bg-night text-white font-mono text-micro uppercase tracking-wider rounded-lg hover:bg-night/90 transition-all cursor-pointer"
+      >
+        Reload Section
+      </button>
+    </div>
+  );
+}
 
 export default function App() {
   const { setActiveLocation } = useAtmosphere();
@@ -349,31 +366,36 @@ export default function App() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
                 >
-                  <HomeView
-                    tours={displayTours}
-                    wishlistIds={wishlistIds}
-                    loadingDestinations={loadingDestinations}
-                    onSearchClick={() => setSearchModalOpen(true)}
-                    onQuickCategoryClick={handleQuickCategoryClick}
-                    onSelectTour={handleSelectTour}
-                    onToggleWishlist={handleToggleWishlist}
-                    onGoToExplore={() => {
-                      setExploreCategoryFilter('all');
-                      setCurrentTab('explore');
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                      window.history.pushState(null, '', '#explore');
-                    }}
-                    onGoToPlanner={() => {
-                      setCurrentTab('ai-planner');
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                      window.history.pushState(null, '', '#ai-planner');
-                    }}
-                    onGoToPassport={() => {
-                      setCurrentTab('saved');
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                      window.history.pushState(null, '', '#saved');
-                    }}
-                  />
+                  <ErrorBoundary
+                    key={`err-home-${isClient}`}
+                    fallback={<LocalTabErrorFallback sectionName="homepage" onReset={() => window.location.reload()} />}
+                  >
+                    <HomeView
+                      tours={displayTours}
+                      wishlistIds={wishlistIds}
+                      loadingDestinations={loadingDestinations}
+                      onSearchClick={() => setSearchModalOpen(true)}
+                      onQuickCategoryClick={handleQuickCategoryClick}
+                      onSelectTour={handleSelectTour}
+                      onToggleWishlist={handleToggleWishlist}
+                      onGoToExplore={() => {
+                        setExploreCategoryFilter('all');
+                        setCurrentTab('explore');
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        window.history.pushState(null, '', '#explore');
+                      }}
+                      onGoToPlanner={() => {
+                        setCurrentTab('ai-planner');
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        window.history.pushState(null, '', '#ai-planner');
+                      }}
+                      onGoToPassport={() => {
+                        setCurrentTab('saved');
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        window.history.pushState(null, '', '#saved');
+                      }}
+                    />
+                  </ErrorBoundary>
                 </motion.div>
               )}
 
@@ -385,14 +407,19 @@ export default function App() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
                 >
-                  <ExploreView
-                    tours={displayTours}
-                    onTourSelect={handleSelectTour}
-                    onToggleWishlist={handleToggleWishlist}
-                    wishlistIds={wishlistIds}
-                    initialCategoryFilter={exploreCategoryFilter}
-                    loading={loadingDestinations}
-                  />
+                  <ErrorBoundary
+                    key={`err-explore-${isClient}`}
+                    fallback={<LocalTabErrorFallback sectionName="story atlas" onReset={() => window.location.reload()} />}
+                  >
+                    <ExploreView
+                      tours={displayTours}
+                      onTourSelect={handleSelectTour}
+                      onToggleWishlist={handleToggleWishlist}
+                      wishlistIds={wishlistIds}
+                      initialCategoryFilter={exploreCategoryFilter}
+                      loading={loadingDestinations}
+                    />
+                  </ErrorBoundary>
                 </motion.div>
               )}
 
@@ -404,12 +431,17 @@ export default function App() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
                 >
-                  <AiPlannerView
-                    onSaveItinerary={handleSaveItinerary}
-                    loadedItinerary={loadedItinerary}
-                    onClearLoadedItinerary={() => setLoadedItinerary(null)}
-                    allTours={tours}
-                  />
+                  <ErrorBoundary
+                    key={`err-planner-${isClient}`}
+                    fallback={<LocalTabErrorFallback sectionName="ai planner" onReset={() => window.location.reload()} />}
+                  >
+                    <AiPlannerView
+                      onSaveItinerary={handleSaveItinerary}
+                      loadedItinerary={loadedItinerary}
+                      onClearLoadedItinerary={() => setLoadedItinerary(null)}
+                      allTours={tours}
+                    />
+                  </ErrorBoundary>
                 </motion.div>
               )}
 
@@ -421,31 +453,36 @@ export default function App() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.15 }}
                 >
-                  <TripsWishlistView
-                    wishlistTours={wishlistTours}
-                    savedItineraries={savedItineraries}
-                    onTourSelect={handleSelectTour}
-                    onRemoveWishlist={handleToggleWishlist}
-                    onNavigateExplore={() => {
-                      setExploreCategoryFilter('all');
-                      setCurrentTab('explore');
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                      window.history.pushState(null, '', '#explore');
-                    }}
-                    onNavigatePlanner={() => {
-                      setCurrentTab('ai-planner');
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                      window.history.pushState(null, '', '#ai-planner');
-                    }}
-                    onDeleteItinerary={handleDeleteItinerary}
-                    onInspectItinerary={(itin) => {
-                      setLoadedItinerary(itin);
-                      setCurrentTab('ai-planner');
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                      window.history.pushState(null, '', '#ai-planner');
-                    }}
-                    allTours={tours}
-                  />
+                  <ErrorBoundary
+                    key={`err-saved-${isClient}`}
+                    fallback={<LocalTabErrorFallback sectionName="explorer passport" onReset={() => window.location.reload()} />}
+                  >
+                    <TripsWishlistView
+                      wishlistTours={wishlistTours}
+                      savedItineraries={savedItineraries}
+                      onTourSelect={handleSelectTour}
+                      onRemoveWishlist={handleToggleWishlist}
+                      onNavigateExplore={() => {
+                        setExploreCategoryFilter('all');
+                        setCurrentTab('explore');
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        window.history.pushState(null, '', '#explore');
+                      }}
+                      onNavigatePlanner={() => {
+                        setCurrentTab('ai-planner');
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        window.history.pushState(null, '', '#ai-planner');
+                      }}
+                      onDeleteItinerary={handleDeleteItinerary}
+                      onInspectItinerary={(itin) => {
+                        setLoadedItinerary(itin);
+                        setCurrentTab('ai-planner');
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        window.history.pushState(null, '', '#ai-planner');
+                      }}
+                      allTours={tours}
+                    />
+                  </ErrorBoundary>
                 </motion.div>
               )}
             </div>

@@ -26,8 +26,8 @@ export default function EmptyPassportState({ onNavigate, type }: EmptyPassportSt
     },
     itineraries: {
       tag: "journey collection",
-      title: "your passport awaits its first chapter",
-      desc: "Begin exploring India and start collecting stories.",
+      title: "no custom journeys archived yet",
+      desc: "Consult our AI travel companion to design your first custom day-by-day odyssey.",
       btnText: "Craft First Journey",
       illustration: (
         <svg width="64" height="64" viewBox="0 0 64 64" fill="none" className="text-teal/35">
@@ -42,7 +42,7 @@ export default function EmptyPassportState({ onNavigate, type }: EmptyPassportSt
   }[type];
 
   return (
-    <div className="text-center py-16 bg-white border border-border/70 rounded-lg max-w-lg mx-auto p-8 shadow-md relative overflow-hidden w-full">
+    <div className="text-center py-16 bg-white border border-border/70 rounded-2xl max-w-lg mx-auto p-8 shadow-md relative overflow-hidden w-full">
       <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.02] to-teal/[0.02] pointer-events-none" />
       
       <div className="relative w-20 h-20 mx-auto mb-6 flex items-center justify-center bg-background rounded-md border border-border/20 transition-transform duration-500 hover:rotate-2">

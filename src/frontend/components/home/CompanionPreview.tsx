@@ -52,7 +52,7 @@ export default function CompanionPreview({ onGoToPlanner }: { onGoToPlanner?: ()
   }, []);
  
   return (
-    <section className="py-16 md:py-24 bg-background border-t border-border/15">
+    <section className="py-16 md:py-20 bg-white border-t border-border/15">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Messaging mockup */}

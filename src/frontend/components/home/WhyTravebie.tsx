@@ -51,7 +51,7 @@ function Card({ item, index }: { item: typeof items[0]; index: number }) {
  
 export default function WhyTravebie() {
   return (
-    <section className="py-16 md:py-24 border-t border-border/30 bg-white">
+    <section className="py-16 md:py-20 border-t border-border/30 bg-background">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {items.map((item, i) => <Card key={i} item={item} index={i} />)}

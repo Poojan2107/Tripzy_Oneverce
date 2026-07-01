@@ -35,7 +35,7 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
   const chapterNumbers = ['01', '02', '03', '04'];
 
   return (
-    <section className="py-16 md:py-24 bg-background">
+    <section className="py-16 md:py-20 bg-white border-t border-border/15">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <ScrollReveal>
           <div className="mb-14 text-left">
@@ -46,12 +46,12 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
             <p className="mt-3 text-body text-muted/80 font-light max-w-lg">Four distinct worlds. One subcontinent. Each chapter reveals a different India.</p>
           </div>
         </ScrollReveal>
- 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14">
+  
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
           {(loadingDestinations ? Array(4).fill(null) : featuredChapters).map((tour, idx) => {
             if (!tour) return (
               <div key={idx} className="flex flex-col space-y-4 text-left animate-pulse w-full">
-                <div className="relative aspect-[4/3] rounded-lg bg-secondary-surface/70" />
+                <div className="relative aspect-[4/3] rounded-xl bg-secondary-surface/70" />
                 <div className="px-1 space-y-2">
                   <div className="flex justify-between"><div className="w-1/4 h-3 bg-secondary-surface rounded" /><div className="w-1/5 h-3 bg-secondary-surface rounded" /></div>
                   <div className="w-2/3 h-6 bg-secondary-surface rounded" /><div className="w-full h-4 bg-secondary-surface rounded" />
@@ -59,7 +59,6 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
               </div>
             );
  
-            const isEven = idx % 2 === 0;
             const accentColor = tour.accents?.primary || '#FDB62F';
  
             return (
@@ -69,12 +68,13 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: idx * 0.1, type: "spring", stiffness: 80, damping: 20 }}
+                className="h-full"
               >
-                <TiltCard>
-                  <div onClick={() => onSelectTour(tour)} className={`group cursor-pointer text-left ${!isEven ? 'md:mt-16' : ''}`}>
+                <TiltCard className="h-full">
+                  <div onClick={() => onSelectTour(tour)} className="group cursor-pointer text-left flex flex-col justify-between h-full bg-surface border border-border/40 rounded-2xl p-5 hover:shadow-md transition-shadow duration-300">
                     {/* Image container with editorial overlay */}
-                    <div className="relative min-h-[380px] md:min-h-[420px] rounded-lg overflow-hidden shadow-md bg-secondary-surface mb-0">
-                      <Image src={tour.bannerImage} alt={tour.title} fill className="object-cover group-hover:scale-105" sizes="(max-width: 768px) 100vw, 50vw" />
+                    <div className="relative h-[280px] sm:h-[320px] md:h-[340px] rounded-xl overflow-hidden bg-secondary-surface mb-4 w-full shrink-0">
+                      <Image src={tour.bannerImage} alt={tour.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 768px) 100vw, 50vw" />
  
                       {/* Dark gradient overlay at bottom for text legibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
@@ -100,20 +100,20 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                       </motion.button>
  
                       {/* Title and metadata overlaid on image at bottom */}
-                      <div className="absolute bottom-0 left-0 right-0 p-7 pb-6">
+                      <div className="absolute bottom-0 left-0 right-0 p-6 pb-5">
                         <div className="flex items-center gap-2 text-meta font-mono text-white/60 mb-2">
                           <span className="w-4 h-px bg-gold/60" />
                           <span>{tour.location}</span>
                           <span className="text-white/20 mx-1">·</span>
                           <span className="text-gold/80">{tour.duration}</span>
                         </div>
-                        <h3 className="font-display text-section text-white font-light lowercase leading-tight mb-1">{tour.title}</h3>
+                        <h3 className="font-display text-card text-white font-light lowercase leading-tight mb-1">{tour.title}</h3>
                         <p className="text-body text-white/50 font-light leading-relaxed max-w-md line-clamp-2">{tour.subtitle}</p>
                       </div>
                     </div>
  
                     {/* Explore Chapter link */}
-                    <div className="px-0 pt-4 flex items-center justify-between">
+                    <div className="px-0.5 pt-2 flex items-center justify-between mt-auto">
                       <div className="flex items-center gap-2 text-meta text-muted/60">
                         <span className="flex items-center gap-1">
                           <Star className="w-3.5 h-3.5 fill-gold text-gold" />

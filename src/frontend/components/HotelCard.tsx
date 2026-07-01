@@ -19,7 +19,7 @@ export default function HotelCard({ hotel }: HotelCardProps) {
  
   return (
     <motion.div
-      className="bg-surface rounded-lg border border-border/70 overflow-hidden flex flex-col sm:flex-row text-left shadow-md hover:shadow-lg transition-all duration-300"
+      className="bg-surface rounded-2xl border border-border/70 overflow-hidden flex flex-col sm:flex-row text-left shadow-md hover:shadow-lg transition-all duration-300"
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -27,8 +27,8 @@ export default function HotelCard({ hotel }: HotelCardProps) {
       whileHover={{ y: -2 }}
     >
       {/* 1. Image Section */}
-      <div className="aspect-[16/10] sm:w-64 sm:aspect-square shrink-0 relative overflow-hidden bg-secondary-surface group p-3">
-        <div className="w-full h-full rounded-md overflow-hidden relative">
+      <div className="aspect-[16/10] sm:w-64 sm:aspect-square shrink-0 relative overflow-hidden bg-secondary-surface group p-3.5">
+        <div className="w-full h-full rounded-xl overflow-hidden relative">
           {imgFailed ? (
             <div className="w-full h-full flex items-center justify-center">
               <span className="text-xl font-display text-muted/30 font-bold uppercase">{hotel.name.charAt(0)}</span>
@@ -59,7 +59,7 @@ export default function HotelCard({ hotel }: HotelCardProps) {
                 <span>{hotel.location}</span>
               </div>
             </div>
-            <span className="text-meta font-mono font-bold text-coral bg-coral/5 border border-coral/15 px-2.5 py-0.5 rounded-sm whitespace-nowrap">
+            <span className="text-meta font-mono font-bold text-coral bg-coral/5 border border-coral/15 px-2.5 py-0.5 rounded-md whitespace-nowrap">
               {hotel.priceRange}
             </span>
           </div>
@@ -76,7 +76,7 @@ export default function HotelCard({ hotel }: HotelCardProps) {
           {Object.entries(hotel.affiliateLinks).filter(([, url]) => url).map(([key, url]) => (
             <motion.a key={key} href={url} target="_blank" rel="noopener noreferrer"
               onClick={() => trackAffiliateClick(hotel.id, hotel.name, key)}
-              className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 h-9 rounded-md text-meta font-bold uppercase border transition-all cursor-pointer ${AFFILIATE_COLORS[key] || 'bg-background text-muted border-border/15'}`}
+              className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 h-9 rounded-lg text-meta font-bold uppercase border transition-all cursor-pointer ${AFFILIATE_COLORS[key] || 'bg-background text-muted border-border/15'}`}
               whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
               <ExternalLink className="w-3 h-3 shrink-0" />
               {AFFILIATE_LABELS[key] || key}

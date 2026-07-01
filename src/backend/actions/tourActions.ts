@@ -4,6 +4,7 @@ import { db } from "../lib/db";
 import { auth } from "../lib/auth";
 import { destinationSchema } from "../validation/destination";
 import { experienceSchema } from "../validation/experience";
+import type { Tour } from "../../frontend/types";
 
 async function verifyAdmin() {
   const session = await auth();
@@ -261,5 +262,63 @@ export async function updateExperienceStatus(id: string, status: "DRAFT" | "REVI
   } catch (error: any) {
     console.error("Failed to update experience status:", error);
     return { success: false, error: "Failed to update experience status" };
+  }
+}
+
+export async function getDestinationBySlug(slug: string) {
+  try {
+    const dest = await db.destination.findFirst({
+      where: { slug },
+      include: { reviews: true, experiences: true },
+    });
+    if (!dest) {
+      const { TOURS_DATA } = await import("../../frontend/data");
+      const fallback = TOURS_DATA.find((t) => t.id === slug);
+      return fallback ? { success: true, data: fallback } : { success: false, error: "Not found" };
+    }
+    const { TOURS_DATA } = await import("../../frontend/data");
+    const tour: any = {
+      id: dest.slug || dest.id,
+      dbId: dest.id,
+      title: dest.name,
+      subtitle: (dest.metadata as any)?.subtitle || dest.description.slice(0, 85) + "...",
+      description: dest.description,
+      category: dest.trending ? "trending" : dest.featured ? "popular" : "international",
+      duration: dest.duration || "5 Days",
+      rating: dest.price ? 4.8 + (dest.price % 3) * 0.05 : 4.9,
+      reviewsCount: dest.reviews?.length || 0,
+      price: dest.price || 1500,
+      location: `${dest.city}, ${dest.country}`,
+      groupSize: dest.groupSize || "Max 6 travelers",
+      difficulty: dest.difficulty || "Easy",
+      bannerImage: (dest.images as string[])?.[0] || "/images/tours/varanasi-banner.jpg",
+      images: (dest.images as string[]) || [],
+      itinerary: (dest.metadata as any)?.itinerary || [],
+      includedServices: (dest.metadata as any)?.includedServices || [],
+      reviews: dest.reviews || [],
+      tags: dest.tags || [],
+      moods: (dest as any).moods || [],
+      activities: dest.activities || [],
+      bestSeason: dest.bestSeason || undefined,
+      latitude: dest.latitude,
+      longitude: dest.longitude,
+      chapterName: (dest.metadata as any)?.chapterName,
+      chapterTitle: (dest.metadata as any)?.chapterTitle,
+      storyHeadline: (dest.metadata as any)?.storyHeadline,
+      storyNarrative: (dest.metadata as any)?.storyNarrative,
+      localSecret: (dest.metadata as any)?.localSecret,
+      photographySpot: (dest.metadata as any)?.photographySpot,
+      signatureExperience: (dest.metadata as any)?.signatureExperience,
+      budgetRange: (dest.metadata as any)?.budgetRange,
+      accents: (dest.metadata as any)?.accents || TOURS_DATA.find((t) => t.id === (dest.slug || dest.id))?.accents,
+      metaTitle: (dest as any).metaTitle || undefined,
+      metaDescription: (dest as any).metaDescription || undefined,
+      ogImage: (dest as any).ogImage || undefined,
+      status: dest.status || "PUBLISHED",
+    };
+    return { success: true, data: tour as unknown as Tour };
+  } catch (error) {
+    console.error("Failed to get destination by slug:", error);
+    return { success: false, error: "Failed to load destination." };
   }
 }

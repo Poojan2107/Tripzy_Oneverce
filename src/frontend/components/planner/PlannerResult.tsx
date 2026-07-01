@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { TOURS_DATA } from '../../data';
 import { getHotelsByDestination } from '../../data/hotels';
 import HotelCard from '../HotelCard';
+import { useToast } from '../ui/Toast';
 
 
 const ItineraryMap = dynamic(() => import('../map/ItineraryMap'), {
@@ -61,6 +62,7 @@ export default function PlannerResult({
   fromLocation, selectedDestination, savedId, saving, activeDayTab,
   onActiveDayTabChange, onSave, onReset, getJourneyPersona, getDestinationPrettyName,
 }: PlannerResultProps) {
+  const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
@@ -82,10 +84,10 @@ export default function PlannerResult({
         textParts.push('');
       });
       navigator.clipboard.writeText(textParts.join('\n'));
-      alert("Journal itinerary copied as text to clipboard!");
+      toast("Itinerary copied to clipboard!", "copy");
     } catch (e) {
       console.error(e);
-      alert("Failed to copy itinerary text.");
+      toast("Failed to copy itinerary text.", "error");
     }
   };
 
@@ -200,11 +202,11 @@ export default function PlannerResult({
                 )}
  
                 {savedId && !savedId.startsWith('local-') && (
-                  <motion.button
+                    <motion.button
                     onClick={() => {
                       const url = `${window.location.origin}/share/${savedId}`;
                       navigator.clipboard.writeText(url);
-                      alert("Shareable Journey link copied to clipboard:\n" + url);
+                      toast("Share link copied to clipboard!", "copy");
                     }}
                     className="btn btn-outline border-teal/20 bg-teal/5 text-teal hover:bg-teal/10 h-11 px-4 rounded-md text-caption flex items-center justify-center cursor-pointer"
                     whileHover={{ scale: 1.03 }}

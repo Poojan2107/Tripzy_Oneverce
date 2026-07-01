@@ -1,4 +1,4 @@
-# Travebie — Final Client Handover Package (V11)
+# Travebie — Final Client Handover Package (V16)
 
 Welcome to the official handover package for **Travebie**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform.
 
@@ -144,6 +144,7 @@ The itinerary engine utilizes structured prompts to guarantee high-quality Markd
 - **Location Constraints**: The planner restricts output to legitimate geographical regions and structures trips to avoid unrealistic transitions (e.g. crossing Varanasi and Munnar on the same afternoon).
 - **Fallback Database Seeding**: In the event of Gemini service outages or network failures, the planner falls back to pre-seeded static itinerary structures.
 - **Budget Tier Calculation**: Budget logic is derived dynamically (under ₹15,000 for Small, up to ₹40,000 for Medium, and above for Luxury) to map out realistic expenses for travel packages.
+- **V16 Render Hardening**: The planner results view and Leaflet mapping components are protected against null values or missing cost properties. Coordinates are strictly parsed as floats, and costs default gracefully to 0 rather than throwing rendering-time TypeErrors, ensuring the page never crashes inside React's ErrorBoundary.
 
 ---
 

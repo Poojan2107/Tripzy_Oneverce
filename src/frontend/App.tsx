@@ -338,89 +338,116 @@ export default function App() {
               </ErrorBoundary>
             </motion.div>
           ) : (
-            <motion.div key={currentTab}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
-            >
+            <div className="w-full flex-grow relative">
               {currentTab === 'home' && (
-              <HomeView
-                tours={displayTours}
-                wishlistIds={wishlistIds}
-                loadingDestinations={loadingDestinations}
-                onSearchClick={() => setSearchModalOpen(true)}
-                onQuickCategoryClick={handleQuickCategoryClick}
-                onSelectTour={handleSelectTour}
-                onToggleWishlist={handleToggleWishlist}
-                onGoToExplore={() => {
-                  setExploreCategoryFilter('all');
-                  setCurrentTab('explore');
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                  window.history.pushState(null, '', '#explore');
-                }}
-                onGoToPlanner={() => {
-                  setCurrentTab('ai-planner');
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                  window.history.pushState(null, '', '#ai-planner');
-                }}
-                onGoToPassport={() => {
-                  setCurrentTab('saved');
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                  window.history.pushState(null, '', '#saved');
-                }}
-              />
-            )}
+                <motion.div
+                  key="home-tab"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <HomeView
+                    tours={displayTours}
+                    wishlistIds={wishlistIds}
+                    loadingDestinations={loadingDestinations}
+                    onSearchClick={() => setSearchModalOpen(true)}
+                    onQuickCategoryClick={handleQuickCategoryClick}
+                    onSelectTour={handleSelectTour}
+                    onToggleWishlist={handleToggleWishlist}
+                    onGoToExplore={() => {
+                      setExploreCategoryFilter('all');
+                      setCurrentTab('explore');
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      window.history.pushState(null, '', '#explore');
+                    }}
+                    onGoToPlanner={() => {
+                      setCurrentTab('ai-planner');
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      window.history.pushState(null, '', '#ai-planner');
+                    }}
+                    onGoToPassport={() => {
+                      setCurrentTab('saved');
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      window.history.pushState(null, '', '#saved');
+                    }}
+                  />
+                </motion.div>
+              )}
 
-            {currentTab === 'explore' && (
-              <ExploreView
-                tours={displayTours}
-                onTourSelect={handleSelectTour}
-                onToggleWishlist={handleToggleWishlist}
-                wishlistIds={wishlistIds}
-                initialCategoryFilter={exploreCategoryFilter}
-                loading={loadingDestinations}
-              />
-            )}
+              {currentTab === 'explore' && (
+                <motion.div
+                  key="explore-tab"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <ExploreView
+                    tours={displayTours}
+                    onTourSelect={handleSelectTour}
+                    onToggleWishlist={handleToggleWishlist}
+                    wishlistIds={wishlistIds}
+                    initialCategoryFilter={exploreCategoryFilter}
+                    loading={loadingDestinations}
+                  />
+                </motion.div>
+              )}
 
-            {currentTab === 'ai-planner' && (
-              <AiPlannerView
-                onSaveItinerary={handleSaveItinerary}
-                loadedItinerary={loadedItinerary}
-                onClearLoadedItinerary={() => setLoadedItinerary(null)}
-                allTours={tours}
-              />
-            )}
+              {currentTab === 'ai-planner' && (
+                <motion.div
+                  key="ai-planner-tab"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <AiPlannerView
+                    onSaveItinerary={handleSaveItinerary}
+                    loadedItinerary={loadedItinerary}
+                    onClearLoadedItinerary={() => setLoadedItinerary(null)}
+                    allTours={tours}
+                  />
+                </motion.div>
+              )}
 
-            {currentTab === 'saved' && (
-              <TripsWishlistView
-                wishlistTours={wishlistTours}
-                savedItineraries={savedItineraries}
-                onTourSelect={handleSelectTour}
-                onRemoveWishlist={handleToggleWishlist}
-                onNavigateExplore={() => {
-                  setExploreCategoryFilter('all');
-                  setCurrentTab('explore');
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                  window.history.pushState(null, '', '#explore');
-                }}
-                onNavigatePlanner={() => {
-                  setCurrentTab('ai-planner');
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                  window.history.pushState(null, '', '#ai-planner');
-                }}
-                onDeleteItinerary={handleDeleteItinerary}
-                onInspectItinerary={(itin) => {
-                  setLoadedItinerary(itin);
-                  setCurrentTab('ai-planner');
-                  window.scrollTo({ top: 0, behavior: 'instant' });
-                  window.history.pushState(null, '', '#ai-planner');
-                }}
-                allTours={tours}
-              />
-            )}
-          </motion.div>
-        )}
+              {currentTab === 'saved' && (
+                <motion.div
+                  key="saved-tab"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                >
+                  <TripsWishlistView
+                    wishlistTours={wishlistTours}
+                    savedItineraries={savedItineraries}
+                    onTourSelect={handleSelectTour}
+                    onRemoveWishlist={handleToggleWishlist}
+                    onNavigateExplore={() => {
+                      setExploreCategoryFilter('all');
+                      setCurrentTab('explore');
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      window.history.pushState(null, '', '#explore');
+                    }}
+                    onNavigatePlanner={() => {
+                      setCurrentTab('ai-planner');
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      window.history.pushState(null, '', '#ai-planner');
+                    }}
+                    onDeleteItinerary={handleDeleteItinerary}
+                    onInspectItinerary={(itin) => {
+                      setLoadedItinerary(itin);
+                      setCurrentTab('ai-planner');
+                      window.scrollTo({ top: 0, behavior: 'instant' });
+                      window.history.pushState(null, '', '#ai-planner');
+                    }}
+                    allTours={tours}
+                  />
+                </motion.div>
+              )}
+            </div>
+          )}
         </AnimatePresence>
       </main>
 

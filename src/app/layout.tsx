@@ -80,6 +80,16 @@ export default function RootLayout({
     <html lang="en" className={`${nunitoSans.variable} ${pacifico.variable}`}>
       <head>
         <script
+          dangerouslySetInnerHTML={{
+            __html: `
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}`,
+          }}
+        />
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

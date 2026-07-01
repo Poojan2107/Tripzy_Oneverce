@@ -108,7 +108,7 @@ export default function PlannerResult({
           <div className="flex flex-col gap-2 pt-2">
             <motion.button
               onClick={onReset}
-              className="btn-primary w-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer min-h-[44px]"
+              className="btn btn-primary w-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer min-h-[44px]"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -116,7 +116,7 @@ export default function PlannerResult({
             </motion.button>
             <motion.button
               onClick={onReset}
-              className="btn-outline w-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer min-h-[44px]"
+              className="btn btn-outline w-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer min-h-[44px]"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >

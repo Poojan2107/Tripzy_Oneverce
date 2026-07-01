@@ -603,7 +603,7 @@ const sanitizeUserInput = (input: string) => {
     return `${compLabel} ${moodLabel}`;
   };  if (loading) {
     return (
-      <div className="bg-background text-night select-none text-left pt-24 pb-24 min-h-[100dvh] font-sans">
+      <div className="bg-background text-night select-none text-left pt-24 pb-[calc(var(--nav-bottom-height)+2rem)] md:pb-24 min-h-[100dvh] font-sans">
         <div className="max-w-4xl mx-auto px-6 space-y-12">
           
           {/* Skeleton Hero / Header */}

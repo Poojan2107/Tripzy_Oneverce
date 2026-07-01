@@ -109,7 +109,7 @@ export default function PlannerWizard({
   };
 
   return (
-    <div className="min-h-[100dvh] bg-background text-night pt-24 pb-32 px-4 sm:px-6 select-none font-sans">
+    <div className="min-h-[100dvh] bg-background text-night pt-24 pb-[calc(var(--nav-bottom-height)+2rem)] md:pb-32 px-4 sm:px-6 select-none font-sans">
       <div className="max-w-4xl mx-auto space-y-8">
 
         {/* Header Block */}

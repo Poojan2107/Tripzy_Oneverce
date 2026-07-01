@@ -1,6 +1,6 @@
-# Travebie — Final Client Handover Package (V16)
+# Travebie — Final Client Handover Package (V17)
 
-Welcome to the official handover package for **Travebie**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform.
+Welcome to the official handover package for **Travebie**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform. This version incorporates the final V17 premium visual polish and alignment pass.
 
 * **Production URL**: [https://travebie-oneverce.vercel.app](https://travebie-oneverce.vercel.app)
 * **Local Development**: `http://localhost:3030`

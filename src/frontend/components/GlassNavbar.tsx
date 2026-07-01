@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, Search, Sparkles, BookOpen, LogIn, LogOut, Shield } from 'lucide-react';
 import { TabType } from '../types';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import SafeImage from './ui/SafeImage';
 
 interface GlassNavbarProps {
   currentTab: TabType;
@@ -133,8 +134,13 @@ export default function GlassNavbar({
                 initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }}>
                 <div className="flex items-center gap-2 cursor-pointer">
                   {session.user.image ? (
-                    <img src={session.user.image} alt={session.user.name || "User"} loading="lazy"
-                      className={`w-7 h-7 rounded-full object-cover border border-border/50 transition-all group-hover:ring-2 group-hover:ring-gold/30`} />
+                    <SafeImage
+                      src={session.user.image}
+                      alt={session.user.name || "User"}
+                      width={28}
+                      height={28}
+                      className="rounded-full object-cover border border-border/50 transition-all group-hover:ring-2 group-hover:ring-gold/30"
+                    />
                   ) : (
                     <div className={`w-7 h-7 rounded-full flex items-center justify-center text-caption font-bold border border-border/50 transition-all group-hover:ring-2 group-hover:ring-gold/30 ${
                       isTransparent ? 'bg-white/20 text-white' : 'bg-night text-white'

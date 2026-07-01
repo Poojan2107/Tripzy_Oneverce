@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { getSharedPassportAction } from '../../../../backend/actions/userActions';
 import { Compass, BookOpen, Mountain, Award, User, Sparkles, ArrowRight, MapPin } from 'lucide-react';
@@ -159,7 +160,7 @@ export default async function SharedPassportPage(props: PageProps) {
             <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-tr from-teal via-teal/70 to-gold p-0.5 shadow-sm shrink-0">
               <div className="w-full h-full rounded-full overflow-hidden bg-white flex items-center justify-center">
                 {user.image ? (
-                  <img src={user.image} alt={user.name || 'Avatar'} className="w-full h-full object-cover" />
+                  <Image src={user.image} alt={user.name || 'Avatar'} width={64} height={64} className="rounded-full object-cover" />
                 ) : (
                   <div className="w-full h-full rounded-full bg-background flex items-center justify-center text-night/60 text-xl font-bold font-mono">
                     {user.name ? user.name[0].toUpperCase() : 'AV'}

@@ -364,6 +364,11 @@ export default function App() {
                   window.scrollTo({ top: 0, behavior: 'instant' });
                   window.history.pushState(null, '', '#ai-planner');
                 }}
+                onGoToPassport={() => {
+                  setCurrentTab('saved');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                  window.history.pushState(null, '', '#saved');
+                }}
               />
             )}
 

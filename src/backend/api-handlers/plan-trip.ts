@@ -87,6 +87,7 @@ export async function POST(req: Request) {
         console.error("Failed to calculate trip duration:", err);
       }
     }
+    tripDuration = Math.max(1, tripDuration);
 
     // 2. Determine travel month
     let travelMonth = undefined;
@@ -138,21 +139,24 @@ export async function POST(req: Request) {
       }
     }
 
-    // 4. Fallback mock response if no Gemini API Key is configured
+    // 4. Guard budget amount against edge cases
+    const safeBudgetAmount = Math.max(5000, (budgetAmount ?? 0) || 5000);
+
+    // 5. Fallback mock response if no Gemini API Key is configured
     const apiKey = getGeminiApiKey();
     if (!apiKey) {
-      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails, budgetAmount);
+      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails, safeBudgetAmount);
       return new Response(JSON.stringify(offlineResponse), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    // 5. Construct prompt injecting DB destination context (RAG)
+    // 6. Construct prompt injecting DB destination context (RAG)
     const destName = finalDest ? finalDest.name : destination;
     const destDesc = finalDest ? finalDest.description : "A beautiful travel spot.";
-    const centerLat = finalDest?.latitude || 20;
-    const centerLng = finalDest?.longitude || 0;
+    const centerLat = finalDest?.latitude ?? 20;
+    const centerLng = finalDest?.longitude ?? 0;
 
     const prompt = `
       Create an immersive, premium day-by-day travel itinerary for a trip to ${destName}.
@@ -167,7 +171,7 @@ export async function POST(req: Request) {
       - Starting Location: ${fromLocation}
       - Dates: ${fromDate} to ${toDate}
       - Budget Tier: ${budget}
-      - Budget Amount (INR per person per day): ${budgetAmount || 'Not specified'}
+      - Budget Amount (INR per person per day): ${safeBudgetAmount}
       - Travel Style: ${travelStyle}
       - Key Interests: ${sanitizedInterests}
       - Travelers: ${guests}

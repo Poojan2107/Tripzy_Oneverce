@@ -187,9 +187,11 @@ const sanitizeUserInput = (input: string) => {
     fromLocation: string,
     notes: string
   ) => {
-    const fallbackDestName = selectedTour ? selectedTour.title : (destination || "Varanasi");
-    const fallbackLat = selectedTour?.latitude || 25.3176;
-    const fallbackLng = selectedTour?.longitude || 82.9739;
+    const safeDestName = (selectedTour?.title || destination || "Varanasi").trim() || "this hidden gem";
+    const fallbackDestName = safeDestName;
+    const fallbackLat = selectedTour?.latitude ?? 25.3176;
+    const fallbackLng = selectedTour?.longitude ?? 82.9739;
+    const safeCustomDuration = Math.max(1, customDuration || 4);
 
     const itinerary = [];
     const baseDays = selectedTour?.itinerary || [
@@ -215,7 +217,7 @@ const sanitizeUserInput = (input: string) => {
       }
     ];
 
-    for (let i = 0; i < customDuration; i++) {
+    for (let i = 0; i < safeCustomDuration; i++) {
       const baseDay = baseDays[i % baseDays.length];
       const cycle = Math.floor(i / baseDays.length);
       const dayIndex = i + 1;
@@ -229,7 +231,8 @@ const sanitizeUserInput = (input: string) => {
       });
     }
 
-    const dailyBudget = customBudgetAmount || (derivedBudgetTier === "Luxury" ? 35000 : derivedBudgetTier === "Medium" ? 15000 : 5000);
+    const safeBudgetAmount = Math.max(5000, customBudgetAmount ?? 0);
+    const dailyBudget = safeBudgetAmount || (derivedBudgetTier === "Luxury" ? 35000 : derivedBudgetTier === "Medium" ? 15000 : 5000);
     const transitCost = Math.round(dailyBudget * customDuration * 0.25);
     const stayCost = Math.round(dailyBudget * customDuration * 0.45);
     const foodCost = Math.round(dailyBudget * customDuration * 0.20);

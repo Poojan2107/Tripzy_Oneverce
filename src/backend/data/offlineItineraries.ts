@@ -1,5 +1,6 @@
 export function getBaseOfflineItinerary(destName: string, lat: number, lng: number, budget: string) {
-  const name = destName.toLowerCase();
+  const safeDestName = (destName?.trim() || 'this hidden gem').toLowerCase();
+  const name = safeDestName;
   
   if (name.includes("varanasi")) {
     return [
@@ -547,22 +548,24 @@ export function getOfflineItinerary(destName: string, lat: number, lng: number, 
 
 export function buildOfflineResponse(finalDest: any, destination: string, budget: string, tripDuration: number, matchDetails: any, budgetAmount?: number) {
   const fallbackDestName = finalDest ? finalDest.name : (destination || "Varanasi");
-  const fallbackLat = finalDest?.latitude || 25.3176;
-  const fallbackLng = finalDest?.longitude || 82.9739;
+  const fallbackLat = finalDest?.latitude ?? 25.3176;
+  const fallbackLng = finalDest?.longitude ?? 82.9739;
+  const safeDuration = Math.max(1, tripDuration || 4);
+  const safeBudgetAmount = Math.max(5000, budgetAmount ?? 0);
 
   // Destination-aware cost multipliers
   const destNameLower = fallbackDestName.toLowerCase();
   const costMultiplier = destNameLower.includes('ladakh') || destNameLower.includes('kashmir') || destNameLower.includes('andaman') ? 1.4 : destNameLower.includes('jaisalmer') || destNameLower.includes('kerala') || destNameLower.includes('udaipur') ? 1.2 : destNameLower.includes('goa') || destNameLower.includes('munnar') || destNameLower.includes('cherrapunji') ? 0.9 : 1.0;
 
   // Use budgetAmount if provided, otherwise fall back to tier defaults
-  const dailyBudget = budgetAmount || (budget === 'Luxury' ? 35000 : budget === 'Medium' ? 15000 : 5000);
+  const dailyBudget = safeBudgetAmount || (budget === 'Luxury' ? 35000 : budget === 'Medium' ? 15000 : 5000);
   const baseTransit = Math.round(dailyBudget * 0.35);
   const baseStay = Math.round(dailyBudget * 0.75);
   const baseFood = Math.round(dailyBudget * 0.30);
   const totalCost = Math.round((baseTransit + baseStay + baseFood) * costMultiplier);
 
   return {
-    itinerary: getOfflineItinerary(fallbackDestName, fallbackLat, fallbackLng, budget, tripDuration),
+    itinerary: getOfflineItinerary(fallbackDestName, fallbackLat, fallbackLng, budget, safeDuration),
     costs: {
       transit: Math.round(baseTransit * costMultiplier),
       stay: Math.round(baseStay * costMultiplier),

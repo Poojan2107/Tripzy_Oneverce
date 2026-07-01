@@ -162,10 +162,19 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const hash = window.location.hash.replace('#', '');
-    if (['home', 'explore', 'ai-planner', 'saved'].includes(hash)) {
-      setCurrentTab(hash as TabType);
-    }
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['home', 'explore', 'ai-planner', 'saved'].includes(hash)) {
+        setCurrentTab(hash as TabType);
+        setSelectedTour(null);
+        if (hash !== 'ai-planner') {
+          setLoadedItinerary(null);
+        }
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    handleHashChange();
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const [searchModalOpen, setSearchModalOpen] = useState(false);

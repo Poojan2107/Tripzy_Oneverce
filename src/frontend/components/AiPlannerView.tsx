@@ -118,26 +118,42 @@ const sanitizeUserInput = (input: string) => {
     if (loadedItinerary) {
       setHasStarted(true);
       const savedData = loadedItinerary.itinerary;
+      
+      const budgetVal = Number(loadedItinerary.budget);
+      const durationVal = Number(loadedItinerary.duration);
+      const hasBudgetAndDuration = !isNaN(budgetVal) && !isNaN(durationVal) && budgetVal > 0 && durationVal > 0;
+      
       if (savedData && savedData.days) {
+        const rawCosts = savedData.costs || {};
+        const safeCosts = {
+          transit: Number(rawCosts.transit) || 12000,
+          stay: Number(rawCosts.stay) || 25000,
+          food: Number(rawCosts.food) || 15000,
+          total: Number(rawCosts.total) || 52000,
+        };
+        if (safeCosts.total === 0 || isNaN(safeCosts.total)) {
+          safeCosts.total = safeCosts.transit + safeCosts.stay + safeCosts.food;
+        }
         setItineraryResult({
           itinerary: savedData.days,
-          costs: savedData.costs,
-          weather: savedData.weather,
-          nearbyPlaces: savedData.nearbyPlaces,
+          costs: safeCosts,
+          weather: savedData.weather || { temperature: "24°C - 28°C", conditions: "Clear & Pleasant" },
+          nearbyPlaces: savedData.nearbyPlaces || [],
           recommendationScore: savedData.recommendationScore || 96,
           recommendationReasoning: savedData.recommendationReasoning || "",
           destinationId: loadedItinerary.destination,
         });
         setNotes(savedData.notes || "");
       } else {
+        const safeCosts = {
+          transit: 12000,
+          stay: hasBudgetAndDuration ? Math.round(budgetVal * durationVal * 0.6) : 25000,
+          food: hasBudgetAndDuration ? Math.round(budgetVal * durationVal * 0.4) : 15000,
+          total: hasBudgetAndDuration ? budgetVal * durationVal : 52000
+        };
         setItineraryResult({
           itinerary: Array.isArray(savedData) ? savedData : [],
-          costs: {
-            transit: 12000,
-            stay: loadedItinerary.budget ? loadedItinerary.budget * loadedItinerary.duration * 0.6 : 25000,
-            food: loadedItinerary.budget ? loadedItinerary.budget * loadedItinerary.duration * 0.4 : 15000,
-            total: loadedItinerary.budget ? loadedItinerary.budget * loadedItinerary.duration : 52000
-          },
+          costs: safeCosts,
           weather: { temperature: "24°C - 28°C", conditions: "Clear & Pleasant" },
           recommendationScore: 96,
           recommendationReasoning: "Imported travel pass.",
@@ -145,8 +161,9 @@ const sanitizeUserInput = (input: string) => {
         });
         setNotes("");
       }
-      setCustomBudgetAmount(loadedItinerary.budget || 1500);
-      setDuration(loadedItinerary.duration <= 3 ? 'weekend' : loadedItinerary.duration <= 7 ? 'week' : 'extended');
+      setCustomBudgetAmount(hasBudgetAndDuration ? budgetVal : 1500);
+      setCustomDuration(hasBudgetAndDuration ? durationVal : 5);
+      setDuration(hasBudgetAndDuration && durationVal <= 3 ? 'weekend' : hasBudgetAndDuration && durationVal <= 7 ? 'week' : 'extended');
       setTravelers('solo');
       setMood('Relaxation');
       setSavedId(loadedItinerary.id);

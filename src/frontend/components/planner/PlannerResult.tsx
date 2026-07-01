@@ -39,6 +39,10 @@ interface PlannerResultProps {
 function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: string }) {
   const [display, setDisplay] = useState(0);
   useEffect(() => {
+    if (isNaN(value) || value <= 0) {
+      setDisplay(value || 0);
+      return;
+    }
     let start = 0;
     const duration = 1200;
     const step = Math.max(1, Math.floor(value / 60));
@@ -46,7 +50,7 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
       start += step;
       if (start >= value) { setDisplay(value); clearInterval(interval); }
       else setDisplay(start);
-    }, duration / (value / step));
+    }, Math.max(16, duration / (value / step)));
     return () => clearInterval(interval);
   }, [value]);
   return <>{display}{suffix}</>;

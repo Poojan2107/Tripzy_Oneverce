@@ -27,6 +27,9 @@ export const destinationSchema = z.object({
   tags: z.array(z.string().max(40)).max(20).optional(),
   images: z.array(z.string().max(500)).max(15).optional(),
   status: z.enum(["DRAFT", "REVIEW", "PUBLISHED"]).optional(),
+  metaTitle: z.string().max(70).nullable().optional(),
+  metaDescription: z.string().max(160).nullable().optional(),
+  ogImage: z.string().max(500).nullable().optional(),
   metadata: z.any().optional(),
 });
 

@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tour } from '../../types';
 import ServiceIcon from './ServiceIcon';
+import RichTextRenderer from '../ui/RichTextRenderer';
 
 interface ItineraryTabProps {
   tour: Tour;
@@ -38,7 +39,7 @@ export default function ItineraryTab({ tour, activeDay, onDayChange, accentColor
             <div>
               <span className="text-meta font-mono text-coral block mb-1">Day {day.day}</span>
               <h3 className="font-display text-card text-night font-bold">{day.title}</h3>
-              <p className="text-body text-muted/80 font-light mt-2 leading-relaxed">{day.description}</p>
+              <RichTextRenderer content={day.description} prose="base" className="mt-2" />
             </div>
             {day.activities.length > 0 && (
               <div className="border-t border-border/15 pt-4 space-y-2">

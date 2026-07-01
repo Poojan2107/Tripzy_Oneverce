@@ -60,6 +60,9 @@ export interface Tour {
     secondary: string;
   };
   status?: 'DRAFT' | 'REVIEW' | 'PUBLISHED';
+  metaTitle?: string;
+  metaDescription?: string;
+  ogImage?: string;
 }
 
 export interface BookingState {

@@ -85,6 +85,9 @@ export async function createDestination(data: any) {
         activities: (v.activities as any) || [],
         tags: (v.tags as any) || [],
         status: v.status || "DRAFT",
+        metaTitle: v.metaTitle || null,
+        metaDescription: v.metaDescription || null,
+        ogImage: v.ogImage || null,
       }
     });
     return { success: true, data: destination };
@@ -132,6 +135,9 @@ export async function updateDestination(id: string, data: any) {
         activities: (v.activities as any) || [],
         tags: (v.tags as any) || [],
         status: v.status || "DRAFT",
+        metaTitle: v.metaTitle || null,
+        metaDescription: v.metaDescription || null,
+        ogImage: v.ogImage || null,
       }
     });
     return { success: true, data: destination };

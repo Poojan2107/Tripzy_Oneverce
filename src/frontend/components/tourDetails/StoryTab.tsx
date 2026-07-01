@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { BookOpen } from 'lucide-react';
 import { Tour } from '../../types';
 import { CulturalContext } from './data';
-
+import RichTextRenderer from '../ui/RichTextRenderer';
 interface StoryTabProps {
   tour: Tour;
   cultural?: CulturalContext;
@@ -28,7 +28,7 @@ export default function StoryTab({ tour, cultural, accentColor }: StoryTabProps)
       </motion.div>
  
       <motion.div variants={fadeUp} className="border-l-4 pl-6" style={{ borderColor: accentColor }}>
-        <p className="text-body text-muted/80 font-light leading-relaxed">{tour.description}</p>
+        <RichTextRenderer content={tour.description} prose="base" />
       </motion.div>
  
       {cultural && (
@@ -48,7 +48,7 @@ export default function StoryTab({ tour, cultural, accentColor }: StoryTabProps)
             {tour.chapterTitle && <span className="text-meta font-mono text-muted">{tour.chapterTitle}</span>}
           </div>
           <h2 className="font-display text-section text-night font-bold leading-tight">{tour.storyHeadline || 'Chapter Lore'}</h2>
-          {tour.storyNarrative && <p className="text-body text-muted/80 font-light leading-relaxed italic border-l-2 border-gold/30 pl-4">"{tour.storyNarrative}"</p>}
+          {tour.storyNarrative && <div className="border-l-2 border-gold/30 pl-4 italic"><RichTextRenderer content={tour.storyNarrative} prose="base" /></div>}
         </motion.div>
       )}
  

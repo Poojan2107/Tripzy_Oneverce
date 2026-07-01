@@ -56,6 +56,7 @@ const INIT_DEST_STATE = {
   activities: 'Sightseeing, Local Dining, Museum tours', tags: 'Historic, High-end',
   bannerImage: '/images/tours/varanasi-banner.jpg',
   status: 'DRAFT' as 'DRAFT' | 'REVIEW' | 'PUBLISHED',
+  metaTitle: '', metaDescription: '', ogImage: '',
 };
 
 const INIT_EXP_STATE = {
@@ -114,6 +115,9 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
       activities: 'Guided walks, Local dining, Photography', tags: 'Historic, Scenic',
       bannerImage: tour.bannerImage,
       status: tour.status || 'DRAFT',
+      metaTitle: tour.metaTitle || '',
+      metaDescription: tour.metaDescription || '',
+      ogImage: tour.ogImage || '',
     });
     setIsDestFormOpen(true);
   };
@@ -160,6 +164,9 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
       activities: dest.activities.split(',').map(a => a.trim()).filter(Boolean),
       tags: dest.tags.split(',').map(t => t.trim()).filter(Boolean),
       status: dest.status,
+      metaTitle: dest.metaTitle || null,
+      metaDescription: dest.metaDescription || null,
+      ogImage: dest.ogImage || null,
     };
     try {
       const res = editingDest ? await updateDestination(editingDest.id, payload) : await createDestination(payload);
@@ -177,6 +184,9 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
           tags: (res.data.tags as string[]) || [], moods: [], bestSeason: undefined,
           latitude: res.data.latitude || undefined, longitude: res.data.longitude || undefined,
           status: (res.data.status as any) || 'DRAFT',
+          metaTitle: (res.data.metaTitle as string) || undefined,
+          metaDescription: (res.data.metaDescription as string) || undefined,
+          ogImage: (res.data.ogImage as string) || undefined,
         };
         editingDest ? onUpdateTour(tour) : onAddTour(tour);
         alert(editingDest ? "Destination updated successfully." : "Destination created.");
@@ -308,6 +318,9 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
           setTags: (v) => setDest(p => ({ ...p, tags: v })),
           setBannerImage: (v) => setDest(p => ({ ...p, bannerImage: v })),
           setStatus: (v) => setDest(p => ({ ...p, status: v })),
+          setMetaTitle: (v) => setDest(p => ({ ...p, metaTitle: v })),
+          setMetaDescription: (v) => setDest(p => ({ ...p, metaDescription: v })),
+          setOgImage: (v) => setDest(p => ({ ...p, ogImage: v })),
         }}
         onSubmit={handleSaveDest}
       />

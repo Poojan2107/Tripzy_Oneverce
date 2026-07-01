@@ -1,6 +1,7 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, Sparkles, Eye, Edit3 } from 'lucide-react';
 import { EXCHANGE_RATE } from '../../utils/currency';
+import RichTextRenderer from '../ui/RichTextRenderer';
 
 interface ExperienceFormState {
   isOpen: boolean;
@@ -42,6 +43,8 @@ interface ExperienceFormProps {
 
 export default function ExperienceForm({ state, actions, onSubmit }: ExperienceFormProps) {
   const [imageQuality, setImageQuality] = React.useState<{ status: 'idle' | 'ok' | 'warn' | 'error'; message: string }>({ status: 'idle', message: '' });
+  const [showPreview, setShowPreview] = React.useState(false);
+  const [isGenerating, setIsGenerating] = React.useState(false);
 
   React.useEffect(() => {
     if (!state.featuredImage) {
@@ -66,6 +69,14 @@ export default function ExperienceForm({ state, actions, onSubmit }: ExperienceF
     genericPhrases.some((phrase) => state.description.toLowerCase().includes(phrase)) ? 'Description contains generic travel phrasing. Replace with concrete details.' : null,
     !state.tags.includes(',') && state.tags.length > 0 ? 'Tags should include several comma-separated, specific search terms.' : null,
   ].filter(Boolean) as string[];
+
+  const handleGenerateDescription = async () => {
+    setIsGenerating(true);
+    const { generateExperienceDescription } = await import('../../../backend/lib/generate');
+    const result = await generateExperienceDescription(state.name, state.tags);
+    if (result) actions.setDescription(result);
+    setIsGenerating(false);
+  };
 
   if (!state.isOpen) return null;
 
@@ -129,8 +140,26 @@ export default function ExperienceForm({ state, actions, onSubmit }: ExperienceF
           </div>
 
           <div className="space-y-1">
-            <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Description</label>
-               <textarea maxLength={1000} rows={4} placeholder="Experience description..." value={state.description} onChange={(e) => actions.setDescription(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none" />
+            <div className="flex items-center justify-between">
+              <label className="text-micro font-mono font-bold text-stone uppercase tracking-[0.25em]">Description</label>
+              <div className="flex gap-1.5">
+                <button type="button" onClick={() => setShowPreview(p => !p)} className="px-2.5 py-1 rounded-md text-micro font-bold flex items-center gap-1 border border-border bg-white hover:bg-secondary-surface transition-colors cursor-pointer">
+                  {showPreview ? <Edit3 className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                  {showPreview ? 'edit' : 'preview'}
+                </button>
+                <button type="button" disabled={isGenerating || !state.name} onClick={handleGenerateDescription} className="px-2.5 py-1 rounded-md text-micro font-bold flex items-center gap-1 bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-colors disabled:opacity-40 cursor-pointer">
+                  <Sparkles className={`w-3 h-3 ${isGenerating ? 'animate-pulse' : ''}`} />
+                  {isGenerating ? 'generating...' : 'AI generate'}
+                </button>
+              </div>
+            </div>
+            {showPreview ? (
+              <div className="min-h-[100px] p-3.5 bg-white border border-border rounded-xl text-xs leading-relaxed">
+                {state.description ? <RichTextRenderer content={state.description} prose="base" /> : <span className="text-stone/50">Nothing to preview yet.</span>}
+              </div>
+            ) : (
+              <textarea maxLength={1000} rows={4} placeholder="Experience description... Supports **markdown** formatting." value={state.description} onChange={(e) => actions.setDescription(e.target.value)} className="w-full px-3.5 py-3 sm:py-2.5 bg-white border border-border rounded-xl text-xs text-night placeholder:text-stone/50 focus:outline-none focus:border-gold focus-visible:ring-2 focus-visible:ring-gold/40 transition-colors resize-none" />
+            )}
             <p className="text-micro text-stone/60 text-right">{state.description.length}/1000</p>
           </div>
 

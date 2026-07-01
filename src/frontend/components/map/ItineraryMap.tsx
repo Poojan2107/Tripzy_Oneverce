@@ -22,7 +22,13 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
   useEffect(() => {
     if (!mounted || !mapContainerRef.current) return;
 
-    const mappedDays = itinerary.filter((day: any) => day.latitude && day.longitude);
+    const mappedDays = itinerary.filter((day: any) => 
+      day && 
+      day.latitude != null && 
+      day.longitude != null && 
+      !isNaN(parseFloat(day.latitude)) && 
+      !isNaN(parseFloat(day.longitude))
+    );
     if (mappedDays.length === 0) return;
 
     delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -34,7 +40,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
     const firstDay = mappedDays[0];
     const map = L.map(mapContainerRef.current, {
-      center: [firstDay.latitude, firstDay.longitude],
+      center: [parseFloat(firstDay.latitude), parseFloat(firstDay.longitude)],
       zoom: 12,
       zoomControl: true,
       scrollWheelZoom: false,
@@ -52,8 +58,8 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
     const latlngs: L.LatLngExpression[] = [];
 
     mappedDays.forEach((day: any, index: number) => {
-      const lat = day.latitude;
-      const lng = day.longitude;
+      const lat = parseFloat(day.latitude);
+      const lng = parseFloat(day.longitude);
       latlngs.push([lat, lng]);
 
       const isActive = index === activeDay;

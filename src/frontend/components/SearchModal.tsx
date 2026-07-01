@@ -161,8 +161,10 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
       });
     }
     return tours.filter(t =>
-      t.title.toLowerCase().includes(activeTerm) || t.location.toLowerCase().includes(activeTerm) ||
-      t.subtitle.toLowerCase().includes(activeTerm) || t.description.toLowerCase().includes(activeTerm) ||
+      (t.title || '').toLowerCase().includes(activeTerm) || 
+      (t.location || '').toLowerCase().includes(activeTerm) ||
+      (t.subtitle || '').toLowerCase().includes(activeTerm) || 
+      (t.description || '').toLowerCase().includes(activeTerm) ||
       (t.tags || []).some(tag => tag.toLowerCase().includes(activeTerm)) ||
       (t.moods || []).some(m => m.toLowerCase().includes(activeTerm))
     );

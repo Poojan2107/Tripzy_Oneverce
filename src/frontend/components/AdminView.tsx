@@ -106,7 +106,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
   };
 
   const openEditDestForm = (tour: Tour) => {
-    const loc = tour.location.split(',');
+    const loc = (tour.location || '').split(',');
     setEditingDest(tour);
     setDest({
       name: tour.title, city: loc[0]?.trim() || '', country: loc[1]?.trim() || '',

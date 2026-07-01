@@ -91,8 +91,8 @@ export default function PlannerWizard({
   };
 
   const filteredTours = TOURS_DATA.filter(tour =>
-    tour.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    tour.location.toLowerCase().includes(searchQuery.toLowerCase())
+    (tour.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (tour.location || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const isStep1Valid = !!selectedDestination;

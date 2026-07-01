@@ -250,7 +250,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
   const gradientClass = TAG_GRADIENTS[activeSlide.tag] || TAG_GRADIENTS.Nature;
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden bg-night">
+    <section className="relative w-full min-h-screen flex flex-col overflow-hidden bg-night">
       {/* Full-bleed background per slide — crossfade without remount */}
       <div className="absolute inset-0">
         {[activeIndex - 1, activeIndex, activeIndex + 1].filter(i => i >= 0 && i < HERO_CAROUSEL_ITEMS.length).map(i => (
@@ -289,7 +289,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
         }}
       />
 
-      <div className="relative z-10 min-h-screen flex flex-col justify-center pt-20 md:pt-24">
+      <div className="relative z-10 w-full flex-grow flex flex-col justify-center pt-28 pb-16 lg:pt-32 lg:pb-20">
         <motion.div
           className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 w-full"
           variants={staggerVariants}

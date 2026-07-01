@@ -5,6 +5,7 @@ import { auth } from "../lib/auth";
 import { destinationSchema } from "../validation/destination";
 import { experienceSchema } from "../validation/experience";
 import type { Tour } from "../../frontend/types";
+import { logAudit } from "./adminActions";
 
 async function verifyAdmin() {
   const session = await auth();
@@ -91,6 +92,7 @@ export async function createDestination(data: any) {
         ogImage: v.ogImage || null,
       }
     });
+    logAudit("CREATE_DESTINATION", "Destination", destination.id, { name: destination.name });
     return { success: true, data: destination };
   } catch (error: any) {
     console.error("Failed to create destination:", error);
@@ -141,6 +143,7 @@ export async function updateDestination(id: string, data: any) {
         ogImage: v.ogImage || null,
       }
     });
+    logAudit("UPDATE_DESTINATION", "Destination", destination.id, { name: destination.name });
     return { success: true, data: destination };
   } catch (error: any) {
     console.error("Failed to update destination:", error);
@@ -154,6 +157,7 @@ export async function deleteDestination(id: string) {
     await db.destination.delete({
       where: { id }
     });
+    logAudit("DELETE_DESTINATION", "Destination", id);
     return { success: true };
   } catch (error: any) {
     console.error("Failed to delete destination:", error);
@@ -185,6 +189,7 @@ export async function createExperience(data: any) {
         status: v.status || "DRAFT",
       }
     });
+    logAudit("CREATE_EXPERIENCE", "Experience", experience.id, { name: experience.name });
     return { success: true, data: experience };
   } catch (error: any) {
     console.error("Failed to create experience:", error);
@@ -217,6 +222,7 @@ export async function updateExperience(id: string, data: any) {
         status: v.status || "DRAFT",
       }
     });
+    logAudit("UPDATE_EXPERIENCE", "Experience", experience.id, { name: experience.name });
     return { success: true, data: experience };
   } catch (error: any) {
     console.error("Failed to update experience:", error);
@@ -230,6 +236,7 @@ export async function deleteExperience(id: string) {
     await db.experience.delete({
       where: { id }
     });
+    logAudit("DELETE_EXPERIENCE", "Experience", id);
     return { success: true };
   } catch (error: any) {
     console.error("Failed to delete experience:", error);
@@ -244,6 +251,7 @@ export async function updateDestinationStatus(id: string, status: "DRAFT" | "REV
       where: { id },
       data: { status },
     });
+    logAudit("UPDATE_DESTINATION_STATUS", "Destination", id, { status });
     return { success: true, data: destination };
   } catch (error: any) {
     console.error("Failed to update destination status:", error);
@@ -258,6 +266,7 @@ export async function updateExperienceStatus(id: string, status: "DRAFT" | "REVI
       where: { id },
       data: { status },
     });
+    logAudit("UPDATE_EXPERIENCE_STATUS", "Experience", id, { status });
     return { success: true, data: experience };
   } catch (error: any) {
     console.error("Failed to update experience status:", error);

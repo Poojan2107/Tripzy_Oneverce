@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   BarChart2, Users, MapPin, Sparkles,
-  Brain, BookOpen, MessageCircle, Heart, Shield, Mail, Calendar, Clock, Star, Navigation
+  Brain, BookOpen, MessageCircle, Heart, Shield, Mail, Calendar, Clock, Star, Navigation, Image
 } from 'lucide-react';
 import { Tour } from '../types';
 import { formatINR, EXCHANGE_RATE } from '../utils/currency';
@@ -21,6 +21,8 @@ import AdminUsersTab from './admin/AdminUsersTab';
 import AdminReviewsTab from './admin/AdminReviewsTab';
 import AdminDestinationsTab from './admin/AdminDestinationsTab';
 import AdminExperiencesTab from './admin/AdminExperiencesTab';
+import AdminAuditLogTab from './admin/AdminAuditLogTab';
+import AdminMediaTab from './admin/AdminMediaTab';
 import DestinationForm from './admin/DestinationForm';
 import ExperienceForm from './admin/ExperienceForm';
 
@@ -69,7 +71,7 @@ const INIT_EXP_STATE = {
 };
 
 export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTour, onDeleteTour }: AdminViewProps) {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'destinations' | 'experiences' | 'users' | 'reviews'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'destinations' | 'experiences' | 'users' | 'reviews' | 'audit' | 'media'>('dashboard');
   const [searchTerm, setSearchTerm] = useState('');
   const [metrics, setMetrics] = useState<any>(null);
   const [loadingMetrics, setLoadingMetrics] = useState(true);
@@ -247,6 +249,8 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
     { id: 'destinations', label: 'Destinations', icon: MapPin },
     { id: 'experiences', label: 'Experiences', icon: Sparkles },
     { id: 'reviews', label: 'Reviews', icon: Star },
+    { id: 'audit', label: 'Audit Log', icon: Shield },
+    { id: 'media', label: 'Media', icon: Image },
   ] as const;
 
   return (
@@ -296,6 +300,16 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
         {activeTab === 'experiences' && (
           <motion.div key="experiences" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
             <AdminExperiencesTab experiences={experiences} loadingExperiences={loadingExperiences} searchTerm={searchTerm} onSearchChange={setSearchTerm} onEdit={openEditExpForm} onDelete={handleDeleteExp} onCreate={openCreateExpForm} onStatusChange={handleExperienceStatus} />
+          </motion.div>
+        )}
+        {activeTab === 'audit' && (
+          <motion.div key="audit" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+            <AdminAuditLogTab />
+          </motion.div>
+        )}
+        {activeTab === 'media' && (
+          <motion.div key="media" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+            <AdminMediaTab />
           </motion.div>
         )}
       </AnimatePresence>

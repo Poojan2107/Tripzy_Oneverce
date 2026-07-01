@@ -150,7 +150,7 @@ export default function ExploreView({
   };
 
   return (
-    <div className="h-[calc(100dvh-48px)] md:h-[calc(100dvh-64px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
+    <div className="h-[calc(100dvh-76px)] md:h-[calc(100dvh-84px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
       {/* Mobile toggle */}
       <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+var(--safe-bottom))] bottom-4 left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-border/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         {(['list', 'map'] as const).map(view => {

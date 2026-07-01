@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, Star, MapPin, Compass, Clock, Sparkles } from 'lucide-react';
 import { Tour } from '../types';
 import { trackEvent } from '../utils/analytics';
+import { searchDestinations, searchSuggestions } from '../../backend/actions/searchActions';
 
 interface SearchModalProps { isOpen: boolean; onClose: () => void; tours: Tour[]; onSelectTour: (tour: Tour) => void; }
 
@@ -23,6 +24,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
   const [isFiltering, setIsFiltering] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [serverResults, setServerResults] = useState<any[] | null>(null);
   const filterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -88,31 +90,82 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
     return () => { window.removeEventListener('keydown', handleGlobalKeyDown); document.body.style.overflow = ''; };
   }, [isOpen]);
 
+  const runSearch = useCallback(async (term: string) => {
+    setIsFiltering(true);
+    try {
+      const res = await searchDestinations(term, {}, 1, 10);
+      if (res.success) {
+        setServerResults(res.data);
+      } else {
+        setServerResults([]);
+      }
+    } catch {
+      setServerResults([]);
+    }
+    setIsFiltering(false);
+  }, []);
+
   useEffect(() => {
     if (query || selectedTag) {
-      setIsFiltering(true);
+      const activeTerm = selectedTag || query.trim();
       if (filterTimeoutRef.current) clearTimeout(filterTimeoutRef.current);
-      filterTimeoutRef.current = setTimeout(() => {
+      if (activeTerm && activeTerm.length >= 3) {
+        filterTimeoutRef.current = setTimeout(() => {
+          runSearch(activeTerm);
+          trackEvent('search', { query: activeTerm });
+        }, 300);
+      } else {
+        setServerResults(null);
         setIsFiltering(false);
-        const activeTerm = selectedTag || query.trim();
-        if (activeTerm && activeTerm.length >= 3) trackEvent('search', { query: activeTerm });
-      }, 300);
-    } else { setIsFiltering(false); }
+      }
+    } else {
+      setServerResults(null);
+      setIsFiltering(false);
+    }
     return () => { if (filterTimeoutRef.current) clearTimeout(filterTimeoutRef.current); };
-  }, [query, selectedTag]);
+  }, [query, selectedTag, runSearch]);
 
   useEffect(() => setFocusedIndex(-1), [query, selectedTag]);
 
   const matchedTours = useMemo(() => {
     const activeTerm = selectedTag ? selectedTag.toLowerCase() : query.toLowerCase().trim();
-    if (activeTerm === '') return tours.slice(0, 3);
+    if (!activeTerm) return tours.slice(0, 3);
+    if (serverResults !== null) {
+      return serverResults.map(sr => {
+        const match = tours.find(t => t.id === sr.id || t.id === sr.slug);
+        return match || {
+          id: sr.slug || sr.id,
+          title: sr.name,
+          location: `${sr.city}, ${sr.country}`,
+          subtitle: sr.description?.slice(0, 85) || '',
+          description: sr.description || '',
+          category: 'international' as const,
+          duration: sr.duration || '5 Days',
+          rating: sr.rating || 4.5,
+          reviewsCount: sr.reviewsCount || 0,
+          price: sr.price || 0,
+          bannerImage: sr.images?.[0] || '',
+          images: sr.images || [],
+          itinerary: [],
+          includedServices: [],
+          reviews: [],
+          tags: sr.tags || [],
+          moods: sr.travelStyles || [],
+          groupSize: 'Max 6 travelers',
+          difficulty: 'Easy',
+          latitude: sr.latitude,
+          longitude: sr.longitude,
+          bestSeason: sr.bestSeason || undefined,
+        } as Tour;
+      });
+    }
     return tours.filter(t =>
       t.title.toLowerCase().includes(activeTerm) || t.location.toLowerCase().includes(activeTerm) ||
       t.subtitle.toLowerCase().includes(activeTerm) || t.description.toLowerCase().includes(activeTerm) ||
       (t.tags || []).some(tag => tag.toLowerCase().includes(activeTerm)) ||
       (t.moods || []).some(m => m.toLowerCase().includes(activeTerm))
     );
-  }, [query, selectedTag, tours]);
+  }, [query, selectedTag, tours, serverResults]);
 
   const handleSelect = (tour: Tour) => { saveRecentSearch(tour.title); trackEvent('search_select', { tourId: tour.id, title: tour.title }); onSelectTour(tour); onClose(); };
 

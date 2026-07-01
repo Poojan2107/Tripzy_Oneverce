@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { Search, X, Star, MapPin, Compass, Clock, Sparkles } from 'lucide-react';
 import { Tour } from '../types';
 import { trackEvent } from '../utils/analytics';
@@ -283,7 +284,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                           onClick={() => handleSelect(tour)}
                           className={`flex gap-3 p-3 rounded-xl cursor-pointer group transition-colors duration-200 text-left border ${isFocused ? 'bg-background border-teal/30 shadow-sm' : 'bg-transparent border-transparent hover:bg-background'}`}>
                           <div className="w-12 h-12 rounded-lg overflow-hidden bg-secondary-surface shrink-0 relative">
-                            <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                            <Image src={tour.bannerImage} alt={tour.title} fill className="object-cover" sizes="48px" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5 text-micro text-muted/50 font-mono uppercase tracking-wider">

@@ -375,7 +375,7 @@ export default function ExploreView({
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}>
             <div className="aspect-[3/2] rounded-lg overflow-hidden bg-secondary-surface shadow-md border border-border/70 group">
-              <img src={activeTour.bannerImage} alt={activeTour.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <SafeImage src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover" />
             </div>
             <div className="space-y-4">
               <div className="flex items-center gap-1.5 text-meta font-mono text-muted">

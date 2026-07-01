@@ -1,4 +1,4 @@
-const IS_VERCEL = process.env.VERCEL === "1" || process.env.CI === "true";
+const IS_VERCEL = process.env.VERCEL === "1";
 
 const REQUIRED = [
   "DATABASE_URL",

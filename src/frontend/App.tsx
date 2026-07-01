@@ -300,7 +300,9 @@ export default function App() {
         </header>
       )}
 
-      <main className="w-full flex-grow">
+      <main className={`w-full flex-grow transition-all duration-300 ${
+        currentTab === 'home' ? 'pt-0' : 'pt-[76px] md:pt-[84px]'
+      }`}>
         <AnimatePresence mode="wait">
           {selectedTour ? (
             <motion.div key="tour-details"

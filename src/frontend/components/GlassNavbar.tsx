@@ -39,13 +39,13 @@ export default function GlassNavbar({
   ];
 
   const getNavContainerClass = () => {
-    if (isTransparent) return 'absolute top-0 left-0 w-full z-50 bg-transparent py-4 px-6';
-    return 'sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/20 py-2.5 px-6';
+    if (isTransparent) return 'fixed top-0 left-0 w-full z-50 bg-transparent py-4 px-6 transition-all duration-300';
+    return 'fixed top-0 left-0 w-full z-50 bg-[#F8F4EE]/90 backdrop-blur-md border-b border-border/20 py-2.5 px-6 shadow-sm transition-all duration-300';
   };
  
   const getInnerClass = () => {
-    if (isTransparent) return 'bg-white/[0.07] backdrop-blur-[12px] border-white/10 text-white py-2';
-    return 'bg-white border-border/40 shadow-md text-night py-1.5';
+    if (isTransparent) return 'bg-black/15 backdrop-blur-md border-white/10 text-white py-2';
+    return 'bg-white border-border/40 shadow-sm text-night py-1.5';
   };
  
   return (

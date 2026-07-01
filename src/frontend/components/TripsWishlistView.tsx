@@ -269,68 +269,74 @@ export default function TripsWishlistView({
       )}
  
       {/* ── 1. PASSPORT HERO ── */}
-      <div className="relative mb-8 bg-surface border border-border/70 rounded-lg p-7 md:p-10 shadow-md overflow-hidden">
+      <div className="relative mb-10 bg-surface border border-border/70 rounded-2xl p-8 md:p-10 shadow-md overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-gold/5 to-transparent rounded-bl-full pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-teal/5 to-transparent rounded-tr-full pointer-events-none" />
  
-        <div className="flex flex-col md:flex-row md:items-center gap-6 relative z-10">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-tr from-teal via-teal/70 to-gold p-0.5 shadow-sm shrink-0">
-            <div className="w-full h-full rounded-full overflow-hidden bg-surface flex items-center justify-center">
-              {session?.user?.image ? (
-                <SafeImage
-                  src={session.user.image}
-                  alt={session.user.name || 'Avatar'}
-                  width={64}
-                  height={64}
-                  className="rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full rounded-full bg-secondary-surface flex items-center justify-center text-night/60 text-xl font-bold font-mono">
-                  {session?.user?.name ? session.user.name[0].toUpperCase() : 'AV'}
+        <div className="flex flex-col gap-8 relative z-10 w-full">
+          {/* Top row: Profile & Share */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-border/15">
+            <div className="flex items-center gap-4.5 text-left">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-tr from-teal via-teal/70 to-gold p-0.5 shadow-sm shrink-0">
+                <div className="w-full h-full rounded-full overflow-hidden bg-surface flex items-center justify-center">
+                  {session?.user?.image ? (
+                    <SafeImage
+                      src={session.user.image}
+                      alt={session.user.name || 'Avatar'}
+                      width={64}
+                      height={64}
+                      className="rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full rounded-full bg-secondary-surface flex items-center justify-center text-night/60 text-xl font-bold font-mono">
+                      {session?.user?.name ? session.user.name[0].toUpperCase() : 'AV'}
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+     
+              <div>
+                <span className="text-meta font-mono text-teal block mb-1">Explorer Passport</span>
+                <h1 className="font-display text-heading text-night font-light lowercase leading-tight">
+                  {session?.user?.name || "Guest Explorer"}
+                </h1>
+                <span className="text-meta font-mono text-muted/50 block lowercase mt-0.5">
+                  Explorer Since 2026 · {session?.user?.email || "guest@tripzy.ai"}
+                </span>
+              </div>
             </div>
+
+            {session?.user?.id && (
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/passport/share/${session.user.id}`;
+                  navigator.clipboard.writeText(url);
+                  toast("Passport link copied to clipboard!", "copy");
+                }}
+                className="btn btn-outline border-teal/20 bg-teal/5 text-teal hover:bg-teal/10 h-10 px-4 rounded-md text-caption flex items-center justify-center cursor-pointer shadow-sm self-start sm:self-center shrink-0"
+              >
+                Share Passport
+              </button>
+            )}
           </div>
  
-          <div className="flex-1 text-left">
-            <span className="text-meta font-mono text-teal block mb-1">Explorer Passport</span>
-            <h1 className="font-display text-heading text-night font-light lowercase leading-tight flex flex-wrap items-center gap-3">
-              <span>{session?.user?.name || "Guest Explorer"}</span>
-              {session?.user?.id && (
-                <button
-                  onClick={() => {
-                    const url = `${window.location.origin}/passport/share/${session.user.id}`;
-                    navigator.clipboard.writeText(url);
-                    toast("Passport link copied to clipboard!", "copy");
-                  }}
-                  className="btn btn-outline border-teal/20 bg-teal/5 text-teal hover:bg-teal/10 h-8 px-3 rounded-md text-caption flex items-center justify-center cursor-pointer shadow-sm"
-                >
-                  Share Passport
-                </button>
-              )}
-            </h1>
-            <span className="text-meta font-mono text-muted/50 block lowercase mt-0.5">
-              Explorer Since 2026 · {session?.user?.email || "guest@tripzy.ai"}
-            </span>
-          </div>
- 
-          {/* Enhanced Stats grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 shrink-0 w-full md:w-auto">
-            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-md border border-border/10 shadow-sm">
-              <span className="block font-display text-section font-light text-night leading-none">{savedItineraries.length}</span>
-              <span className="text-meta font-mono text-muted/60 block mt-1">Journeys</span>
+          {/* Bottom row: Enhanced Stats grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+            <div className="text-center bg-background/50 p-4 rounded-xl border border-border/60 shadow-sm transition-all duration-300 hover:shadow-md hover:border-gold/30">
+              <span className="block font-display text-3xl font-light text-night leading-none">{savedItineraries.length}</span>
+              <span className="text-meta font-mono text-muted/60 block mt-2 uppercase tracking-wider">Journeys</span>
             </div>
-            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-md border border-border/10 shadow-sm">
-              <span className="block font-display text-section font-light text-gold leading-none">{wishlistTours.length}</span>
-              <span className="text-meta font-mono text-muted/60 block mt-1">Saved Chapters</span>
+            <div className="text-center bg-background/50 p-4 rounded-xl border border-border/60 shadow-sm transition-all duration-300 hover:shadow-md hover:border-gold/30">
+              <span className="block font-display text-3xl font-light text-gold leading-none">{wishlistTours.length}</span>
+              <span className="text-meta font-mono text-muted/60 block mt-2 uppercase tracking-wider">Saved Chapters</span>
             </div>
-            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-md border border-border/10 shadow-sm">
-              <span className="block font-display text-section font-light text-coral leading-none">{regionsExplored}</span>
-              <span className="text-meta font-mono text-muted/60 block mt-1">Regions</span>
+            <div className="text-center bg-background/50 p-4 rounded-xl border border-border/60 shadow-sm transition-all duration-300 hover:shadow-md hover:border-gold/30">
+              <span className="block font-display text-3xl font-light text-coral leading-none">{regionsExplored}</span>
+              <span className="text-meta font-mono text-muted/60 block mt-2 uppercase tracking-wider">Regions</span>
             </div>
-            <div className="text-center bg-secondary-surface/30 p-2.5 rounded-md border border-border/10 shadow-sm">
-              <span className="block font-display text-section font-light text-teal leading-none">{daysTraveled}</span>
-              <span className="text-meta font-mono text-muted/60 block mt-1">Days Traveled</span>
+            <div className="text-center bg-background/50 p-4 rounded-xl border border-border/60 shadow-sm transition-all duration-300 hover:shadow-md hover:border-gold/30">
+              <span className="block font-display text-3xl font-light text-teal leading-none">{daysTraveled}</span>
+              <span className="text-meta font-mono text-muted/60 block mt-2 uppercase tracking-wider">Days Traveled</span>
             </div>
           </div>
         </div>
@@ -343,7 +349,7 @@ export default function TripsWishlistView({
         <div className="lg:col-span-2 space-y-8">
           
           {/* Dynamic Travel Timeline */}
-          <div className="bg-surface border border-border/70 rounded-lg p-6 md:p-8 shadow-md space-y-5">
+          <div className="bg-surface border border-border/70 rounded-2xl p-6 md:p-8 shadow-md space-y-5">
             <div className="flex items-center gap-2 pb-3 border-b border-border/15">
                <BookOpen className="w-4 h-4 text-gold" />
                <h3 className="font-display text-section text-night font-light lowercase leading-none">travel timeline journal</h3>
@@ -357,8 +363,8 @@ export default function TripsWishlistView({
                     <span className="font-display text-section text-night font-light block leading-none mb-3">{group.year}</span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {group.items.map((item) => (
-                        <div key={item.id} className="bg-background border border-border/70 p-3.5 rounded-md flex items-center gap-3 hover:shadow-sm transition-shadow shadow-sm">
-                          <div className="w-12 h-12 rounded-md overflow-hidden bg-secondary-surface shrink-0 relative">
+                        <div key={item.id} className="bg-background border border-border/70 p-3.5 rounded-xl flex items-center gap-3 hover:shadow-sm transition-shadow shadow-sm">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-secondary-surface shrink-0 relative">
                             <SafeImage src={item.bannerImage} alt={item.title} className="object-cover" />
                           </div>
                           <div className="min-w-0 flex-1 text-left">
@@ -379,7 +385,7 @@ export default function TripsWishlistView({
           </div>
  
           {/* Travel Seals (collected badges) */}
-          <div className="bg-surface border border-border/70 rounded-lg p-6 md:p-8 shadow-md">
+          <div className="bg-surface border border-border/70 rounded-2xl p-6 md:p-8 shadow-md">
             <div className="flex items-center gap-2 pb-3 border-b border-border/15 mb-5">
               <Award className="w-4 h-4 text-teal" />
                <h3 className="font-display text-section text-night font-light lowercase leading-none">travel seals — collected artifacts</h3>
@@ -387,7 +393,7 @@ export default function TripsWishlistView({
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {badgesList.map((badge) => (
                 <div key={badge.id}
-                  className={`p-4 rounded-md border flex flex-col items-center text-center transition-all duration-300 relative group overflow-hidden ${
+                  className={`p-4 rounded-xl border flex flex-col items-center text-center transition-all duration-300 relative group overflow-hidden ${
                     badge.unlocked
                       ? 'bg-background border-border shadow-sm hover:shadow-md hover:border-gold/50 cursor-pointer'
                       : 'bg-secondary-surface/40 border-dashed border-border/60 opacity-60 select-none'
@@ -436,13 +442,13 @@ export default function TripsWishlistView({
         <div className="space-y-6">
           
           {/* Destination Map Card */}
-          <div className="bg-surface border border-border/70 rounded-lg p-5 shadow-sm space-y-4">
+          <div className="bg-surface border border-border/70 rounded-2xl p-6 shadow-sm space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-border/15">
               <Compass className="w-4 h-4 text-gold animate-spin-slow" />
               <h4 className="font-display text-section text-night font-light lowercase leading-none">footprints map</h4>
             </div>
             
-            <div className="h-[300px] w-full rounded-md overflow-hidden shadow-inner relative">
+            <div className="h-[300px] w-full rounded-xl overflow-hidden shadow-inner relative border border-border/40">
               <PassportMap 
                 wishlistTours={wishlistTours} 
                 savedItineraries={savedItineraries} 
@@ -453,7 +459,7 @@ export default function TripsWishlistView({
           </div>
  
           {/* Travel Preferences Card */}
-          <div className="bg-surface border border-border/70 rounded-lg p-6 shadow-sm space-y-4">
+          <div className="bg-surface border border-border/70 rounded-2xl p-6 shadow-sm space-y-4">
             <div className="flex items-center gap-2 pb-3 border-b border-border/15">
               <Sparkles className="w-4 h-4 text-gold" />
               <h4 className="font-display text-section text-night font-light lowercase leading-none">travel preferences</h4>

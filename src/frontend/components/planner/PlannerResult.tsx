@@ -93,34 +93,46 @@ export default function PlannerResult({
 
   if (itineraryResult.error) {
     return (
-      <div className="pt-28 pb-32 px-6 max-w-md mx-auto min-h-[100dvh] bg-background flex items-center justify-center">
+      <div className="pt-28 pb-32 px-6 w-full max-w-lg mx-auto min-h-[100dvh] bg-background flex items-center justify-center">
         <motion.div
-          className="text-center p-8 bg-white border border-border/50 rounded-3xl shadow-sm space-y-4 text-night"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
+          className="text-center p-10 bg-surface border border-border/70 rounded-2xl shadow-md space-y-6 text-night relative overflow-hidden w-full"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
         >
-          <Compass className="w-10 h-10 text-muted/30 mx-auto" />
-          <h2 className="font-display text-2xl font-light text-night lowercase">journey interrupted</h2>
-          <p className="text-small text-muted/60 font-light leading-relaxed">
-            We're consulting our explorer archive and preparing an alternative journey.
+          {/* Subtle design flourish to match premium aesthetic */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gold via-coral to-teal" />
+          
+          <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto shadow-sm">
+            <Compass className="w-8 h-8 text-gold animate-spin-slow" />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="font-display text-3xl font-light text-night lowercase tracking-tight">journey interrupted</h2>
+            <p className="text-meta font-mono text-gold uppercase tracking-widest">explorer sync delay</p>
+          </div>
+
+          <p className="text-body text-muted/80 font-light leading-relaxed max-w-md mx-auto">
+            Our digital cartographer encountered a temporary sync delay while consulting the servers. Rest assured, your draft preferences are safe. Click below to reconnect and restore your journey.
           </p>
-          <div className="flex flex-col gap-2 pt-2">
+
+          <div className="flex flex-col gap-3 pt-2">
             <motion.button
               onClick={onReset}
-              className="btn btn-primary w-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer min-h-[44px]"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              className="btn btn-primary w-full h-12 px-6 rounded-lg text-caption tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_24px_rgba(244,182,61,0.25)]"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Retry Action
+              <Sparkles className="w-4 h-4 text-night animate-pulse" />
+              <span>Restore Journey</span>
             </motion.button>
             <motion.button
               onClick={onReset}
-              className="btn btn-outline w-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider cursor-pointer min-h-[44px]"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              className="btn btn-outline border-border/80 text-muted hover:text-night w-full h-11 px-6 rounded-lg text-caption tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-colors duration-300"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Start Over
+              <span>Back to Planner</span>
             </motion.button>
           </div>
         </motion.div>
@@ -157,7 +169,7 @@ export default function PlannerResult({
           </div>
         </div>
       )}
-      <div className="max-w-4xl mx-auto px-6 space-y-12">
+      <div className="max-w-4xl mx-auto px-6 space-y-16">
 
         {/* 1. Journey Hero */}
         <motion.div className="bg-surface relative overflow-hidden border border-border/70 rounded-lg shadow-md" variants={sectionVariants} custom={0}>
@@ -306,7 +318,7 @@ export default function PlannerResult({
           <AnimatePresence mode="wait">
             <motion.div
               key={activeDayTab}
-              className="bg-surface border border-border/70 rounded-lg p-6 md:p-8 shadow-md space-y-6 relative overflow-hidden"
+              className="bg-surface border border-border/70 rounded-2xl p-6 md:p-8 shadow-md space-y-6 relative overflow-hidden"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
@@ -404,7 +416,7 @@ export default function PlannerResult({
             <h3 className="font-display text-section text-night font-light lowercase">route map</h3>
             <div className="h-px flex-1 bg-border/20" />
           </div>
-          <div className="bg-surface border border-border/70 rounded-lg overflow-hidden shadow-md h-44 w-full relative">
+          <div className="bg-surface border border-border/70 rounded-2xl overflow-hidden shadow-md h-44 w-full relative">
             <ItineraryMap days={itin} activeDay={activeDayTab} />
           </div>
         </motion.div>
@@ -466,8 +478,8 @@ export default function PlannerResult({
           </div>
           <div className="bg-dark-bg border border-dark-card rounded-3xl relative overflow-hidden shadow-card text-dark-text">
             {/* Punch Holes for Ticket Aesthetic */}
-            <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-background rounded-full border border-r-0 border-border z-20" />
-            <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-background rounded-full border border-l-0 border-border z-20" />
+            <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-background rounded-full border border-r-0 border-background z-20" />
+            <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-background rounded-full border border-l-0 border-background z-20" />
 
             {/* Ticket Header */}
             <div className="bg-dark-surface px-6 py-4 flex items-center justify-between border-b border-dark-card">

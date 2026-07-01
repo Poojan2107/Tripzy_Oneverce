@@ -71,7 +71,7 @@ function CarouselCard({
     hidden: { x: '0%', y: 0, z: -200, rotateY: 0, scale: 0.7, opacity: 0, zIndex: 0 },
   };
 
-  const springConfig = { type: "spring" as const, stiffness: 260, damping: 28, mass: 1 };
+  const transitionConfig = { duration: 0.5, ease: [0.25, 1, 0.5, 1] as const };
 
   return (
     <motion.div
@@ -82,7 +82,7 @@ function CarouselCard({
       }`}
       variants={variants}
       animate={position}
-      transition={springConfig}
+      transition={transitionConfig}
       style={{
         perspective: 1200,
         rotateX: isActive ? rotateX : 0,
@@ -264,13 +264,13 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
             className="absolute inset-0"
             initial={false}
             animate={{ opacity: i === activeIndex ? 1 : 0 }}
-            transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
+            transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
           >
             <Image
               src={HERO_CAROUSEL_ITEMS[i].bannerImage}
               alt=""
               fill
-              className="object-cover"
+              className="object-cover animate-fade-in"
               sizes="100vw"
               priority={i === activeIndex}
             />
@@ -414,18 +414,16 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 onDragEnd={handleDragEnd}
                 whileTap={{ cursor: 'grabbing' }}
               >
-                <AnimatePresence mode="popLayout">
-                  {HERO_CAROUSEL_ITEMS.map((item, idx) => (
-                    <CarouselCard
-                      key={item.id}
-                      slide={item}
-                      isActive={getPosition(idx) === 'center'}
-                      position={getPosition(idx)}
-                      onClick={handleSelectActiveTour}
-                      onNavigate={goTo}
-                    />
-                  ))}
-                </AnimatePresence>
+                {HERO_CAROUSEL_ITEMS.map((item, idx) => (
+                  <CarouselCard
+                    key={item.id}
+                    slide={item}
+                    isActive={getPosition(idx) === 'center'}
+                    position={getPosition(idx)}
+                    onClick={handleSelectActiveTour}
+                    onNavigate={goTo}
+                  />
+                ))}
               </motion.div>
 
               {/* Progress bar + Navigation */}

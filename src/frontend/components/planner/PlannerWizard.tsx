@@ -151,14 +151,14 @@ export default function PlannerWizard({
         </div>
 
         {/* Main card */}
-        <div className="bg-surface border border-border/70 rounded-lg p-6 sm:p-10 shadow-md text-left relative overflow-hidden">
+        <div className="bg-surface border border-border/70 rounded-2xl p-8 sm:p-12 shadow-md text-left relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.01] to-teal/[0.01] pointer-events-none" />
 
           {/* Step 1: Destination */}
           {wizardStep === 1 && (
-            <div className="space-y-4 relative z-10">
+            <div className="space-y-5 relative z-10">
               <div className="flex justify-between items-center">
-                <label className="text-meta font-mono text-night font-bold">Choose Your Destination</label>
+                <label className="text-meta font-mono text-night font-bold uppercase tracking-wider">Choose Your Destination</label>
                 {selectedDestination && (
                   <span className="text-meta font-mono text-gold bg-gold/15 border border-gold/30 px-2.5 py-0.5 rounded-sm uppercase font-bold">
                     selected
@@ -173,11 +173,11 @@ export default function PlannerWizard({
                   placeholder="Search chapters (e.g. Varanasi, Kerala...)"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-border/60 bg-background text-body text-night placeholder:text-muted/35 outline-none focus:border-teal/60 focus:shadow-[0_0_12px_rgba(24,182,201,0.1)] transition-all font-sans"
                 />
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar border border-border/15 rounded-md p-2 bg-background/35">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-80 overflow-y-auto pr-2 custom-scrollbar border border-border/15 rounded-xl p-3 bg-background/35">
                 {filteredTours.length > 0 ? (
                   filteredTours.map((tour) => {
                     const isSelected = selectedDestination === tour.id;
@@ -185,7 +185,7 @@ export default function PlannerWizard({
                       <button
                         key={tour.id}
                         onClick={() => onDestinationChange(tour.id)}
-                        className={`group p-2.5 text-left cursor-pointer flex flex-col justify-between aspect-[4/3] relative overflow-hidden rounded-lg border outline-none transition-all duration-300 ${
+                        className={`group p-3 text-left cursor-pointer flex flex-col justify-between aspect-[4/3] relative overflow-hidden rounded-xl border outline-none transition-all duration-300 ${
                           isSelected
                             ? 'border-gold bg-gold/5 shadow-[0_0_15px_rgba(244,182,61,0.25)]'
                             : 'border-border/30 hover:border-gold/50 bg-surface'
@@ -201,8 +201,8 @@ export default function PlannerWizard({
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-night/80 via-night/20 to-transparent z-0" />
                         {isSelected && (
-                          <div className="absolute top-2 right-2 z-10 bg-gold text-night rounded-full p-0.5 shadow-sm">
-                            <CheckCircle2 className="w-2.5 h-2.5 stroke-[3]" />
+                          <div className="absolute top-2.5 right-2.5 z-10 bg-gold text-night rounded-full p-0.5 shadow-sm">
+                            <CheckCircle2 className="w-3.5 h-3.5 stroke-[3]" />
                           </div>
                         )}
                         <div className="relative z-10 w-full mt-auto text-left">
@@ -223,11 +223,11 @@ export default function PlannerWizard({
 
           {/* Step 2: Companion + Budget + Duration */}
           {wizardStep === 2 && (
-            <div className="space-y-6 relative z-10">
+            <div className="space-y-7 relative z-10">
               {/* Companion */}
-              <div className="space-y-3">
-                <label className="text-meta font-mono text-night font-bold block">Who are you traveling with?</label>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-4">
+                <label className="text-meta font-mono text-night font-bold block uppercase tracking-wider">Who are you traveling with?</label>
+                <div className="grid grid-cols-2 gap-4">
                   {COMPANION_OPTIONS.map((opt) => {
                     const Icon = getCompanionIcon(opt.id);
                     const isSelected = travelers === opt.id;
@@ -235,19 +235,19 @@ export default function PlannerWizard({
                       <button
                         key={opt.id}
                         onClick={() => onTravelersChange(opt.id)}
-                        className={`btn-ghost p-3 text-left cursor-pointer flex items-center gap-3 outline-none ${
+                        className={`btn-ghost p-4 rounded-xl text-left cursor-pointer flex items-center gap-3.5 outline-none border transition-all duration-300 ${
                           isSelected
                             ? 'bg-secondary-surface border-gold text-night shadow-sm'
                             : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'
                         }`}
                       >
-                        <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
+                        <div className={`w-8.5 h-8.5 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 ${
                           isSelected ? 'bg-gold text-night scale-105' : 'bg-secondary-surface text-muted/50'
                         }`}>
-                          <Icon className="w-3.5 h-3.5" />
+                          <Icon className="w-4 h-4" />
                         </div>
                         <div>
-                          <span className={`text-body font-semibold block ${isSelected ? 'text-night' : 'text-muted/80'}`}>{opt.label}</span>
+                          <span className={`text-body font-semibold block ${isSelected ? 'text-night font-bold' : 'text-muted/80'}`}>{opt.label}</span>
                         </div>
                       </button>
                     );
@@ -256,15 +256,15 @@ export default function PlannerWizard({
               </div>
 
               {/* Budget Slider */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <label className="text-meta font-mono text-night font-bold block">Budget Per Day</label>
-                  <span className="text-body font-bold text-gold bg-gold/10 border border-gold/20 px-3 py-0.5 rounded-sm">
+                  <label className="text-meta font-mono text-night font-bold block uppercase tracking-wider">Budget Per Day</label>
+                  <span className="text-body font-bold text-gold bg-gold/10 border border-gold/20 px-3 py-1 rounded-md">
                     {formatBudget(customBudgetAmount)}
                   </span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <IndianRupee className="w-4 h-4 text-muted/40 shrink-0" />
+                <div className="flex items-center gap-4">
+                  <IndianRupee className="w-4.5 h-4.5 text-muted/40 shrink-0" />
                   <input
                     type="range"
                     min={budgetSliderMin}
@@ -272,13 +272,13 @@ export default function PlannerWizard({
                     step={1000}
                     value={customBudgetAmount}
                     onChange={(e) => onBudgetChange(Number(e.target.value))}
-                    className="w-full h-1.5 bg-border/40 rounded-full appearance-none cursor-pointer accent-gold [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gold [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer"
+                    className="w-full h-1.5 bg-border/40 rounded-full appearance-none cursor-pointer accent-gold [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4.5 [&::-webkit-slider-thumb]:h-4.5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gold [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer"
                   />
-                  <IndianRupee className="w-4 h-4 text-muted/40 shrink-0" />
+                  <IndianRupee className="w-4.5 h-4.5 text-muted/40 shrink-0" />
                 </div>
-                <div className="flex justify-between text-micro font-mono text-muted/50 mt-1">
+                <div className="flex justify-between text-micro font-mono text-muted/50 mt-1.5">
                   <span>{formatBudget(budgetSliderMin)}</span>
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${customBudgetAmount <= 15000 ? 'bg-teal/10 border-teal/30 text-teal' : customBudgetAmount <= 40000 ? 'bg-gold/10 border-gold/30 text-gold' : 'bg-coral/10 border-coral/30 text-coral'}`}>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${customBudgetAmount <= 15000 ? 'bg-teal/10 border-teal/30 text-teal' : customBudgetAmount <= 40000 ? 'bg-gold/10 border-gold/30 text-gold' : 'bg-coral/10 border-coral/30 text-coral'}`}>
                     {customBudgetAmount <= 15000 ? 'Budget' : customBudgetAmount <= 40000 ? 'Comfort' : 'Luxury'}
                   </span>
                   <span>{formatBudget(Math.max(budgetSliderMax, 200000))}</span>
@@ -286,29 +286,29 @@ export default function PlannerWizard({
               </div>
 
               {/* Duration */}
-              <div className="space-y-3">
-                <label className="text-meta font-mono text-night font-bold block">Duration of stay</label>
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+              <div className="space-y-4">
+                <label className="text-meta font-mono text-night font-bold block uppercase tracking-wider">Duration of stay</label>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
                   {DURATION_OPTIONS.map((opt) => {
                     const isSelected = duration === opt.id;
                     return (
                       <button
                         key={opt.id}
                         onClick={() => { setShowCustomDuration(false); onDurationChange(opt.id); }}
-                        className={`btn-ghost py-2 px-1 text-center cursor-pointer flex flex-col justify-center items-center outline-none min-h-[54px] ${
+                        className={`btn-ghost py-2.5 px-2 rounded-xl text-center cursor-pointer flex flex-col justify-center items-center outline-none min-h-[58px] border transition-all duration-300 ${
                           isSelected
                             ? 'bg-secondary-surface border-gold text-night shadow-sm'
                             : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'
                         }`}
                       >
-                        <span className={`text-body font-semibold ${isSelected ? 'text-night' : 'text-muted/80'}`}>{opt.days} Days</span>
+                        <span className={`text-body font-semibold ${isSelected ? 'text-night font-bold' : 'text-muted/80'}`}>{opt.days} Days</span>
                         <span className="text-meta text-muted/50 font-mono uppercase mt-0.5">{opt.id === 'weekend' ? '2-3d' : opt.id === 'short' ? '4-6d' : opt.id === 'week' ? '1wk' : '2wk'}</span>
                       </button>
                     );
                   })}
                   <button
                     onClick={handleCustomDurationClick}
-                    className={`btn-ghost py-2 px-1 text-center cursor-pointer flex flex-col justify-center items-center outline-none min-h-[54px] ${
+                    className={`btn-ghost py-2.5 px-2 rounded-xl text-center cursor-pointer flex flex-col justify-center items-center outline-none min-h-[58px] border transition-all duration-300 ${
                       showCustomDuration || duration === 'custom'
                         ? 'bg-secondary-surface border-gold text-night shadow-sm'
                         : 'bg-background/40 border-border/40 text-muted hover:bg-background/80 hover:border-border'
@@ -328,12 +328,12 @@ export default function PlannerWizard({
                       value={customDaysInput}
                       onChange={(e) => setCustomDaysInput(parseInt(e.target.value) || 1)}
                       onBlur={handleCustomDaysConfirm}
-                      className="w-20 px-3 py-1.5 rounded-md border border-border/40 bg-background text-body text-night text-center outline-none focus:border-teal transition-all font-sans"
+                      className="w-20 px-3 py-2 rounded-md border border-border/40 bg-background text-body text-night text-center outline-none focus:border-teal transition-all font-sans"
                     />
                     <span className="text-meta font-mono text-muted">(max 30)</span>
                     <button
                       onClick={handleCustomDaysConfirm}
-                      className="btn-ghost px-3 py-1.5 text-meta font-mono font-bold text-teal border border-teal/30 rounded-md cursor-pointer hover:bg-teal/10"
+                      className="btn-ghost px-4 py-2 text-meta font-mono font-bold text-teal border border-teal/30 rounded-md cursor-pointer hover:bg-teal/10"
                     >
                       Set
                     </button>
@@ -346,47 +346,47 @@ export default function PlannerWizard({
           {/* Step 3: Notes + Departing From */}
           {wizardStep === 3 && (
             <div className="space-y-6 relative z-10">
-              <div className="space-y-2">
-                <label className="text-meta font-mono text-night font-bold block">Departing From (Optional)</label>
-                    <input
-                      type="text"
-                      maxLength={100}
-                      placeholder="e.g. Mumbai, Delhi, Bengaluru"
-                      value={fromLocation}
-                      onChange={(e) => onFromLocationChange(e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans"
-                    />
+              <div className="space-y-2.5">
+                <label className="text-meta font-mono text-night font-bold block uppercase tracking-wider">Departing From (Optional)</label>
+                <input
+                  type="text"
+                  maxLength={100}
+                  placeholder="e.g. Mumbai, Delhi, Bengaluru"
+                  value={fromLocation}
+                  onChange={(e) => onFromLocationChange(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg border border-border/60 bg-background text-body text-night placeholder:text-muted/35 outline-none focus:border-teal transition-all font-sans"
+                />
               </div>
 
               <div className="space-y-3">
-                <label className="text-meta font-mono text-night font-bold block">
+                <label className="text-meta font-mono text-night font-bold block uppercase tracking-wider">
                   Describe your dream journey
                 </label>
                 <textarea
-                  rows={3}
+                  rows={5}
                   maxLength={500}
                   value={notes}
                   onChange={(e) => onNotesChange(e.target.value)}
                   placeholder="Describe what you want to seek... e.g. I want to experience sunset ghat ceremonies, visit ancient weaving guilds, try local street foods, and capture sunrise vistas, keeping the itinerary relaxed and photogenic."
-                  className="w-full p-4 rounded-md border border-border/40 bg-background text-body text-night placeholder:text-muted/30 outline-none focus:border-teal transition-all font-sans resize-none leading-relaxed"
+                  className="w-full p-4 rounded-lg border border-border/60 bg-background text-body text-night placeholder:text-muted/35 outline-none focus:border-teal transition-all font-sans resize-none leading-relaxed"
                 />
               </div>
 
               {/* Preview */}
-              <div className="bg-background/60 border border-border/20 rounded-md p-4 space-y-1">
-                <span className="text-micro font-mono text-gold block uppercase tracking-wider">Journey Preview</span>
-                <p className="text-body text-night/80 font-light">{previewPersona}</p>
+              <div className="bg-background/60 border border-border/20 rounded-xl p-5 space-y-1.5">
+                <span className="text-micro font-mono text-gold block uppercase tracking-wider font-bold">Journey Preview</span>
+                <p className="text-body text-night/85 font-light leading-relaxed">{previewPersona}</p>
               </div>
             </div>
           )}
 
           {/* Navigation */}
-          <div className="flex items-center justify-between pt-8 z-10 relative">
+          <div className="flex items-center justify-between pt-8 z-10 relative border-t border-border/10 mt-6">
             <div>
               {wizardStep > 1 ? (
                 <button
                   onClick={handleBack}
-                  className="btn-ghost h-10 px-4 rounded-md text-caption font-bold text-muted hover:text-night flex items-center gap-1.5 cursor-pointer border border-border/30"
+                  className="btn-ghost h-11 px-5 rounded-lg text-caption font-bold text-muted hover:text-night flex items-center gap-1.5 cursor-pointer border border-border/30 transition-all duration-300"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Back
@@ -398,10 +398,10 @@ export default function PlannerWizard({
               <button
                 onClick={handleNext}
                 disabled={wizardStep === 1 ? !isStep1Valid : !isStep2Valid}
-                className={`btn h-11 px-5 rounded-md text-caption inline-flex items-center gap-1.5 cursor-pointer transition-all duration-300 ${
+                className={`btn h-11 px-6 rounded-lg text-caption inline-flex items-center gap-1.5 cursor-pointer transition-all duration-300 ${
                   (wizardStep === 1 ? isStep1Valid : isStep2Valid)
-                    ? 'btn-night text-white'
-                    : 'bg-secondary-surface text-muted/30 cursor-not-allowed'
+                    ? 'btn-night text-white shadow-md'
+                    : 'bg-secondary-surface text-muted/30 cursor-not-allowed border border-border/10'
                 }`}
               >
                 Next
@@ -411,10 +411,10 @@ export default function PlannerWizard({
               <button
                 onClick={handleGenerate}
                 disabled={!isFormValid || generating}
-                className={`btn h-12 px-6 rounded-md text-caption inline-flex items-center gap-2 cursor-pointer transition-all duration-300 ${
+                className={`btn h-12 px-7 rounded-lg text-caption inline-flex items-center gap-2 cursor-pointer transition-all duration-300 ${
                   isFormValid && !generating
-                    ? 'btn-night text-white hover:bg-gold hover:text-night shadow-lg'
-                    : 'bg-secondary-surface text-muted/30 cursor-not-allowed'
+                    ? 'btn-night text-white hover:bg-gold hover:text-night shadow-[0_0_24px_rgba(244,182,61,0.25)]'
+                    : 'bg-secondary-surface text-muted/30 cursor-not-allowed border border-border/10'
                 }`}
               >
                 {generating ? (

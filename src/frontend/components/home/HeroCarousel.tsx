@@ -75,8 +75,10 @@ function CarouselCard({
 
   return (
     <motion.div
-      className={`absolute w-[min(320px,80vw)] h-[430px] rounded-lg overflow-hidden cursor-pointer origin-center border transition-colors duration-300 ${
-        isActive ? 'border-gold/40 shadow-lg' : 'border-white/10 hover:border-white/25 shadow-md'
+      className={`absolute w-[min(320px,80vw)] h-[430px] rounded-xl overflow-hidden cursor-pointer origin-center border transition-all duration-300 ${
+        isActive
+          ? 'border-gold/50 shadow-[0_24px_64px_rgba(0,0,0,0.35),0_0_0_1px_rgba(244,182,61,0.2)]'
+          : 'border-white/10 hover:border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.25)]'
       }`}
       variants={variants}
       animate={position}
@@ -96,24 +98,24 @@ function CarouselCard({
         className="w-full h-full rounded-lg overflow-hidden"
         style={{
           boxShadow: isActive
-            ? `0 20px 48px rgba(0,0,0,0.25), 0 0 0 1px ${accentColor}`
-            : 'var(--shadow-md)',
+            ? `0 32px 64px rgba(0,0,0,0.35), 0 0 0 1px ${accentColor}, inset 0 1px 0 rgba(255,255,255,0.06)`
+            : '0 8px 32px rgba(0,0,0,0.18)',
         }}
       >
         <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">
-          <div className="h-[55%] w-full overflow-hidden relative bg-secondary-surface">
+          <div className="h-[58%] w-full overflow-hidden relative bg-secondary-surface">
             <Image
               src={slide.bannerImage}
               alt={slide.title}
               fill
-              className="object-cover"
+              className={`object-cover transition-transform duration-700 ${isActive ? 'scale-[1.04]' : 'scale-100'}`}
               sizes="320px"
               priority={isActive}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-            <span className={`absolute top-4 left-4 px-3 py-1 rounded-sm text-caption font-mono font-bold text-white uppercase border border-white/20 backdrop-blur-md shadow-sm bg-opacity-80 ${slide.badgeColor}`}>{slide.category}</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+            <span className={`absolute top-3.5 left-3.5 px-2.5 py-1 rounded-sm text-meta font-mono font-bold text-white uppercase border border-white/25 backdrop-blur-md shadow-sm tracking-wide ${slide.badgeColor}`}>{slide.category}</span>
             <div className="absolute bottom-3 left-4 right-4 flex justify-between items-end">
-              <span className="text-meta font-mono text-white/95">{slide.subtitle}</span>
+              <span className="text-meta font-mono text-white/95 font-bold tracking-wider drop-shadow-sm">{slide.subtitle}</span>
             </div>
           </div>
           <div className="flex-1 p-5 flex flex-col justify-between text-left bg-surface/95 paper-grain border-t border-border/40">
@@ -159,11 +161,12 @@ function CarouselCard({
 }
 
 const AMBIENT_PARTICLES = [
-  { x: '8%', y: '15%', size: 80, color: 'rgba(244,182,61,0.08)', duration: 8 },
-  { x: '92%', y: '12%', size: 120, color: 'rgba(233,92,116,0.06)', duration: 10 },
-  { x: '3%', y: '75%', size: 60, color: 'rgba(24,182,201,0.07)', duration: 7 },
-  { x: '95%', y: '85%', size: 100, color: 'rgba(244,182,61,0.05)', duration: 9 },
-  { x: '50%', y: '5%', size: 40, color: 'rgba(233,92,116,0.04)', duration: 6 },
+  { x: '8%', y: '15%', size: 120, color: 'rgba(244,182,61,0.10)', duration: 8 },
+  { x: '92%', y: '12%', size: 160, color: 'rgba(233,92,116,0.07)', duration: 10 },
+  { x: '3%', y: '75%', size: 80, color: 'rgba(24,182,201,0.09)', duration: 7 },
+  { x: '95%', y: '85%', size: 130, color: 'rgba(244,182,61,0.06)', duration: 9 },
+  { x: '50%', y: '5%', size: 60, color: 'rgba(233,92,116,0.05)', duration: 6 },
+  { x: '25%', y: '90%', size: 90, color: 'rgba(244,182,61,0.05)', duration: 11 },
 ];
 
 function FloatingParticles() {
@@ -277,7 +280,10 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
       </div>
 
       {/* Top scrim gradient for navbar text contrast */}
-      <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/60 via-black/25 to-transparent pointer-events-none z-10" />
+      <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none z-10" />
+
+      {/* Bottom gradient strip — seamless handoff to next section */}
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#F8F4EE] to-transparent pointer-events-none z-10" />
 
       {/* Vignette overlay */}
       <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.4)] pointer-events-none" />
@@ -374,21 +380,24 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
             <motion.div className="flex-grow w-full lg:w-1/2 flex flex-col items-center justify-center relative min-h-[520px]" variants={itemVariants}>
               {/* Floating Passport Badge */}
               <motion.div
-                className="absolute top-0 right-2 lg:right-8 z-40 flex flex-col items-start gap-1 bg-white/10 backdrop-blur-xl border border-white/10 rounded-lg px-4.5 py-3 shadow-lg select-none text-left"
+                className="absolute top-0 right-2 lg:right-8 z-40 flex flex-col items-start gap-1.5 bg-black/25 backdrop-blur-2xl border border-white/15 rounded-xl px-5 py-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] select-none text-left"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <span className="text-caption text-gold font-bold">Atlas Chronicles</span>
-                <div className="flex gap-4 mt-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold shadow-[0_0_4px_rgba(244,182,61,0.9)] animate-pulse" />
+                  <span className="text-caption text-gold font-bold tracking-wider uppercase">Atlas Chronicles</span>
+                </div>
+                <div className="flex gap-5 mt-1">
                   {[
                     { value: '12', label: 'Chapters' },
                     { value: '4', label: 'Regions' },
-                    { value: '3', label: 'Journeys' },
+                    { value: '∞', label: 'Stories' },
                   ].map((s) => (
                     <div key={s.label} className="text-left">
-                      <span className="text-card font-bold text-white block font-display leading-none">{s.value}</span>
-                      <span className="text-meta font-mono text-white/40 block mt-0.5">{s.label}</span>
+                      <span className="text-2xl font-bold text-white block font-display leading-none tracking-tight">{s.value}</span>
+                      <span className="text-meta font-mono text-white/50 block mt-0.5 uppercase tracking-wider">{s.label}</span>
                     </div>
                   ))}
                 </div>

@@ -129,7 +129,16 @@ export default function PlannerResult({
   }
 
   const itin = itineraryResult.itinerary || [];
-  const costs = itineraryResult.costs || { transit: 0, stay: 0, food: 0, total: 0 };
+  const rawCosts = itineraryResult.costs || {};
+  const costs = {
+    transit: typeof rawCosts.transit === 'number' ? rawCosts.transit : parseFloat(rawCosts.transit) || 0,
+    stay: typeof rawCosts.stay === 'number' ? rawCosts.stay : parseFloat(rawCosts.stay) || 0,
+    food: typeof rawCosts.food === 'number' ? rawCosts.food : parseFloat(rawCosts.food) || 0,
+    total: typeof rawCosts.total === 'number' ? rawCosts.total : parseFloat(rawCosts.total) || 0,
+  };
+  if (costs.total === 0) {
+    costs.total = costs.transit + costs.stay + costs.food;
+  }
   const currentDay = itin[activeDayTab] || {};
   const destId = itineraryResult.destinationId || selectedDestination || '';
   const tour = TOURS_DATA.find(t => t.id === destId);
@@ -287,7 +296,7 @@ export default function PlannerResult({
                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${isActive ? 'bg-night/20 text-night' : 'bg-secondary-surface text-muted/60'}`}>
                      {idx + 1}
                    </span>
-                   <span className="uppercase tracking-widest text-[10px]">{isActive ? dayItem.title?.split(' ').slice(0, 2).join(' ') || `Day ${idx + 1}` : `Day ${idx + 1}`}</span>
+                   <span className="uppercase tracking-widest text-[10px]">{isActive ? dayItem?.title?.split(' ').slice(0, 2).join(' ') || `Day ${idx + 1}` : `Day ${idx + 1}`}</span>
                  </motion.button>
                );
              })}

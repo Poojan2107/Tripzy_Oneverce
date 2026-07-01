@@ -22,6 +22,8 @@ export default function PassportMap({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const [mounted, setMounted] = useState(false);
 
+  const markerGroupRef = useRef<L.FeatureGroup | null>(null);
+
   // Set mounted flag and clean up map on unmount
   useEffect(() => {
     setMounted(true);
@@ -68,8 +70,9 @@ export default function PassportMap({
     return Array.from(list.values());
   })();
 
+  // 1. Initialize Map ONCE on mount
   useEffect(() => {
-    if (!mounted || !mapContainerRef.current) return;
+    if (!mounted || !mapContainerRef.current || mapInstanceRef.current) return;
 
     // Reset default Leaflet icon urls
     delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -96,7 +99,16 @@ export default function PassportMap({
       maxZoom: 20
     }).addTo(map);
 
-    const markerGroup = L.featureGroup().addTo(map);
+    markerGroupRef.current = L.featureGroup().addTo(map);
+  }, [mounted]);
+
+  // 2. Add / update markers when mapData changes
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const markerGroup = markerGroupRef.current;
+    if (!map || !markerGroup) return;
+
+    markerGroup.clearLayers();
     const bounds: [number, number][] = [];
 
     mapData.forEach((item) => {
@@ -141,12 +153,7 @@ export default function PassportMap({
     if (bounds.length > 0) {
       map.fitBounds(bounds, { padding: [30, 30] });
     }
-
-    return () => {
-      map.remove();
-      mapInstanceRef.current = null;
-    };
-  }, [mounted, mapData]);
+  }, [mapData, mounted]);
 
   if (!mounted) {
     return (

@@ -15,22 +15,24 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
 
   const itinerary = days;
 
+  const markerGroupRef = useRef<L.FeatureGroup | null>(null);
+  const routeLineRef = useRef<L.Polyline | null>(null);
+
   useEffect(() => {
     setMounted(true);
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
   }, []);
 
+  // 1. Initialize Map ONCE on mount
   useEffect(() => {
-    if (!mounted || !mapContainerRef.current) return;
+    if (!mounted || !mapContainerRef.current || mapInstanceRef.current) return;
 
-    const mappedDays = itinerary.filter((day: any) => 
-      day && 
-      day.latitude != null && 
-      day.longitude != null && 
-      !isNaN(parseFloat(day.latitude)) && 
-      !isNaN(parseFloat(day.longitude))
-    );
-    if (mappedDays.length === 0) return;
-
+    // Reset default Leaflet icon urls
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -38,10 +40,9 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
     });
 
-    const firstDay = mappedDays[0];
     const map = L.map(mapContainerRef.current, {
-      center: [parseFloat(firstDay.latitude), parseFloat(firstDay.longitude)],
-      zoom: 12,
+      center: [20.5937, 78.9629],
+      zoom: 10,
       zoomControl: true,
       scrollWheelZoom: false,
     });
@@ -54,6 +55,30 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
       subdomains: 'abcd',
       maxZoom: 20
     }).addTo(map);
+
+    markerGroupRef.current = L.featureGroup().addTo(map);
+  }, [mounted]);
+
+  // 2. Add / update markers and route line when itinerary or activeDay changes
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const markerGroup = markerGroupRef.current;
+    if (!map || !markerGroup) return;
+
+    markerGroup.clearLayers();
+    if (routeLineRef.current) {
+      routeLineRef.current.remove();
+      routeLineRef.current = null;
+    }
+
+    const mappedDays = itinerary.filter((day: any) => 
+      day && 
+      day.latitude != null && 
+      day.longitude != null && 
+      !isNaN(parseFloat(day.latitude)) && 
+      !isNaN(parseFloat(day.longitude))
+    );
+    if (mappedDays.length === 0) return;
 
     const latlngs: L.LatLngExpression[] = [];
 
@@ -76,7 +101,7 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
         iconAnchor: [12, 12]
       });
 
-      const marker = L.marker([lat, lng], { icon: dayMarkerIcon }).addTo(map);
+      const marker = L.marker([lat, lng], { icon: dayMarkerIcon }).addTo(markerGroup);
       marker.bindPopup(`
         <div style="font-family: var(--font-sans), sans-serif; font-size: 11px; color: var(--color-night, #0E1B26); padding: 4px;">
           <strong style="font-size: 12px; display: block; margin-bottom: 2px;">Day ${index + 1}: ${day.title}</strong>
@@ -93,13 +118,11 @@ export default function ItineraryMap({ days = [], activeDay = 0 }: ItineraryMapP
         lineCap: 'round',
         lineJoin: 'round'
       }).addTo(map);
+      routeLineRef.current = routeLine;
       map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
+    } else if (latlngs.length === 1) {
+      map.setView(latlngs[0], 12);
     }
-
-    return () => {
-      map.remove();
-      mapInstanceRef.current = null;
-    };
   }, [itinerary, activeDay, mounted]);
 
   if (!mounted) {

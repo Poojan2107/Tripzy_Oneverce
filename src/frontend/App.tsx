@@ -301,7 +301,7 @@ export default function App() {
       )}
 
       <main className={`w-full flex-grow transition-all duration-300 ${
-        currentTab === 'home' ? 'pt-0' : 'pt-[76px] md:pt-[84px]'
+        currentTab === 'home' ? 'pt-0' : 'pt-[52px] md:pt-[76px] lg:pt-[84px]'
       }`}>
         <AnimatePresence mode="wait">
           {selectedTour ? (

@@ -43,7 +43,7 @@ export default function BottomNavbar({ currentTab, onTabChange, wishlistCount, v
                 animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <Icon className={`w-4.5 h-4.5 transition-colors ${
+                <Icon className={`w-[18px] h-[18px] transition-colors ${
                   isActive ? 'text-gold' : 'text-muted/50'
                 }`} />
               </motion.div>

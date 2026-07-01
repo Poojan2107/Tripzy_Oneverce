@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring, PanInfo } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring, PanInfo, useReducedMotion } from 'framer-motion';
 import Image from 'next/image';
 import { Sparkles, ArrowRight, MapPin, Heart, Compass, BookOpen, Camera, Clock, Star, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { HERO_CAROUSEL_ITEMS } from './data';
@@ -170,8 +170,10 @@ const AMBIENT_PARTICLES = [
 ];
 
 function FloatingParticles() {
+  const shouldReduce = useReducedMotion();
+  if (shouldReduce) return null;
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden hidden sm:block">
       {AMBIENT_PARTICLES.map((p, i) => (
         <motion.div
           key={i}
@@ -298,7 +300,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
         }}
       />
 
-      <div className="relative z-10 w-full flex-grow flex flex-col justify-center pt-28 pb-16 lg:pt-32 lg:pb-20">
+      <div className="relative z-10 w-full flex-grow flex flex-col justify-center pt-20 pb-16 sm:pt-24 lg:pt-32 lg:pb-20">
         <motion.div
           className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 w-full"
           variants={staggerVariants}
@@ -377,10 +379,10 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
             </motion.div>
  
             {/* Right: Carousel area */}
-            <motion.div className="flex-grow w-full lg:w-1/2 flex flex-col items-center justify-center relative min-h-[520px]" variants={itemVariants}>
-              {/* Floating Passport Badge */}
+            <motion.div className="flex-grow w-full lg:w-1/2 flex flex-col items-center justify-center relative min-h-[360px] sm:min-h-[440px] lg:min-h-[520px]" variants={itemVariants}>
+              {/* Floating Passport Badge — desktop only */}
               <motion.div
-                className="absolute top-0 right-2 lg:right-8 z-40 flex flex-col items-start gap-1.5 bg-black/25 backdrop-blur-2xl border border-white/15 rounded-xl px-5 py-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] select-none text-left"
+                className="absolute top-0 right-2 lg:right-8 z-40 hidden lg:flex flex-col items-start gap-1.5 bg-black/25 backdrop-blur-2xl border border-white/15 rounded-xl px-5 py-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] select-none text-left"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
@@ -405,7 +407,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
 
               {/* Carousel Cards Container */}
               <motion.div
-                className="relative w-full h-[480px] flex items-center justify-center select-none"
+                className="relative w-full h-[380px] sm:h-[440px] lg:h-[480px] flex items-center justify-center select-none"
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.3}

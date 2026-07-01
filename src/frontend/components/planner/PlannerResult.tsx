@@ -145,7 +145,7 @@ export default function PlannerResult({
 
   return (
     <motion.div
-      className="min-h-[100dvh] bg-background text-night select-none text-left pt-6 pb-24"
+      className="min-h-[100dvh] bg-background text-night select-none text-left pt-6 pb-[calc(var(--nav-bottom-height)+2rem)] md:pb-24"
       initial="hidden"
       animate={mounted ? "visible" : "hidden"}
     >

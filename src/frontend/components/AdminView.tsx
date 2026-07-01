@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Tour } from '../types';
 import { formatINR, EXCHANGE_RATE } from '../utils/currency';
+import { useToast } from '../components/ui/Toast';
 import { getDashboardMetrics } from '../../backend/actions/analyticsActions';
 import { getAdminUsers } from '../../backend/actions/adminActions';
 import {
@@ -83,6 +84,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
 
   const [dest, setDest] = useState(INIT_DEST_STATE);
   const [exp, setExp] = useState(INIT_EXP_STATE);
+  const { toast } = useToast();
 
   const loadData = useCallback(async () => {
     try { setLoadingMetrics(true); const r = await getDashboardMetrics(); if (r.success) setMetrics(r.data); } catch (e) { console.error("[admin] Failed to load dashboard metrics:", e); } finally { setLoadingMetrics(false); }
@@ -143,7 +145,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
 
   const handleSaveDest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!dest.name || !dest.city || !dest.country || !dest.bannerImage) { alert("Please fill in all required fields."); return; }
+    if (!dest.name || !dest.city || !dest.country || !dest.bannerImage) { toast("Please fill in all required fields.", "error"); return; }
     const payload = {
       name: dest.name, slug: dest.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       country: dest.country, city: dest.city, region: dest.region,
@@ -189,15 +191,15 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
           ogImage: (res.data.ogImage as string) || undefined,
         };
         editingDest ? onUpdateTour(tour) : onAddTour(tour);
-        alert(editingDest ? "Destination updated successfully." : "Destination created.");
-      } else { alert("Error: " + res.error); }
+        toast(editingDest ? "Destination updated." : "Destination created.", "success");
+      } else { toast("Error: " + res.error, "error"); }
       setIsDestFormOpen(false); loadData();
-    } catch (err: any) { console.error(err); alert("Database mutation failed."); }
+    } catch (err: any) { console.error(err); toast("Database mutation failed.", "error"); }
   };
 
   const handleSaveExp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!exp.name || !exp.featuredImage) { alert("Please fill in required fields."); return; }
+    if (!exp.name || !exp.featuredImage) { toast("Please fill in required fields.", "error"); return; }
     const payload = {
       name: exp.name, slug: exp.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
       description: exp.description, featuredImage: exp.featuredImage, icon: exp.icon,
@@ -209,32 +211,32 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
     };
     try {
       const res = editingExp ? await updateExperience(editingExp.id, payload) : await createExperience(payload);
-      if (res.success) { alert("Experience saved successfully!"); } else { alert("Error: " + res.error); }
+      if (res.success) { toast("Experience saved.", "success"); } else { toast("Error: " + res.error, "error"); }
       setIsExpFormOpen(false); loadData();
-    } catch (err: any) { console.error(err); alert("Failed to save experience."); }
+    } catch (err: any) { console.error(err); toast("Failed to save experience.", "error"); }
   };
 
   const handleDeleteDest = async (id: string, name: string) => {
     if (confirm(`Permanently delete "${name}"?`)) {
-      try { const r = await deleteDestination(id); if (r.success) { onDeleteTour(id); loadData(); } else alert("Delete failed: " + r.error); } catch { alert("Failed to delete."); }
+      try { const r = await deleteDestination(id); if (r.success) { onDeleteTour(id); loadData(); toast("Destination deleted.", "success"); } else toast("Delete failed: " + r.error, "error"); } catch { toast("Failed to delete.", "error"); }
     }
   };
 
   const handleDeleteExp = async (id: string, name: string) => {
     if (confirm(`Delete experience "${name}"?`)) {
-      try { const r = await deleteExperience(id); if (r.success) loadData(); else alert("Delete failed: " + r.error); } catch { alert("Failed to delete."); }
+      try { const r = await deleteExperience(id); if (r.success) { loadData(); toast("Experience deleted.", "success"); } else toast("Delete failed: " + r.error, "error"); } catch { toast("Failed to delete.", "error"); }
     }
   };
 
   const handleDestinationStatus = async (id: string, status: 'DRAFT' | 'REVIEW' | 'PUBLISHED') => {
     const res = await updateDestinationStatus(id, status);
-    if (!res.success) alert(res.error || 'Could not update status.');
+    if (!res.success) toast(res.error || 'Could not update status.', "error");
     loadData();
   };
 
   const handleExperienceStatus = async (id: string, status: 'DRAFT' | 'REVIEW' | 'PUBLISHED') => {
     const res = await updateExperienceStatus(id, status);
-    if (!res.success) alert(res.error || 'Could not update status.');
+    if (!res.success) toast(res.error || 'Could not update status.', "error");
     loadData();
   };
 

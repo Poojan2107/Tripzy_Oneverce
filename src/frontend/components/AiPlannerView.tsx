@@ -8,6 +8,7 @@ import { TOURS_DATA } from '../data';
 import { Tour } from '../types';
 import { parseBudgetRange } from '../utils/budget';
 import { trackPlannerCompletion } from '../utils/analytics';
+import { useToast } from '../components/ui/Toast';
 import { LOADING_MESSAGES, DURATION_OPTIONS } from './planner/constants';
 import { buildOfflineResponse } from '../../backend/data/offlineItineraries';
 import PlannerWizard from './planner/PlannerWizard';
@@ -27,6 +28,7 @@ export default function AiPlannerView({
   onClearLoadedItinerary,
   allTours = []
 }: AiPlannerViewProps) {
+  const { toast } = useToast();
   const mountedRef = useRef(true);
   useEffect(() => { return () => { mountedRef.current = false; }; }, []);
 
@@ -460,11 +462,11 @@ const sanitizeUserInput = (input: string) => {
           });
         }
       } else {
-        alert(result.error || "Your journey could not be saved right now. Your explorer journal remains safe locally. Please try again shortly.");
+        toast(result.error || "Your journey could not be saved right now.", "error");
       }
     } catch (err) {
       console.error("Failed to save:", err);
-      alert("Your journey could not be saved right now. Your explorer journal remains safe locally. Please try again shortly.");
+      toast("Your journey could not be saved right now.", "error");
     } finally {
       setSaving(false);
     }

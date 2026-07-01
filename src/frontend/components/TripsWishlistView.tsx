@@ -10,6 +10,7 @@ import { Tour } from '../types';
 import { TOURS_DATA } from '../data';
 import { formatINR } from '../utils/currency';
 import SafeImage from './ui/SafeImage';
+import { useToast } from './ui/Toast';
 import ScrapbookPostcard from './passport/ScrapbookPostcard';
 import EmptyPassportState from './passport/EmptyPassportState';
 import dynamic from 'next/dynamic';
@@ -47,6 +48,7 @@ export default function TripsWishlistView({
   allTours = []
 }: TripsWishlistViewProps) {
   const { data: session } = useSession();
+  const { toast } = useToast();
   const [activeSubTab, setActiveSubTab] = useState<'chapters' | 'journeys'>('chapters');
 
   const displayTours = useMemo(() => {
@@ -293,7 +295,7 @@ export default function TripsWishlistView({
                   onClick={() => {
                     const url = `${window.location.origin}/passport/share/${session.user.id}`;
                     navigator.clipboard.writeText(url);
-                    alert("Public Passport link copied to clipboard:\n" + url);
+                    toast("Passport link copied to clipboard!", "copy");
                   }}
                   className="btn btn-outline border-teal/20 bg-teal/5 text-teal hover:bg-teal/10 h-8 px-3 rounded-md text-caption flex items-center justify-center cursor-pointer shadow-sm"
                 >

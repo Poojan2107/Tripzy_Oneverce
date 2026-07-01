@@ -125,6 +125,72 @@ export async function deleteSavedItinerary(id: string) {
   }
 }
 
+export interface UserPreferences {
+  budget?: string;
+  duration?: number;
+  travelStyle?: string;
+  companion?: string;
+  interests?: string;
+  month?: string;
+}
+
+export async function saveUserPreferences(preferences: UserPreferences) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { success: false, error: "Not authenticated." };
+    }
+
+    const existing = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: { preferences: true },
+    });
+
+    const currentPrefs = (existing?.preferences as Record<string, any>) || {};
+    const merged = { ...currentPrefs, ...preferences, updatedAt: new Date().toISOString() };
+
+    await db.user.update({
+      where: { id: session.user.id },
+      data: { preferences: merged },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to save preferences:", error);
+    return { success: false, error: "Failed to save preferences." };
+  }
+}
+
+export async function getUserPreferences(): Promise<{ success: boolean; data?: UserPreferences; error?: string }> {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return { success: false, error: "Not authenticated." };
+    }
+
+    const user = await db.user.findUnique({
+      where: { id: session.user.id },
+      select: { preferences: true },
+    });
+
+    const prefs = (user?.preferences as Record<string, any>) || {};
+    return {
+      success: true,
+      data: {
+        budget: prefs.budget || undefined,
+        duration: prefs.duration || undefined,
+        travelStyle: prefs.travelStyle || undefined,
+        companion: prefs.companion || undefined,
+        interests: prefs.interests || undefined,
+        month: prefs.month || undefined,
+      },
+    };
+  } catch (error) {
+    console.error("Failed to load preferences:", error);
+    return { success: false, error: "Failed to load preferences." };
+  }
+}
+
 export async function getSharedPassportAction(userId: string) {
   try {
     const user = await db.user.findUnique({

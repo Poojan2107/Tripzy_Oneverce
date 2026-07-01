@@ -11,6 +11,7 @@ import { trackPlannerCompletion } from '../utils/analytics';
 import { useToast } from '../components/ui/Toast';
 import { LOADING_MESSAGES, DURATION_OPTIONS } from './planner/constants';
 import { buildOfflineResponse } from '../../backend/data/offlineItineraries';
+import { saveUserPreferences } from '../../backend/actions/userActions';
 import PlannerWizard from './planner/PlannerWizard';
 import PlannerResult from './planner/PlannerResult';
 import PlannerLoadingSkeleton from './planner/PlannerLoadingSkeleton';
@@ -329,6 +330,7 @@ const sanitizeUserInput = (input: string) => {
       setLoading(false);
       setItineraryResult(data);
       trackPlannerCompletion(selectedDestination || '', customDuration, derivedBudgetTier);
+      saveUserPreferences({ budget: derivedBudgetTier, duration: customDuration, travelStyle: mood || undefined, companion: travelers || undefined, interests: energy || undefined });
     } catch (err: any) {
       console.warn("AI Generation attempt 1 failed:", err);
       if (!mountedRef.current) {
@@ -347,6 +349,7 @@ const sanitizeUserInput = (input: string) => {
         setLoading(false);
         setItineraryResult(data);
         trackPlannerCompletion(selectedDestination || '', customDuration, derivedBudgetTier);
+        saveUserPreferences({ budget: derivedBudgetTier, duration: customDuration, travelStyle: mood || undefined, companion: travelers || undefined, interests: energy || undefined });
       } catch (retryErr: any) {
         clearInterval(msgInterval);
         if (!mountedRef.current) return;

@@ -85,13 +85,15 @@ export default function TripsWishlistView({
   const regionsExplored = useMemo(() => {
     const regions = new Set<string>();
     wishlistTours.forEach(t => {
-      const parts = t.location.split(',');
-      const region = parts[parts.length - 2]?.trim() || parts[parts.length - 1]?.trim();
-      if (region) regions.add(region);
+      if (t.location && typeof t.location === 'string') {
+        const parts = t.location.split(',');
+        const region = parts[parts.length - 2]?.trim() || parts[parts.length - 1]?.trim();
+        if (region) regions.add(region);
+      }
     });
     savedItineraries.forEach(itin => {
       const tour = displayTours.find(t => t.id === itin.destination || t.dbId === itin.destination) || TOURS_DATA.find(t => t.id === itin.destination);
-      if (tour) {
+      if (tour && tour.location && typeof tour.location === 'string') {
         const parts = tour.location.split(',');
         const region = parts[parts.length - 2]?.trim() || parts[parts.length - 1]?.trim();
         if (region) regions.add(region);

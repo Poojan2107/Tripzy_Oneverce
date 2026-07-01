@@ -14,6 +14,7 @@ import LocalIntelTab from './tourDetails/LocalIntelTab';
 import LogisticsTab from './tourDetails/LogisticsTab';
 import HotelsTab from './tourDetails/HotelsTab';
 import Sidebar from './tourDetails/Sidebar';
+import ReviewSection from './tourDetails/ReviewSection';
 
 
 interface TourDetailsViewProps {
@@ -30,6 +31,7 @@ const TABS = [
   { id: 'local', label: 'Local Secrets' },
   { id: 'logistics', label: 'Plan & Prepare' },
   { id: 'hotels', label: 'Where To Stay' },
+  { id: 'reviews', label: 'Reviews' },
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
@@ -109,6 +111,16 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
                       <span className="text-meta font-mono text-muted/40">Local intel coming soon for this chapter</span>
                     </div>
                   )}
+                </motion.div>
+              )}
+              {activeTab === 'reviews' && (
+                <motion.div key="reviews"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ReviewSection destinationId={tour.dbId || tour.id} />
                 </motion.div>
               )}
               {activeTab === 'logistics' && (

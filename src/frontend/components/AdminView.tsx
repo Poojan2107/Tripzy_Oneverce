@@ -18,6 +18,7 @@ import {
 } from '../../backend/actions/tourActions';
 import AdminDashboard from './admin/AdminDashboard';
 import AdminUsersTab from './admin/AdminUsersTab';
+import AdminReviewsTab from './admin/AdminReviewsTab';
 import AdminDestinationsTab from './admin/AdminDestinationsTab';
 import AdminExperiencesTab from './admin/AdminExperiencesTab';
 import DestinationForm from './admin/DestinationForm';
@@ -68,7 +69,7 @@ const INIT_EXP_STATE = {
 };
 
 export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTour, onDeleteTour }: AdminViewProps) {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'destinations' | 'experiences' | 'users'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'destinations' | 'experiences' | 'users' | 'reviews'>('dashboard');
   const [searchTerm, setSearchTerm] = useState('');
   const [metrics, setMetrics] = useState<any>(null);
   const [loadingMetrics, setLoadingMetrics] = useState(true);
@@ -245,6 +246,7 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
     { id: 'users', label: 'Users', icon: Users },
     { id: 'destinations', label: 'Destinations', icon: MapPin },
     { id: 'experiences', label: 'Experiences', icon: Sparkles },
+    { id: 'reviews', label: 'Reviews', icon: Star },
   ] as const;
 
   return (
@@ -279,6 +281,11 @@ export default function AdminView({ tours, wishlistCount, onAddTour, onUpdateTou
         {activeTab === 'users' && (
           <motion.div key="users" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
             <AdminUsersTab users={users} loadingUsers={loadingUsers} searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+          </motion.div>
+        )}
+        {activeTab === 'reviews' && (
+          <motion.div key="reviews" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+            <AdminReviewsTab />
           </motion.div>
         )}
         {activeTab === 'destinations' && (

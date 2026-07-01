@@ -489,7 +489,7 @@ export default function TripsWishlistView({
               const count = tab === 'chapters' ? wishlistTours.length : savedItineraries.length;
               return (
                 <button key={tab} onClick={() => setActiveSubTab(tab as any)}
-                  className={`px-4 py-2 btn-ghost text-meta font-mono uppercase flex items-center gap-2 cursor-pointer min-h-[34px] shrink-0 relative ${
+                  className={`px-4 py-2 btn-ghost text-meta font-mono uppercase flex items-center gap-2 cursor-pointer min-h-[44px] shrink-0 relative ${
                     isActive ? 'text-white shadow-sm font-bold' : 'text-muted hover:text-night'
                   }`}
                 >

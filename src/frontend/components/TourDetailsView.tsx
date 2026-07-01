@@ -65,7 +65,7 @@ export default function TourDetailsView({ tour, onBack, onPlanClick, isWishliste
           <div className="lg:col-span-2 space-y-0">
             <div className="relative flex gap-1.5 overflow-x-auto no-scrollbar pb-4 border-b border-border/20 mb-8">
               {TABS.map(tab => (
-                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-4 py-2.5 btn-ghost text-meta font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer min-h-[38px] ${activeTab === tab.id ? 'text-white border-transparent' : 'text-muted bg-white border-border/40 hover:border-gold/50 hover:text-night shadow-sm'}`}>
+                <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`relative px-4 py-2.5 btn-ghost text-meta font-bold uppercase tracking-wider whitespace-nowrap cursor-pointer min-h-[44px] ${activeTab === tab.id ? 'text-white border-transparent' : 'text-muted bg-white border-border/40 hover:border-gold/50 hover:text-night shadow-sm'}`}>
                   {activeTab === tab.id && (
                     <motion.span layoutId="tourTabActive" className="absolute inset-0 bg-night rounded-md shadow-sm" transition={{ type: "spring", stiffness: 300, damping: 30 }} />
                   )}

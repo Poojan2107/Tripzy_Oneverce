@@ -157,7 +157,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                       if (selectedTag === tag) { setSelectedTag(null); setQuery(''); }
                       else { setSelectedTag(tag); trackEvent('search_tag_click', { tag }); }
                     }}
-                      className={`px-3 py-2 btn-ghost text-micro font-mono uppercase tracking-wider min-h-[38px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'text-muted/70'}`}
+                      className={`px-3 py-2 btn-ghost text-micro font-mono uppercase tracking-wider min-h-[44px] flex items-center cursor-pointer ${isActive ? 'bg-night text-white border-night font-bold' : 'text-muted/70'}`}
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       {tag}
                     </motion.button>
@@ -260,7 +260,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
 
             <div className="px-4 py-3 border-t border-border/30 flex items-center justify-between text-micro text-muted/50 font-mono uppercase tracking-wider shrink-0 bg-surface">
               <span className="flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-gold" /><span>Search destinations</span></span>
-              <span className="flex items-center gap-2">
+              <span className="hidden md:flex items-center gap-2">
                 <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-micro">↑↓ navigate</span>
                 <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-micro">enter select</span>
                 <span className="px-1.5 py-0.5 bg-surface border border-border/40 rounded text-micro">esc close</span>

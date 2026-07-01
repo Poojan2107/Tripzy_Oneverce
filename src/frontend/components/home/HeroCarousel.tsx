@@ -77,7 +77,7 @@ function CarouselCard({
 
   return (
     <motion.div
-      className={`absolute w-[320px] h-[430px] rounded-lg overflow-hidden cursor-pointer origin-center border transition-colors duration-300 ${
+      className={`absolute w-[min(320px,80vw)] h-[430px] rounded-lg overflow-hidden cursor-pointer origin-center border transition-colors duration-300 ${
         isActive ? 'border-gold/40 shadow-lg' : 'border-white/10 hover:border-white/25 shadow-md'
       }`}
       variants={variants}

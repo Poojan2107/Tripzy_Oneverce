@@ -77,7 +77,7 @@ export default function ExploreView({
   return (
     <div className="h-[calc(100dvh-48px)] md:h-[calc(100dvh-64px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
       {/* Mobile toggle */}
-      <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+var(--safe-bottom))] left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-border/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
+      <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+var(--safe-bottom))] bottom-4 left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-border/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
         {(['list', 'map'] as const).map(view => {
           const Icon = view === 'list' ? List : Map;
           return (
@@ -124,7 +124,7 @@ export default function ExploreView({
             {CATEGORY_CHIPS.map((chip) => (
               <motion.button key={chip.id}
                 onClick={() => { setActiveCategory(chip.id); setActiveTourId(null); }}
-                className={`flex-shrink-0 px-3.5 py-1.5 btn-ghost text-meta font-mono min-h-[32px] flex items-center ${
+                className={`flex-shrink-0 px-3.5 py-1.5 btn-ghost text-meta font-mono min-h-[44px] flex items-center ${
                   activeCategory === chip.id
                     ? 'bg-night text-white border-night'
                     : 'bg-background text-muted border-border'
@@ -199,7 +199,7 @@ export default function ExploreView({
                           <div className="flex items-center gap-1.5 text-meta font-mono text-muted">
                             <span className="text-gold font-bold">{tour.chapterName || 'Chapter 01'}</span>
                             <span className="text-border/40">·</span>
-                            <span className="truncate max-w-[100px]">{tour.location.split(',')[0]}</span>
+                            <span className="truncate">{tour.location.split(',')[0]}</span>
                           </div>
                           <h3 className="font-display text-card text-night font-light lowercase truncate mt-0.5 leading-tight group-hover:text-gold transition-colors">{tour.title}</h3>
                         </div>

@@ -288,7 +288,7 @@ export default function PlannerWizard({
               {/* Duration */}
               <div className="space-y-3">
                 <label className="text-meta font-mono text-night font-bold block">Duration of stay</label>
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                   {DURATION_OPTIONS.map((opt) => {
                     const isSelected = duration === opt.id;
                     return (
@@ -398,7 +398,7 @@ export default function PlannerWizard({
               <button
                 onClick={handleNext}
                 disabled={wizardStep === 1 ? !isStep1Valid : !isStep2Valid}
-                className={`btn h-10 px-5 rounded-md text-caption inline-flex items-center gap-1.5 cursor-pointer transition-all duration-300 ${
+                className={`btn h-11 px-5 rounded-md text-caption inline-flex items-center gap-1.5 cursor-pointer transition-all duration-300 ${
                   (wizardStep === 1 ? isStep1Valid : isStep2Valid)
                     ? 'btn-night text-white'
                     : 'bg-secondary-surface text-muted/30 cursor-not-allowed'

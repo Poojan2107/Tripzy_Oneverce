@@ -39,13 +39,13 @@ export default function GlassNavbar({
   ];
 
   const getNavContainerClass = () => {
-    if (isTransparent) return 'fixed top-0 left-0 w-full z-50 bg-transparent py-4 px-6 transition-all duration-300';
-    return 'fixed top-0 left-0 w-full z-50 bg-[#F8F4EE]/90 backdrop-blur-md border-b border-border/20 py-2.5 px-6 shadow-sm transition-all duration-300';
+    if (isTransparent) return 'fixed top-0 left-0 w-full z-50 bg-transparent py-4 px-6 transition-all duration-500';
+    return 'fixed top-0 left-0 w-full z-50 bg-[#F8F4EE]/95 backdrop-blur-xl border-b border-border/30 py-2.5 px-6 shadow-[0_1px_24px_rgba(0,0,0,0.06)] transition-all duration-500';
   };
  
   const getInnerClass = () => {
-    if (isTransparent) return 'bg-black/15 backdrop-blur-md border-white/10 text-white py-2';
-    return 'bg-white border-border/40 shadow-sm text-night py-1.5';
+    if (isTransparent) return 'bg-black/20 backdrop-blur-xl border-white/12 text-white py-2 shadow-[0_4px_24px_rgba(0,0,0,0.2)]';
+    return 'bg-white border-border/50 shadow-[0_2px_8px_rgba(0,0,0,0.04)] text-night py-1.5';
   };
  
   return (
@@ -76,7 +76,7 @@ export default function GlassNavbar({
         </motion.button>
  
         <motion.div className={`flex items-center gap-0.5 rounded-md px-1 py-1 border ${
-          isTransparent ? 'bg-white/[0.06] border-white/10' : 'bg-secondary-surface/60 border-border/40'
+          isTransparent ? 'bg-white/[0.08] border-white/15' : 'bg-secondary-surface/60 border-border/40'
         }`} layout>
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -85,8 +85,8 @@ export default function GlassNavbar({
               <motion.button key={tab.id} onClick={() => onTabChange(tab.id)} layout
                 className={`relative px-4.5 py-2 btn-ghost text-caption font-bold flex items-center gap-2 cursor-pointer min-h-[38px] ${
                   isActive
-                    ? 'text-gold bg-transparent'
-                    : isTransparent ? 'text-white/70 hover:text-white hover:bg-white/10'
+                    ? isTransparent ? 'text-gold' : 'text-gold bg-transparent'
+                    : isTransparent ? 'text-white/80 hover:text-white hover:bg-white/10'
                       : 'text-muted hover:text-night hover:bg-secondary-surface'
                 }`}
                 whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
@@ -100,7 +100,7 @@ export default function GlassNavbar({
                   </motion.span>
                 )}
                 {isActive && (
-                  <motion.span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-6 h-[3px] bg-gold rounded-full"
+                  <motion.span className={`absolute bottom-0.5 left-1/2 -translate-x-1/2 w-6 h-[3px] rounded-full ${isTransparent ? 'bg-gold shadow-[0_0_6px_rgba(244,182,61,0.8)]' : 'bg-gold'}`}
                     layoutId="navActiveIndicator" transition={{ type: "spring", stiffness: 300, damping: 25 }} />
                 )}
               </motion.button>

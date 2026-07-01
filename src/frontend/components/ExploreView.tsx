@@ -166,7 +166,7 @@ export default function ExploreView({
       </div>
 
       {/* Left sidebar */}
-      <div className={`w-full md:w-[28%] flex flex-col border-r border-border bg-surface h-full overflow-hidden shrink-0 ${mobileView === 'list' ? 'block' : 'hidden md:flex'}`}>
+      <div className={`w-full md:w-[28%] flex flex-col border-r border-border bg-surface h-full overflow-hidden shrink-0 min-w-0 ${mobileView === 'list' ? 'flex' : 'hidden md:flex'}`}>
         <div className="p-5 border-b border-border space-y-4 bg-surface">
           <div className="flex items-center justify-between">
             <div>
@@ -368,7 +368,7 @@ export default function ExploreView({
       </div>
 
       {/* Center: Map panel */}
-      <div className={`flex-1 h-full relative ${mobileView === 'map' ? 'block' : 'hidden md:block'}`}>
+      <div className={`flex-1 h-full relative min-w-0 overflow-hidden ${mobileView === 'map' ? 'flex' : 'hidden md:flex'} flex-col`}>
         <DiscoveryMap tours={tours} activeTourId={activeTourId} onActiveTourChange={setActiveTourId} onSelectTour={(t) => t && onTourSelect(t)} />
       </div>
 

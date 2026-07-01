@@ -303,13 +303,13 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
             {/* Left: Editorial text panel */}
             <motion.div className="flex-1 space-y-6 text-left relative z-10 w-full lg:max-w-[42%]" variants={itemVariants}>
               <div className="space-y-6">
-                <motion.div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm bg-white/10 backdrop-blur-md border border-white/10" variants={itemVariants}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                  <span className="text-meta font-mono text-white/80">travebie · atlas vivant</span>
+                <motion.div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-sm bg-white/[0.08] backdrop-blur-md border border-white/15 shadow-sm" variants={itemVariants}>
+                  <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_6px_rgba(244,182,61,0.9)] animate-pulse" />
+                  <span className="text-meta font-mono text-white/90 tracking-wider uppercase">travebie · atlas vivant</span>
                 </motion.div>
  
                 <motion.div className="relative inline-block" variants={itemVariants}>
-                  <h1 className="font-display text-display text-white leading-none tracking-tight lowercase">
+                  <h1 className="font-display text-display text-white leading-[0.92] tracking-tight lowercase drop-shadow-[0_2px_24px_rgba(0,0,0,0.6)]">
                     explore india<br />as living<br /><em className="italic font-light text-gold font-normal">chapters</em>
                   </h1>
                   <motion.div
@@ -321,7 +321,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                   </motion.div>
                 </motion.div>
  
-                <motion.p className="text-body text-white/60 max-w-md font-light leading-relaxed" variants={itemVariants}>
+                <motion.p className="text-body text-white/70 max-w-md font-light leading-relaxed" variants={itemVariants}>
                   Every destination tells a story. Explore chapter by chapter, journey by journey.
                 </motion.p>
               </div>
@@ -329,9 +329,9 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
               <motion.div className="flex flex-wrap items-center gap-4 pt-2" variants={itemVariants}>
                 <motion.button
                   onClick={onGoToPlanner}
-                  className="btn btn-primary h-12 px-6 rounded-md text-caption tracking-wider flex items-center gap-2 cursor-pointer shadow-lg"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="btn btn-primary h-12 px-7 rounded-md text-caption tracking-wider flex items-center gap-2 cursor-pointer shadow-[0_0_24px_rgba(244,182,61,0.45),0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_0_36px_rgba(244,182,61,0.65)] transition-shadow duration-300"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <Sparkles className="w-4 h-4" />
@@ -339,9 +339,9 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 </motion.button>
                 <motion.button
                   onClick={onGoToExplore}
-                  className="btn btn-outline border-white/20 hover:border-white/50 text-white/80 hover:text-white h-12 px-5 rounded-md text-caption bg-white/5 backdrop-blur-sm shadow-sm flex items-center gap-2 cursor-pointer transition-all duration-300"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="btn btn-outline border-white/25 hover:border-white/60 text-white/85 hover:text-white h-12 px-5 rounded-md text-caption bg-white/8 backdrop-blur-sm flex items-center gap-2 cursor-pointer transition-all duration-300 hover:bg-white/15"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <motion.div
@@ -355,18 +355,18 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
  
               {/* Slide-specific metadata inline */}
               <motion.div key={`meta-${activeIndex}`}
-                className="flex flex-wrap items-center gap-4 text-caption text-white/50 pt-2"
+                className="flex flex-wrap items-center gap-4 text-caption text-white/60 pt-2"
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <span className="font-semibold text-white/80">{activeSlide.duration}</span>
+                <span className="font-semibold text-white/90">{activeSlide.duration}</span>
                 <span className="text-white/20">•</span>
-                <span>{activeSlide.season}</span>
+                <span className="text-white/65">{activeSlide.season}</span>
                 <span className="text-white/20">•</span>
-                <span className="text-gold font-medium">{getMoodLabel(activeSlide.id)}</span>
+                <span className="text-gold font-semibold">{getMoodLabel(activeSlide.id)}</span>
                 <span className="text-white/20">•</span>
-                <span className="px-2 py-0.5 rounded-sm bg-white/10 text-meta text-gold font-bold">{activeSlide.style}</span>
+                <span className="px-2 py-0.5 rounded-sm bg-white/[0.12] border border-white/10 text-meta text-gold font-bold">{activeSlide.style}</span>
               </motion.div>
             </motion.div>
  

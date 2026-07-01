@@ -287,6 +287,20 @@ model RecommendationEvent {
   timestamp    DateTime @default(now())
 }
 
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  entity    String
+  entityId  String?
+  userId    String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([action])
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
 model RecommendationInteraction {
   id               String   @id @default(cuid())
   recommendationId String?

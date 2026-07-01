@@ -3,6 +3,7 @@
 import { db } from "../lib/db";
 import { auth } from "../lib/auth";
 import { createReviewSchema } from "../validation/review";
+import { logAudit } from "./adminActions";
 
 export async function createReview(data: { destinationId: string; rating: number; comment?: string }) {
   try {
@@ -127,7 +128,7 @@ export async function updateReviewStatus(reviewId: string, status: "PENDING" | "
       where: { id: reviewId },
       data: { status },
     });
-
+    logAudit("UPDATE_REVIEW_STATUS", "Review", reviewId, { status });
     return { success: true };
   } catch (error) {
     console.error("Failed to update review status:", error);

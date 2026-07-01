@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import { getDestinationBySlug } from "@/src/backend/actions/tourActions";
 import DestinationPageClient from "./DestinationPageClient";
 
+export const revalidate = 3600;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

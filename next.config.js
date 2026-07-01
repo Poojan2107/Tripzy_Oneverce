@@ -14,6 +14,8 @@ const nextConfig = {
       { protocol: "https", hostname: "**.cloudfront.net" },
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "**.googleapis.com" },
+      { protocol: "https", hostname: "**.googleusercontent.com" },
+      { protocol: "https", hostname: "**.githubusercontent.com" },
       { protocol: "https", hostname: "flagcdn.com" },
       { protocol: "https", hostname: "uploadthing.com" },
       { protocol: "https", hostname: "utfs.io" },

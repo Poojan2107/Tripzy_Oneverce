@@ -277,7 +277,13 @@ export default function TripsWishlistView({
           <div className="w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-tr from-teal via-teal/70 to-gold p-0.5 shadow-sm shrink-0">
             <div className="w-full h-full rounded-full overflow-hidden bg-surface flex items-center justify-center">
               {session?.user?.image ? (
-                <img src={session.user.image} alt={session.user.name || 'Avatar'} className="w-full h-full object-cover" />
+                <SafeImage
+                  src={session.user.image}
+                  alt={session.user.name || 'Avatar'}
+                  width={64}
+                  height={64}
+                  className="rounded-full object-cover"
+                />
               ) : (
                 <div className="w-full h-full rounded-full bg-secondary-surface flex items-center justify-center text-night/60 text-xl font-bold font-mono">
                   {session?.user?.name ? session.user.name[0].toUpperCase() : 'AV'}
@@ -352,8 +358,8 @@ export default function TripsWishlistView({
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {group.items.map((item) => (
                         <div key={item.id} className="bg-background border border-border/70 p-3.5 rounded-md flex items-center gap-3 hover:shadow-sm transition-shadow shadow-sm">
-                          <div className="w-12 h-12 rounded-md overflow-hidden bg-secondary-surface shrink-0">
-                            <img src={item.bannerImage} alt={item.title} className="w-full h-full object-cover" />
+                          <div className="w-12 h-12 rounded-md overflow-hidden bg-secondary-surface shrink-0 relative">
+                            <SafeImage src={item.bannerImage} alt={item.title} className="object-cover" />
                           </div>
                           <div className="min-w-0 flex-1 text-left">
                             <span className="text-body font-bold text-night lowercase block truncate">{item.title || 'Untitled Journey'}</span>

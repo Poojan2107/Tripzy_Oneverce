@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --port=3030 --hostname 0.0.0.0",
-    "build": "next build",
+    "build": "next build && node scripts/postbuild.mjs",
     "start": "next start --port=3030",
     "lint": "next typegen && tsc --noEmit",
     "typecheck": "next typegen && tsc --noEmit",

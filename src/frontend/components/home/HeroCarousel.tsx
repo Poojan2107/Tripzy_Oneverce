@@ -302,8 +302,8 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
       {/* Top scrim gradient for navbar text contrast */}
       <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none z-10" />
 
-      {/* Bottom gradient strip — seamless handoff to next section */}
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#F8F4EE] to-transparent pointer-events-none z-10" />
+      {/* Bottom gradient strip — seamless transition to solid dark navy */}
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-night to-transparent pointer-events-none z-10" />
 
       {/* Vignette overlay */}
       <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.4)] pointer-events-none" />

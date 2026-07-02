@@ -43,10 +43,11 @@ export default function AtlasPassportPreview({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Atlas Stats */}
           <motion.div
-            className="relative p-8 rounded-lg bg-background/80 border border-border/25 overflow-hidden shadow-sm"
+            className="relative p-8 rounded-lg bg-gradient-to-br from-white/95 to-[#FFFDF9]/65 border border-border/20 overflow-hidden shadow-[var(--shadow-sm)]"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
+            whileHover={{ y: -6, boxShadow: 'var(--shadow-md)' }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-gold/5 to-transparent rounded-bl-full pointer-events-none" />
@@ -77,10 +78,11 @@ export default function AtlasPassportPreview({
  
           {/* Passport Preview */}
           <motion.div
-            className="relative p-8 rounded-lg bg-white border border-border/25 overflow-hidden shadow-sm"
+            className="relative p-8 rounded-lg bg-gradient-to-br from-white/95 to-[#FFFDF9]/65 border border-border/20 overflow-hidden shadow-[var(--shadow-sm)]"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
+            whileHover={{ y: -6, boxShadow: 'var(--shadow-md)' }}
             transition={{ delay: 0.1, type: "spring", stiffness: 100, damping: 20 }}
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-teal/5 to-transparent rounded-bl-full pointer-events-none" />

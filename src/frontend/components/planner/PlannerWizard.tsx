@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
-import { Sparkles, Compass, CheckCircle2, User, Heart, Users, Search, ArrowLeft, ArrowRight, IndianRupee } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Compass, CheckCircle2, User, Heart, Users, Search, ArrowLeft, ArrowRight, Lock, IndianRupee } from 'lucide-react';
 import { COMPANION_OPTIONS, DURATION_OPTIONS } from './constants';
 import { TOURS_DATA } from '../../data';
 import { Tour } from '../../types';
@@ -129,21 +130,29 @@ export default function PlannerWizard({
             {WIZARD_STEPS.map((s, i) => (
               <div key={s.num} className="flex items-center flex-1">
                 <div className="flex flex-col items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                    wizardStep === s.num ? 'bg-gold text-night shadow-md scale-110' :
-                    wizardStep > s.num ? 'bg-teal text-white' :
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 relative ${
+                    wizardStep === s.num ? 'bg-gold text-night shadow-md scale-110 ring-4 ring-gold/25' :
+                    wizardStep > s.num ? 'bg-teal text-white ring-4 ring-teal/15' :
                     'bg-secondary-surface text-muted/50 border border-border/40'
                   }`}>
+                    {wizardStep === s.num && (
+                      <span className="absolute inset-0 rounded-full border border-gold/50 animate-ping opacity-25" />
+                    )}
                     {wizardStep > s.num ? <CheckCircle2 className="w-4 h-4 stroke-[3]" /> : s.num}
                   </div>
-                  <span className={`text-micro font-mono mt-1.5 transition-colors duration-300 ${
+                  <span className={`text-micro font-mono mt-2 transition-colors duration-300 ${
                     wizardStep >= s.num ? 'text-night font-bold' : 'text-muted/40'
                   }`}>{s.label}</span>
                 </div>
                 {i < 2 && (
-                  <div className={`flex-1 h-px mx-3 mt-[-1.5rem] transition-colors duration-300 ${
-                    wizardStep > s.num ? 'bg-teal' : 'bg-border/30'
-                  }`} />
+                  <div className="flex-1 mx-3 mt-[-1.5rem] relative h-[2px] bg-border/20 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="absolute left-0 top-0 bottom-0 bg-teal rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: wizardStep > s.num ? '100%' : '0%' }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                    />
+                  </div>
                 )}
               </div>
             ))}
@@ -395,7 +404,7 @@ export default function PlannerWizard({
             </div>
 
             {wizardStep < 3 ? (
-              <button
+              <motion.button
                 onClick={handleNext}
                 disabled={wizardStep === 1 ? !isStep1Valid : !isStep2Valid}
                 className={`btn h-11 px-6 rounded-lg text-caption inline-flex items-center gap-1.5 cursor-pointer transition-all duration-300 ${
@@ -403,12 +412,15 @@ export default function PlannerWizard({
                     ? 'btn-night text-white shadow-md'
                     : 'bg-secondary-surface text-muted/30 cursor-not-allowed border border-border/10'
                 }`}
+                whileHover={(wizardStep === 1 ? isStep1Valid : isStep2Valid) ? { scale: 1.03 } : {}}
+                whileTap={(wizardStep === 1 ? isStep1Valid : isStep2Valid) ? { scale: 0.97 } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 Next
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </motion.button>
             ) : (
-              <button
+              <motion.button
                 onClick={handleGenerate}
                 disabled={!isFormValid || generating}
                 className={`btn h-12 px-7 rounded-lg text-caption inline-flex items-center gap-2 cursor-pointer transition-all duration-300 ${
@@ -416,6 +428,9 @@ export default function PlannerWizard({
                     ? 'btn-night text-white hover:bg-gold hover:text-night shadow-[0_0_24px_rgba(244,182,61,0.25)]'
                     : 'bg-secondary-surface text-muted/30 cursor-not-allowed border border-border/10'
                 }`}
+                whileHover={isFormValid && !generating ? { scale: 1.03 } : {}}
+                whileTap={isFormValid && !generating ? { scale: 0.97 } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 {generating ? (
                   <>
@@ -428,7 +443,7 @@ export default function PlannerWizard({
                     <span>Craft Journey</span>
                   </>
                 )}
-              </button>
+              </motion.button>
             )}
           </div>
 

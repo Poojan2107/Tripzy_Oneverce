@@ -49,69 +49,79 @@ function CarouselCard({
   onClick: () => void;
   onNavigate: (dir: 'prev' | 'next') => void;
 }) {
-  const x = useMotionValue(0.5);
-  const y = useMotionValue(0.5);
-  const rotateX = useSpring(useTransform(y, [0, 1], [4, -4]), { stiffness: 150, damping: 25 });
-  const rotateY = useSpring(useTransform(x, [0, 1], [-4, 4]), { stiffness: 150, damping: 25 });
   const accentColor = TAG_ACCENTS[slide.tag] || TAG_ACCENTS.Nature;
 
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isActive) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width);
-    y.set((e.clientY - rect.top) / rect.height);
-  }, [isActive, x, y]);
-
-  const handleMouseLeave = useCallback(() => { x.set(0.5); y.set(0.5); }, [x, y]);
-
-  const outerVariants = {
-    left: { x: '-42%', y: 0, z: -80, rotateY: 16, scale: 0.84, opacity: 0.55, zIndex: 10 },
-    center: { x: '0%', y: 0, z: 20, rotateY: 0, scale: 1.08, opacity: 1, zIndex: 30 },
-    right: { x: '42%', y: 0, z: -80, rotateY: -16, scale: 0.84, opacity: 0.55, zIndex: 10 },
-    hidden: { x: '0%', y: 0, z: -200, rotateY: 0, scale: 0.7, opacity: 0, zIndex: 0 },
+  const variants = {
+    left: { 
+      x: '-42%', 
+      y: 0, 
+      rotate: -5,
+      scale: 0.84, 
+      opacity: 0.55, 
+      zIndex: 10, 
+      borderColor: 'rgba(255,255,255,0.1)', 
+      boxShadow: '0 8px 32px rgba(0,0,0,0.18)' 
+    },
+    center: { 
+      x: '0%', 
+      y: 0, 
+      rotate: 0,
+      scale: 1.08, 
+      opacity: 1, 
+      zIndex: 30, 
+      borderColor: 'rgba(244,182,61,0.45)', 
+      boxShadow: '0 24px 64px rgba(0,0,0,0.35)' 
+    },
+    right: { 
+      x: '42%', 
+      y: 0, 
+      rotate: 5,
+      scale: 0.84, 
+      opacity: 0.55, 
+      zIndex: 10, 
+      borderColor: 'rgba(255,255,255,0.1)', 
+      boxShadow: '0 8px 32px rgba(0,0,0,0.18)' 
+    },
+    hidden: { 
+      x: '0%', 
+      y: 0, 
+      rotate: 0,
+      scale: 0.7, 
+      opacity: 0, 
+      zIndex: 0, 
+      borderColor: 'rgba(255,255,255,0)', 
+      boxShadow: 'none' 
+    },
   };
 
-  const innerVariants = {
-    left: { borderColor: 'rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' },
-    center: { borderColor: 'rgba(244,182,61,0.4)', boxShadow: '0 24px 64px rgba(0,0,0,0.35)' },
-    right: { borderColor: 'rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' },
-    hidden: { borderColor: 'rgba(255,255,255,0)', boxShadow: 'none' },
-  };
-
-  const transitionConfig = { type: "spring" as const, stiffness: 100, damping: 22, mass: 0.8 };
+  const transitionConfig = { type: "spring" as const, stiffness: 120, damping: 20, mass: 0.8 };
 
   return (
     <motion.div
-      className="absolute w-[min(320px,80vw)] h-[430px] cursor-pointer origin-center"
-      variants={outerVariants}
+      className="absolute w-[min(320px,80vw)] h-[430px] rounded-xl overflow-hidden cursor-pointer origin-center border"
+      variants={variants}
       animate={position}
       transition={transitionConfig}
+      whileHover={
+        isActive
+          ? { 
+              scale: 1.12, 
+              y: -10, 
+              borderColor: 'rgba(244,182,61,0.85)', 
+              boxShadow: '0 32px 72px rgba(0,0,0,0.45), 0 0 20px rgba(244,182,61,0.35)' 
+            }
+          : { 
+              scale: 0.88, 
+              opacity: 0.75 
+            }
+      }
+      whileTap={isActive ? { scale: 1.08 } : undefined}
       style={{
-        perspective: 1200,
         pointerEvents: position === 'hidden' ? 'none' : 'auto',
       }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       onClick={isActive ? onClick : () => position === 'left' ? onNavigate('next') : onNavigate('prev')}
     >
-      <motion.div
-        className="w-full h-full rounded-xl overflow-hidden border"
-        variants={innerVariants}
-        animate={position}
-        transition={transitionConfig}
-        whileHover={
-          isActive
-            ? { scale: 1.03, y: -6, transition: { duration: 0.2, ease: "easeOut" } }
-            : { scale: 1.01, transition: { duration: 0.2, ease: "easeOut" } }
-        }
-        whileTap={isActive ? { scale: 0.98 } : undefined}
-        style={{
-          rotateX: isActive ? rotateX : 0,
-          rotateY: isActive ? rotateY : 0,
-          transformStyle: "preserve-3d",
-        }}
-      >
-        <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">
+      <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">
           <div className="h-[58%] w-full overflow-hidden relative bg-secondary-surface">
             <Image
               src={slide.bannerImage}
@@ -165,7 +175,6 @@ function CarouselCard({
           </div>
         </div>
       </motion.div>
-    </motion.div>
   );
 }
 

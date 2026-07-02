@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Search, Mail, Calendar, Users, Heart, BookOpen, MessageCircle, Shield } from 'lucide-react';
 
 interface AdminUsersTabProps {
@@ -52,7 +53,7 @@ export default function AdminUsersTab({ users, loadingUsers, searchTerm, onSearc
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         {u.image ? (
-                          <img src={u.image} alt={u.name || u.email} loading="lazy" className="w-9 h-9 rounded-full object-cover border border-border shrink-0" />
+                          <Image src={u.image} alt={u.name || u.email} width={36} height={36} className="w-9 h-9 rounded-full object-cover border border-border shrink-0" />
                         ) : (
                           <div className="w-9 h-9 rounded-full bg-secondary-surface flex items-center justify-center shrink-0 border border-border">
                             <Users className="w-4 h-4 text-stone" />
@@ -106,7 +107,7 @@ export default function AdminUsersTab({ users, loadingUsers, searchTerm, onSearc
             <div key={u.id} className="bg-white border border-border rounded-2xl p-4 shadow-card">
               <div className="flex items-start gap-3">
                 {u.image ? (
-                  <img src={u.image} alt={u.name || u.email} className="w-12 h-12 rounded-full object-cover border border-border shrink-0" />
+                  <Image src={u.image} alt={u.name || u.email} width={48} height={48} className="w-12 h-12 rounded-full object-cover border border-border shrink-0" />
                 ) : (
                   <div className="w-12 h-12 rounded-full bg-secondary-surface flex items-center justify-center shrink-0 border border-border">
                     <Users className="w-5 h-5 text-stone" />

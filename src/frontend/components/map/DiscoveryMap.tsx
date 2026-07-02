@@ -337,11 +337,21 @@ export default function DiscoveryMap({
   }
 
   return (
-    <div className="w-full h-full relative overflow-hidden">
+    <div className="w-full h-full relative overflow-hidden bg-[#F2ECE3]">
+      {/* India map SVG trace placeholder — visible until tiles load */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <svg className="w-1/2 h-1/2 opacity-[0.07] text-[#B8A58A]" fill="currentColor" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <path d="M150 30 L170 55 L190 60 L200 80 L185 105 L175 130 L160 155 L150 180 L140 155 L125 130 L110 105 L95 80 L105 60 L130 55 Z" />
+          <path d="M170 55 L195 50 L210 70 L200 80" />
+          <path d="M130 55 L105 50 L90 70 L95 80" />
+          <path d="M160 155 L175 170 L170 190 L150 180" />
+          <path d="M140 155 L125 170 L130 190 L150 180" />
+        </svg>
+      </div>
       {/* Map Container */}
       <div 
         ref={mapContainerRef} 
-        className="w-full h-full z-0 light-map" 
+        className="w-full h-full z-[1] light-map relative" 
       />
       
       {/* Dynamic regional radial wash color overlay */}

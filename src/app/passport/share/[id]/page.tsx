@@ -294,7 +294,7 @@ export default async function SharedPassportPage(props: PageProps) {
               {wishlistTours.map((tour: any) => (
                 <div key={tour.id} className="bg-white border border-border/40 p-5 pb-6 rounded-3xl flex flex-col justify-between text-left shadow-card">
                   <div className="relative aspect-[3/2] rounded-2xl overflow-hidden bg-background mb-4">
-                    <img src={tour.bannerImage} alt={tour.title} className="w-full h-full object-cover" />
+                    <Image src={tour.bannerImage} alt={tour.title} fill className="object-cover" />
                   </div>
                   <div className="space-y-2">
                     <span className="text-micro font-mono text-gold uppercase tracking-widest block font-bold">{tour.location}</span>

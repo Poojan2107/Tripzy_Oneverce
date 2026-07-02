@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Search, Sparkles, Plus, Edit3, Trash2 } from 'lucide-react';
 import { formatINR } from '../../utils/currency';
 
@@ -86,7 +87,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         {exp.featuredImage ? (
-                          <img src={exp.featuredImage} alt={exp.name} loading="lazy" decoding="async" className="w-10 h-10 rounded-lg object-cover border border-border shrink-0" />
+                          <Image src={exp.featuredImage} alt={exp.name} width={40} height={40} className="w-10 h-10 rounded-lg object-cover border border-border shrink-0" />
                         ) : (
                           <div className="w-10 h-10 rounded-lg bg-secondary-surface flex items-center justify-center shrink-0 border border-border">
                             <Sparkles className="w-4 h-4 text-stone" />
@@ -148,7 +149,7 @@ export default function AdminExperiencesTab({ experiences, loadingExperiences, s
             <div key={exp.id} className="bg-white border border-border rounded-2xl p-4 shadow-card">
               <div className="flex items-start gap-3">
                 {exp.featuredImage ? (
-                  <img src={exp.featuredImage} alt={exp.name} loading="lazy" decoding="async" className="w-14 h-14 rounded-xl object-cover border border-border shrink-0" />
+                  <Image src={exp.featuredImage} alt={exp.name} width={56} height={56} className="w-14 h-14 rounded-xl object-cover border border-border shrink-0" />
                 ) : (
                   <div className="w-14 h-14 rounded-xl bg-secondary-surface flex items-center justify-center shrink-0 border border-border"><Sparkles className="w-5 h-5 text-stone" /></div>
                 )}

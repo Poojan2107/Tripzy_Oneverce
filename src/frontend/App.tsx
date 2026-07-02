@@ -82,6 +82,12 @@ export default function App() {
 
   useEffect(() => {
     setIsClient(true);
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    }
     try {
       // Legacy fallback check for maximum compatibility
       let savedWishlist = localStorage.getItem('tripzy_wishlist');

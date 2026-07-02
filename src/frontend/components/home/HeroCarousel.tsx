@@ -273,7 +273,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
   const gradientClass = TAG_GRADIENTS[activeSlide.tag] || TAG_GRADIENTS.Nature;
 
   return (
-    <section className="relative w-full min-h-screen flex flex-col overflow-hidden bg-night">
+    <section className="relative w-full h-[95vh] min-h-[680px] flex flex-col overflow-hidden bg-night">
       {/* Full-bleed background per slide — crossfade without remount */}
       <div className="absolute inset-0">
         {HERO_CAROUSEL_ITEMS.map((item, i) => (

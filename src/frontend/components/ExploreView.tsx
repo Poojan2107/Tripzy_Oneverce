@@ -321,7 +321,7 @@ export default function ExploreView({
                           <div className="flex items-center gap-1.5 text-meta font-mono text-muted">
                             <span className="text-gold font-bold">{tour.chapterName || 'Chapter'}</span>
                             <span className="text-border/40">·</span>
-                            <span className="truncate">{tour.city || (tour.location?.split(',')[0]) || ''}</span>
+                            <span className="truncate">{tour.city || (typeof tour.location === 'string' ? tour.location.split(',')[0] : '') || ''}</span>
                           </div>
                           <h3 className="font-display text-card text-night font-light lowercase truncate mt-1 leading-tight group-hover:text-gold transition-colors">{tour.name || tour.title}</h3>
                         </div>
@@ -379,7 +379,7 @@ export default function ExploreView({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}>
-            <div className="relative aspect-[3/2] rounded-xl overflow-hidden bg-secondary-surface shadow-sm border border-border/70 group">
+            <div className="relative aspect-[3/2] rounded-xl overflow-hidden bg-secondary-surface shadow-sm border border-border/70 group" style={{ position: 'relative' }}>
               <SafeImage src={activeTour.bannerImage} alt={activeTour.title} className="w-full h-full object-cover" />
             </div>
             <div className="space-y-5">

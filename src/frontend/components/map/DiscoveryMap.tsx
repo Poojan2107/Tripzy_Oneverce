@@ -193,7 +193,7 @@ export default function DiscoveryMap({
         <div style="font-family: var(--font-sans), sans-serif; font-size: 11px; min-width: 170px; text-align: left; background-color: transparent; padding: 2px; color: var(--color-night, #0E1B26);">
           <img src="${tour.bannerImage}" alt="${tour.title}" loading="lazy" style="width: 100%; height: 90px; object-fit: cover; border-radius: 16px; margin-bottom: 8px; border: 1px solid var(--color-border, #E7DED3);" />
           <h5 style="font-family: var(--font-display), cursive; font-size: 17px; font-weight: 500; color: var(--color-night, #0E1B26); margin: 0 0 2px 0; text-transform: lowercase;">${tour.title}</h5>
-          <p style="color: var(--color-muted, #64748B); font-size: 9px; margin: 0 0 8px 0; font-family: monospace;">📍 ${tour.location.toUpperCase()}</p>
+          <p style="color: var(--color-muted, #64748B); font-size: 9px; margin: 0 0 8px 0; font-family: monospace;">📍 ${String(tour.location || '').toUpperCase()}</p>
           <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border, #E7DED3); padding-top: 8px; margin-top: 5px;">
             <span style="font-weight: 700; font-size: 12px; color: var(--color-gold, #F4B63D);">${formatINR(tour.price)}</span>
             <button id="popup-btn-${tour.id}" style="background: var(--color-night, #0E1B26); color: var(--color-surface, #FFFDF9); border: none; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 12px; border-radius: 9999px; cursor: pointer; min-width: 70px; transition: all 0.2s;">Inspect</button>

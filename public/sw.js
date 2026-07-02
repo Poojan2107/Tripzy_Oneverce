@@ -1,9 +1,12 @@
-const CACHE_NAME = "travebie-v1";
+const CACHE_NAME = "travebie-v2";
 const STATIC_ASSETS = [
   "/",
   "/offline",
   "/favicon.svg",
   "/manifest.webmanifest",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/apple-touch-icon.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -26,7 +29,7 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // API requests - network first
+  // API requests - network first, cache fallback
   if (url.pathname.startsWith("/api/")) {
     event.respondWith(
       fetch(request)
@@ -40,7 +43,41 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Static assets - cache first
+  // Images - cache first, network update
+  if (url.pathname.startsWith("/images/") || url.pathname.startsWith("/icons/")) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        const fetchPromise = fetch(request).then((res) => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return res;
+        });
+        return cached || fetchPromise;
+      })
+    );
+    return;
+  }
+
+  // Fonts (Google Fonts) - cache first
+  if (url.hostname.includes("fonts")) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        const fetchPromise = fetch(request).then((res) => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return res;
+        });
+        return cached || fetchPromise;
+      })
+    );
+    return;
+  }
+
+  // Navigation & pages - network first, cache fallback, offline page
   event.respondWith(
     caches.match(request).then((cached) => {
       const fetchPromise = fetch(request).then((res) => {

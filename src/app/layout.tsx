@@ -58,7 +58,16 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/favicon.svg",
-    apple: "/favicon.svg",
+    apple: "/icons/apple-touch-icon.png",
+    other: [
+      { rel: "icon", sizes: "192x192", url: "/icons/icon-192.png" },
+      { rel: "icon", sizes: "512x512", url: "/icons/icon-512.png" },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Travebie",
+    statusBarStyle: "default",
   },
 };
 
@@ -92,18 +101,58 @@ if ("serviceWorker" in navigator) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              name: "Travebie",
-              url: baseUrl,
-              description: "AI-powered travel companion for exploring India through handcrafted chapters.",
-              image: `${baseUrl}/images/hero-varanasi.jpg`,
-              address: {
-                "@type": "PostalAddress",
-                addressCountry: "IN",
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "WebApplication",
+                name: "Travebie",
+                url: baseUrl,
+                description: "AI-powered travel companion for exploring India through handcrafted chapters.",
+                image: `${baseUrl}/images/hero-varanasi.jpg`,
+                applicationCategory: "TravelApplication",
+                operatingSystem: "Web",
+                offers: {
+                  "@type": "Offer",
+                  price: "0",
+                  priceCurrency: "INR",
+                },
+                address: {
+                  "@type": "PostalAddress",
+                  addressCountry: "IN",
+                },
               },
-            }),
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
+                  { "@type": "ListItem", position: 2, name: "Explore Atlas", item: `${baseUrl}/#explore` },
+                  { "@type": "ListItem", position: 3, name: "AI Planner", item: `${baseUrl}/#ai-planner` },
+                  { "@type": "ListItem", position: 4, name: "Passport", item: `${baseUrl}/#saved` },
+                ],
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                name: "India Travel Destinations",
+                description: "12 handcrafted Indian chapters curated by Travebie",
+                numberOfItems: 12,
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "Varanasi" },
+                  { "@type": "ListItem", position: 2, name: "Udaipur" },
+                  { "@type": "ListItem", position: 3, name: "Kerala" },
+                  { "@type": "ListItem", position: 4, name: "Ladakh" },
+                  { "@type": "ListItem", position: 5, name: "Jaisalmer" },
+                  { "@type": "ListItem", position: 6, name: "Goa" },
+                  { "@type": "ListItem", position: 7, name: "Hampi" },
+                  { "@type": "ListItem", position: 8, name: "Kashmir" },
+                  { "@type": "ListItem", position: 9, name: "Munnar" },
+                  { "@type": "ListItem", position: 10, name: "Kutch" },
+                  { "@type": "ListItem", position: 11, name: "Cherrapunji" },
+                  { "@type": "ListItem", position: 12, name: "Andaman" },
+                ],
+              },
+            ]),
           }}
         />
       </head>

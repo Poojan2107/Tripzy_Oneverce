@@ -53,38 +53,38 @@ function CarouselCard({
 
   const variants = {
     left: { 
-      x: '-42%', 
-      y: 0, 
-      rotate: -5,
-      scale: 0.84, 
-      opacity: 0.55, 
+      x: '-44%', 
+      y: 12, 
+      rotate: -8,
+      scale: 0.8, 
+      opacity: 0.45, 
       zIndex: 10, 
-      borderColor: 'rgba(255,255,255,0.1)', 
-      boxShadow: '0 8px 32px rgba(0,0,0,0.18)' 
+      borderColor: 'rgba(255,255,255,0.08)', 
+      boxShadow: '0 8px 24px rgba(0,0,0,0.15)' 
     },
     center: { 
       x: '0%', 
       y: 0, 
       rotate: 0,
-      scale: 1.08, 
+      scale: 1.12, 
       opacity: 1, 
       zIndex: 30, 
-      borderColor: 'rgba(244,182,61,0.45)', 
-      boxShadow: '0 24px 64px rgba(0,0,0,0.35)' 
+      borderColor: 'rgba(244,182,61,0.5)', 
+      boxShadow: '0 32px 80px rgba(0,0,0,0.45), 0 0 30px rgba(244,182,61,0.2)' 
     },
     right: { 
-      x: '42%', 
-      y: 0, 
-      rotate: 5,
-      scale: 0.84, 
-      opacity: 0.55, 
+      x: '44%', 
+      y: 12, 
+      rotate: 8,
+      scale: 0.8, 
+      opacity: 0.45, 
       zIndex: 10, 
-      borderColor: 'rgba(255,255,255,0.1)', 
-      boxShadow: '0 8px 32px rgba(0,0,0,0.18)' 
+      borderColor: 'rgba(255,255,255,0.08)', 
+      boxShadow: '0 8px 24px rgba(0,0,0,0.15)' 
     },
     hidden: { 
       x: '0%', 
-      y: 0, 
+      y: 20, 
       rotate: 0,
       scale: 0.7, 
       opacity: 0, 
@@ -293,17 +293,14 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
               priority={i === 0 || i === activeIndex}
             />
             <div className={`absolute inset-0 bg-gradient-to-br ${TAG_GRADIENTS[item.tag] || TAG_GRADIENTS.Nature}`} />
-            <div className="absolute inset-0 bg-gradient-to-t from-night/95 via-night/50 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-night/60 via-transparent to-night/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-night/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-night/40 via-transparent to-night/15" />
           </motion.div>
         ))}
       </div>
 
       {/* Top scrim gradient for navbar text contrast */}
       <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/70 via-black/30 to-transparent pointer-events-none z-10" />
-
-      {/* Bottom gradient strip — seamless transition to solid dark navy */}
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-night to-transparent pointer-events-none z-10" />
 
       {/* Vignette overlay */}
       <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.4)] pointer-events-none" />
@@ -381,18 +378,18 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
  
               {/* Slide-specific metadata inline */}
               <motion.div key={`meta-${activeIndex}`}
-                className="flex flex-wrap items-center gap-4 text-caption text-white/60 pt-2"
+                className="inline-flex flex-wrap items-center gap-3 px-4 py-2 rounded-full bg-black/35 backdrop-blur-md border border-white/10 text-caption text-white/80 mt-2 shadow-[0_4px_16px_rgba(0,0,0,0.15)]"
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <span className="font-semibold text-white/90">{activeSlide.duration}</span>
+                <span className="font-semibold text-white">{activeSlide.duration}</span>
                 <span className="text-white/20">•</span>
-                <span className="text-white/65">{activeSlide.season}</span>
+                <span className="text-white/85">{activeSlide.season}</span>
                 <span className="text-white/20">•</span>
-                <span className="text-gold font-semibold">{getMoodLabel(activeSlide.id)}</span>
+                <span className="text-gold font-semibold tracking-wide uppercase text-[10px]">{getMoodLabel(activeSlide.id)}</span>
                 <span className="text-white/20">•</span>
-                <span className="px-2 py-0.5 rounded-sm bg-white/[0.12] border border-white/10 text-meta text-gold font-bold">{activeSlide.style}</span>
+                <span className="px-2 py-0.5 rounded-full bg-gold/15 border border-gold/30 text-[9px] text-gold font-bold uppercase tracking-wider">{activeSlide.style}</span>
               </motion.div>
             </motion.div>
  

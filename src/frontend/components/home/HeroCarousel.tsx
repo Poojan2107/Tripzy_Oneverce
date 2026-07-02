@@ -64,43 +64,51 @@ function CarouselCard({
 
   const handleMouseLeave = useCallback(() => { x.set(0.5); y.set(0.5); }, [x, y]);
 
-  const variants = {
-    left: { x: '-42%', y: 0, z: -80, rotateY: 16, scale: 0.84, opacity: 0.55, zIndex: 10, borderColor: 'rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' },
-    center: { x: '0%', y: 0, z: 20, rotateY: 0, scale: 1.08, opacity: 1, zIndex: 30, borderColor: 'rgba(244,182,61,0.4)', boxShadow: '0 24px 64px rgba(0,0,0,0.35)' },
-    right: { x: '42%', y: 0, z: -80, rotateY: -16, scale: 0.84, opacity: 0.55, zIndex: 10, borderColor: 'rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' },
-    hidden: { x: '0%', y: 0, z: -200, rotateY: 0, scale: 0.7, opacity: 0, zIndex: 0, borderColor: 'rgba(255,255,255,0)', boxShadow: 'none' },
+  const outerVariants = {
+    left: { x: '-42%', y: 0, z: -80, rotateY: 16, scale: 0.84, opacity: 0.55, zIndex: 10 },
+    center: { x: '0%', y: 0, z: 20, rotateY: 0, scale: 1.08, opacity: 1, zIndex: 30 },
+    right: { x: '42%', y: 0, z: -80, rotateY: -16, scale: 0.84, opacity: 0.55, zIndex: 10 },
+    hidden: { x: '0%', y: 0, z: -200, rotateY: 0, scale: 0.7, opacity: 0, zIndex: 0 },
+  };
+
+  const innerVariants = {
+    left: { borderColor: 'rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' },
+    center: { borderColor: 'rgba(244,182,61,0.4)', boxShadow: '0 24px 64px rgba(0,0,0,0.35)' },
+    right: { borderColor: 'rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' },
+    hidden: { borderColor: 'rgba(255,255,255,0)', boxShadow: 'none' },
   };
 
   const transitionConfig = { type: "spring" as const, stiffness: 100, damping: 22, mass: 0.8 };
 
   return (
     <motion.div
-      className="absolute w-[min(320px,80vw)] h-[430px] rounded-xl overflow-hidden cursor-pointer origin-center border"
-      variants={variants}
+      className="absolute w-[min(320px,80vw)] h-[430px] cursor-pointer origin-center"
+      variants={outerVariants}
       animate={position}
       transition={transitionConfig}
-      whileHover={
-        isActive
-          ? { scale: 1.10, y: -8, transition: { duration: 0.2 } }
-          : { scale: 0.87, opacity: 0.75, transition: { duration: 0.2 } }
-      }
       style={{
         perspective: 1200,
-        rotateX: isActive ? rotateX : 0,
-        rotateY: isActive ? rotateY : 0,
         pointerEvents: position === 'hidden' ? 'none' : 'auto',
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={isActive ? onClick : () => position === 'left' ? onNavigate('next') : onNavigate('prev')}
-      whileTap={isActive ? { scale: 0.98 } : undefined}
     >
       <motion.div
-        className="w-full h-full rounded-lg overflow-hidden"
+        className="w-full h-full rounded-xl overflow-hidden border"
+        variants={innerVariants}
+        animate={position}
+        transition={transitionConfig}
+        whileHover={
+          isActive
+            ? { scale: 1.03, y: -6, transition: { duration: 0.2, ease: "easeOut" } }
+            : { scale: 1.01, transition: { duration: 0.2, ease: "easeOut" } }
+        }
+        whileTap={isActive ? { scale: 0.98 } : undefined}
         style={{
-          boxShadow: isActive
-            ? `0 32px 64px rgba(0,0,0,0.35), 0 0 0 1px ${accentColor}, inset 0 1px 0 rgba(255,255,255,0.06)`
-            : '0 8px 32px rgba(0,0,0,0.18)',
+          rotateX: isActive ? rotateX : 0,
+          rotateY: isActive ? rotateY : 0,
+          transformStyle: "preserve-3d",
         }}
       >
         <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">

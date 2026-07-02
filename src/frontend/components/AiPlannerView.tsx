@@ -69,19 +69,20 @@ export default function AiPlannerView({
     }
   }, [selectedDestination]);
 
-const getDestinationPrettyName = (destId: string | null | undefined): string => {
+const getDestinationPrettyName = (destId: any): string => {
   if (!destId) return 'Curated Destination';
+  const destIdStr = String(destId);
   if (allTours && allTours.length > 0) {
-    const tourObj = allTours.find(t => t.id === destId || t.dbId === destId);
+    const tourObj = allTours.find(t => t.id === destIdStr || t.dbId === destIdStr);
     if (tourObj) return tourObj.title;
   }
-  const staticTour = TOURS_DATA.find(t => t.id === destId || t.dbId === destId);
+  const staticTour = TOURS_DATA.find(t => t.id === destIdStr || t.dbId === destIdStr);
   if (staticTour) return staticTour.title;
-  if (destId.includes('-')) {
-    const part = destId.split('-')[0];
+  if (destIdStr.includes('-')) {
+    const part = destIdStr.split('-')[0];
     return part.charAt(0).toUpperCase() + part.slice(1);
   }
-  return destId;
+  return destIdStr;
 };
 
 const sanitizeUserInput = (input: string) => {

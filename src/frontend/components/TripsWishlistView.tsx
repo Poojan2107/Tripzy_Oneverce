@@ -2,7 +2,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Trash2, Sparkles, Award, User, LogIn,
+  Trash2, Sparkles, Award, User, LogIn, Lock,
   Compass, BookOpen, Mountain, ArrowRight
 } from 'lucide-react';
 import { useSession, signIn } from 'next-auth/react';
@@ -397,12 +397,20 @@ export default function TripsWishlistView({
                 <div key={badge.id}
                   className={`p-4 rounded-xl border flex flex-col items-center text-center transition-all duration-300 relative group overflow-hidden ${
                     badge.unlocked
-                      ? 'bg-background border-border shadow-sm hover:shadow-md hover:border-gold/50 cursor-pointer'
-                      : 'bg-secondary-surface/40 border-dashed border-border/60 opacity-60 select-none'
+                      ? 'bg-gradient-to-br from-white to-[#FFFDF9]/80 border-border shadow-sm hover:shadow-md hover:border-gold/50 cursor-pointer'
+                      : 'bg-secondary-surface/40 border-dashed border-border/60 select-none'
                   }`}
                 >
                   {badge.unlocked && (
                     <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.03] to-teal/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  )}
+                  
+                  {!badge.unlocked && (
+                    <div className="absolute inset-0 bg-night/95 backdrop-blur-xs p-3 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none select-none z-10 text-center">
+                      <Lock className="w-4 h-4 text-gold mb-1 animate-pulse" />
+                      <span className="text-[9px] font-mono text-gold/80 uppercase tracking-widest block mb-0.5">lock criteria</span>
+                      <p className="text-[10px] text-white/70 font-light leading-relaxed max-w-[130px]">{badge.lockedDesc}</p>
+                    </div>
                   )}
                   
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center relative mb-3 transition-all duration-500 ${
@@ -421,8 +429,8 @@ export default function TripsWishlistView({
                   {badge.unlocked ? (
                     <span className="text-meta font-mono text-gold block mt-1 line-clamp-1 w-full">{badge.desc}</span>
                   ) : (
-                    <div className="w-full mt-1.5 space-y-1">
-                      <span className="text-meta font-mono text-muted/50 block line-clamp-1 w-full">{badge.lockedDesc}</span>
+                    <div className="w-full mt-1.5 space-y-1 opacity-70">
+                      <span className="text-[10px] font-mono text-muted/65 block line-clamp-1 w-full">{badge.lockedDesc}</span>
                       {getBadgeProgress(badge.id) && (
                         <div className="w-full bg-secondary-surface h-1 rounded-full overflow-hidden">
                           <div 

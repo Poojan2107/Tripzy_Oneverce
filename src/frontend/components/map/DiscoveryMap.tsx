@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { motion } from 'framer-motion';
 import { Tour } from '../../types';
 import { formatINR } from '../../utils/currency';
 
@@ -121,8 +122,7 @@ export default function DiscoveryMap({
 
     mapInstanceRef.current = map;
 
-    // Add zoom control to bottom-right for thumb reach on mobile
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    // Custom zoom buttons will be rendered via React rather than Leaflet controls.
 
     // CartoDB Voyager map tiles
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -368,6 +368,28 @@ export default function DiscoveryMap({
           </div>
         </div>
       )}
+
+      {/* Custom Premium Zoom Controls */}
+      <div className="absolute bottom-16 right-3.5 z-20 flex flex-col gap-1.5 pointer-events-auto">
+        <motion.button
+          onClick={() => mapInstanceRef.current?.zoomIn()}
+          aria-label="Zoom in"
+          className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-border/80 flex items-center justify-center text-night shadow-[var(--shadow-sm)] hover:border-gold/50 cursor-pointer text-base font-light leading-none select-none"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+        >
+          +
+        </motion.button>
+        <motion.button
+          onClick={() => mapInstanceRef.current?.zoomOut()}
+          aria-label="Zoom out"
+          className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-border/80 flex items-center justify-center text-night shadow-[var(--shadow-sm)] hover:border-gold/50 cursor-pointer text-base font-light leading-none select-none"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+        >
+          −
+        </motion.button>
+      </div>
 
       <div className="absolute bottom-0 left-0 right-0 z-10 flex flex-wrap items-center gap-2 p-3 pb-[max(12px,var(--safe-bottom))]">
         <div className="bg-surface/90 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-border shadow-sm pointer-events-none text-micro text-night/70 font-mono uppercase tracking-widest flex items-center gap-2">

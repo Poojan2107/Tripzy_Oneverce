@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Search, MapPin, Navigation, Edit3, Trash2, Plus } from 'lucide-react';
 import { Tour } from '../../types';
 import { formatINR } from '../../utils/currency';
@@ -60,7 +61,7 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
                 <tr key={tour.id} className="hover:bg-secondary-surface/30 transition-colors">
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
-                      <img src={tour.bannerImage} alt={tour.title} loading="lazy" decoding="async" className="w-12 h-12 rounded-xl object-cover border border-border shrink-0" />
+                      <Image src={tour.bannerImage} alt={tour.title} width={48} height={48} className="w-12 h-12 rounded-xl object-cover border border-border shrink-0" />
                       <div>
                         <p className="font-medium text-night text-sm">{tour.title}</p>
                         <p className="text-micro text-stone mt-0.5">{tour.duration}</p>
@@ -125,7 +126,7 @@ export default function AdminDestinationsTab({ tours, searchTerm, onSearchChange
         {filtered.map((tour) => (
           <div key={tour.id} className="bg-white border border-border rounded-2xl p-4 shadow-card">
             <div className="flex items-start gap-3">
-              <img src={tour.bannerImage} alt={tour.title} loading="lazy" decoding="async" className="w-16 h-16 rounded-xl object-cover border border-border shrink-0" />
+              <Image src={tour.bannerImage} alt={tour.title} width={64} height={64} className="w-16 h-16 rounded-xl object-cover border border-border shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-night text-sm truncate">{tour.title}</p>
                 <p className="text-micro text-stone mt-0.5 truncate">{tour.location}</p>

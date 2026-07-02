@@ -7,6 +7,8 @@ import { TOURS_DATA } from '../../data';
 import { getHotelsByDestination } from '../../data/hotels';
 import HotelCard from '../HotelCard';
 import { useToast } from '../ui/Toast';
+import TravelPackGuides from './TravelPackGuides';
+import SafeImage from '../ui/SafeImage';
 
 
 const ItineraryMap = dynamic(() => import('../map/ItineraryMap'), {
@@ -68,6 +70,7 @@ export default function PlannerResult({
 }: PlannerResultProps) {
   const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
   const handleCopyItineraryText = () => {
@@ -112,12 +115,12 @@ export default function PlannerResult({
           </div>
 
           <div className="space-y-2">
-            <h2 className="font-display text-3xl font-light text-night lowercase tracking-tight">journey interrupted</h2>
-            <p className="text-meta font-mono text-gold uppercase tracking-widest">explorer sync delay</p>
+            <h2 className="font-display text-3xl font-light text-night lowercase tracking-tight">the spirits of the archives are resting</h2>
+            <p className="text-meta font-mono text-gold uppercase tracking-widest">temporary connection pause</p>
           </div>
 
           <p className="text-body text-muted/80 font-light leading-relaxed max-w-md mx-auto">
-            Our digital cartographer encountered a temporary sync delay while consulting the servers. Rest assured, your draft preferences are safe. Click below to reconnect and restore your journey.
+            Our digital cartographer encountered a momentary sync delay consulting the celestial archives. Your draft preferences remain safe. Try again or explore our pre-built curated circuits while we reconnect.
           </p>
 
           <div className="flex flex-col gap-3 pt-2">
@@ -128,15 +131,19 @@ export default function PlannerResult({
               whileTap={{ scale: 0.98 }}
             >
               <Sparkles className="w-4 h-4 text-night animate-pulse" />
-              <span>Restore Journey</span>
+              <span>Retry Connection</span>
             </motion.button>
             <motion.button
-              onClick={onReset}
+              onClick={() => {
+                const exploreEl = document.getElementById('explore');
+                if (exploreEl) exploreEl.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="btn btn-outline border-border/80 text-muted hover:text-night w-full h-11 px-6 rounded-lg text-caption tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-colors duration-300"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <span>Back to Planner</span>
+              <Compass className="w-4 h-4" />
+              <span>Browse Curated Circuits</span>
             </motion.button>
           </div>
         </motion.div>
@@ -179,7 +186,7 @@ export default function PlannerResult({
         <motion.div className="bg-surface relative overflow-hidden border border-border/70 rounded-lg shadow-md" variants={sectionVariants} custom={0}>
           {tour?.bannerImage && (
             <div className="absolute inset-0 opacity-[0.08]">
-              <img src={tour.bannerImage} alt="" loading="lazy" className="w-full h-full object-cover" />
+              <SafeImage src={tour.bannerImage} alt="" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/90 to-transparent" />
             </div>
           )}
@@ -226,10 +233,29 @@ export default function PlannerResult({
                   </motion.span>
                 )}
  
-                {savedId && !savedId.startsWith('local-') && (
-                    <motion.button
+                {savedId && !savedId.startsWith('local-') ? (
+                  <motion.button
                     onClick={() => {
                       const url = `${window.location.origin}/share/${savedId}`;
+                      navigator.clipboard.writeText(url);
+                      toast("Share link copied to clipboard!", "copy");
+                    }}
+                    className="btn btn-outline border-teal/20 bg-teal/5 text-teal hover:bg-teal/10 h-11 px-4 rounded-md text-caption flex items-center justify-center cursor-pointer"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    Share Journey
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    onClick={() => {
+                      const params = new URLSearchParams({
+                        dest: destId,
+                        days: String(customDuration),
+                        budget: String(customBudgetAmount),
+                        travelers: travelers || 'solo',
+                      });
+                      const url = `${window.location.origin}/share?${params.toString()}`;
                       navigator.clipboard.writeText(url);
                       toast("Share link copied to clipboard!", "copy");
                     }}
@@ -286,8 +312,34 @@ export default function PlannerResult({
           </div>
         </motion.div>
 
-        {/* 2. Story Timeline */}
-        <motion.div className="space-y-6" variants={sectionVariants} custom={1}>
+        {/* 2. Sensory Audio Guide */}
+        <motion.div className="space-y-4" variants={sectionVariants} custom={1}>
+          <div className="bg-surface border border-border/70 p-5 rounded-2xl flex items-center gap-4 shadow-sm">
+            <motion.button
+              onClick={() => setAudioPlaying(!audioPlaying)}
+              className="w-12 h-12 rounded-full bg-gold flex items-center justify-center text-night cursor-pointer shadow-md shrink-0"
+              whileTap={{ scale: 0.9 }}
+            >
+              <span className="text-lg font-bold leading-none">{audioPlaying ? '⏸' : '▶'}</span>
+            </motion.button>
+            <div className="text-left flex-1 min-w-0">
+              <span className="text-[10px] font-mono text-gold uppercase tracking-wider block">Sensory Audio Guide</span>
+              <h4 className="text-sm font-semibold text-night truncate">Listen to the history of {getDestinationPrettyName(destId)}</h4>
+              {audioPlaying && (
+                <div className="flex gap-0.5 mt-1.5 items-end h-3">
+                  <div className="w-0.5 bg-gold rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-2" />
+                  <div className="w-0.5 bg-gold rounded-full animate-[pulse_0.4s_ease-in-out_infinite] h-3" />
+                  <div className="w-0.5 bg-gold rounded-full animate-[pulse_0.7s_ease-in-out_infinite] h-1.5" />
+                  <div className="w-0.5 bg-gold rounded-full animate-[pulse_0.5s_ease-in-out_infinite] h-2.5" />
+                  <div className="w-0.5 bg-gold rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-1" />
+                </div>
+              )}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* 3. Story Timeline */}
+        <motion.div className="space-y-6" variants={sectionVariants} custom={2}>
           <div className="flex items-center gap-3">
             <h3 className="font-display text-section text-night font-light lowercase">story timeline</h3>
             <div className="h-px flex-1 bg-border/20" />
@@ -337,7 +389,7 @@ export default function PlannerResult({
                 </h3>
               </div>
  
-              <p className="text-base text-night/85 leading-relaxed font-light">
+              <p className="text-base text-night/85 leading-relaxed font-light line-clamp-4">
                 {currentDay.description}
               </p>
  
@@ -414,8 +466,8 @@ export default function PlannerResult({
           </AnimatePresence>
         </motion.div>
  
-        {/* 3. Route Map */}
-        <motion.div className="space-y-4" variants={sectionVariants} custom={2}>
+        {/* 4. Route Map */}
+        <motion.div className="space-y-4" variants={sectionVariants} custom={3}>
           <div className="flex items-center gap-3">
             <h3 className="font-display text-section text-night font-light lowercase">route map</h3>
             <div className="h-px flex-1 bg-border/20" />
@@ -425,8 +477,8 @@ export default function PlannerResult({
           </div>
         </motion.div>
  
-        {/* 4. Hotels */}
-        <motion.div className="space-y-4" variants={sectionVariants} custom={3}>
+        {/* 5. Hotels */}
+        <motion.div className="space-y-4" variants={sectionVariants} custom={4}>
           <div className="flex items-center gap-3">
             <h3 className="font-display text-section text-night font-light lowercase">where to stay</h3>
             <div className="h-px flex-1 bg-border/20" />
@@ -444,8 +496,8 @@ export default function PlannerResult({
           )}
         </motion.div>
 
-        {/* 5. Journey Metrics */}
-        <motion.div className="space-y-4" variants={sectionVariants} custom={4}>
+        {/* 6. Journey Metrics */}
+        <motion.div className="space-y-4" variants={sectionVariants} custom={5}>
           <div className="flex items-center gap-3">
             <h3 className="font-display text-xl text-night font-light lowercase">journey snapshot</h3>
             <div className="h-px flex-1 bg-border/65" />
@@ -474,8 +526,17 @@ export default function PlannerResult({
           </div>
         </motion.div>
 
-        {/* 6. Boarding Pass */}
-        <motion.div className="space-y-4" variants={sectionVariants} custom={5}>
+        {/* 7. Travel Pack Guides */}
+        <motion.div className="space-y-4" variants={sectionVariants} custom={6}>
+          <div className="flex items-center gap-3">
+            <h3 className="font-display text-section text-night font-light lowercase">traveler essentials</h3>
+            <div className="h-px flex-1 bg-border/20" />
+          </div>
+          <TravelPackGuides destination={getDestinationPrettyName(destId)} month={tour?.bestSeason?.split(' to ')[0] || 'October'} />
+        </motion.div>
+
+        {/* 8. Boarding Pass */}
+        <motion.div className="space-y-4" variants={sectionVariants} custom={7}>
           <div className="flex items-center gap-3">
             <h3 className="font-display text-xl text-night font-light lowercase">journey pass</h3>
             <div className="h-px flex-1 bg-border/65" />

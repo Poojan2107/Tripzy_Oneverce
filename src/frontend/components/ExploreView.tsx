@@ -323,10 +323,10 @@ export default function ExploreView({
                             <span className="text-border/40">·</span>
                             <span className="truncate">{tour.city || (typeof tour.location === 'string' ? tour.location.split(',')[0] : '') || ''}</span>
                           </div>
-                          <h3 className="font-display text-card text-night font-light lowercase truncate mt-1 leading-tight group-hover:text-gold transition-colors">{tour.name || tour.title}</h3>
+                          <h3 className="font-display text-card text-night font-light lowercase line-clamp-1 mt-1 leading-tight group-hover:text-gold transition-colors">{tour.name || tour.title}</h3>
                         </div>
                         <div className="flex items-center justify-between mt-auto">
-                          <span className="text-meta font-bold text-night">{formatINR(tour.price)}</span>
+                          <span className="text-meta font-bold text-night">from {formatINR(tour.price)}</span>
                           <div className="flex items-center gap-1.5">
                             <div className="flex items-center gap-0.5">
                               <Star className="w-3.5 h-3.5 fill-gold text-gold" />
@@ -392,7 +392,7 @@ export default function ExploreView({
                   </>
                 )}
               </div>
-              <h2 className="font-display text-section text-night font-light lowercase leading-tight">{activeTour.title}</h2>
+              <h2 className="font-display text-section text-night font-light lowercase leading-tight line-clamp-2">{activeTour.title}</h2>
               <p className="text-body text-muted/80 font-light leading-relaxed line-clamp-3">{activeTour.storyNarrative || activeTour.subtitle}</p>
               <div className="flex items-center gap-2 text-caption font-mono text-muted">
                 <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{activeTour.duration}</span>
@@ -405,13 +405,24 @@ export default function ExploreView({
                 ))}
               </div>
               <div className="flex items-center justify-between pt-4 border-t border-border">
-                <div className="text-meta text-muted/50">
+                <div className="text-meta text-muted/50 relative group cursor-help">
+                  <span className="text-micro font-mono text-gold block -mb-0.5">estimated baseline</span>
                   <span className="text-body font-semibold text-night">{formatINR(activeTour.price)}</span>
-                  <span className="ml-0.5">/ day</span>
+                  <span className="ml-0.5 text-meta text-muted/60">/ day avg</span>
+                  <div className="absolute bottom-full left-0 mb-2 w-56 p-2.5 bg-night text-white text-[10px] rounded-lg border border-border/30 shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-300 z-30 leading-relaxed">
+                    Baseline average. Customize your budget (Budget, Balanced, or Luxury) inside the AI Planner tab.
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-                  <span className="text-meta font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
+                <div className="flex items-center gap-3">
+                  <motion.button onClick={() => onTourSelect(activeTour)}
+                    className="text-micro font-mono text-teal hover:text-teal/80 underline underline-offset-2 decoration-teal/30 cursor-pointer hidden lg:inline-flex items-center gap-1"
+                    whileHover={{ gap: '6px' }}>
+                    Plan with your budget <ArrowRight className="w-3 h-3" />
+                  </motion.button>
+                  <div className="flex items-center gap-1">
+                    <Star className="w-3.5 h-3.5 fill-gold text-gold" />
+                    <span className="text-meta font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
+                  </div>
                 </div>
               </div>
               <motion.button onClick={() => onTourSelect(activeTour)}

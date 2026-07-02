@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Image, ExternalLink } from 'lucide-react';
+import { Image as ImageIcon, ExternalLink } from 'lucide-react';
+import SafeImage from '../ui/SafeImage';
 import { getMediaLibrary } from '../../../backend/actions/adminActions';
 
 export default function AdminMediaTab() {
@@ -24,7 +25,7 @@ export default function AdminMediaTab() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
-        <Image className="w-4 h-4 text-gold" />
+        <ImageIcon className="w-4 h-4 text-gold" />
         <span className="text-micro font-bold uppercase tracking-wider text-stone">Media Library</span>
         <span className="text-xs text-stone ml-auto">{images.length} images</span>
       </div>
@@ -32,7 +33,7 @@ export default function AdminMediaTab() {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         {images.map((img, i) => (
           <a key={`${img.id}-${i}`} href={img.url} target="_blank" rel="noopener noreferrer" className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-stone/10 border border-border hover:border-gold/40 transition-colors">
-            <img src={img.url} alt={img.name} className="w-full h-full object-cover" loading="lazy" />
+            <SafeImage src={img.url} alt={img.name} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
               <div className="flex items-center gap-1 text-white text-[10px] truncate w-full">
                 <ExternalLink className="w-3 h-3 shrink-0" />

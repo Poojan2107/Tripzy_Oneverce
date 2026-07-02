@@ -35,7 +35,7 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
   const chapterNumbers = ['01', '02', '03', '04'];
 
   return (
-    <section className="py-16 md:py-20 bg-white border-t border-border/15">
+    <section className="py-16 md:py-20 bg-white border-t border-border/15 premium-grid">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16">
         <ScrollReveal>
           <div className="mb-14 text-left">

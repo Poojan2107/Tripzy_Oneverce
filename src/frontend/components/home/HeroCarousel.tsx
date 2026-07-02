@@ -51,8 +51,8 @@ function CarouselCard({
 }) {
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
-  const rotateX = useSpring(useTransform(y, [0, 1], [5, -5]), { stiffness: 120, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [0, 1], [-5, 5]), { stiffness: 120, damping: 30 });
+  const rotateX = useSpring(useTransform(y, [0, 1], [4, -4]), { stiffness: 150, damping: 25 });
+  const rotateY = useSpring(useTransform(x, [0, 1], [-4, 4]), { stiffness: 150, damping: 25 });
   const accentColor = TAG_ACCENTS[slide.tag] || TAG_ACCENTS.Nature;
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -65,24 +65,25 @@ function CarouselCard({
   const handleMouseLeave = useCallback(() => { x.set(0.5); y.set(0.5); }, [x, y]);
 
   const variants = {
-    left: { x: '-35%', y: 0, z: -100, rotateY: 18, scale: 0.80, opacity: 0.45, zIndex: 10 },
-    center: { x: '0%', y: 0, z: 20, rotateY: 0, scale: 1.08, opacity: 1, zIndex: 30 },
-    right: { x: '35%', y: 0, z: -100, rotateY: -18, scale: 0.80, opacity: 0.45, zIndex: 10 },
-    hidden: { x: '0%', y: 0, z: -200, rotateY: 0, scale: 0.7, opacity: 0, zIndex: 0 },
+    left: { x: '-42%', y: 0, z: -80, rotateY: 16, scale: 0.84, opacity: 0.55, zIndex: 10, borderColor: 'rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' },
+    center: { x: '0%', y: 0, z: 20, rotateY: 0, scale: 1.08, opacity: 1, zIndex: 30, borderColor: 'rgba(244,182,61,0.4)', boxShadow: '0 24px 64px rgba(0,0,0,0.35)' },
+    right: { x: '42%', y: 0, z: -80, rotateY: -16, scale: 0.84, opacity: 0.55, zIndex: 10, borderColor: 'rgba(255,255,255,0.1)', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' },
+    hidden: { x: '0%', y: 0, z: -200, rotateY: 0, scale: 0.7, opacity: 0, zIndex: 0, borderColor: 'rgba(255,255,255,0)', boxShadow: 'none' },
   };
 
-  const transitionConfig = { duration: 0.5, ease: [0.25, 1, 0.5, 1] as const };
+  const transitionConfig = { type: "spring" as const, stiffness: 100, damping: 22, mass: 0.8 };
 
   return (
     <motion.div
-      className={`absolute w-[min(320px,80vw)] h-[430px] rounded-xl overflow-hidden cursor-pointer origin-center border transition-all duration-300 ${
-        isActive
-          ? 'border-gold/50 shadow-[0_24px_64px_rgba(0,0,0,0.35),0_0_0_1px_rgba(244,182,61,0.2)]'
-          : 'border-white/10 hover:border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.25)]'
-      }`}
+      className="absolute w-[min(320px,80vw)] h-[430px] rounded-xl overflow-hidden cursor-pointer origin-center border"
       variants={variants}
       animate={position}
       transition={transitionConfig}
+      whileHover={
+        isActive
+          ? { scale: 1.10, y: -8, transition: { duration: 0.2 } }
+          : { scale: 0.87, opacity: 0.75, transition: { duration: 0.2 } }
+      }
       style={{
         perspective: 1200,
         rotateX: isActive ? rotateX : 0,
@@ -258,24 +259,24 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
     <section className="relative w-full min-h-screen flex flex-col overflow-hidden bg-night">
       {/* Full-bleed background per slide — crossfade without remount */}
       <div className="absolute inset-0">
-        {[activeIndex - 1, activeIndex, activeIndex + 1].filter(i => i >= 0 && i < HERO_CAROUSEL_ITEMS.length).map(i => (
+        {HERO_CAROUSEL_ITEMS.map((item, i) => (
           <motion.div
-            key={i}
+            key={item.id}
             className="absolute inset-0"
-            initial={false}
+            initial={{ opacity: 0 }}
             animate={{ opacity: i === activeIndex ? 1 : 0 }}
-            transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
           >
             <Image
-              src={HERO_CAROUSEL_ITEMS[i].bannerImage}
+              src={item.bannerImage}
               alt=""
               fill
-              className="object-cover animate-fade-in"
+              className="object-cover"
               sizes="100vw"
-              priority={i === activeIndex}
+              priority={i === 0 || i === activeIndex}
             />
-            <div className={`absolute inset-0 bg-gradient-to-br ${TAG_GRADIENTS[HERO_CAROUSEL_ITEMS[i].tag] || TAG_GRADIENTS.Nature}`} />
-            <div className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/40 to-transparent" />
+            <div className={`absolute inset-0 bg-gradient-to-br ${TAG_GRADIENTS[item.tag] || TAG_GRADIENTS.Nature}`} />
+            <div className="absolute inset-0 bg-gradient-to-t from-night/95 via-night/50 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-night/60 via-transparent to-night/30" />
           </motion.div>
         ))}
@@ -300,7 +301,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
         }}
       />
 
-      <div className="relative z-10 w-full flex-grow flex flex-col justify-center pt-20 pb-16 sm:pt-24 lg:pt-32 lg:pb-20">
+      <div className="relative z-10 w-full flex-grow flex flex-col justify-center pt-16 pb-12 sm:pt-20 lg:pt-24 lg:pb-16">
         <motion.div
           className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 w-full"
           variants={staggerVariants}

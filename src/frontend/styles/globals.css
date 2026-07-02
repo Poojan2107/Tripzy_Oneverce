@@ -273,6 +273,14 @@
 .duration-1500 { transition-duration: 1500ms; }
 .duration-2000 { transition-duration: 2000ms; }
 
+/* ── PREMIUM GRID ── */
+.premium-grid {
+  background-image: 
+    linear-gradient(to right, rgba(14, 27, 38, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(14, 27, 38, 0.015) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
 /* ── PAPER GRAIN ── */
 .paper-grain { position: relative; }
 .paper-grain::before {

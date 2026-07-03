@@ -11,7 +11,7 @@ async function callGeminiWithRetry(
   config: any,
   retries = 2
 ): Promise<any> {
-  const TIMEOUT_MS = 20000;
+  const TIMEOUT_MS = 30000;
   for (let attempt = 0; attempt <= retries; attempt++) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);

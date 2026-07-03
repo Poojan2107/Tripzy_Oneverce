@@ -1,62 +1,35 @@
 "use client";
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Search, LogIn, LogOut, ArrowUp } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import dynamic from 'next/dynamic';
-import { trackPageView, trackWishlistSave, trackDestinationClick } from './utils/analytics';
-import ErrorBoundary from './components/ErrorBoundary';
-
-import { TabType, Tour } from './types';
+import { Tour, Conversation } from './types';
 import { TOURS_DATA, INDIA_CHAPTER_SLUGS } from './data';
 import { getAllDestinations } from '../backend/actions/tourActions';
-
-import GlassNavbar from './components/GlassNavbar';
-import BottomNavbar from './components/BottomNavbar';
-import ExploreView from './components/ExploreView';
+import ErrorBoundary from './components/ErrorBoundary';
+import Sidebar from './components/chat/Sidebar';
+import ChatView from './components/chat/ChatView';
+import ProfileView from './components/chat/ProfileView';
 import TourDetailsView from './components/TourDetailsView';
-import SearchModal from './components/SearchModal';
-import HomeView from './components/HomeView';
-
-const AiPlannerView = dynamic(() => import('./components/AiPlannerView'), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-[100dvh] bg-background flex items-center justify-center">
-      <div className="w-10 h-10 rounded-full border-2 border-border/40 border-t-teal animate-spin" />
-    </div>
-  )
-});
-const TripsWishlistView = dynamic(() => import('./components/TripsWishlistView'), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-[100dvh] bg-background flex items-center justify-center">
-      <div className="w-10 h-10 rounded-full border-2 border-border/40 border-t-teal animate-spin" />
-    </div>
-  )
-});
 import { useAtmosphere } from './utils/AtmosphereContext';
-
-function LocalTabErrorFallback({ sectionName, onReset }: { sectionName: string; onReset: () => void }) {
-  return (
-    <div className="w-full min-h-[50dvh] flex flex-col items-center justify-center p-6 text-center bg-background border border-border/40 rounded-2xl my-8 max-w-lg mx-auto shadow-sm">
-      <Compass className="w-10 h-10 text-gold mb-3 animate-pulse" />
-      <h3 className="font-display text-lg text-night font-light lowercase mb-1">could not load {sectionName}</h3>
-      <p className="text-xs text-muted/65 font-light mb-4 max-w-sm">
-        An unexpected rendering issue occurred in this section. The rest of the application remains fully functional.
-      </p>
-      <button
-        onClick={onReset}
-        className="px-4 py-2 bg-night text-white font-mono text-micro uppercase tracking-wider rounded-lg hover:bg-night/90 transition-all cursor-pointer"
-      >
-        Reload Section
-      </button>
-    </div>
-  );
-}
+import { trackWishlistSave } from './utils/analytics';
 
 export default function App() {
   const { setActiveLocation } = useAtmosphere();
   const { data: session } = useSession();
+
+  const [mode, setMode] = useState<'chat' | 'profile'>('chat');
+  const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
+  const [tours, setTours] = useState<Tour[]>([]);
+  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
+  const [savedItineraries, setSavedItineraries] = useState<any[]>([]);
+  const [isClient, setIsClient] = useState(false);
+  const [loadingDestinations, setLoadingDestinations] = useState(true);
+  const [pendingPrompt, setPendingPrompt] = useState<string | null>(null);
+
+  // Conversations state (shared between Sidebar + ChatView)
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
 
   const sortToursIndiaFirst = (list: Tour[]) => {
     const india = INDIA_CHAPTER_SLUGS.map(id => list.find(t => t.id === id)).filter(Boolean) as Tour[];
@@ -64,53 +37,18 @@ export default function App() {
     return [...india, ...rest];
   };
 
-  const [currentTab, setCurrentTab] = useState<TabType>('home');
-  const [selectedTour, setSelectedTour] = useState<Tour | null>(null);
-  
-  const [tours, setTours] = useState<Tour[]>([]);
-  const [wishlistIds, setWishlistIds] = useState<string[]>([]);
-  const [savedItineraries, setSavedItineraries] = useState<any[]>([]);
-  const [isClient, setIsClient] = useState(false);
-  const [loadingDestinations, setLoadingDestinations] = useState(true);
-  const [loadedItinerary, setLoadedItinerary] = useState<any | null>(null);
-
-  useEffect(() => {
-    if (isClient) {
-      trackPageView(currentTab);
-    }
-  }, [currentTab, isClient]);
-
   useEffect(() => {
     setIsClient(true);
-    if (typeof window !== 'undefined') {
-      if ('scrollRestoration' in window.history) {
-        window.history.scrollRestoration = 'manual';
-      }
-      window.scrollTo(0, 0);
-    }
     try {
-      // Legacy fallback check for maximum compatibility
-      let savedWishlist = localStorage.getItem('tripzy_wishlist');
-      if (!savedWishlist) {
-        savedWishlist = localStorage.getItem('wishlist') || localStorage.getItem('travebie_wishlist');
-        if (savedWishlist) {
-          localStorage.setItem('tripzy_wishlist', savedWishlist);
-        }
-      }
+      const savedWishlist = localStorage.getItem('travebie_wishlist') || localStorage.getItem('tripzy_wishlist');
       if (savedWishlist) setWishlistIds(JSON.parse(savedWishlist));
-      
-      let savedItins = localStorage.getItem('tripzy_itineraries');
-      if (!savedItins) {
-        savedItins = localStorage.getItem('itineraries') || localStorage.getItem('travebie_itineraries');
-        if (savedItins) {
-          localStorage.setItem('tripzy_itineraries', savedItins);
-        }
-      }
+
+      const savedItins = localStorage.getItem('travebie_itineraries') || localStorage.getItem('tripzy_itineraries');
       if (savedItins) setSavedItineraries(JSON.parse(savedItins));
 
-    } catch (e) {
-      console.error("Failed to parse local storage", e);
-    }
+      const savedConvs = localStorage.getItem('travebie_conversations');
+      if (savedConvs) setConversations(JSON.parse(savedConvs));
+    } catch {}
 
     const loadDestinations = async () => {
       setLoadingDestinations(true);
@@ -150,15 +88,14 @@ export default function App() {
             photographySpot: d.metadata?.photographySpot,
             signatureExperience: d.metadata?.signatureExperience,
             budgetRange: d.metadata?.budgetRange,
-            accents: d.metadata?.accents || TOURS_DATA.find(t => t.id === (d.slug || d.id))?.accents,
+            accents: d.metadata?.accents || TOURS_DATA.find((t: Tour) => t.id === (d.slug || d.id))?.accents,
             status: d.status || 'PUBLISHED',
           }));
           setTours(mapped);
         } else {
           setTours(TOURS_DATA);
         }
-      } catch (err) {
-        console.error("Failed to query database destinations:", err);
+      } catch {
         setTours(TOURS_DATA);
       } finally {
         setLoadingDestinations(false);
@@ -167,389 +104,156 @@ export default function App() {
     loadDestinations();
   }, []);
 
+  // Persist wishlist
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (['home', 'explore', 'ai-planner', 'saved'].includes(hash)) {
-        setCurrentTab(hash as TabType);
-        setSelectedTour(null);
-        if (hash !== 'ai-planner') {
-          setLoadedItinerary(null);
-        }
-      }
-    };
-    window.addEventListener('hashchange', handleHashChange);
-    handleHashChange();
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
-
-  const [searchModalOpen, setSearchModalOpen] = useState(false);
-  const [exploreCategoryFilter, setExploreCategoryFilter] = useState('all');
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setShowScrollTop(window.scrollY > 400);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  useEffect(() => {
-    if (isClient) {
-      localStorage.setItem('tripzy_wishlist', JSON.stringify(wishlistIds));
-    }
+    if (isClient) localStorage.setItem('travebie_wishlist', JSON.stringify(wishlistIds));
   }, [wishlistIds, isClient]);
 
+  // Persist itineraries
   useEffect(() => {
-    if (isClient) {
-      localStorage.setItem('tripzy_itineraries', JSON.stringify(savedItineraries));
-    }
+    if (isClient) localStorage.setItem('travebie_itineraries', JSON.stringify(savedItineraries));
   }, [savedItineraries, isClient]);
+
+  // Persist conversations
+  useEffect(() => {
+    if (isClient && conversations.length > 0) {
+      localStorage.setItem('travebie_conversations', JSON.stringify(conversations.slice(0, 50)));
+    }
+  }, [conversations, isClient]);
 
   const displayTours = useMemo(
     () => sortToursIndiaFirst(isClient && tours.length > 0 ? tours : TOURS_DATA),
     [tours, isClient]
   );
 
-  useEffect(() => {
-    if (isClient && tours.length > 0) {
-      localStorage.setItem('tripzy_tours', JSON.stringify(tours));
-    }
-  }, [tours, isClient]);
-
-  const handleToggleWishlist = (tourId: string) => {
+  const handleToggleWishlist = useCallback((tourId: string) => {
     setWishlistIds((prev) => {
       const exists = prev.includes(tourId);
       const updated = exists ? prev.filter((id) => id !== tourId) : [...prev, tourId];
-      if (isClient) {
-        localStorage.setItem('tripzy_wishlist', JSON.stringify(updated));
-        trackWishlistSave(tourId, !exists);
-      }
+      trackWishlistSave(tourId, !exists);
       return updated;
     });
-  };
+  }, []);
 
-  const handleSaveItinerary = (newItin: any, skipRedirect = false) => {
+  const handleSaveItinerary = useCallback((newItin: any, _skipRedirect = false) => {
     setSavedItineraries((prev) => {
-      const exists = prev.some((i) => i.id === newItin.id);
-      if (exists) return prev;
-      const updated = [newItin, ...prev];
-      if (isClient) localStorage.setItem('tripzy_itineraries', JSON.stringify(updated));
-      return updated;
+      if (prev.some((i) => i.id === newItin.id)) return prev;
+      return [newItin, ...prev];
     });
-    if (!skipRedirect) {
-      setCurrentTab('saved');
+  }, []);
+
+  const handleDeleteItinerary = useCallback((itinId: string) => {
+    setSavedItineraries((prev) => prev.filter((i) => i.id !== itinId));
+  }, []);
+
+  // Clear pendingPrompt after ChatView consumes it
+  useEffect(() => {
+    if (pendingPrompt) {
+      const t = setTimeout(() => setPendingPrompt(null), 100);
+      return () => clearTimeout(t);
     }
-  };
+  }, [pendingPrompt]);
 
-  const handleDeleteItinerary = (itinId: string) => {
-    setSavedItineraries((prev) => {
-      const updated = prev.filter((i) => i.id !== itinId);
-      if (isClient) localStorage.setItem('tripzy_itineraries', JSON.stringify(updated));
-      return updated;
-    });
-  };
-
-  const handleQuickCategoryClick = (categoryTag: string) => {
-    setExploreCategoryFilter(categoryTag);
-    setCurrentTab('explore');
-    setSelectedTour(null);
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    window.history.pushState(null, '', '#explore');
-  };
-
-  const handleSelectTour = (tour: Tour | null) => {
-    setSelectedTour(tour);
-    if (tour) {
-      setActiveLocation(tour.location);
-      trackDestinationClick(tour.id, tour.title);
-    }
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  };
+  const handleShowProfile = useCallback(() => setMode('profile'), []);
+  const handleShowChat = useCallback(() => setMode('chat'), []);
 
   const wishlistTours = useMemo(
     () => displayTours.filter((tour) => wishlistIds.includes(tour.id)),
     [displayTours, wishlistIds]
   );
-  const featuredTours = useMemo(
-    () => displayTours.filter(t => t.category === 'trending' || t.category === 'popular').slice(0, 4),
-    [displayTours]
-  );
-
-  useEffect(() => {
-    const handleKeys = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        setSearchModalOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeys);
-    return () => window.removeEventListener('keydown', handleKeys);
-  }, []);
 
   return (
     <ErrorBoundary>
-    <div className="w-full min-h-[100dvh] flex flex-col bg-transparent text-night antialiased relative overflow-x-clip">
-      <div className="print:hidden">
-        <GlassNavbar
-          currentTab={currentTab}
-          onTabChange={(tab) => {
-            if (tab !== 'ai-planner') {
-              setLoadedItinerary(null);
-            }
-            setCurrentTab(tab);
-            handleSelectTour(null);
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            window.history.pushState(null, '', `#${tab}`);
-          }}
-          onSearchClick={() => setSearchModalOpen(true)}
-          wishlistCount={wishlistIds.length}
-        />
-      </div>
+      <div className="w-full min-h-[100dvh] flex bg-background text-night antialiased relative overflow-x-clip">
 
-      {/* Mobile Brand Bar — logo only, no duplicate auth/nav */}
-      {selectedTour === null && (
-        <header className={`print:hidden md:hidden w-full z-50 px-4 py-2.5 flex items-center justify-between select-none transition-all duration-300 ${
-          currentTab === 'home'
-            ? 'absolute top-0 left-0 bg-transparent border-none'
-            : 'sticky top-0 border-b bg-background/90 backdrop-blur-md border-border/40'
-        }`}>
-          <button
-            onClick={() => {
-              setSelectedTour(null);
-              setCurrentTab('home');
-              window.scrollTo({ top: 0, behavior: 'instant' });
-              window.history.pushState(null, '', '#home');
-            }}
-            className="flex items-center gap-2 btn-ghost cursor-pointer text-left min-h-[44px]"
-          >
-            <Compass className="w-5 h-5 text-gold animate-spin-slow" />
-            <span className={`font-logo text-lg font-bold tracking-tight lowercase ${
-              currentTab === 'home' ? 'text-white' : 'text-night'
-            }`}>
-              travebie<span className="text-gold">.ai</span>
-            </span>
-          </button>
-        </header>
-      )}
-
-      <main className={`w-full flex-grow transition-all duration-300 ${
-        currentTab === 'home' ? 'pt-0' : 'pt-[52px] md:pt-[76px] lg:pt-[84px]'
-      }`}>
-        <AnimatePresence mode="wait">
-          {selectedTour ? (
-            <motion.div key="tour-details"
+        {/* Tour Details Modal */}
+        <AnimatePresence>
+          {selectedTour && (
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-night/30 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              onClick={() => setSelectedTour(null)}
             >
-              <ErrorBoundary
-                onError={() => handleSelectTour(null)}
-                fallback={
-                  <div className="w-full min-h-[60dvh] flex flex-col items-center justify-center p-6">
-                    <Compass className="w-10 h-10 text-gold mb-3" />
-                    <h2 className="font-display text-xl text-night font-light lowercase mb-1">could not load chapter</h2>
-                    <p className="text-xs text-muted/60 font-light mb-4">This destination details are temporarily unavailable.</p>
-                    <button
-                      onClick={() => handleSelectTour(null)}
-                      className="px-5 py-2.5 btn-night text-micro font-bold uppercase tracking-wider rounded-xl"
-                    >
-                      Back to Explore
-                    </button>
-                  </div>
-                }
+              <motion.div
+                className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-surface rounded-2xl shadow-xl border border-border/50 scrollbar-thin"
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
               >
-              <TourDetailsView
-                tour={selectedTour}
-                onBack={() => handleSelectTour(null)}
-                onPlanClick={() => {
-                  setCurrentTab('ai-planner');
-                  handleSelectTour(null);
-                }}
-                onToggleWishlist={handleToggleWishlist}
-                isWishlisted={wishlistIds.includes(selectedTour.id)}
-              />
-              </ErrorBoundary>
+                <button
+                  onClick={() => setSelectedTour(null)}
+                  className="absolute top-4 right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-white/80 backdrop-blur-sm border border-border/50 text-muted hover:text-night cursor-pointer min-w-[44px] min-h-[44px]"
+                  aria-label="Close"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <TourDetailsView
+                  tour={selectedTour}
+                  onBack={() => setSelectedTour(null)}
+                  onPlanClick={() => {
+                    const dest = selectedTour.title;
+                    setSelectedTour(null);
+                    setActiveConversationId(null);
+                    setMode('chat');
+                    setPendingPrompt(`Plan a trip to ${dest}`);
+                  }}
+                  onToggleWishlist={handleToggleWishlist}
+                  isWishlisted={wishlistIds.includes(selectedTour.id)}
+                />
+              </motion.div>
             </motion.div>
-          ) : (
-            <div className="w-full flex-grow relative">
-              {currentTab === 'home' && (
-                <motion.div
-                  key="home-tab"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <ErrorBoundary
-                    key={`err-home-${isClient}`}
-                    fallback={<LocalTabErrorFallback sectionName="homepage" onReset={() => window.location.reload()} />}
-                  >
-                    <HomeView
-                      tours={displayTours}
-                      wishlistIds={wishlistIds}
-                      loadingDestinations={loadingDestinations}
-                      onSearchClick={() => setSearchModalOpen(true)}
-                      onQuickCategoryClick={handleQuickCategoryClick}
-                      onSelectTour={handleSelectTour}
-                      onToggleWishlist={handleToggleWishlist}
-                      onGoToExplore={() => {
-                        setExploreCategoryFilter('all');
-                        setCurrentTab('explore');
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                        window.history.pushState(null, '', '#explore');
-                      }}
-                      onGoToPlanner={() => {
-                        setCurrentTab('ai-planner');
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                        window.history.pushState(null, '', '#ai-planner');
-                      }}
-                      onGoToPassport={() => {
-                        setCurrentTab('saved');
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                        window.history.pushState(null, '', '#saved');
-                      }}
-                    />
-                  </ErrorBoundary>
-                </motion.div>
-              )}
-
-              {currentTab === 'explore' && (
-                <motion.div
-                  key="explore-tab"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <ErrorBoundary
-                    key={`err-explore-${isClient}`}
-                    fallback={<LocalTabErrorFallback sectionName="story atlas" onReset={() => window.location.reload()} />}
-                  >
-                    <ExploreView
-                      tours={displayTours}
-                      onTourSelect={handleSelectTour}
-                      onToggleWishlist={handleToggleWishlist}
-                      wishlistIds={wishlistIds}
-                      initialCategoryFilter={exploreCategoryFilter}
-                      loading={loadingDestinations}
-                    />
-                  </ErrorBoundary>
-                </motion.div>
-              )}
-
-              {currentTab === 'ai-planner' && (
-                <motion.div
-                  key="ai-planner-tab"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <ErrorBoundary
-                    key={`err-planner-${isClient}`}
-                    fallback={<LocalTabErrorFallback sectionName="ai planner" onReset={() => window.location.reload()} />}
-                  >
-                    <AiPlannerView
-                      onSaveItinerary={handleSaveItinerary}
-                      loadedItinerary={loadedItinerary}
-                      onClearLoadedItinerary={() => setLoadedItinerary(null)}
-                      allTours={tours}
-                    />
-                  </ErrorBoundary>
-                </motion.div>
-              )}
-
-              {currentTab === 'saved' && (
-                <motion.div
-                  key="saved-tab"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <ErrorBoundary
-                    key={`err-saved-${isClient}`}
-                    fallback={<LocalTabErrorFallback sectionName="explorer passport" onReset={() => window.location.reload()} />}
-                  >
-                    <TripsWishlistView
-                      wishlistTours={wishlistTours}
-                      savedItineraries={savedItineraries}
-                      onTourSelect={handleSelectTour}
-                      onRemoveWishlist={handleToggleWishlist}
-                      onNavigateExplore={() => {
-                        setExploreCategoryFilter('all');
-                        setCurrentTab('explore');
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                        window.history.pushState(null, '', '#explore');
-                      }}
-                      onNavigatePlanner={() => {
-                        setCurrentTab('ai-planner');
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                        window.history.pushState(null, '', '#ai-planner');
-                      }}
-                      onDeleteItinerary={handleDeleteItinerary}
-                      onInspectItinerary={(itin) => {
-                        setLoadedItinerary(itin);
-                        setCurrentTab('ai-planner');
-                        window.scrollTo({ top: 0, behavior: 'instant' });
-                        window.history.pushState(null, '', '#ai-planner');
-                      }}
-                      allTours={tours}
-                    />
-                  </ErrorBoundary>
-                </motion.div>
-              )}
-            </div>
           )}
         </AnimatePresence>
-      </main>
 
-      <div className="print:hidden">
-        <BottomNavbar
-          currentTab={currentTab}
-          onTabChange={(tab) => {
-            if (tab !== 'ai-planner') {
-              setLoadedItinerary(null);
-            }
-            setCurrentTab(tab);
-            handleSelectTour(null);
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            window.history.pushState(null, '', `#${tab}`);
-          }}
+        {/* Sidebar */}
+        <Sidebar
+          conversations={conversations}
+          activeConversationId={activeConversationId}
+          currentMode={mode}
           wishlistCount={wishlistIds.length}
-          visible={selectedTour === null}
+          session={session}
+          onNewChat={() => { setActiveConversationId(null); handleShowChat(); }}
+          onSelectConversation={setActiveConversationId}
+          onDeleteConversation={(id) => setConversations((prev) => prev.filter((c) => c.id !== id))}
+          onShowProfile={handleShowProfile}
+          onShowChat={handleShowChat}
+          onSignIn={() => signIn()}
+          onSignOut={() => signOut()}
         />
+
+        {/* Main Content */}
+        <main className="flex-1 flex flex-col min-h-[100dvh] max-w-[900px] mx-auto w-full lg:pl-0 pl-[52px]">
+          {mode === 'profile' ? (
+            <ProfileView
+              wishlistTours={wishlistTours}
+              savedItineraries={savedItineraries}
+              onTourSelect={(tour) => setSelectedTour(tour)}
+              onRemoveWishlist={handleToggleWishlist}
+              onDeleteItinerary={handleDeleteItinerary}
+              allTours={displayTours}
+              onBack={handleShowChat}
+            />
+          ) : (
+            <ChatView
+              tours={displayTours}
+              wishlistIds={wishlistIds}
+              savedItineraries={savedItineraries}
+              onToggleWishlist={handleToggleWishlist}
+              onSaveItinerary={handleSaveItinerary}
+              onDeleteItinerary={handleDeleteItinerary}
+              onShowTourDetail={(tour) => setSelectedTour(tour)}
+              externalConversations={conversations}
+              externalActiveId={activeConversationId}
+              onConversationsChange={setConversations}
+              onActiveConversationChange={setActiveConversationId}
+              pendingPrompt={pendingPrompt}
+            />
+          )}
+        </main>
       </div>
-
-      <SearchModal
-        isOpen={searchModalOpen}
-        onClose={() => setSearchModalOpen(false)}
-        tours={displayTours}
-        onSelectTour={(tour) => {
-          handleSelectTour(tour);
-          setSearchModalOpen(false);
-        }}
-      />
-
-      {/* Scroll-to-top button */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-[calc(var(--nav-bottom-height)-12px+var(--safe-bottom))] md:bottom-6 right-5 z-[100] w-11 h-11 flex items-center justify-center rounded-full btn-night shadow-lg"
-            aria-label="Scroll to top"
-          >
-            <ArrowUp className="w-4 h-4" />
-          </motion.button>
-        )}
-      </AnimatePresence>
-
-    </div>
     </ErrorBoundary>
   );
 }

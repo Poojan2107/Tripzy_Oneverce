@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { Tour } from '../../types';
 
-const MotionImage = motion(Image);
+const MotionImage = motion.create(Image);
 
 function getMoodLabel(id: string): string {
   if (id === 'varanasi-spiritual') return 'Spiritual Chapter';

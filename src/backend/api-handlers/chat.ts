@@ -1,13 +1,16 @@
 import { GoogleGenAI } from "@google/genai";
 import { getGeminiApiKey } from "../lib/gemini";
 import { checkRateLimit } from "../lib/rate-limit";
+import { getSimulatedResponse } from "../lib/simulatedResponse";
+import { detectIntent } from "../lib/intentDetector";
+import { buildSystemPrompt } from "../lib/promptTemplates";
 
 async function callGeminiStreamWithTimeout(
   genAI: GoogleGenAI,
   model: string,
   contents: any,
   config: any,
-  timeoutMs = 20000
+  timeoutMs = 30000
 ) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -51,6 +54,10 @@ export async function POST(req: Request) {
         parts: [{ text: m.content }]
       }));
 
+    // Detect user intent and build context-aware prompt
+    const context = detectIntent(messages);
+    const systemPrompt = buildSystemPrompt(context);
+
     let stream;
     try {
       stream = await callGeminiStreamWithTimeout(
@@ -59,15 +66,23 @@ export async function POST(req: Request) {
         contents,
         {
           systemInstruction: {
-            parts: [{ text: "You are the Travebie AI Travel Assistant. Your job is to help users discover, plan, and optimize their travel itineraries. Be helpful, concise, and prioritize recommending our featured and trending destinations. Provide budget breakdowns when asked." }]
+            parts: [{ text: systemPrompt }]
           }
         }
       );
     } catch {
-      return new Response(
-        "I'm having trouble connecting right now. Please try again in a moment.",
-        { status: 200, headers: { "Content-Type": "text/plain; charset=utf-8" } }
-      );
+      // Gemini unavailable — serve a rich simulated response
+      const simulated = getSimulatedResponse(messages);
+      const encoder = new TextEncoder();
+      const simulatedStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(simulated));
+          controller.close();
+        },
+      });
+      return new Response(simulatedStream, {
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
     }
 
     const encoder = new TextEncoder();

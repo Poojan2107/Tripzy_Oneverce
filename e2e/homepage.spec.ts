@@ -1,40 +1,65 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Homepage', () => {
-  test('loads successfully and displays brand', async ({ page }) => {
+async function waitForStable(page: any) {
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(500);
+}
+
+async function fillReactInput(page: any, text: string) {
+  await page.evaluate((val) => {
+    const textarea = document.querySelector('textarea');
+    if (!textarea) return;
+    const nativeSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLTextAreaElement.prototype, 'value'
+    )!.set!;
+    nativeSetter.call(textarea, val);
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+  }, text);
+}
+
+test.describe('Travebie V2 — Chat Welcome', () => {
+  test('loads and shows welcome screen', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('text=travebie')).toBeVisible();
-    await expect(page.locator('text=explore atlas')).toBeVisible();
+    await waitForStable(page);
+    await expect(page.locator('text=what adventure are you planning?')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('main').getByText('travebie', { exact: true })).toBeVisible();
   });
 
-  test('navigation tabs switch views', async ({ page }) => {
+  test('shows prompt box and suggested prompts', async ({ page }) => {
     await page.goto('/');
-
-    const atlasTab = page.getByRole('button', { name: /atlas/i });
-    if (await atlasTab.isVisible()) {
-      await atlasTab.click();
-      await expect(page.locator('text=india\'s story atlas')).toBeVisible({ timeout: 5000 });
-    }
-
-    const companionTab = page.getByRole('button', { name: /companion/i });
-    if (await companionTab.isVisible()) {
-      await companionTab.click();
-      await expect(page.locator('text=design your dream journey')).toBeVisible({ timeout: 5000 });
-    }
+    await waitForStable(page);
+    await expect(page.getByPlaceholder('Describe your dream journey...')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('button:has-text("Weekend Escape")')).toBeVisible();
+    await expect(page.locator('button:has-text("Honeymoon")')).toBeVisible();
+    await expect(page.locator('button:has-text("Solo Backpacking")')).toBeVisible();
   });
 
-  test('search modal opens via Cmd+K', async ({ page }) => {
+  test('typing in prompt enables send button', async ({ page }) => {
     await page.goto('/');
-    await page.keyboard.press('Meta+k');
-    await expect(page.locator('text=Search')).toBeVisible({ timeout: 3000 });
+    await waitForStable(page);
+    await fillReactInput(page, 'Plan a trip to Goa');
+    await expect(page.getByLabel('Send message')).toBeEnabled({ timeout: 5000 });
   });
 
-  test('category chips are clickable', async ({ page }) => {
+  test('empty prompt keeps send button disabled', async ({ page }) => {
     await page.goto('/');
-    const firstChip = page.locator('button:has-text("Spiritual")').first();
-    if (await firstChip.isVisible()) {
-      await firstChip.click();
-    }
+    await waitForStable(page);
+    await expect(page.getByLabel('Send message')).toBeDisabled();
+  });
+
+  test('sidebar opens and closes on mobile', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await waitForStable(page);
+    const hamburger = page.getByLabel('Open sidebar');
+    await expect(hamburger).toBeVisible();
+    await hamburger.click();
+    // Wait for AnimatePresence spring animation to complete
+    await expect(page.getByRole('button', { name: 'Close sidebar' })).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole('button', { name: 'New Chat' })).toBeVisible();
+    const closeBtn = page.getByRole('button', { name: 'Close sidebar' });
+    await closeBtn.click();
+    await expect(page.getByRole('button', { name: 'New Chat' })).not.toBeVisible();
   });
 
   test('offline page renders', async ({ page }) => {

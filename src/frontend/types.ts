@@ -101,3 +101,47 @@ export interface Hotel {
 }
 
 export type TabType = 'home' | 'explore' | 'ai-planner' | 'saved';
+
+// ─── V2 Chat Types ───
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: number;
+}
+
+export interface Conversation {
+  id: string;
+  title: string;
+  messages: ChatMessage[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type ParsedSectionType =
+  | 'overview'
+  | 'timeline'
+  | 'hotels'
+  | 'budget'
+  | 'food'
+  | 'transport'
+  | 'packing'
+  | 'weather'
+  | 'map'
+  | 'tips'
+  | 'experiences'
+  | 'hidden_gems'
+  | 'photography'
+  | 'etiquette'
+  | 'avoid'
+  | 'emergency'
+  | 'festivals'
+  | 'nearby'
+  | 'unknown';
+
+export interface ParsedSection {
+  type: ParsedSectionType;
+  title: string;
+  content: string;
+}

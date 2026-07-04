@@ -20,12 +20,69 @@ function makeFollowUp(destination: string, topic: string): string {
 }
 
 export function getSimulatedResponse(messages: { role: string; content: string }[]): string {
-  const userMessages = messages.filter((m) => m.role === "user");
-  const lastMsg = userMessages[userMessages.length - 1]?.content || "Goa";
-  const prevMsg = userMessages.length > 1 ? userMessages[userMessages.length - 2]?.content : "";
-  const isFollowUp = userMessages.length > 1;
-  const place = detectPlace(isFollowUp ? prevMsg : lastMsg, "Goa");
-  const lowLast = lastMsg.toLowerCase();
+const userMessages = messages.filter((m) => m.role === "user");
+const lastMsg = userMessages[userMessages.length - 1]?.content || "Goa";
+const prevMsg = userMessages.length > 1 ? userMessages[userMessages.length - 2]?.content : "";
+const isFollowUp = userMessages.length > 1;
+const place = detectPlace(isFollowUp ? prevMsg : lastMsg, "Goa");
+const lowLast = lastMsg.toLowerCase();
+
+// URL understanding — return a Goa trip plan based on a hypothetical article
+if (/^https?:\/\//.test(lowLast) || /paste|check\s*out|here.*link/i.test(lowLast)) {
+  return `## Journey Overview
+Based on the article you shared, Goa sounds like the perfect escape right now. The writer captures the essence of Goa's relaxed coastal charm — pristine beaches, Portuguese heritage, and incredible seafood. Here's what I've put together based on what was mentioned.
+
+- **Destination highlights** — Pristine beaches, Portuguese-era architecture, vibrant night markets, spice plantations, dolphin spotting
+- **Best for** — Solo travellers, couples, friend groups
+- **Ideal duration** — 4-5 days
+- **Vibe** — Relaxed, tropical, cultural, slightly bohemian
+
+## Daily Itinerary
+**Day 1: North Goa Beaches**
+**Morning**: Land at Goa International Airport. Take a prepaid taxi (₹600) to Candolim. Start with a morning swim at Candolim Beach.
+**Afternoon**: Lunch at Fisherman's Wharf (prawn balchão recommended). Explore Fort Aguada.
+**Evening**: Watch the sunset from the fort walls. Dinner at Bomra's (Asian-fusion, ₹1,800 for two).
+
+**Day 2: South Goa Exploration**
+**Morning**: Drive to Palolem Beach (1 hr). Kayak through the backwaters spotting kingfishers.
+**Afternoon**: Lunch at The Loft in Palolem (wood-fired pizzas). Visit Butterfly Beach.
+**Evening**: Dinner on the sand at Cafe Lazy under fairy lights.
+
+## Hotels & Accommodation
+**Luxury**
+**The St. Regis Goa** — Beachfront elegance. ₹25,000–₹40,000/night. Best for honeymooners.
+**W Goa** — Vibrant resort on Vagator. ₹18,000–₹30,000/night. Best for young couples.
+
+**Mid-Range**
+**Alila Diwa** — Boutique luxury. ₹8,000–₹12,000/night.
+**Casa Candolim** — Contemporary apartments. ₹5,500–₹8,000/night.
+
+**Budget**
+**The Hosteller Vagator** — Social hostel. Dorm ₹1,200, private ₹3,000.
+**Tiya Cottages Palolem** — Rustic beach cottages. ₹2,500–₹4,000/night.
+
+## Food & Dining
+**Goan Fish Curry** at Mum's Kitchen — coconut-based, tangy with kokum.
+**Prawn Balchão** at Fisherman's Wharf — spicy and tangy.
+**Bebinca** at Cafe Tato — 16-layer Goan dessert.
+**Feni** — Local cashew spirit, ₹80 a peg at any bar.
+
+## Budget Breakdown
+| Category | Estimated Cost |
+| Transport | ₹15,000–₹25,000 |
+| Accommodation (4 nights) | ₹12,000–₹60,000 |
+| Food (per day) | ₹4,000–₹8,000 |
+| Activities | ₹3,000–₹5,000 |
+| Miscellaneous | ₹2,000–₹4,000 |
+| **Total** | **₹36,000–₹1,02,000 per person** |
+
+## Transport & Getting Around
+**By air**: Goa International Airport. Direct flights from Delhi (2.5 hrs), Mumbai (1 hr).
+**By train**: Madgaon station. Sleeper from Mumbai ₹400–₹800 (10 hrs).
+**Local**: Scooter ₹400–₹600/day. Taxi ₹200 base + ₹15/km.
+
+Which section would you like me to dive deeper into?`;
+}
 
   // Follow-up detection — return targeted section content
   if (isFollowUp) {

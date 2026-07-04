@@ -59,10 +59,7 @@ export default function Sidebar({
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto scrollbar-thin px-2 space-y-0.5">
-        <div className="px-3 pt-4 pb-1.5">
-          <p className="text-micro text-white/20 font-mono uppercase tracking-widest">Conversations</p>
-        </div>
+      <nav className="flex-1 overflow-y-auto scrollbar-thin px-2">
         <ConversationHistory
           conversations={conversations}
           activeId={activeConversationId}

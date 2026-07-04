@@ -8,18 +8,13 @@ async function waitForStable(page: any) {
 }
 
 async function fillReactInput(page: any, text: string) {
-  await page.evaluate((val) => {
-    const textarea = document.querySelector('textarea');
-    if (!textarea) return;
-    const nativeSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLTextAreaElement.prototype, 'value'
-    )!.set!;
-    nativeSetter.call(textarea, val);
-    textarea.dispatchEvent(new Event('input', { bubbles: true }));
-  }, text);
+  const ta = page.getByLabel('Message input');
+  await ta.focus();
+  await page.keyboard.insertText(text);
 }
 
 async function submitPrompt(page: any, text: string) {
+  await expect(page.getByLabel('Message input')).toBeEnabled({ timeout: 15000 });
   await fillReactInput(page, text);
   await expect(page.getByLabel('Send message')).toBeEnabled({ timeout: 5000 });
   await page.getByLabel('Send message').click();

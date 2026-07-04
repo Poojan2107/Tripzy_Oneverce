@@ -10,13 +10,9 @@ test.describe('Card Rendering Verification', () => {
     await page.waitForTimeout(500);
 
     // Submit without route mock so simulated response kicks in
-    await page.evaluate((val) => {
-      const ta = document.querySelector('textarea');
-      if (!ta) return;
-      const ns = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value')!.set!;
-      ns.call(ta, val);
-      ta.dispatchEvent(new Event('input', { bubbles: true }));
-    }, 'Plan a weekend trip to Goa');
+    const ta = page.getByLabel('Message input');
+    await ta.focus();
+    await page.keyboard.insertText('Plan a weekend trip to Goa');
     await expect(page.getByLabel('Send message')).toBeEnabled({ timeout: 5000 });
     await page.getByLabel('Send message').click();
 

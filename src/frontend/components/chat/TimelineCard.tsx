@@ -1,7 +1,7 @@
 "use client";
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, ChevronDown, Sun, SunDim, Sunset, Moon } from 'lucide-react';
+import { Clock, ChevronDown, ChevronRight, Sun, SunDim, Sunset, Moon } from 'lucide-react';
 
 interface DayEntry {
   day: number;
@@ -48,7 +48,68 @@ function parseDays(content: string): DayEntry[] {
   return days;
 }
 
-export default function TimelineCard({ content }: { content: string }) {
+function DayBlock({ day, idx }: { day: DayEntry; idx: number }) {
+  const [open, setOpen] = useState(true);
+
+  const toggle = useCallback(() => setOpen((v) => !v), []);
+
+  return (
+    <div className="relative">
+      <div className="absolute -left-[22px] top-[7px] w-2.5 h-2.5 rounded-full bg-teal/20 border-2 border-teal z-10" />
+      <button
+        onClick={toggle}
+        className="w-full flex items-center gap-2 cursor-pointer text-left group"
+      >
+        <ChevronRight
+          className={`w-3.5 h-3.5 text-muted/40 transition-transform duration-200 shrink-0 ${
+            open ? 'rotate-90' : ''
+          } group-hover:text-muted/70`}
+        />
+        <span className="text-micro font-mono text-teal font-bold tracking-wider">Day {day.day}</span>
+        <span className="text-caption text-muted/60 truncate flex-1">{day.title}</span>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="slots"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="pl-[22px] pt-2 pb-3">
+              {day.slots.length > 0 && (
+                <div className="space-y-1.5">
+                  {day.slots.map((slot, si) => (
+                    <div key={si} className="flex items-start gap-2.5 py-1.5">
+                      <div className="w-5 h-5 rounded-full bg-background border border-border/40 flex items-center justify-center shrink-0 mt-0.5">
+                        {slot.icon}
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50">
+                          {slot.label}
+                        </span>
+                        <p className="text-caption text-muted/80 leading-relaxed mt-0.5">{slot.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {day.raw && (
+                <p className="text-caption text-muted/70 leading-relaxed whitespace-pre-wrap mt-1">{day.raw}</p>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+const TimelineCard = memo(function TimelineCard({ content }: { content: string }) {
   const [expanded, setExpanded] = useState(true);
   const days = parseDays(content);
 
@@ -56,6 +117,7 @@ export default function TimelineCard({ content }: { content: string }) {
     <div className="bg-surface border border-border/50 rounded-2xl shadow-sm overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
         className="w-full flex items-center justify-between px-5 py-4 cursor-pointer text-left"
       >
         <div className="flex items-center gap-2.5">
@@ -77,38 +139,12 @@ export default function TimelineCard({ content }: { content: string }) {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 space-y-5">
+            <div className="px-5 pb-5">
               {days.length > 0 ? (
-                <div className="relative pl-6 space-y-6">
-                  <div className="absolute left-[11px] top-2 bottom-2 w-px bg-border" />
+                <div className="relative pl-6 space-y-2">
+                  <div className="absolute left-[11px] top-[7px] bottom-0 w-px bg-border" />
                   {days.map((day) => (
-                    <div key={day.day} className="relative">
-                      <div className="absolute -left-[22px] top-1 w-2.5 h-2.5 rounded-full bg-teal/20 border-2 border-teal" />
-                      <span className="text-micro font-mono text-teal font-bold tracking-wider">Day {day.day}</span>
-                      <h4 className="text-body text-night font-semibold mt-0.5 mb-2">{day.title}</h4>
-
-                      {day.slots.length > 0 && (
-                        <div className="space-y-1.5">
-                          {day.slots.map((slot, si) => (
-                            <div key={si} className="flex items-start gap-2.5 py-1.5">
-                              <div className="w-5 h-5 rounded-full bg-background border border-border/40 flex items-center justify-center shrink-0 mt-0.5">
-                                {slot.icon}
-                              </div>
-                              <div className="flex-1">
-                                <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50">
-                                  {slot.label}
-                                </span>
-                                <p className="text-caption text-muted/80 leading-relaxed mt-0.5">{slot.content}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {day.raw && (
-                        <p className="text-caption text-muted/70 leading-relaxed whitespace-pre-wrap mt-1">{day.raw}</p>
-                      )}
-                    </div>
+                    <DayBlock key={day.day} day={day} idx={day.day} />
                   ))}
                 </div>
               ) : (
@@ -120,4 +156,6 @@ export default function TimelineCard({ content }: { content: string }) {
       </AnimatePresence>
     </div>
   );
-}
+});
+
+export default TimelineCard;

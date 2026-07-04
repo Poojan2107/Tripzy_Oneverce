@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 const containerVariants = {
@@ -14,7 +15,30 @@ const dotVariants = {
   }),
 };
 
+const TRAVEL_THOUGHTS = [
+  "Finding hidden places...",
+  "Checking local experiences...",
+  "Building your itinerary...",
+  "Looking for authentic food...",
+  "Comparing hotel options...",
+  "Optimizing your budget...",
+  "Planning the best route...",
+  "Preparing travel tips...",
+];
+
 export default function TypingIndicator() {
+  const [thought, setThought] = useState(TRAVEL_THOUGHTS[0]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setThought((prev) => {
+        const idx = TRAVEL_THOUGHTS.indexOf(prev);
+        return TRAVEL_THOUGHTS[(idx + 1) % TRAVEL_THOUGHTS.length];
+      });
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <motion.div
       className="px-6 py-2"
@@ -23,6 +47,7 @@ export default function TypingIndicator() {
       animate="animate"
       exit="exit"
       aria-label="AI is typing"
+      aria-live="polite"
     >
       <div className="max-w-full">
         <div className="flex items-start justify-between gap-3 mb-2">
@@ -40,7 +65,7 @@ export default function TypingIndicator() {
               />
             ))}
           </div>
-          <span className="text-micro text-muted/30 font-mono uppercase tracking-widest">Thinking...</span>
+          <span className="text-micro text-muted/50 font-medium tracking-wide animate-pulse">{thought}</span>
         </div>
       </div>
     </motion.div>

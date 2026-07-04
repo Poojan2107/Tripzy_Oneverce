@@ -42,8 +42,6 @@ export interface DetectedContext {
   currentMonth: string;
   /** URL extracted from the user message, if any */
   extractedUrl?: string | null;
-  /** Fetched text content from the URL (populated by chat.ts) */
-  extractedContent?: string | null;
 }
 
 const INTENT_PATTERNS: [RegExp, Intent][] = [

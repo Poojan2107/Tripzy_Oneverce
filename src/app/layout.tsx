@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import "../frontend/styles/globals.css";
 import Providers from "./providers";
 import PageTransition from "../frontend/components/PageTransition";
-import Footer from "../frontend/components/Footer";
+import ConditionalFooter from "./ConditionalFooter";
 
 
 const nunitoSans = Nunito_Sans({
@@ -162,7 +162,7 @@ if ("serviceWorker" in navigator) {
             <PageTransition>
               <div className="flex-1">{children}</div>
             </PageTransition>
-            <Footer />
+            <ConditionalFooter />
           </div>
         </Providers>
         <Analytics />

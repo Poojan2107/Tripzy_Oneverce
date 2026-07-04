@@ -4,6 +4,7 @@ import { checkRateLimit } from "../lib/rate-limit";
 import { getSimulatedResponse } from "../lib/simulatedResponse";
 import { detectIntent } from "../lib/intentDetector";
 import { buildSystemPrompt } from "../lib/promptTemplates";
+import { fetchUrlContent } from "../lib/contentFetcher";
 
 async function callGeminiStreamWithTimeout(
   genAI: GoogleGenAI,
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const { messages } = await req.json();
+    const { messages, preferences: savedPrefs } = await req.json();
 
     const apiKey = getGeminiApiKey();
     if (!apiKey) {
@@ -56,6 +57,20 @@ export async function POST(req: Request) {
 
     // Detect user intent and build context-aware prompt
     const context = detectIntent(messages);
+
+    // Merge saved preferences (from localStorage) into context
+    if (savedPrefs) {
+      if (savedPrefs.budgetTier && !context.budgetTier) context.budgetTier = savedPrefs.budgetTier;
+      if (savedPrefs.travelerType && !context.travelerType) context.travelerType = savedPrefs.travelerType;
+      if (savedPrefs.destination && context.destination === 'Goa') context.destination = savedPrefs.destination;
+    }
+
+    // If URL understanding intent, fetch the content
+    if (context.intent === 'url_understanding' && context.extractedUrl) {
+      const content = await fetchUrlContent(context.extractedUrl);
+      if (content) context.extractedContent = content;
+    }
+
     const systemPrompt = buildSystemPrompt(context);
 
     let stream;

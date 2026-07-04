@@ -6,32 +6,26 @@ async function waitForStable(page: any) {
 }
 
 async function fillReactInput(page: any, text: string) {
-  await page.evaluate((val) => {
-    const textarea = document.querySelector('textarea');
-    if (!textarea) return;
-    const nativeSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLTextAreaElement.prototype, 'value'
-    )!.set!;
-    nativeSetter.call(textarea, val);
-    textarea.dispatchEvent(new Event('input', { bubbles: true }));
-  }, text);
+  const ta = page.getByLabel('Message input');
+  await ta.focus();
+  await page.keyboard.insertText(text);
 }
 
 test.describe('Travebie V2 — Chat Welcome', () => {
   test('loads and shows welcome screen', async ({ page }) => {
     await page.goto('/');
     await waitForStable(page);
-    await expect(page.locator('text=what adventure are you planning?')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('text=where would you like to go next?')).toBeVisible({ timeout: 5000 });
     await expect(page.getByRole('main').getByText('travebie', { exact: true })).toBeVisible();
   });
 
   test('shows prompt box and suggested prompts', async ({ page }) => {
     await page.goto('/');
     await waitForStable(page);
-    await expect(page.getByPlaceholder('Describe your dream journey...')).toBeVisible({ timeout: 5000 });
-    await expect(page.locator('button:has-text("Weekend Escape")')).toBeVisible();
-    await expect(page.locator('button:has-text("Honeymoon")')).toBeVisible();
-    await expect(page.locator('button:has-text("Solo Backpacking")')).toBeVisible();
+    await expect(page.locator('textarea[aria-label="Message input"]')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('button:has-text("Plan a weekend escape")')).toBeVisible();
+    await expect(page.locator('button:has-text("Plan a romantic trip")')).toBeVisible();
+    await expect(page.locator('button:has-text("Plan a solo adventure")')).toBeVisible();
   });
 
   test('typing in prompt enables send button', async ({ page }) => {

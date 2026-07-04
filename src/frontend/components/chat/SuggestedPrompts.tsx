@@ -1,15 +1,15 @@
 "use client";
 import { motion } from 'framer-motion';
-import { Sparkles, Mountain, Heart, Users, Map, Sun, Compass } from 'lucide-react';
+import { Sparkles, Heart, Users, Map, Sun, Compass, Mountain } from 'lucide-react';
 
 const PROMPTS = [
-  { icon: Sparkles, label: 'Weekend Escape', text: 'Plan a quick weekend getaway from Delhi' },
-  { icon: Heart, label: 'Honeymoon', text: 'Romantic honeymoon trip for a couple' },
-  { icon: Mountain, label: 'Solo Backpacking', text: 'Solo backpacking trip through Himachal' },
-  { icon: Users, label: 'Family Trip', text: 'Family-friendly vacation with kids' },
-  { icon: Map, label: 'Road Trip', text: 'Epic road trip across Rajasthan' },
-  { icon: Sun, label: 'Spiritual', text: 'Spiritual journey through Varanasi and Rishikesh' },
-  { icon: Compass, label: 'Adventure', text: 'Adventure trip with trekking and camping' },
+  { icon: Sparkles, label: 'Plan a weekend escape', text: 'Plan a quick weekend getaway from Delhi' },
+  { icon: Heart, label: 'Plan a romantic trip', text: 'Romantic honeymoon trip for a couple' },
+  { icon: Mountain, label: 'Plan a solo adventure', text: 'Solo backpacking trip through Himachal' },
+  { icon: Users, label: 'Plan a family vacation', text: 'Family-friendly vacation with kids' },
+  { icon: Map, label: 'Plan a road trip', text: 'Epic road trip across Rajasthan' },
+  { icon: Sun, label: 'Plan a spiritual journey', text: 'Spiritual journey through Varanasi and Rishikesh' },
+  { icon: Compass, label: 'Plan an adventure', text: 'Adventure trip with trekking and camping' },
 ];
 
 interface SuggestedPromptsProps {
@@ -37,9 +37,9 @@ export default function SuggestedPrompts({ onSelect, disabled }: SuggestedPrompt
           animate="animate"
           onClick={() => onSelect(text)}
           disabled={disabled}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/60 bg-surface/80 text-muted hover:text-night hover:border-gold/40 hover:bg-gold/5 text-meta font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-border/60 bg-surface/80 text-muted/80 hover:text-night hover:border-gold/40 hover:bg-gold/5 text-caption font-semibold tracking-normal transition-all duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-sm hover:-translate-y-0.5 active:scale-[0.97]"
         >
-          <Icon className="w-3.5 h-3.5 shrink-0" />
+          <Icon className="w-4 h-4 shrink-0 opacity-60" />
           {label}
         </motion.button>
       ))}

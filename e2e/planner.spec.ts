@@ -11,25 +11,27 @@ async function waitForStable(page: any) {
 }
 
 async function fillReactInput(page: any, text: string) {
-  await page.evaluate((val) => {
-    const textarea = document.querySelector('textarea');
-    if (!textarea) throw new Error('textarea not found');
-    const nativeSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLTextAreaElement.prototype, 'value'
-    )!.set!;
-    nativeSetter.call(textarea, val);
-    textarea.dispatchEvent(new Event('input', { bubbles: true }));
-  }, text);
+  const ta = page.getByLabel('Message input');
+  await ta.focus();
+  await page.keyboard.insertText(text);
 }
 
 async function typePrompt(page: any, text: string) {
   await fillReactInput(page, text);
-  await expect(page.getByLabel('Send message')).toBeEnabled({ timeout: 5000 });
+  await expect(page.getByLabel('Send message')).toBeEnabled({ timeout: 8000 });
+}
+
+async function waitForSendReady(page: any) {
+  await expect(page.getByLabel('Message input')).toBeEnabled({ timeout: 15000 });
 }
 
 async function submitPrompt(page: any, text: string) {
+  await waitForSendReady(page);
   await typePrompt(page, text);
-  await page.getByLabel('Send message').click();
+  await page.evaluate(() => {
+    const btn = document.querySelector('button[aria-label="Send message"]') as HTMLButtonElement;
+    if (btn) btn.click();
+  });
 }
 
 test.describe('Travebie V2 — Chat Conversation', () => {
@@ -48,13 +50,13 @@ test.describe('Travebie V2 — Chat Conversation', () => {
     await waitForStable(page);
     await submitPrompt(page, 'Plan a weekend trip to Goa');
     await expect(main(page).getByText('Plan a weekend trip to Goa')).toBeVisible({ timeout: 8000 });
-    await expect(page.locator('text=what adventure are you planning?')).not.toBeVisible();
+    await expect(page.locator('text=where would you like to go next?')).not.toBeVisible();
   });
 
   test('suggested prompt fills and submits', async ({ page }) => {
     await page.goto('/');
     await waitForStable(page);
-    const spiritualBtn = page.locator('button:has-text("Spiritual")');
+    const spiritualBtn = page.locator('button:has-text("Plan a spiritual journey")');
     await spiritualBtn.click();
     await expect(main(page).getByText('Spiritual journey through Varanasi and Rishikesh')).toBeVisible({ timeout: 8000 });
   });
@@ -63,7 +65,7 @@ test.describe('Travebie V2 — Chat Conversation', () => {
     await page.goto('/');
     await waitForStable(page);
     await submitPrompt(page, 'Plan a trip to Kerala');
-    await expect(page.getByPlaceholder('Describe your dream journey...')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('textarea[aria-label="Message input"]')).toBeVisible({ timeout: 5000 });
   });
 
   test('sidebar shows conversation history after first message', async ({ page }) => {

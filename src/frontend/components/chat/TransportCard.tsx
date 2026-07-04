@@ -18,6 +18,7 @@ export default function TransportCard({ content }: { content: string }) {
     <div className="bg-surface border border-border/50 rounded-2xl shadow-sm overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
         className="w-full flex items-center justify-between px-5 py-4 cursor-pointer text-left"
       >
         <div className="flex items-center gap-2.5">

@@ -1,7 +1,7 @@
 "use client";
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, ChevronDown, CloudRain, Snowflake, Cloud } from 'lucide-react';
+import { Sun, ChevronDown, CloudRain, Snowflake, Cloud, Calendar, Users, Backpack, Star } from 'lucide-react';
 
 function parseSeasons(text: string): { season: string | null; lines: string[]; icon: React.ReactNode }[] {
   const lines = text.split('\n').filter(Boolean);
@@ -48,9 +48,49 @@ function parseSeasons(text: string): { season: string | null; lines: string[]; i
   return seasons;
 }
 
-export default function WeatherCard({ content }: { content: string }) {
+function parseStructuredWeather(content: string): {
+  bestMonths: string | null;
+  currentSeason: string | null;
+  temperature: string | null;
+  crowdLevel: string | null;
+  packingReminder: string | null;
+  travelTip: string | null;
+} {
+  const result = {
+    bestMonths: null as string | null,
+    currentSeason: null as string | null,
+    temperature: null as string | null,
+    crowdLevel: null as string | null,
+    packingReminder: null as string | null,
+    travelTip: null as string | null,
+  };
+
+  const bestMonthsMatch = content.match(/\*\*Best\s*Months?\*\*[:\s]*(.+)/i);
+  if (bestMonthsMatch) result.bestMonths = bestMonthsMatch[1].trim();
+
+  const seasonMatch = content.match(/\*\*(?:Current\s*)?Season\*\*[:\s]*(.+)/i);
+  if (seasonMatch) result.currentSeason = seasonMatch[1].trim();
+
+  const tempMatch = content.match(/(\d+\s*[–-]\s*\d+\s*°C|\d+\s*°C)/);
+  if (tempMatch) result.temperature = tempMatch[1].trim();
+
+  const crowdMatch = content.match(/\*\*Crowd\s*Level\*\*[:\s]*(.+)/i);
+  if (crowdMatch) result.crowdLevel = crowdMatch[1].trim();
+
+  const packingMatch = content.match(/\*\*Packing\s*(?:Reminder|Essentials|List)?\s*\*\*[:\s]*(.+)/i);
+  if (packingMatch) result.packingReminder = packingMatch[1].trim();
+
+  const tipMatch = content.match(/\*\*(?:Travel|Pro)\s*Tip\s*\*\*[:\s]*(.+)/i);
+  if (tipMatch) result.travelTip = tipMatch[1].trim();
+
+  return result;
+}
+
+const WeatherCard = memo(function WeatherCard({ content }: { content: string }) {
   const [expanded, setExpanded] = useState(true);
   const seasons = parseSeasons(content);
+  const structured = parseStructuredWeather(content);
+  const hasStructured = structured.bestMonths || structured.currentSeason || structured.temperature || structured.crowdLevel || structured.packingReminder || structured.travelTip;
 
   return (
     <div className="bg-surface border border-border/50 rounded-2xl shadow-sm overflow-hidden">
@@ -74,26 +114,89 @@ export default function WeatherCard({ content }: { content: string }) {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 space-y-3">
-              {seasons.map((season, idx) => (
-                <div key={idx} className="p-3 rounded-xl bg-background border border-border/30">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <div className="w-6 h-6 rounded-full bg-background border border-border/40 flex items-center justify-center">
-                      {season.icon}
+            <div className="px-5 pb-5">
+              {hasStructured ? (
+                <div className="grid grid-cols-2 gap-2">
+                  {structured.bestMonths && (
+                    <div className="p-3 rounded-xl bg-background border border-border/30">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Calendar className="w-3 h-3 text-gold" />
+                        <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50">Best Months</span>
+                      </div>
+                      <p className="text-caption text-night font-semibold">{structured.bestMonths}</p>
                     </div>
-                    {season.season && (
-                      <span className="text-caption text-night font-semibold">{season.season}</span>
-                    )}
-                  </div>
-                  {season.lines.map((line, li) => (
-                    <p key={li} className="text-caption text-muted/80 leading-relaxed pl-8">{line}</p>
+                  )}
+                  {structured.temperature && (
+                    <div className="p-3 rounded-xl bg-background border border-border/30">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Sun className="w-3 h-3 text-amber" />
+                        <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50">Temperature</span>
+                      </div>
+                      <p className="text-caption text-night font-semibold">{structured.temperature}</p>
+                    </div>
+                  )}
+                  {structured.currentSeason && (
+                    <div className="p-3 rounded-xl bg-background border border-border/30">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <CloudRain className="w-3 h-3 text-blue/60" />
+                        <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50">Current Season</span>
+                      </div>
+                      <p className="text-caption text-night font-semibold">{structured.currentSeason}</p>
+                    </div>
+                  )}
+                  {structured.crowdLevel && (
+                    <div className="p-3 rounded-xl bg-background border border-border/30">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Users className="w-3 h-3 text-coral" />
+                        <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50">Crowd Level</span>
+                      </div>
+                      <p className="text-caption text-night font-semibold">{structured.crowdLevel}</p>
+                    </div>
+                  )}
+                  {structured.packingReminder && (
+                    <div className="col-span-2 p-3 rounded-xl bg-background border border-border/30">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Backpack className="w-3 h-3 text-teal" />
+                        <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50">Packing Reminder</span>
+                      </div>
+                      <p className="text-caption text-night/80 leading-relaxed">{structured.packingReminder}</p>
+                    </div>
+                  )}
+                  {structured.travelTip && (
+                    <div className="col-span-2 p-3 rounded-xl bg-background border border-border/30">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <Star className="w-3 h-3 text-gold" />
+                        <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50">Travel Tip</span>
+                      </div>
+                      <p className="text-caption text-night/80 leading-relaxed">{structured.travelTip}</p>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {seasons.map((season, idx) => (
+                    <div key={idx} className="p-3 rounded-xl bg-background border border-border/30">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <div className="w-6 h-6 rounded-full bg-background border border-border/40 flex items-center justify-center">
+                          {season.icon}
+                        </div>
+                        {season.season && (
+                          <span className="text-caption text-night font-semibold">{season.season}</span>
+                        )}
+                      </div>
+                      {season.lines.map((line, li) => (
+                        <p key={li} className="text-caption text-muted/80 leading-relaxed pl-8">{line}</p>
+                      ))}
+                    </div>
                   ))}
                 </div>
-              ))}
+              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
-}
+});
+
+export default WeatherCard;

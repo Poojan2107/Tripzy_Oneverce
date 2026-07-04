@@ -1,7 +1,7 @@
 "use client";
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, memo } from 'react';
 import { ChevronDown, Sparkles } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import type { ChatMessage } from '../../types';
 import MessageBubble from './MessageBubble';
 import TypingIndicator from './TypingIndicator';
@@ -26,7 +26,7 @@ function groupMessages(messages: ChatMessage[]): ChatMessage[][] {
   return groups;
 }
 
-export default function Conversation({ messages, isStreaming, onSubmit, disabled }: ConversationProps) {
+const Conversation = memo(function Conversation({ messages, isStreaming, onSubmit, disabled }: ConversationProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [showScrollBtn, setShowScrollBtn] = useState(false);
@@ -60,6 +60,7 @@ export default function Conversation({ messages, isStreaming, onSubmit, disabled
     isNearBottomRef.current = true;
   };
 
+  const prefersReduced = useReducedMotion();
   const groups = groupMessages(messages);
 
   return (
@@ -68,6 +69,9 @@ export default function Conversation({ messages, isStreaming, onSubmit, disabled
         ref={scrollRef}
         onScroll={checkNearBottom}
         onTouchStart={handleScrollStart}
+        role="log"
+        aria-live="polite"
+        aria-label="Chat messages"
         className="flex-1 overflow-y-auto scrollbar-thin overscroll-contain pt-[calc(8px+env(safe-area-inset-top,0px)+44px)] pb-4"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
@@ -77,10 +81,10 @@ export default function Conversation({ messages, isStreaming, onSubmit, disabled
             return (
               <motion.div
                 key={group[0].id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: prefersReduced ? 1 : 0, y: prefersReduced ? 0 : 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] as const }}
-                className={isUser ? 'mb-4 last:mb-0' : 'mb-6 last:mb-0'}
+                transition={prefersReduced ? { duration: 0 } : { duration: 0.25, ease: [0.25, 0.1, 0.25, 1] as const }}
+                className={isUser ? 'mb-2 last:mb-0' : 'mb-3 last:mb-0'}
               >
                 {group.map((msg) => (
                   <MessageBubble key={msg.id} message={msg} isStreaming={isStreaming} onSubmit={onSubmit} />
@@ -131,9 +135,11 @@ export default function Conversation({ messages, isStreaming, onSubmit, disabled
         )}
       </AnimatePresence>
 
-      <div className="bg-gradient-to-t from-background via-background/95 to-transparent pt-6 pb-[max(8px,env(safe-area-inset-bottom))] px-4">
+      <div className="bg-gradient-to-t from-background via-background/90 to-transparent pt-5 pb-[max(8px,env(safe-area-inset-bottom))] px-4 lg:px-6">
         <PromptBox onSubmit={onSubmit} disabled={disabled} />
       </div>
     </div>
   );
-}
+});
+
+export default Conversation;

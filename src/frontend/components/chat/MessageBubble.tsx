@@ -1,4 +1,5 @@
 "use client";
+import { memo } from 'react';
 import type { ChatMessage } from '../../types';
 import MessageRenderer from './MessageRenderer';
 import FollowUpSuggestions from './FollowUpSuggestions';
@@ -10,7 +11,7 @@ interface MessageBubbleProps {
   onSubmit?: (text: string) => void;
 }
 
-export default function MessageBubble({ message, isStreaming, onSubmit }: MessageBubbleProps) {
+const MessageBubble = memo(function MessageBubble({ message, isStreaming, onSubmit }: MessageBubbleProps) {
   if (message.role === 'user') {
     return (
       <div className="flex justify-end px-6 py-1.5">
@@ -24,8 +25,11 @@ export default function MessageBubble({ message, isStreaming, onSubmit }: Messag
   return (
     <div className="px-6 py-1.5">
       <div className="max-w-full group/card">
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <span className="text-micro font-bold uppercase tracking-widest text-muted/40">Travebie AI</span>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold/60" />
+            <span className="text-micro font-bold uppercase tracking-widest text-muted/50">Travebie AI</span>
+          </div>
           {!isStreaming && message.content && (
             <CopyButton text={message.content} label="Copy response" />
           )}
@@ -37,4 +41,6 @@ export default function MessageBubble({ message, isStreaming, onSubmit }: Messag
       </div>
     </div>
   );
-}
+});
+
+export default MessageBubble;

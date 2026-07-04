@@ -288,6 +288,21 @@ The user is concerned about safety.
 - Include safety tips for solo travelers and women.
 - Suggest areas to avoid after dark.
 - Mention travel insurance recommendations.`,
+    url_understanding: `
+## INTENT: CONTENT UNDERSTANDING
+
+The user shared a link to an article, blog post, or video about a travel destination. Below is the extracted content from that link.
+
+Your task:
+1. Read the extracted content carefully
+2. Identify the destination, activities, accommodation, food, and budget mentioned
+3. Use this information as the PRIMARY source for building the trip plan
+4. Enhance with your own local knowledge where the content is thin
+5. Follow the same section structure as a normal trip plan
+6. Reference specific details from the content in your response
+7. If the content mentions specific prices, restaurants, or hotels, include them
+
+Format the response exactly like a standard trip plan with ## section headers.`,
   };
   return modules[intent] || "";
 }
@@ -476,6 +491,46 @@ Rules:
 - End with "Want me to adjust anything else?"`;
 }
 
+function contentModule(context: DetectedContext): string {
+  if (!context.extractedContent || context.intent !== "url_understanding") return "";
+  return `
+## EXTRACTED CONTENT FROM USER'S LINK
+
+The user shared a link. Here is the extracted content:
+
+${context.extractedContent}
+
+Use the details above as the foundation for your trip plan. Integrate specific references from this content into your response.`;
+}
+
+function memoryModule(context: DetectedContext): string {
+  const remembered: string[] = [];
+
+  if (context.budgetTier) {
+    const labels: Record<string, string> = { budget: "budget-conscious", mid: "mid-range", premium: "premium", luxury: "luxury" };
+    remembered.push(`Budget preference: ${labels[context.budgetTier] || context.budgetTier}`);
+  }
+  if (context.travelerType) {
+    remembered.push(`Traveling as: ${context.travelerType}`);
+  }
+  if (context.destination && context.destination !== 'Goa') {
+    remembered.push(`Destination interest: ${context.destination}`);
+  }
+  if (context.duration) {
+    remembered.push(`Trip duration: ${context.duration} days`);
+  }
+
+  if (remembered.length === 0) return "";
+
+  return `
+## REMEMBERED PREFERENCES
+
+Travebie remembers the following about this user from previous conversations:
+${remembered.map((r) => `- ${r}`).join("\n")}
+
+Use these to personalize the response. If the user's current request contradicts a remembered preference, follow the current request. Do NOT explicitly mention these preferences to the user — just use them as context.`;
+}
+
 export function buildSystemPrompt(context: DetectedContext): string {
   const modules: string[] = [basePrompt()];
 
@@ -503,9 +558,15 @@ export function buildSystemPrompt(context: DetectedContext): string {
   // Follow-up module (if applicable)
   if (context.isFollowUp) {
     modules.push(followUpModule());
-  } else {
-    // Not a follow-up — use standard follow-up handling from base prompt
   }
+
+  // Content module — injected fetched URL content
+  const content = contentModule(context);
+  if (content) modules.push(content);
+
+  // Memory module — injects saved preferences from previous conversations
+  const memory = memoryModule(context);
+  if (memory) modules.push(memory);
 
   return modules.join("\n\n");
 }

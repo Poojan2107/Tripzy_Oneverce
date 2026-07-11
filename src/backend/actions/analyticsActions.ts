@@ -31,7 +31,7 @@ export async function getDashboardMetrics() {
       orderBy: { _count: { id: "desc" } },
       take: 5,
     });
-    const searchTrends = rawSearchTrends.map((s) => ({
+    const searchTrends = rawSearchTrends.map((s: any) => ({
       query: s.query,
       count: s._count.id,
     }));
@@ -44,15 +44,15 @@ export async function getDashboardMetrics() {
       take: 5,
     });
 
-    const destIds = rawViews.map((v) => v.destinationId);
+    const destIds = rawViews.map((v: any) => v.destinationId);
     const dests = destIds.length > 0
       ? await db.destination.findMany({
           where: { id: { in: destIds } },
           select: { id: true, name: true, city: true, country: true },
         })
       : [];
-    const destMap = new Map(dests.map((d) => [d.id, d]));
-    const destinationPopularity = rawViews.map((v) => {
+    const destMap = new Map<string, any>(dests.map((d: any) => [d.id, d]));
+    const destinationPopularity = rawViews.map((v: any) => {
       const dest = destMap.get(v.destinationId);
       return {
         name: dest ? `${dest.city}, ${dest.country}` : "Unknown Spot",
@@ -68,7 +68,7 @@ export async function getDashboardMetrics() {
       by: ["budget"],
       _count: { id: true },
     });
-    const budgets = rawBudgets.map((b) => ({
+    const budgets = rawBudgets.map((b: any) => ({
       tier: b.budget,
       count: b._count.id,
     }));
@@ -86,7 +86,7 @@ export async function getDashboardMetrics() {
       orderBy: { _count: { id: "desc" } },
       take: 4,
     });
-    const travelStyles = rawStyles.map((ts) => ({
+    const travelStyles = rawStyles.map((ts: any) => ({
       style: ts.travelStyle,
       count: ts._count.id,
     }));
@@ -98,7 +98,7 @@ export async function getDashboardMetrics() {
       orderBy: { _count: { id: "desc" } },
       take: 5,
     });
-    const recommendationPopularity = rawRecommendations.map((r) => ({
+    const recommendationPopularity = rawRecommendations.map((r: any) => ({
       name: r.destination,
       count: r._count.id,
     }));
@@ -129,8 +129,8 @@ export async function getDashboardMetrics() {
       const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
       const dayStr = d.toISOString().slice(0, 10);
       dayLabels.push(dayStr);
-      viewCounts.push(rawDailyViews.filter(v => v.timestamp.toISOString().slice(0, 10) === dayStr).length);
-      searchCounts.push(rawDailySearches.filter(s => s.timestamp.toISOString().slice(0, 10) === dayStr).length);
+      viewCounts.push(rawDailyViews.filter((v: any) => v.timestamp.toISOString().slice(0, 10) === dayStr).length);
+      searchCounts.push(rawDailySearches.filter((s: any) => s.timestamp.toISOString().slice(0, 10) === dayStr).length);
     }
 
     return {

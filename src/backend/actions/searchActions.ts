@@ -110,10 +110,10 @@ export async function searchDestinations(
       db.destination.count({ where }),
     ]);
 
-    const results: SearchResult[] = destinations.map((d) => {
-      const ratings = d.reviews.map((r) => r.rating);
+    const results: SearchResult[] = destinations.map((d: any) => {
+      const ratings = d.reviews.map((r: any) => r.rating);
       const avgRating = ratings.length > 0
-        ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+        ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length
         : 0;
 
       return {
@@ -184,7 +184,7 @@ export async function searchSuggestions(query: string) {
 
     return {
       success: true,
-      data: destinations.map((d) => ({
+      data: destinations.map((d: any) => ({
         slug: d.slug,
         name: d.name,
         location: `${d.city}, ${d.country}`,

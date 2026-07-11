@@ -55,9 +55,9 @@ export async function getDestinationReviews(destinationId: string, page = 1, pag
       db.review.count({ where: { destinationId, status: "APPROVED" } }),
     ]);
 
-    const ratings = reviews.map((r) => r.rating);
+    const ratings = reviews.map((r: any) => r.rating);
     const averageRating = ratings.length > 0
-      ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+      ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length
       : 0;
 
     return {

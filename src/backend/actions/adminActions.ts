@@ -66,7 +66,7 @@ export async function getAdminUsers() {
 
     return {
       success: true,
-      data: users.map((u) => ({
+      data: users.map((u: any) => ({
         ...u,
         createdAt: u.createdAt.toISOString(),
         lastActive: null as string | null,

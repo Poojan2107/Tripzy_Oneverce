@@ -19,7 +19,7 @@ async function findDestinationBySlugOrId(slugOrId: string) {
 export async function toggleBookmark(destinationId: string) {
   try {
     const userId = await getUserId();
-    const result = await db.$transaction(async (tx) => {
+    const result = await db.$transaction(async (tx: any) => {
       const existing = await tx.bookmark.findUnique({
         where: {
           userId_destinationId: {
@@ -75,7 +75,7 @@ export async function getUserBookmarks() {
         },
       },
     });
-    const slugs = bookmarks.map((bookmark) => bookmark.destination.slug);
+    const slugs = bookmarks.map((bookmark: any) => bookmark.destination.slug);
     return { success: true, data: slugs };
   } catch (error) {
     console.error("Fetch bookmarks failed:", error);
@@ -92,7 +92,7 @@ export async function getUserSavedItineraries() {
     });
     return {
       success: true,
-      data: items.map((item) => ({
+      data: items.map((item: any) => ({
         id: item.id,
         title: item.title,
         destination: item.destination,
@@ -110,7 +110,7 @@ export async function getUserSavedItineraries() {
 export async function deleteSavedItinerary(id: string) {
   try {
     const userId = await getUserId();
-    const result = await db.$transaction(async (tx) => {
+    const result = await db.$transaction(async (tx: any) => {
       const item = await tx.savedItinerary.findUnique({ where: { id } });
       if (!item || item.userId !== userId) {
         return { success: false, error: "Not found" } as const;

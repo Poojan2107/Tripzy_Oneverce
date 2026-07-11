@@ -87,7 +87,7 @@ function parseStructuredWeather(content: string): {
 }
 
 const WeatherCard = memo(function WeatherCard({ content }: { content: string }) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const seasons = parseSeasons(content);
   const structured = parseStructuredWeather(content);
   const hasStructured = structured.bestMonths || structured.currentSeason || structured.temperature || structured.crowdLevel || structured.packingReminder || structured.travelTip;
@@ -96,11 +96,12 @@ const WeatherCard = memo(function WeatherCard({ content }: { content: string }) 
     <div className="bg-surface border border-border/50 rounded-2xl shadow-sm overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer text-left"
+        aria-expanded={expanded}
+        className="w-full flex items-center justify-between px-4 py-3.5 cursor-pointer text-left"
       >
         <div className="flex items-center gap-2.5">
           <Sun className="w-4 h-4 text-gold" />
-          <h3 className="font-display text-card text-night font-light">Weather & Best Time</h3>
+          <h3 className="font-display text-card text-night font-light">Weather</h3>
         </div>
         <ChevronDown className={`w-4 h-4 text-muted/50 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
       </button>
@@ -114,7 +115,7 @@ const WeatherCard = memo(function WeatherCard({ content }: { content: string }) 
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5">
+            <div className="px-4 pb-4">
               {hasStructured ? (
                 <div className="grid grid-cols-2 gap-2">
                   {structured.bestMonths && (

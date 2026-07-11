@@ -2,23 +2,12 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, CheckCircle2, Camera, Sparkles, KeyRound, MapPin, ArrowUpRight } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import { TOURS_DATA } from '../../data';
 import { getHotelsByDestination } from '../../data/hotels';
 import HotelCard from '../HotelCard';
 import { useToast } from '../ui/Toast';
 import TravelPackGuides from './TravelPackGuides';
 import SafeImage from '../ui/SafeImage';
-
-
-const ItineraryMap = dynamic(() => import('../map/ItineraryMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-52 rounded-2xl bg-white animate-pulse flex items-center justify-center border border-border/40">
-      <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/50">Plotting Route Map...</span>
-    </div>
-  )
-});
 
 interface PlannerResultProps {
   itineraryResult: any;
@@ -466,16 +455,7 @@ export default function PlannerResult({
           </AnimatePresence>
         </motion.div>
  
-        {/* 4. Route Map */}
-        <motion.div className="space-y-4" variants={sectionVariants} custom={3}>
-          <div className="flex items-center gap-3">
-            <h3 className="font-display text-section text-night font-light lowercase">route map</h3>
-            <div className="h-px flex-1 bg-border/20" />
-          </div>
-          <div className="bg-surface border border-border/70 rounded-2xl overflow-hidden shadow-md h-44 w-full relative">
-            <ItineraryMap days={itin} activeDay={activeDayTab} />
-          </div>
-        </motion.div>
+        {/* 4. Route Map - removed */}
  
         {/* 5. Hotels */}
         <motion.div className="space-y-4" variants={sectionVariants} custom={4}>

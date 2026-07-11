@@ -309,3 +309,17 @@ model RecommendationInteraction {
   userId           String?
   timestamp        DateTime @default(now())
 }
+
+model TripSession {
+  id                  String   @id @default(cuid())
+  sessionId           String   @unique
+  currentTrip         Json?    // Complete merged trip JSON
+  sessionState        Json?    // Structured state
+  conversationSummary String?  // AI-readable summary
+  recentMessages      Json?    // Last 2-4 exchanges only
+  pendingChanges      Json?    // Pending changes
+  metadata            Json?    // Additional metadata
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+

@@ -13,16 +13,6 @@ import SafeImage from './ui/SafeImage';
 import { useToast } from './ui/Toast';
 import ScrapbookPostcard from './passport/ScrapbookPostcard';
 import EmptyPassportState from './passport/EmptyPassportState';
-import dynamic from 'next/dynamic';
-
-const PassportMap = dynamic(() => import('./map/PassportMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-[300px] bg-secondary-surface animate-pulse flex flex-col items-center justify-center border border-border rounded-2xl">
-      <span className="text-micro font-mono uppercase tracking-[0.25em] text-muted/50">Loading Map...</span>
-    </div>
-  )
-});
 
 interface TripsWishlistViewProps {
   wishlistTours: Tour[];
@@ -451,22 +441,7 @@ export default function TripsWishlistView({
         {/* Right Side: Map & Preferences (col-span-1) */}
         <div className="space-y-6">
           
-          {/* Destination Map Card */}
-          <div className="bg-surface border border-border/70 rounded-2xl p-6 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-border/15">
-              <Compass className="w-4 h-4 text-gold animate-spin-slow" />
-              <h4 className="font-display text-section text-night font-light lowercase leading-none">footprints map</h4>
-            </div>
-            
-            <div className="h-[300px] w-full rounded-xl overflow-hidden shadow-inner relative border border-border/40">
-              <PassportMap 
-                wishlistTours={wishlistTours} 
-                savedItineraries={savedItineraries} 
-                allTours={displayTours}
-              onTourSelect={(tour) => onTourSelect(tour)}
-              />
-            </div>
-          </div>
+          {/* Destination Map Card - removed */}
  
           {/* Travel Preferences Card */}
           <div className="bg-surface border border-border/70 rounded-2xl p-6 shadow-sm space-y-4">

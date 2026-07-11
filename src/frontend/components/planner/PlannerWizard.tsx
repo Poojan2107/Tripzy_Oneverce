@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Compass, CheckCircle2, User, Heart, Users, Search, ArrowLeft, ArrowRight, Lock, IndianRupee } from 'lucide-react';
 import { COMPANION_OPTIONS, DURATION_OPTIONS } from './constants';
@@ -49,6 +49,7 @@ function formatBudget(val: number): string {
 }
 
 export default function PlannerWizard({
+  step,
   travelers, selectedDestination, fromLocation, duration,
   customDuration, customBudgetAmount, budgetSliderMin, budgetSliderMax,
   notes, previewPersona,
@@ -57,7 +58,13 @@ export default function PlannerWizard({
   onCustomDurationChange,
   onStart,
 }: PlannerWizardProps) {
-  const [wizardStep, setWizardStep] = useState(1);
+  const [wizardStep, setWizardStep] = useState(step || 1);
+
+  useEffect(() => {
+    if (step >= 1 && step <= 3) {
+      setWizardStep(step);
+    }
+  }, [step]);
   const [generating, setGenerating] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showCustomDuration, setShowCustomDuration] = useState(false);

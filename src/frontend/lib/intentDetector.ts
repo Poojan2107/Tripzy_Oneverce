@@ -111,13 +111,68 @@ const BUDGET_PATTERNS: [RegExp, BudgetTier][] = [
   [/(?:₹|rs\.?\s*)(\d+[,]*\d*)/i, null],
 ];
 
-const DURATION_PATTERN = /(\d+)\s*(?:-|\s*to\s*)\s*(\d+)\s*days?|(\d+)\s*days?/i;
+const DURATION_PATTERN = /(\d+)\s*(?:-|\s*to\s*)\s*(\d+)\s*days?|(\d+)\s*(?:-|\s*)\s*days?/i;
 
 function extractPlace(text: string, fallback = "Goa"): string {
   for (const [re, name] of DESTINATION_PATTERNS) {
     if (re.test(text)) return name;
   }
+
+  // Fall back to natural language regex patterns to extract custom places
+  const patterns = [
+    /trip to\s+([a-z\s]+)/i,
+    /go to\s+([a-z\s]+)/i,
+    /travel to\s+([a-z\s]+)/i,
+    /explore\s+([a-z\s]+)/i,
+    /\d+\s*days?\s+(?:road\s+)?(?:trip\s+)?(?:to\s+)?([a-z\s]+)\s+trip/i,
+    /\d+\s*days?\s+(?:road\s+)?(?:trip\s+)?(?:to|in|for)\s+([a-z\s]+)/i,
+    /\d+\s*days?\s+(?:road\s+)?(?:trip\s+)?(?:to\s+)?([a-z\s]+)/i,
+    /plan\s+(?:a\s+)?([a-z\s]+)\s+trip/i,
+    /([a-z\s]+)\s+trip/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match && match[1]) {
+      const cleaned = cleanPlaceName(match[1]);
+      if (cleaned) return cleaned;
+    }
+  }
+
+  // Single or double word queries
+  const words = text.trim().split(/\s+/);
+  if (words.length <= 2 && !/trip|plan|hello|hi|thanks/i.test(text)) {
+    const cleaned = cleanPlaceName(text);
+    if (cleaned) return cleaned;
+  }
+
   return fallback;
+}
+
+const IGNORED_WORDS = new Set([
+  "plan", "plans", "pan", "trip", "trips", "road", "day", "days", "to", "in", "for", 
+  "from", "with", "my", "our", "a", "an", "the", "go", "travel", "explore", "visit", 
+  "itinerary", "itineraries", "stay", "hotel", "hotels", "budget", "cheapest", "cheap", 
+  "luxury", "premium", "yes", "no", "ok", "okay", "please", "thanks", "thank", "hello", 
+  "hi", "hey", "planning", "generator", "generate", "details", "info", "information",
+  "and", "or", "but", "so", "make", "it", "more", "less", "do"
+]);
+
+function cleanPlaceName(name: string): string {
+  // Remove common travel keywords
+  let cleaned = name.replace(/\b(trip|plan|plans|pan|road|day|days|to|in|for|from|with|my|our|a|an|the|go|travel|explore|visit|itinerary|itineraries|stay|hotel|hotels|budget|cheapest|cheap|luxury|premium|yes|no|ok|okay|please|thanks|thank|hello|hi|hey|planning|generator|generate|details|info|information|and|or|but|so|make|it|more|less|do)\b/gi, "").trim();
+  if (!cleaned) return "";
+
+  // Reject if it is just a number, single character, or in the ignored set
+  if (/^\d+$/.test(cleaned) || cleaned.length <= 1 || IGNORED_WORDS.has(cleaned.toLowerCase())) {
+    return "";
+  }
+
+  // Capitalize first letters of each word
+  return cleaned
+    .split(/\s+/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
 }
 
 function extractIntent(text: string): Intent {
@@ -180,11 +235,37 @@ function extractBudget(text: string): { tier: BudgetTier; amount: number | null 
 }
 
 function extractDuration(text: string): number | null {
-  const match = DURATION_PATTERN.exec(text);
-  if (match) {
-    if (match[3]) return parseInt(match[3], 10);
-    return Math.max(parseInt(match[1], 10), parseInt(match[2], 10));
+  const low = text.toLowerCase();
+
+  // 1. Explicit word-based durations
+  if (/\b(?:one|single)[- ]day\b/i.test(low)) return 1;
+  if (/\btwo[- ]day\b/i.test(low)) return 2;
+  if (/\bthree[- ]day\b/i.test(low)) return 3;
+  if (/\bfour[- ]day\b/i.test(low)) return 4;
+  if (/\bfive[- ]day\b/i.test(low)) return 5;
+  if (/\bsix[- ]day\b/i.test(low)) return 6;
+  if (/\bseven[- ]day\b/i.test(low)) return 7;
+  if (/\beight[- ]day\b/i.test(low)) return 8;
+  if (/\bnine[- ]day\b/i.test(low)) return 9;
+  if (/\bten[- ]day\b/i.test(low)) return 10;
+
+  // 2. Range match with digit (e.g. 3 to 5 days, 3-5 days)
+  const rangeMatch = /(\d+)\s*(?:-|\s*to\s*)\s*(\d+)\s*days?/i.exec(text);
+  if (rangeMatch) {
+    return Math.max(parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10));
   }
+
+  // 3. Single match with digit (supporting hyphen before day, e.g. 7-day, 10 day)
+  const singleMatch = /(\d+)\s*(?:-|\s*)\s*days?/i.exec(text);
+  if (singleMatch) {
+    return parseInt(singleMatch[1], 10);
+  }
+
+  // 4. Weekend/getaway detection
+  if (/\bweekend\b/i.test(low)) {
+    return 2;
+  }
+
   return null;
 }
 
@@ -193,12 +274,38 @@ function extractUrl(text: string): string | null {
   return match ? match[0].replace(/[.,;:!?)]$/, '') : null;
 }
 
-function extractDestination(text: string, conversationText: string): string {
-  // Try last message first, then fall back to full conversation
-  const fromLast = extractPlace(text);
-  if (fromLast !== "Goa") return fromLast;
-  const fromConvo = extractPlace(conversationText, "Goa");
-  return fromConvo;
+function inferDefaultDuration(text: string, destination: string): number {
+  const lowText = text.toLowerCase();
+  const lowDest = destination.toLowerCase();
+
+  // Check if weekend is mentioned
+  if (lowText.includes("weekend")) {
+    return 2;
+  }
+
+  // Check if road trip is mentioned
+  if (lowText.includes("road trip") || lowText.includes("roadtrip") || lowText.includes("bike trip")) {
+    return 5;
+  }
+
+  // Check if international trip destinations
+  const internationalPlaces = [
+    "europe", "paris", "london", "dubai", "bali", "thailand", "singapore", 
+    "switzerland", "maldives", "vietnam", "usa", "uk", "america", "japan", "tokyo",
+    "italy", "rome", "spain", "barcelona", "greece", "turkey", "istanbul"
+  ];
+  const isInternational = internationalPlaces.some(p => lowDest.includes(p) || lowText.includes(p));
+  if (isInternational) {
+    return 8; // default to 8 days (7-10 range)
+  }
+
+  // Specific Goa Leisure Trip defaults to 5 days
+  if (lowDest.includes("goa") || lowText.includes("goa")) {
+    return 5;
+  }
+
+  // Default City Trip -> 3 days
+  return 3;
 }
 
 export function detectIntent(
@@ -208,21 +315,51 @@ export function detectIntent(
   const lastMsg = userMessages[userMessages.length - 1]?.content || "";
   const allUserText = userMessages.map((m) => m.content).join(" ");
 
+  // Helper to extract a value scanning from latest to oldest user messages
+  const extractFromHistory = <T>(extractor: (text: string) => T | null): T | null => {
+    for (let i = userMessages.length - 1; i >= 0; i--) {
+      const val = extractor(userMessages[i].content);
+      if (val !== null) return val;
+    }
+    return null;
+  };
+
+  // Special extraction for destination to ensure we walk backwards
+  const extractDestinationFromHistory = (): string => {
+    for (let i = userMessages.length - 1; i >= 0; i--) {
+      const place = extractPlace(userMessages[i].content, "");
+      if (place) return place;
+    }
+    return "Goa";
+  };
+
   const now = new Date();
   const currentMonth = now.toLocaleString("en-US", {
     month: "long",
     year: "numeric",
   });
 
+  const destination = extractDestinationFromHistory();
+  let duration = extractFromHistory(extractDuration);
+  
+  // If no explicit duration found, apply smart defaults for trip planning intents
+  if (duration === null) {
+    const intent = extractIntent(lastMsg);
+    const isTripQuery = intent === "trip_planning" || intent === "weekend_getaway" || intent === "honeymoon" || intent === "family_trip" || intent === "solo_backpacking" || intent === "luxury_travel" || intent === "adventure_travel" || intent === "pilgrimage" || intent === "road_trip";
+    if (isTripQuery || lastMsg.toLowerCase().includes("trip") || lastMsg.toLowerCase().includes("plan")) {
+      duration = inferDefaultDuration(allUserText, destination);
+    }
+  }
+
   return {
     intent: extractIntent(lastMsg),
-    destination: extractDestination(lastMsg, allUserText),
-    duration: extractDuration(lastMsg),
-    budgetTier: extractBudget(lastMsg).tier,
-    budgetAmount: extractBudget(lastMsg).amount,
-    travelerType: extractTravelerType(lastMsg),
+    destination,
+    duration,
+    budgetTier: extractFromHistory((text) => extractBudget(text).tier),
+    budgetAmount: extractFromHistory((text) => extractBudget(text).amount),
+    travelerType: extractFromHistory(extractTravelerType),
     isFollowUp: userMessages.length > 1,
     currentMonth,
-    extractedUrl: extractUrl(lastMsg),
+    extractedUrl: extractFromHistory(extractUrl),
   };
 }

@@ -1,5 +1,4 @@
 "use client";
-import { Sparkles } from 'lucide-react';
 import { useMemo } from 'react';
 import type { ParsedSectionType } from '../../types';
 import { parseAiResponse } from '../../lib/parseAiResponse';
@@ -117,12 +116,8 @@ export default function FollowUpSuggestions({ content, onSubmit, disabled }: Fol
   if (prompts.length === 0) return null;
 
   return (
-    <div className="mt-4 pt-3 border-t border-border/20">
-      <div className="flex items-center gap-1.5 mb-2.5">
-        <Sparkles className="w-3 h-3 text-muted/40" />
-        <span className="text-micro text-muted/40 font-mono uppercase tracking-widest">Continue exploring</span>
-      </div>
-      <div className="flex flex-wrap gap-2">
+    <div className="mt-3">
+      <div className="flex flex-wrap gap-1.5">
         {prompts.map((prompt) => (
           <button
             key={prompt}

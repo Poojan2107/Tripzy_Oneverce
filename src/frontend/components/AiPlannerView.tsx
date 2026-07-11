@@ -21,13 +21,17 @@ interface AiPlannerViewProps {
   loadedItinerary?: any;
   onClearLoadedItinerary?: () => void;
   allTours?: Tour[];
+  initialPrompt?: string | null;
+  onClearInitialPrompt?: () => void;
 }
 
 export default function AiPlannerView({
   onSaveItinerary,
   loadedItinerary,
   onClearLoadedItinerary,
-  allTours = []
+  allTours = [],
+  initialPrompt,
+  onClearInitialPrompt
 }: AiPlannerViewProps) {
   const { toast } = useToast();
   const mountedRef = useRef(true);
@@ -171,6 +175,36 @@ const sanitizeUserInput = (input: string) => {
       setSelectedDestination(loadedItinerary.destination || null);
     }
   }, [loadedItinerary]);
+
+  useEffect(() => {
+    if (initialPrompt) {
+      setNotes(initialPrompt);
+      
+      const lowerPrompt = initialPrompt.toLowerCase();
+      const allPossibleTours = allTours.length > 0 ? allTours : TOURS_DATA;
+      const matchedTour = allPossibleTours.find(
+        (t) =>
+          (t.title && lowerPrompt.includes(t.title.toLowerCase())) ||
+          (t.id && lowerPrompt.includes(t.id.toLowerCase())) ||
+          (t.location && lowerPrompt.includes(t.location.toLowerCase()))
+      );
+
+      if (matchedTour) {
+        setSelectedDestination(matchedTour.id);
+        if (!travelers) setTravelers('solo');
+        if (!duration) {
+          setDuration('short');
+          setCustomDuration(5);
+        }
+        setStep(2);
+        setHasStarted(true);
+      } else {
+        setStep(1);
+        setHasStarted(true);
+      }
+      onClearInitialPrompt?.();
+    }
+  }, [initialPrompt, allTours, travelers, duration, onClearInitialPrompt]);
 
   useEffect(() => {
     if (!session) return;

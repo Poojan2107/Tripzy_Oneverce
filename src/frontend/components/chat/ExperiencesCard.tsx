@@ -12,7 +12,7 @@ function parseExperiences(text: string): string[] {
 }
 
 export default function ExperiencesCard({ content }: { content: string }) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const { tours, onShowTourDetail } = useChat();
   const items = parseExperiences(content);
 
@@ -24,14 +24,11 @@ export default function ExperiencesCard({ content }: { content: string }) {
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer text-left"
+        className="w-full flex items-center justify-between px-4 py-3.5 cursor-pointer text-left"
       >
         <div className="flex items-center gap-2.5">
           <Sparkles className="w-4 h-4 text-gold" />
-          <h3 className="font-display text-card text-night font-light">Local Experiences</h3>
-          {items.length > 0 && (
-            <span className="text-micro text-muted/50 font-mono">{items.length}</span>
-          )}
+          <h3 className="font-display text-card text-night font-light">Don't Miss</h3>
         </div>
         <ChevronDown className={`w-4 h-4 text-muted/50 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
       </button>
@@ -45,11 +42,11 @@ export default function ExperiencesCard({ content }: { content: string }) {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 space-y-2">
+            <div className="px-4 pb-4 space-y-2">
               {items.length > 0 ? (
                 items.map((item, idx) => (
                   <div key={idx} className="flex items-start gap-3 p-3 rounded-xl bg-background border border-border/30">
-                    <Sparkles className="w-4 h-4 text-gold/50 mt-0.5 shrink-0" />
+                    <span className="w-1 h-1 rounded-full bg-gold/40 mt-2 shrink-0" />
                     <span className="text-caption text-night/80 leading-relaxed">{item}</span>
                   </div>
                 ))

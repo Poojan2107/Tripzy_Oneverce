@@ -2,9 +2,11 @@ import { GoogleGenAI } from "@google/genai";
 import { getGeminiApiKey } from "../lib/gemini";
 import { checkRateLimit } from "../lib/rate-limit";
 import { getSimulatedResponse } from "../lib/simulatedResponse";
-import { detectIntent } from "../lib/intentDetector";
-import { buildSystemPrompt } from "../lib/promptTemplates";
+import { detectIntent, Intent } from "../lib/intentDetector";
+import { buildNewTripSystemPrompt, buildFollowUpSystemPrompt } from "../lib/promptTemplates";
 import { fetchUrlContent } from "../lib/contentFetcher";
+import { getSession, saveSession, TripSession } from "../lib/sessionStore";
+import { pruneItineraryForContext, mergeItineraryPatch } from "../lib/smartContext";
 
 async function callGeminiStreamWithTimeout(
   genAI: GoogleGenAI,
@@ -29,6 +31,354 @@ async function callGeminiStreamWithTimeout(
   }
 }
 
+const chatResponseSchema = {
+  type: "object",
+  properties: {
+    hero: {
+      type: "object",
+      properties: {
+        destination: { type: "string" },
+        coverImageQuery: { type: "string" },
+        tripDuration: { type: "string" },
+        travelMode: { type: "string" },
+        bestTimeToVisit: { type: "string" },
+        estimatedBudget: { type: "string" },
+        tripSummary: { type: "string" }
+      },
+      required: ["destination", "coverImageQuery", "tripDuration", "travelMode", "bestTimeToVisit", "estimatedBudget", "tripSummary"]
+    },
+    overview: {
+      type: "object",
+      properties: {
+        startLocation: { type: "string" },
+        destination: { type: "string" },
+        totalDistance: { type: "string" },
+        totalTravelTime: { type: "string" },
+        currency: { type: "string" },
+        languages: { type: "array", items: { type: "string" } },
+        weatherSummary: { type: "string" },
+        bestSeason: { type: "string" },
+        tripType: { type: "string" },
+        difficulty: { type: "string" },
+        estimatedDailyCost: { type: "string" },
+        totalCost: { type: "string" },
+        travelStyle: { type: "string" }
+      },
+      required: ["startLocation", "destination", "totalDistance", "totalTravelTime", "currency", "languages", "weatherSummary", "bestSeason", "tripType", "difficulty", "estimatedDailyCost", "totalCost", "travelStyle"]
+    },
+    route: {
+      type: "object",
+      properties: {
+        mapSummary: { type: "string" },
+        majorStops: { type: "array", items: { type: "string" } }
+      },
+      required: ["mapSummary", "majorStops"]
+    },
+    days: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          day: { type: "integer" },
+          title: { type: "string" },
+          morning: { type: "array", items: { type: "string" } },
+          afternoon: { type: "array", items: { type: "string" } },
+          evening: { type: "array", items: { type: "string" } },
+          places: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                description: { type: "string" },
+                visitDuration: { type: "string" },
+                entryFee: { type: "string" },
+                openingHours: { type: "string" },
+                rating: { type: "string" },
+                coordinates: {
+                  type: "object",
+                  properties: {
+                    lat: { type: "string" },
+                    lng: { type: "string" }
+                  },
+                  required: ["lat", "lng"]
+                },
+                imageQueries: { type: "array", items: { type: "string" } },
+                googleMapsSearch: { type: "string" }
+              },
+              required: ["name", "description", "visitDuration", "entryFee", "openingHours", "rating", "coordinates", "imageQueries", "googleMapsSearch"]
+            }
+          },
+          restaurants: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                reason: { type: "string" }
+              },
+              required: ["name", "reason"]
+            }
+          },
+          hotels: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                budgetType: { type: "string" },
+                reason: { type: "string" }
+              },
+              required: ["name", "budgetType", "reason"]
+            }
+          },
+          fuelStops: { type: "array", items: { type: "string" } },
+          weather: { type: "string" },
+          aiTips: { type: "array", items: { type: "string" } }
+        },
+        required: ["day", "title", "morning", "afternoon", "evening", "places", "restaurants", "hotels", "weather", "aiTips"]
+      }
+    },
+    expenseCalculator: {
+      type: "object",
+      properties: {
+        fuel: { type: "string" },
+        hotel: { type: "string" },
+        food: { type: "string" },
+        activities: { type: "string" },
+        shopping: { type: "string" },
+        miscellaneous: { type: "string" },
+        estimatedTotal: { type: "string" }
+      },
+      required: ["fuel", "hotel", "food", "activities", "shopping", "miscellaneous", "estimatedTotal"]
+    },
+    packingChecklist: { type: "array", items: { type: "string" } },
+    localFoods: { type: "array", items: { type: "string" } },
+    shoppingPlaces: { type: "array", items: { type: "string" } },
+    emergencyContacts: {
+      type: "object",
+      properties: {
+        police: { type: "string" },
+        ambulance: { type: "string" },
+        touristHelpline: { type: "string" }
+      },
+      required: ["police", "ambulance", "touristHelpline"]
+    },
+    faqs: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          question: { type: "string" },
+          answer: { type: "string" }
+        },
+        required: ["question", "answer"]
+      }
+    }
+  },
+  required: ["hero", "overview", "route", "days", "expenseCalculator", "packingChecklist", "localFoods", "shoppingPlaces", "emergencyContacts", "faqs"]
+};
+
+function shouldForceJson(context: any): boolean {
+  if (context.intent === "GENERAL_CHAT" || context.intent === "ASK_QUESTION") {
+    return false;
+  }
+  return true;
+}
+
+// Inline helper to update structured session state and conversation summary using Gemini
+async function updateSessionSummaryAndState(
+  session: TripSession,
+  lastUserMsg: string,
+  lastAssistantResponse: string,
+  apiKey: string
+): Promise<{ conversationSummary: string; sessionState: any } | null> {
+  const ai = new GoogleGenAI({ apiKey });
+
+  const prompt = `You are a travel planning state machine. Your task is to update the Conversation Summary and Session State based on the latest exchange.
+
+Current Conversation Summary:
+"${session.conversationSummary || "No summary yet."}"
+
+Current Session State:
+${JSON.stringify(session.sessionState || {}, null, 2)}
+
+Latest User Message: "${lastUserMsg}"
+Latest Assistant Response: "${lastAssistantResponse.slice(0, 1000)}..."
+
+Produce an updated JSON object containing:
+1. "conversationSummary": A concise 2-3 sentence summary of the user's travel goal, current status, and topic of discussion.
+2. "sessionState": A structured state object with fields:
+   - "destination": string
+   - "days": number or null
+   - "budget": string
+   - "travelStyle": string
+   - "travelerType": string
+   - "completed": array of strings (list of items completed/finalized, e.g., ["Itinerary", "Hotels", "Beaches"])
+   - "pending": array of strings (list of items pending, e.g., ["Restaurants", "Packing"])
+
+Return ONLY a valid JSON object matching this structure. Do not wrap in markdown code blocks.`;
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        temperature: 0.2,
+        maxOutputTokens: 500,
+      },
+    });
+
+    if (response.text) {
+      const clean = response.text.trim().replace(/^```json\s*/i, "").replace(/```$/, "").trim();
+      return JSON.parse(clean);
+    }
+  } catch (e) {
+    console.error("[sessionStateUpdate] failed:", e);
+  }
+
+  // Fallback if AI call fails
+  try {
+    const updatedState = { ...(session.sessionState || {}) };
+    if (session.currentTrip?.hero?.destination) updatedState.destination = session.currentTrip.hero.destination;
+    if (session.currentTrip?.hero?.tripDuration) {
+      const match = session.currentTrip.hero.tripDuration.match(/(\d+)/);
+      if (match) updatedState.days = parseInt(match[1], 10);
+    }
+    if (session.currentTrip?.hero?.estimatedBudget) updatedState.budget = session.currentTrip.hero.estimatedBudget;
+    return {
+      conversationSummary: session.conversationSummary || `User is planning a trip to ${updatedState.destination || "destination"}.`,
+      sessionState: updatedState
+    };
+  } catch {
+    return null;
+  }
+}
+
+// Background session post-processing when stream completes
+async function handleSessionPostProcessing(
+  sessionId: string,
+  fullGeneratedText: string,
+  lastUserMsg: string,
+  apiKey: string
+) {
+  try {
+    const session = await getSession(sessionId);
+
+    // 1. Append exchanges
+    if (!session.recentMessages) session.recentMessages = [];
+    session.recentMessages.push({ role: "user", content: lastUserMsg });
+    session.recentMessages.push({ role: "assistant", content: fullGeneratedText });
+
+    // 2. Parse and merge JSON
+    const trimmed = fullGeneratedText.trim();
+    const clean = trimmed.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
+
+    if (clean.startsWith("{")) {
+      try {
+        const json = JSON.parse(clean);
+        const isFullTrip = json.hero && json.days && json.overview;
+        if (isFullTrip) {
+          session.currentTrip = json;
+        } else if (session.currentTrip) {
+          session.currentTrip = mergeItineraryPatch(session.currentTrip, json);
+        } else {
+          session.currentTrip = json;
+        }
+      } catch (e) {
+        console.error("[post-processing] merge JSON failed:", e);
+      }
+    }
+
+    // 3. Update structured state locally (fast and rate-limit safe)
+    if (session.currentTrip) {
+      const state = session.sessionState || {
+        destination: "",
+        days: null,
+        budget: "",
+        travelStyle: "",
+        travelerType: "",
+        completed: [],
+        pending: ["Itinerary", "Hotels", "Restaurants", "Packing"]
+      };
+
+      if (session.currentTrip.hero?.destination) state.destination = session.currentTrip.hero.destination;
+      if (session.currentTrip.hero?.tripDuration) {
+        const match = session.currentTrip.hero.tripDuration.match(/(\d+)/);
+        if (match) state.days = parseInt(match[1], 10);
+      }
+      if (session.currentTrip.hero?.estimatedBudget) state.budget = session.currentTrip.hero.estimatedBudget;
+      if (session.currentTrip.overview?.travelStyle) state.travelStyle = session.currentTrip.overview.travelStyle;
+
+      // Local completion tracking
+      const messages = session.recentMessages;
+      const context = detectIntent(messages, true);
+      
+      if (context.intent === "NEW_TRIP") {
+        state.completed = ["Itinerary"];
+        state.pending = ["Hotels", "Restaurants", "Activities", "Packing"];
+      } else {
+        if (context.intent === "CHANGE_HOTEL" && !state.completed.includes("Hotels")) {
+          state.completed.push("Hotels");
+        }
+        if (context.intent === "CHANGE_RESTAURANT" && !state.completed.includes("Restaurants")) {
+          state.completed.push("Restaurants");
+        }
+        if ((context.intent === "ADD_ACTIVITY" || context.intent === "UPDATE_DAY") && !state.completed.includes("Itinerary")) {
+          state.completed.push("Itinerary");
+        }
+        state.pending = ["Itinerary", "Hotels", "Restaurants", "Packing"].filter(p => !state.completed.includes(p));
+      }
+
+      session.sessionState = state;
+    }
+
+    // 4. Conversation Compression: every 4 turns (8 messages)
+    const turnCount = session.recentMessages.length;
+    if (turnCount >= 8) {
+      console.log("[post-processing] Triggering conversation compression (turn count:", turnCount / 2, ")...");
+      const summaryResult = await updateSessionSummaryAndState(session, lastUserMsg, fullGeneratedText, apiKey);
+      if (summaryResult) {
+        session.conversationSummary = summaryResult.conversationSummary;
+        session.sessionState = summaryResult.sessionState;
+      }
+      session.recentMessages = session.recentMessages.slice(-2); // keep only latest exchange
+    } else {
+      // Set a generic local placeholder if empty
+      if (!session.conversationSummary) {
+        session.conversationSummary = `User is planning a trip to ${session.sessionState?.destination || "destination"}. Current focus is itinerary modifications.`;
+      }
+    }
+
+    await saveSession(session);
+  } catch (e) {
+    console.error("[post-processing] failed:", e);
+  }
+}
+
+function cleanHistoryForGemini(messages: any[]): any[] {
+  return messages.map((m: any) => {
+    const content = m.content.trim();
+    const clean = content.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
+    if (clean.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(clean);
+        if (parsed.hero && parsed.days) {
+          return {
+            role: m.role === 'assistant' || m.role === 'model' ? 'model' : 'user',
+            parts: [{ text: `[Generated trip plan for ${parsed.hero.destination || "destination"}]` }]
+          };
+        }
+      } catch {}
+    }
+    return {
+      role: m.role === 'assistant' || m.role === 'model' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    };
+  });
+}
+
 export async function POST(req: Request) {
   try {
     if (!(await checkRateLimit(req))) {
@@ -37,7 +387,9 @@ export async function POST(req: Request) {
       });
     }
 
-    const { messages, preferences: savedPrefs } = await req.json();
+    const body = await req.json();
+    const { messages, preferences: savedPrefs, sessionId: bodySessionId } = body;
+    let clientCurrentTrip = body.currentTrip || null;
 
     const apiKey = getGeminiApiKey();
     if (!apiKey) {
@@ -47,47 +399,89 @@ export async function POST(req: Request) {
       );
     }
 
-    const genAI = new GoogleGenAI({ apiKey });
-    const contents = messages
-      .filter((m: any) => m.role !== 'system')
-      .map((m: any) => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }]
-      }));
+    const apiMessages = messages.filter((m: any) => m.role !== 'system');
+    const lastUserMsg = apiMessages.length > 0 ? apiMessages[apiMessages.length - 1].content : "";
 
-    // Detect user intent and build context-aware prompt
-    const context = detectIntent(messages);
+    // 1. Session Retrieval
+    const sessionId = bodySessionId || `session_${Date.now()}`;
+    const session = await getSession(sessionId);
 
-    // Merge saved preferences (from localStorage) into context
+    // Sync client's current trip if it was passed
+    if (clientCurrentTrip) {
+      session.currentTrip = clientCurrentTrip;
+    }
+
+    const currentTrip = session.currentTrip;
+
+    // 2. Intent Detection
+    const context = detectIntent(apiMessages, !!currentTrip);
+
+    // Merge saved preferences into context
     if (savedPrefs) {
       if (savedPrefs.budgetTier && !context.budgetTier) context.budgetTier = savedPrefs.budgetTier;
       if (savedPrefs.travelerType && !context.travelerType) context.travelerType = savedPrefs.travelerType;
       if (savedPrefs.destination && context.destination === 'Goa') context.destination = savedPrefs.destination;
     }
 
-    // If URL understanding intent, fetch the content
-    if (context.intent === 'url_understanding' && context.extractedUrl) {
+    // Fetch URL contents if needed
+    if (context.intent === 'NEW_TRIP' && context.extractedUrl) {
       const content = await fetchUrlContent(context.extractedUrl);
       if (content) context.extractedContent = content;
     }
 
-    const systemPrompt = buildSystemPrompt(context);
+    // 3. Smart Context Pruning
+    const prunedTrip = currentTrip ? pruneItineraryForContext(currentTrip, context.intent, lastUserMsg) : null;
 
+    // 4. Prompt Selection
+    let systemPrompt = "";
+    if (context.isFollowUp && currentTrip) {
+      systemPrompt = buildFollowUpSystemPrompt(context, prunedTrip, session.sessionState, session.conversationSummary || "");
+    } else {
+      systemPrompt = buildNewTripSystemPrompt(context);
+    }
+
+    // 5. Build Content Payload: keep only recent messages (up to 4 exchanges = 8 messages)
+    const recentApiMessages = apiMessages.slice(0, -1).slice(-6); // last 3 exchanges
+    const contents = [
+      ...cleanHistoryForGemini(recentApiMessages),
+      {
+        role: 'user',
+        parts: [{ text: lastUserMsg }]
+      }
+    ];
+
+    const forceJson = shouldForceJson(context);
+
+    const config: any = {
+      systemInstruction: {
+        parts: [{ text: systemPrompt }]
+      }
+    };
+
+    if (forceJson) {
+      config.responseMimeType = "application/json";
+      // Only enforce strict schema for complete new trips, to allow arbitrary JSON patches
+      if (!context.isFollowUp || !currentTrip) {
+        config.responseSchema = chatResponseSchema;
+      }
+    }
+
+    const genAI = new GoogleGenAI({ apiKey });
     let stream;
     try {
       stream = await callGeminiStreamWithTimeout(
         genAI,
         "gemini-2.0-flash",
         contents,
-        {
-          systemInstruction: {
-            parts: [{ text: systemPrompt }]
-          }
-        }
+        config
       );
-    } catch {
-      // Gemini unavailable — serve a rich simulated response
+    } catch (e) {
+      console.error("Gemini stream failed, using simulation fallback:", e);
       const simulated = getSimulatedResponse(messages);
+      
+      // Run background post-processing on the simulated response to write session state
+      await handleSessionPostProcessing(sessionId, simulated, lastUserMsg, apiKey);
+
       const encoder = new TextEncoder();
       const simulatedStream = new ReadableStream({
         start(controller) {
@@ -101,14 +495,18 @@ export async function POST(req: Request) {
     }
 
     const encoder = new TextEncoder();
+    let fullGeneratedText = "";
     const readableStream = new ReadableStream({
       async start(controller) {
         try {
           for await (const chunk of stream) {
             if (chunk.text) {
+              fullGeneratedText += chunk.text;
               controller.enqueue(encoder.encode(chunk.text));
             }
           }
+          // Intercept stream completion and run session post-processing in background
+          await handleSessionPostProcessing(sessionId, fullGeneratedText, lastUserMsg, apiKey);
         } catch (err) {
           console.error("Stream error:", err);
         } finally {

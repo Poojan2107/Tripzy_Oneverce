@@ -3,13 +3,13 @@ import { motion } from 'framer-motion';
 import { Sparkles, Heart, Users, Map, Sun, Compass, Mountain } from 'lucide-react';
 
 const PROMPTS = [
-  { icon: Sparkles, label: 'Plan a weekend escape', text: 'Plan a quick weekend getaway from Delhi' },
-  { icon: Heart, label: 'Plan a romantic trip', text: 'Romantic honeymoon trip for a couple' },
-  { icon: Mountain, label: 'Plan a solo adventure', text: 'Solo backpacking trip through Himachal' },
-  { icon: Users, label: 'Plan a family vacation', text: 'Family-friendly vacation with kids' },
-  { icon: Map, label: 'Plan a road trip', text: 'Epic road trip across Rajasthan' },
-  { icon: Sun, label: 'Plan a spiritual journey', text: 'Spiritual journey through Varanasi and Rishikesh' },
-  { icon: Compass, label: 'Plan an adventure', text: 'Adventure trip with trekking and camping' },
+  { icon: Sparkles, label: 'I want mountains and good coffee', text: 'Plan a trip to Himachal with great hill stations and local cafes' },
+  { icon: Heart, label: 'Three days with my parents', text: 'Family trip for 3 days, relaxed pace, easy walking' },
+  { icon: Mountain, label: 'Somewhere nobody talks about', text: 'Offbeat hidden gem destination in India, not touristy' },
+  { icon: Users, label: 'Weekend under ₹15,000', text: 'Budget weekend getaway under ₹15,000 from Delhi' },
+  { icon: Map, label: 'Beach town with good food', text: 'Trip to a coastal town with amazing seafood and local food' },
+  { icon: Sun, label: 'A solo trip to clear my head', text: 'Solo trip, peaceful and quiet, good for reflection' },
+  { icon: Compass, label: 'Show me something new', text: 'Surprise me with a unique destination in India' },
 ];
 
 interface SuggestedPromptsProps {

@@ -16,16 +16,15 @@ test.describe('Travebie V2 — Chat Welcome', () => {
     await page.goto('/');
     await waitForStable(page);
     await expect(page.locator('text=where would you like to go next?')).toBeVisible({ timeout: 5000 });
-    await expect(page.getByRole('main').getByText('travebie', { exact: true })).toBeVisible();
   });
 
   test('shows prompt box and suggested prompts', async ({ page }) => {
     await page.goto('/');
     await waitForStable(page);
     await expect(page.locator('textarea[aria-label="Message input"]')).toBeVisible({ timeout: 5000 });
-    await expect(page.locator('button:has-text("Plan a weekend escape")')).toBeVisible();
-    await expect(page.locator('button:has-text("Plan a romantic trip")')).toBeVisible();
-    await expect(page.locator('button:has-text("Plan a solo adventure")')).toBeVisible();
+    await expect(page.locator('button:has-text("I want mountains and good coffee")')).toBeVisible();
+    await expect(page.locator('button:has-text("Three days with my parents")')).toBeVisible();
+    await expect(page.locator('button:has-text("Somewhere nobody talks about")')).toBeVisible();
   });
 
   test('typing in prompt enables send button', async ({ page }) => {

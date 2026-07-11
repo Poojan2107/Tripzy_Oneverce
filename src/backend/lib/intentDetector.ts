@@ -1,23 +1,19 @@
 export type Intent =
-  | "trip_planning"
-  | "hotel_recommendation"
-  | "food_guide"
-  | "budget_planning"
-  | "weekend_getaway"
-  | "honeymoon"
-  | "family_trip"
-  | "solo_backpacking"
-  | "luxury_travel"
-  | "adventure_travel"
-  | "pilgrimage"
-  | "road_trip"
-  | "seasonal_advice"
-  | "packing_help"
-  | "transport_info"
-  | "hidden_gems"
-  | "local_culture"
-  | "travel_safety"
-  | "url_understanding";
+  | "NEW_TRIP"
+  | "UPDATE_DAY"
+  | "ADD_PLACE"
+  | "REMOVE_PLACE"
+  | "CHANGE_BUDGET"
+  | "CHANGE_DURATION"
+  | "CHANGE_HOTEL"
+  | "CHANGE_RESTAURANT"
+  | "ADD_ACTIVITY"
+  | "REMOVE_ACTIVITY"
+  | "CHANGE_TRANSPORT"
+  | "CHANGE_TRAVEL_STYLE"
+  | "ASK_QUESTION"
+  | "GENERAL_CHAT"
+  | "OTHER";
 
 export type BudgetTier = "budget" | "mid" | "premium" | "luxury" | null;
 export type TravelerType =
@@ -40,32 +36,9 @@ export interface DetectedContext {
   travelerType: TravelerType;
   isFollowUp: boolean;
   currentMonth: string;
-  /** URL extracted from the user message, if any */
   extractedUrl?: string | null;
-  /** Fetched text content from the URL (populated by chat.ts) */
   extractedContent?: string | null;
 }
-
-const INTENT_PATTERNS: [RegExp, Intent][] = [
-  [/^https?:\/\/[^\s]+|paste\s*(?:this|the)\s*(?:link|url)|check\s*(?:out|this)\s*(?:link|url)|here['']s\s*(?:a|the)\s*(?:link|url)|found\s*(?:this|a)\s*(?:article|post|video|blog)/i, "url_understanding"],
-  [/honeymoon|romantic\s*getaway|couple\s*retreat/i, "honeymoon"],
-  [/weekend|short\s*trip|quick\s*getaway|2\s*day/i, "weekend_getaway"],
-  [/family\s*trip|kids|children|family\s*vacation/i, "family_trip"],
-  [/solo\s*trip|solo\s*backpack|backpacking|backpacker/i, "solo_backpacking"],
-  [/luxury|5\s*star|premium|lavish|high\s*end|5star/i, "luxury_travel"],
-  [/adventure|trekking|trek|hiking|rafting|paragliding|camping|bungee/i, "adventure_travel"],
-  [/pilgrimage|temple|mandir|spiritual|darshan|yatra|pilgrim/i, "pilgrimage"],
-  [/road\s*trip|self\s*drive|road\s*travel|driving/i, "road_trip"],
-  [/budget\s*trip|budget\s*plan(?:ning)?|tight\s*budget|limited\s*budget|cheap|affordable|low\s*cost|save\s*money|best\s*value/i, "budget_planning"],
-  [/hotels?|accommodation|stay|where\s*to\s*stay|resort|lodging/i, "hotel_recommendation"],
-  [/food|cuisine|eat|restaurant|dining|street\s*food|what\s*to\s*eat/i, "food_guide"],
-  [/weather|season|monsoon|climate|best\s*time|when\s*to\s*visit|forecast/i, "seasonal_advice"],
-  [/pack|bring|essentials|what\s*to\s*(pack|wear|bring)/i, "packing_help"],
-  [/transport|reach|flight|train|bus|how\s*to\s*(get|reach)|airport/i, "transport_info"],
-  [/hidden|offbeat|secret|off\s*the\s*beaten|gem|undiscovered/i, "hidden_gems"],
-  [/culture|local\s*customs?|tradition|etiquette|local\s*life/i, "local_culture"],
-  [/safe|safety|emergency|scam|avoid|danger|warning/i, "travel_safety"],
-];
 
 const DESTINATION_PATTERNS: [RegExp, string][] = [
   [/goa/i, "Goa"],
@@ -94,7 +67,7 @@ const DESTINATION_PATTERNS: [RegExp, string][] = [
   [/bangalore|bengaluru/i, "Bangalore"],
   [/hyderabad/i, "Hyderabad"],
   [/kolkata|calcutta/i, "Kolkata"],
-  [/ darjeeling|siliguri/i, "Darjeeling"],
+  [/darjeeling|siliguri/i, "Darjeeling"],
 ];
 
 const TRAVELER_PATTERNS: [RegExp, TravelerType][] = [
@@ -113,20 +86,140 @@ const BUDGET_PATTERNS: [RegExp, BudgetTier][] = [
   [/(?:₹|rs\.?\s*)(\d+[,]*\d*)/i, null],
 ];
 
-const DURATION_PATTERN = /(\d+)\s*(?:-|\s*to\s*)\s*(\d+)\s*days?|(\d+)\s*days?/i;
+const DURATION_PATTERN = /(\d+)\s*(?:-|\s*to\s*)\s*(\d+)\s*days?|(\d+)\s*(?:-|\s*)\s*days?/i;
+
+const IGNORED_WORDS = new Set([
+  "plan", "plans", "pan", "trip", "trips", "road", "day", "days", "to", "in", "for", 
+  "from", "with", "my", "our", "a", "an", "the", "go", "travel", "explore", "visit", 
+  "itinerary", "itineraries", "stay", "hotel", "hotels", "budget", "cheapest", "cheap", 
+  "luxury", "premium", "yes", "no", "ok", "okay", "please", "thanks", "thank", "hello", 
+  "hi", "hey", "planning", "generator", "generate", "details", "info", "information",
+  "and", "or", "but", "so", "make", "it", "more", "less", "do"
+]);
+
+function cleanPlaceName(name: string): string {
+  let cleaned = name.replace(/\b(trip|plan|plans|pan|road|day|days|to|in|for|from|with|my|our|a|an|the|go|travel|explore|visit|itinerary|itineraries|stay|hotel|hotels|budget|cheapest|cheap|luxury|premium|yes|no|ok|okay|please|thanks|thank|hello|hi|hey|planning|generator|generate|details|info|information|and|or|but|so|make|it|more|less|do)\b/gi, "").trim();
+  if (!cleaned) return "";
+
+  if (/^\d+$/.test(cleaned) || cleaned.length <= 1 || IGNORED_WORDS.has(cleaned.toLowerCase())) {
+    return "";
+  }
+
+  return cleaned
+    .split(/\s+/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
 
 function extractPlace(text: string, fallback = "Goa"): string {
   for (const [re, name] of DESTINATION_PATTERNS) {
     if (re.test(text)) return name;
   }
+
+  const patterns = [
+    /trip to\s+([a-z\s]+)/i,
+    /go to\s+([a-z\s]+)/i,
+    /travel to\s+([a-z\s]+)/i,
+    /explore\s+([a-z\s]+)/i,
+    /\d+\s*days?\s+(?:road\s+)?(?:trip\s+)?(?:to\s+)?([a-z\s]+)\s+trip/i,
+    /\d+\s*days?\s+(?:road\s+)?(?:trip\s+)?(?:to|in|for)\s+([a-z\s]+)/i,
+    /\d+\s*days?\s+(?:road\s+)?(?:trip\s+)?(?:to\s+)?([a-z\s]+)/i,
+    /plan\s+(?:a\s+)?([a-z\s]+)\s+trip/i,
+    /([a-z\s]+)\s+trip/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match && match[1]) {
+      const cleaned = cleanPlaceName(match[1]);
+      if (cleaned) return cleaned;
+    }
+  }
+
+  const words = text.trim().split(/\s+/);
+  if (words.length <= 2 && !/trip|plan|hello|hi|thanks/i.test(text)) {
+    const cleaned = cleanPlaceName(text);
+    if (cleaned) return cleaned;
+  }
+
   return fallback;
 }
 
-function extractIntent(text: string): Intent {
-  for (const [re, intent] of INTENT_PATTERNS) {
-    if (re.test(text)) return intent;
+export function extractIntent(text: string, isFollowUp: boolean): Intent {
+  const low = text.toLowerCase().trim();
+
+  // GENERAL_CHAT: standard greetings/thanks
+  if (/^(hi|hello|hey|greetings|thanks|thank you|ty|good morning|good evening|how's it going|how are you)\b/i.test(low)) {
+    return "GENERAL_CHAT";
   }
-  return "trip_planning";
+
+  // NEW_TRIP
+  if (!isFollowUp || /plan\s+(?:a\s+)?new\s+trip|start\s+(?:over|fresh|new)|generate\s+(?:a\s+)?new\s+itinerary|plan\s+(?:a\s+)?trip\s+to/i.test(low)) {
+    return "NEW_TRIP";
+  }
+
+  // REMOVE_PLACE
+  if (/\b(?:remove|delete|exclude|skip|don't\s+visit)\s+(?:place|destination|spot|beaches?|hotels?|restaurants?)/i.test(low) || /remove\s+(?:from\s+)?day\s+\d+/i.test(low)) {
+    return "REMOVE_PLACE";
+  }
+
+  // ADD_PLACE
+  if (/\b(?:add|include|insert|visit)\s+(?:place|destination|spot|beaches?)/i.test(low) || /\b(?:add|include|visit)\s+([a-z\s]+)\bto\b/i.test(low)) {
+    return "ADD_PLACE";
+  }
+
+  // REMOVE_ACTIVITY
+  if (/\b(?:remove|delete|skip|exclude|don't\s+do)\s+(?:water\s*sports|trek|hiking|rafting|safari|tour|activity|activities|ride|boating|sightseeing)/i.test(low)) {
+    return "REMOVE_ACTIVITY";
+  }
+
+  // ADD_ACTIVITY
+  if (/\b(?:add|include|do)\s+(?:water\s*sports|trek|hiking|rafting|safari|tour|activity|activities|ride|boating|sightseeing)/i.test(low) || /add\s+activity/i.test(low)) {
+    return "ADD_ACTIVITY";
+  }
+
+  // CHANGE_HOTEL
+  if (/\b(?:change|update|replace|different|other|recommend|suggest)\s+(?:[a-z]+\s+)?(?:hotels?|stay|accommodation|resorts?|guesthouse|hostels?)/i.test(low) || /stay\s+somewhere\s+else/i.test(low) || (/\b(?:hotels?|resorts?|hostels?|accommodation)\b/i.test(low) && (low.includes("change") || low.includes("other") || low.includes("different") || low.includes("stay") || low.includes("recommend") || low.includes("suggest")))) {
+    return "CHANGE_HOTEL";
+  }
+
+  // CHANGE_RESTAURANT
+  if (/\b(?:change|update|replace|different|other|recommend|suggest)\s+(?:[a-z]+\s+)?(?:restaurants?|cafes?|eatery|eateries|dining)/i.test(low) || (/\b(?:restaurants?|cafes?|eateries|eats?)\b/i.test(low) && (low.includes("change") || low.includes("other") || low.includes("different") || low.includes("food") || low.includes("recommend") || low.includes("suggest") || low.includes("dining")))) {
+    return "CHANGE_RESTAURANT";
+  }
+
+  // CHANGE_BUDGET
+  if (/\b(?:budget|cost|price|expensive|cheap|cheaper|luxury|increase|decrease|make\s+it|budget\s+limit|₹|rs\.?)\b/i.test(low) && (low.includes("budget") || low.includes("cheaper") || low.includes("expensive") || low.includes("cost") || low.includes("price") || /₹|rs/i.test(low))) {
+    return "CHANGE_BUDGET";
+  }
+
+  // CHANGE_DURATION
+  if (/\b(?:days|duration|length|extend|shorten|make\s+it|trip\s+for)\b/i.test(low) && (/\d+\s*days?/i.test(low) || low.includes("duration") || low.includes("days") || low.includes("extend") || low.includes("shorten"))) {
+    return "CHANGE_DURATION";
+  }
+
+  // CHANGE_TRANSPORT
+  if (/\b(?:car|cab|taxi|flight|plane|train|bus|bike|drive|transport|mode\s+of\s+travel|travel\s+by|go\s+by)\b/i.test(low)) {
+    return "CHANGE_TRANSPORT";
+  }
+
+  // CHANGE_TRAVEL_STYLE
+  if (/\b(?:luxury|relaxed|fast-paced|slow-paced|comfort|backpacking|adventure|honeymoon|family|style|theme|vibe)\b/i.test(low)) {
+    return "CHANGE_TRAVEL_STYLE";
+  }
+
+  // UPDATE_DAY
+  if (/\b(?:update|change|modify|edit|redo|adjust)\s+day\s+\d+/i.test(low) || /\bon\s+day\s+\d+/i.test(low)) {
+    return "UPDATE_DAY";
+  }
+
+  // ASK_QUESTION
+  if (/^(what|how|where|when|why|who|is\s+it|can\s+we|do\s+we|should|any|are\s+there)\b/i.test(low) || low.includes("?") || low.includes("dress code") || low.includes("safe") || low.includes("weather") || low.includes("pack")) {
+    return "ASK_QUESTION";
+  }
+
+
+  return "OTHER";
 }
 
 function extractTravelerType(text: string): TravelerType {
@@ -139,14 +232,12 @@ function extractTravelerType(text: string): TravelerType {
 function extractBudget(text: string): { tier: BudgetTier; amount: number | null } {
   const amounts: number[] = [];
 
-  // Phase 1: Find explicit amounts with currency prefixes
   const amountRegex = /(?:[₹₹]|inr|rs\.?\s*)(\d[\d,]*)/gi;
   let match: RegExpExecArray | null;
   while ((match = amountRegex.exec(text)) !== null) {
     amounts.push(parseInt(match[1].replace(/,/g, ""), 10));
   }
 
-  // Phase 2: Indian number words (lakh, crore, thousand, k)
   const lakhMatch = text.match(/(\d+)\s*lakh/i);
   if (lakhMatch) amounts.push(parseInt(lakhMatch[1], 10) * 100000);
 
@@ -169,7 +260,6 @@ function extractBudget(text: string): { tier: BudgetTier; amount: number | null 
     return { tier, amount: maxAmount };
   }
 
-  // Phase 3: Quality keywords (no explicit amount found)
   if (/cheap|affordable|low\s*cost|save\s*money|tight\s*budget/i.test(text)) {
     return { tier: "budget", amount: null };
   }
@@ -182,11 +272,33 @@ function extractBudget(text: string): { tier: BudgetTier; amount: number | null 
 }
 
 function extractDuration(text: string): number | null {
-  const match = DURATION_PATTERN.exec(text);
-  if (match) {
-    if (match[3]) return parseInt(match[3], 10);
-    return Math.max(parseInt(match[1], 10), parseInt(match[2], 10));
+  const low = text.toLowerCase();
+
+  if (/\b(?:one|single)[- ]day\b/i.test(low)) return 1;
+  if (/\btwo[- ]day\b/i.test(low)) return 2;
+  if (/\bthree[- ]day\b/i.test(low)) return 3;
+  if (/\bfour[- ]day\b/i.test(low)) return 4;
+  if (/\bfive[- ]day\b/i.test(low)) return 5;
+  if (/\bsix[- ]day\b/i.test(low)) return 6;
+  if (/\bseven[- ]day\b/i.test(low)) return 7;
+  if (/\beight[- ]day\b/i.test(low)) return 8;
+  if (/\bnine[- ]day\b/i.test(low)) return 9;
+  if (/\bten[- ]day\b/i.test(low)) return 10;
+
+  const rangeMatch = /(\d+)\s*(?:-|\s*to\s*)\s*(\d+)\s*days?/i.exec(text);
+  if (rangeMatch) {
+    return Math.max(parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10));
   }
+
+  const singleMatch = /(\d+)\s*(?:-|\s*)\s*days?/i.exec(text);
+  if (singleMatch) {
+    return parseInt(singleMatch[1], 10);
+  }
+
+  if (/\bweekend\b/i.test(low)) {
+    return 2;
+  }
+
   return null;
 }
 
@@ -195,20 +307,58 @@ function extractUrl(text: string): string | null {
   return match ? match[0].replace(/[.,;:!?)]$/, '') : null;
 }
 
-function extractDestination(text: string, conversationText: string): string {
-  // Try last message first, then fall back to full conversation
-  const fromLast = extractPlace(text);
-  if (fromLast !== "Goa") return fromLast;
-  const fromConvo = extractPlace(conversationText, "Goa");
-  return fromConvo;
+function inferDefaultDuration(text: string, destination: string): number {
+  const lowText = text.toLowerCase();
+  const lowDest = destination.toLowerCase();
+
+  if (lowText.includes("weekend")) {
+    return 2;
+  }
+
+  if (lowText.includes("road trip") || lowText.includes("roadtrip") || lowText.includes("bike trip")) {
+    return 5;
+  }
+
+  const internationalPlaces = [
+    "europe", "paris", "london", "dubai", "bali", "thailand", "singapore", 
+    "switzerland", "maldives", "vietnam", "usa", "uk", "america", "japan", "tokyo",
+    "italy", "rome", "spain", "barcelona", "greece", "turkey", "istanbul"
+  ];
+  const isInternational = internationalPlaces.some(p => lowDest.includes(p) || lowText.includes(p));
+  if (isInternational) {
+    return 8;
+  }
+
+  if (lowDest.includes("goa") || lowText.includes("goa")) {
+    return 5;
+  }
+
+  return 3;
 }
 
 export function detectIntent(
-  messages: { role: string; content: string }[]
+  messages: { role: string; content: string }[],
+  hasCurrentTrip = false
 ): DetectedContext {
   const userMessages = messages.filter((m) => m.role === "user");
   const lastMsg = userMessages[userMessages.length - 1]?.content || "";
   const allUserText = userMessages.map((m) => m.content).join(" ");
+
+  const extractFromHistory = <T>(extractor: (text: string) => T | null): T | null => {
+    for (let i = userMessages.length - 1; i >= 0; i--) {
+      const val = extractor(userMessages[i].content);
+      if (val !== null) return val;
+    }
+    return null;
+  };
+
+  const extractDestinationFromHistory = (): string => {
+    for (let i = userMessages.length - 1; i >= 0; i--) {
+      const place = extractPlace(userMessages[i].content, "");
+      if (place) return place;
+    }
+    return "Goa";
+  };
 
   const now = new Date();
   const currentMonth = now.toLocaleString("en-US", {
@@ -216,15 +366,27 @@ export function detectIntent(
     year: "numeric",
   });
 
+  const isFollowUp = hasCurrentTrip || userMessages.length > 1;
+  const destination = extractDestinationFromHistory();
+  let duration = extractFromHistory(extractDuration);
+  
+  if (duration === null) {
+    const intent = extractIntent(lastMsg, isFollowUp);
+    const isTripQuery = intent === "NEW_TRIP" || lastMsg.toLowerCase().includes("trip") || lastMsg.toLowerCase().includes("plan");
+    if (isTripQuery) {
+      duration = inferDefaultDuration(allUserText, destination);
+    }
+  }
+
   return {
-    intent: extractIntent(lastMsg),
-    destination: extractDestination(lastMsg, allUserText),
-    duration: extractDuration(lastMsg),
-    budgetTier: extractBudget(lastMsg).tier,
-    budgetAmount: extractBudget(lastMsg).amount,
-    travelerType: extractTravelerType(lastMsg),
-    isFollowUp: userMessages.length > 1,
+    intent: extractIntent(lastMsg, isFollowUp),
+    destination,
+    duration,
+    budgetTier: extractFromHistory((text) => extractBudget(text).tier),
+    budgetAmount: extractFromHistory((text) => extractBudget(text).amount),
+    travelerType: extractFromHistory(extractTravelerType),
+    isFollowUp,
     currentMonth,
-    extractedUrl: extractUrl(lastMsg),
+    extractedUrl: extractFromHistory(extractUrl),
   };
 }

@@ -19,18 +19,19 @@ interface HomeViewProps {
   onGoToExplore: () => void;
   onGoToPlanner: () => void;
   onGoToPassport: () => void;
+  onGoToPlannerWithPrompt?: (prompt: string) => void;
 }
 
 export default function HomeView(props: HomeViewProps) {
-  const { tours, wishlistIds, loadingDestinations, onQuickCategoryClick, onSelectTour, onToggleWishlist, onGoToExplore, onGoToPlanner, onGoToPassport } = props;
+  const { tours, wishlistIds, loadingDestinations, onQuickCategoryClick, onSelectTour, onToggleWishlist, onGoToExplore, onGoToPlanner, onGoToPassport, onGoToPlannerWithPrompt } = props;
 
   return (
     <div className="bg-background min-h-[100dvh] text-night selection:bg-coral/20 selection:text-night">
-      <HeroCarousel tours={tours} onGoToPlanner={onGoToPlanner} onGoToExplore={onGoToExplore} onSelectTour={onSelectTour} />
+      <HeroCarousel tours={tours} onGoToPlanner={onGoToPlanner} onGoToExplore={onGoToExplore} onSelectTour={onSelectTour} onGoToPlannerWithPrompt={onGoToPlannerWithPrompt} />
       <CategoryScroller onQuickCategoryClick={onQuickCategoryClick} />
       <AtlasPassportPreview onGoToExplore={onGoToExplore} onGoToPassport={onGoToPassport} />
       <WhyTravebie />
-      <FeaturedChapters tours={tours} wishlistIds={wishlistIds} loadingDestinations={loadingDestinations} onSelectTour={onSelectTour} onToggleWishlist={onToggleWishlist} onGoToExplore={onGoToExplore} />
+      <FeaturedChapters tours={tours} wishlistIds={wishlistIds} loadingDestinations={loadingDestinations} onSelectTour={onSelectTour} onToggleWishlist={onToggleWishlist} onGoToPlanner={onGoToPlanner} />
       <TravelerStories tours={tours} onSelectTour={onSelectTour} />
       <CompanionPreview onGoToPlanner={onGoToPlanner} />
     </div>

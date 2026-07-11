@@ -11,13 +11,10 @@ export default function HiddenGemsCard({ content }: { content: string }) {
   );
 
   return (
-    <div className="bg-gradient-to-br from-surface to-[#FDF8F0] border border-amber/20 rounded-2xl p-5 shadow-sm relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber/40 via-gold/60 to-amber/40" />
+    <div className="bg-surface border border-amber/20 rounded-2xl p-4 shadow-sm relative overflow-hidden">
       <div className="flex items-center gap-2.5 mb-3">
-        <div className="w-9 h-9 rounded-full bg-amber/10 flex items-center justify-center shrink-0">
-          <Sparkles className="w-4 h-4 text-amber" />
-        </div>
-        <h3 className="font-display text-card text-night font-light">Hidden Gems</h3>
+        <Sparkles className="w-4 h-4 text-amber shrink-0" />
+        <h3 className="font-display text-card text-night font-light">Local Secrets</h3>
       </div>
       <div className="space-y-2">
         {content.split('\n').filter(Boolean).map((line, i) => {
@@ -26,7 +23,7 @@ export default function HiddenGemsCard({ content }: { content: string }) {
           if (!cleaned) return null;
           return (
             <div key={i} className="flex items-start gap-2.5">
-              <span className="text-amber/40 mt-1 shrink-0">{isHeader ? '✨' : '•'}</span>
+              <span className="w-1 h-1 rounded-full bg-amber/40 mt-2 shrink-0" />
               <p className={`text-caption leading-relaxed ${isHeader ? 'text-night font-semibold' : 'text-muted/80'}`}>
                 {cleaned}
               </p>

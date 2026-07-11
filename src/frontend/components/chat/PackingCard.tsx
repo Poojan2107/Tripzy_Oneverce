@@ -11,7 +11,7 @@ function parseItems(text: string): string[] {
 }
 
 export default function PackingCard({ content }: { content: string }) {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const items = parseItems(content);
 
   return (
@@ -19,14 +19,11 @@ export default function PackingCard({ content }: { content: string }) {
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer text-left"
+        className="w-full flex items-center justify-between px-4 py-3.5 cursor-pointer text-left"
       >
         <div className="flex items-center gap-2.5">
           <CheckCircle2 className="w-4 h-4 text-teal" />
-          <h3 className="font-display text-card text-night font-light">Packing Essentials</h3>
-          {items.length > 0 && (
-            <span className="text-micro text-muted/50 font-mono">{items.length} items</span>
-          )}
+          <h3 className="font-display text-card text-night font-light">Packing</h3>
         </div>
         <ChevronDown className={`w-4 h-4 text-muted/50 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
       </button>
@@ -40,7 +37,7 @@ export default function PackingCard({ content }: { content: string }) {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5">
+            <div className="px-4 pb-4">
               {items.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {items.map((item, idx) => (

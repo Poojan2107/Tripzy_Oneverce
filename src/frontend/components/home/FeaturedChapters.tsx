@@ -11,7 +11,7 @@ interface FeaturedChaptersProps {
   loadingDestinations: boolean;
   onSelectTour: (tour: Tour) => void;
   onToggleWishlist: (tourId: string) => void;
-  onGoToExplore?: () => void;
+  onGoToPlanner?: () => void;
 }
 
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -28,7 +28,7 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
   );
 }
 
-export default function FeaturedChapters({ tours, wishlistIds, loadingDestinations, onSelectTour, onToggleWishlist, onGoToExplore }: FeaturedChaptersProps) {
+export default function FeaturedChapters({ tours, wishlistIds, loadingDestinations, onSelectTour, onToggleWishlist, onGoToPlanner }: FeaturedChaptersProps) {
   const featuredIds = ['varanasi-spiritual', 'kerala-houseboats', 'ladakh-passes', 'jaisalmer-fort'];
   const featuredChapters = tours.filter(t => featuredIds.includes(t.id));
 
@@ -112,7 +112,7 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                       </div>
                     </div>
  
-                    {/* Explore Chapter link */}
+                    {/* Rating and reviews, explore link removed */}
                     <div className="px-0.5 pt-2 flex items-center justify-between mt-auto">
                       <div className="flex items-center gap-2 text-meta text-muted/60">
                         <span className="flex items-center gap-1">
@@ -122,9 +122,6 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                         <span className="text-border/40">·</span>
                         <span>{tour.reviewsCount} reviews</span>
                       </div>
-                      <motion.span className="text-meta font-bold text-coral flex items-center gap-1.5 transition-all" whileHover={{ x: 2 }}>
-                        Explore Chapter <ArrowRight className="w-3.5 h-3.5 text-gold" />
-                      </motion.span>
                     </div>
                   </div>
                 </TiltCard>
@@ -141,12 +138,12 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
           viewport={{ once: true }}
         >
           <motion.button
-            onClick={() => onGoToExplore?.()}
+            onClick={() => onGoToPlanner?.()}
             className="btn btn-outline border-night/20 text-night/80 hover:bg-night hover:text-white h-12 px-6 rounded-md text-caption flex items-center gap-2 mx-auto cursor-pointer"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <Compass className="w-4 h-4" /> View All Chapters
+            <Compass className="w-4 h-4" /> Generate Trip
           </motion.button>
         </motion.div>
       </div>

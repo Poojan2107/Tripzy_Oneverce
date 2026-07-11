@@ -10,9 +10,11 @@ const SUBCAT_ICONS: Record<string, React.ReactNode> = {
   specialty: <ChefHat className="w-3 h-3 text-purple" />,
 };
 
-function parseContent(text: string): { icon: React.ReactNode | null; items: { subcat: string | null; text: string }[] } {
+const PRICE_REGEX = /[₹$€]\s*\d[\d,]*\s*(?:-\s*[₹$€]\s*\d[\d,]*)?/;
+
+function parseContent(text: string): { icon: React.ReactNode | null; items: { subcat: string | null; name: string; price: string; description: string }[] } {
   const lines = text.split('\n').filter(Boolean);
-  const items: { subcat: string | null; text: string }[] = [];
+  const items: { subcat: string | null; name: string; price: string; description: string }[] = [];
   let currentSubcat: string | null = null;
 
   for (const line of lines) {
@@ -25,7 +27,15 @@ function parseContent(text: string): { icon: React.ReactNode | null; items: { su
       continue;
     }
 
-    items.push({ subcat: currentSubcat, text: cleaned });
+    const priceMatch = cleaned.match(PRICE_REGEX);
+    const price = priceMatch ? priceMatch[0] : '';
+    const withoutPrice = priceMatch ? cleaned.replace(PRICE_REGEX, '').replace(/\s{2,}/, ' ').trim() : cleaned;
+
+    const dashIdx = withoutPrice.indexOf('—');
+    const name = dashIdx > 0 ? withoutPrice.slice(0, dashIdx).trim() : withoutPrice;
+    const description = dashIdx > 0 ? withoutPrice.slice(dashIdx + 1).replace(/^–?\s*/, '').trim() : '';
+
+    items.push({ subcat: currentSubcat, name: name || withoutPrice, price, description });
   }
 
   const allSubcats = [...new Set(items.map((i) => i.subcat).filter(Boolean))];
@@ -45,22 +55,19 @@ function parseContent(text: string): { icon: React.ReactNode | null; items: { su
 }
 
 export default function FoodCard({ content }: { content: string }) {
-  const [expanded, setExpanded] = useState(true);
-  const { icon: subcatIcon, items } = parseContent(content);
+  const [expanded, setExpanded] = useState(false);
+  const { items } = parseContent(content);
 
   return (
     <div className="bg-surface border border-border/50 rounded-2xl shadow-sm overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer text-left"
+        className="w-full flex items-center justify-between px-4 py-3.5 cursor-pointer text-left"
       >
         <div className="flex items-center gap-2.5">
           <UtensilsCrossed className="w-4 h-4 text-coral" />
-          <h3 className="font-display text-card text-night font-light">Food & Dining</h3>
-          {items.length > 0 && (
-            <span className="text-micro text-muted/50 font-mono">{items.length} picks</span>
-          )}
+          <h3 className="font-display text-card text-night font-light">Food</h3>
         </div>
         <ChevronDown className={`w-4 h-4 text-muted/50 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
       </button>
@@ -74,7 +81,7 @@ export default function FoodCard({ content }: { content: string }) {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 space-y-2">
+            <div className="px-4 pb-4 space-y-2">
               {items.length > 0 ? (
                 items.map((item, idx) => {
                   const isNewSubcat = idx === 0 || (item.subcat && item.subcat !== items[idx - 1]?.subcat);
@@ -88,11 +95,16 @@ export default function FoodCard({ content }: { content: string }) {
                           </span>
                         </div>
                       )}
-                      <div className="flex items-center gap-3 p-3 rounded-xl bg-background border border-border/30">
-                        <span className="w-6 h-6 rounded-full bg-coral/10 flex items-center justify-center shrink-0">
-                          <span className="text-micro text-coral font-bold">{idx + 1}</span>
-                        </span>
-                        <span className="text-caption text-night/80 leading-relaxed">{item.text}</span>
+                      <div className="p-3 rounded-xl bg-background border border-border/30">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-caption text-night font-semibold leading-snug">{item.name}</span>
+                          {item.price && (
+                            <span className="shrink-0 px-2 py-0.5 rounded-md bg-coral/8 border border-coral/15 text-micro font-mono font-bold text-coral/80">{item.price}</span>
+                          )}
+                        </div>
+                        {item.description && (
+                          <p className="text-micro text-muted/70 leading-relaxed mt-1">{item.description}</p>
+                        )}
                       </div>
                     </div>
                   );

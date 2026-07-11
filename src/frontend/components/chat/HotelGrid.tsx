@@ -122,14 +122,11 @@ const HotelGrid = memo(function HotelGrid({ content }: { content: string }) {
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer text-left"
+        className="w-full flex items-center justify-between px-4 py-3.5 cursor-pointer text-left"
       >
         <div className="flex items-center gap-2.5">
           <Bed className="w-4 h-4 text-coral" />
-          <h3 className="font-display text-card text-night font-light">Hotels & Accommodation</h3>
-          {rawHotels.length > 0 && (
-            <span className="text-micro text-muted/50 font-mono">{rawHotels.length}</span>
-          )}
+          <h3 className="font-display text-card text-night font-light">Hotels</h3>
         </div>
         <ChevronDown className={`w-4 h-4 text-muted/50 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
       </button>
@@ -143,7 +140,7 @@ const HotelGrid = memo(function HotelGrid({ content }: { content: string }) {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5">
+            <div className="px-4 pb-4">
               {/* Sort + Filter Controls */}
               <div className="flex items-center justify-between gap-2 mb-4">
                 <div className="flex items-center gap-1.5">

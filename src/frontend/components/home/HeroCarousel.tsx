@@ -5,12 +5,14 @@ import Image from 'next/image';
 import { Sparkles, ArrowRight, MapPin, Heart, Compass, BookOpen, Camera, Clock, Star, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { HERO_CAROUSEL_ITEMS } from './data';
 import { Tour } from '../../types';
+import PromptBox from '../chat/PromptBox';
 
 interface HeroCarouselProps {
   tours: Tour[];
   onGoToPlanner: () => void;
   onGoToExplore: () => void;
   onSelectTour: (tour: Tour) => void;
+  onGoToPlannerWithPrompt?: (prompt: string) => void;
 }
 
 function getMoodLabel(id: string): string {
@@ -152,26 +154,6 @@ function CarouselCard({
               </div>
               <p className="text-body text-muted/80 leading-relaxed font-sans font-light line-clamp-3">{slide.storyHook}</p>
             </div>
-            <div className="pt-3 border-t border-border/60 flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-meta font-mono text-muted">
-                <Users className="w-3.5 h-3.5 text-teal" />
-                <span>{slide.explorers} explorers loved this</span>
-              </div>
-              {isActive && (
-                <motion.button
-                  onClick={(e) => { e.stopPropagation(); onClick(); }}
-                  className="btn-night h-8.5 min-h-[34px] px-3.5 rounded-md text-meta font-bold uppercase flex items-center gap-1 cursor-pointer"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  Explore Chapter <ArrowRight className="w-3 h-3 text-gold" />
-                </motion.button>
-              )}
-            </div>
           </div>
         </div>
       </motion.div>
@@ -213,7 +195,7 @@ function FloatingParticles() {
   );
 }
 
-export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSelectTour }: HeroCarouselProps) {
+export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSelectTour, onGoToPlannerWithPrompt }: HeroCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval>>(null);
@@ -273,7 +255,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
   const gradientClass = TAG_GRADIENTS[activeSlide.tag] || TAG_GRADIENTS.Nature;
 
   return (
-    <section className="relative w-full h-[95vh] min-h-[680px] flex flex-col overflow-hidden bg-night">
+    <section className="relative w-full min-h-[100dvh] flex flex-col overflow-hidden bg-night">
       {/* Full-bleed background per slide — crossfade without remount */}
       <div className="absolute inset-0">
         {HERO_CAROUSEL_ITEMS.map((item, i) => (
@@ -315,16 +297,16 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
         }}
       />
 
-      <div className="relative z-10 w-full flex-grow flex flex-col justify-center pt-16 pb-12 sm:pt-20 lg:pt-24 lg:pb-16">
+      <div className="relative z-10 w-full flex-grow flex flex-col justify-center pt-20 pb-10 sm:pt-24 lg:pt-28 lg:pb-14">
         <motion.div
           className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 w-full"
           variants={staggerVariants}
           initial="hidden"
           animate="visible"
         >
-          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+          <div className="flex flex-col lg:flex-row items-start gap-16 lg:gap-12 xl:gap-20">
             {/* Left: Editorial text panel */}
-            <motion.div className="flex-1 space-y-6 text-left relative z-10 w-full lg:max-w-[42%]" variants={itemVariants}>
+            <motion.div className="flex-1 space-y-7 text-left relative z-10 w-full lg:max-w-[52%]" variants={itemVariants}>
               <div className="space-y-6">
                 <motion.div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-sm bg-white/[0.08] backdrop-blur-md border border-white/15 shadow-sm" variants={itemVariants}>
                   <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_6px_rgba(244,182,61,0.9)] animate-pulse" />
@@ -349,36 +331,17 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                 </motion.p>
               </div>
  
-              <motion.div className="flex flex-wrap items-center gap-4 pt-2" variants={itemVariants}>
-                <motion.button
-                  onClick={onGoToPlanner}
-                  className="btn btn-primary h-12 px-7 rounded-md text-caption tracking-wider flex items-center gap-2 cursor-pointer shadow-[0_0_24px_rgba(244,182,61,0.45),0_4px_16px_rgba(0,0,0,0.3)] hover:shadow-[0_0_36px_rgba(244,182,61,0.65)] transition-shadow duration-300"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Sparkles className="w-4 h-4" />
-                  Plan Your Journey
-                </motion.button>
-                <motion.button
-                  onClick={onGoToExplore}
-                  className="btn btn-outline border-white/25 hover:border-white/60 text-white/85 hover:text-white h-12 px-5 rounded-md text-caption bg-white/8 backdrop-blur-sm flex items-center gap-2 cursor-pointer transition-all duration-300 hover:bg-white/15"
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <motion.div
-                    className="w-2 h-2 rounded-full bg-gold"
-                    animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  />
-                  Explore Chapters
-                </motion.button>
+              {/* Hero search box */}
+              <motion.div className="flex flex-col gap-4 pt-2 w-full relative z-20" variants={itemVariants}>
+                <PromptBox
+                  variant="hero"
+                  onSubmit={(text) => onGoToPlannerWithPrompt?.(text)}
+                />
               </motion.div>
- 
+
               {/* Slide-specific metadata inline */}
               <motion.div key={`meta-${activeIndex}`}
-                className="inline-flex flex-wrap items-center gap-3 px-4 py-2 rounded-full bg-black/35 backdrop-blur-md border border-white/10 text-caption text-white/80 mt-2 shadow-[0_4px_16px_rgba(0,0,0,0.15)]"
+                className="inline-flex flex-wrap items-center gap-3 px-4 py-2 rounded-full bg-black/35 backdrop-blur-md border border-white/10 text-caption text-white/80 mt-2 mb-8 lg:mb-0 shadow-[0_4px_16px_rgba(0,0,0,0.15)]"
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
@@ -394,7 +357,7 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
             </motion.div>
  
             {/* Right: Carousel area */}
-            <motion.div className="flex-grow w-full lg:w-1/2 flex flex-col items-center justify-center relative min-h-[360px] sm:min-h-[440px] lg:min-h-[520px]" variants={itemVariants}>
+            <motion.div className="w-full lg:w-[48%] xl:w-[45%] flex-shrink-0 flex flex-col items-center justify-center relative min-h-[360px] sm:min-h-[440px] lg:min-h-[540px]" variants={itemVariants}>
               {/* Floating Passport Badge — desktop only */}
               <motion.div
                 className="absolute top-0 right-2 lg:right-8 z-40 hidden lg:flex flex-col items-start gap-1.5 bg-black/25 backdrop-blur-2xl border border-white/15 rounded-xl px-5 py-3.5 shadow-[0_8px_32px_rgba(0,0,0,0.3)] select-none text-left"

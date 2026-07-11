@@ -1,11 +1,10 @@
 "use client";
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Heart, MapPin, Calendar, Clock, Compass, X, Camera, Sparkles, Map, List, ArrowRight, Star, Zap, SlidersHorizontal, ChevronLeft, ChevronRight, IndianRupee } from 'lucide-react';
+import { Search, MapPin, Calendar, Clock, Compass, X, Camera, Sparkles, List, ArrowRight, Star, Zap, SlidersHorizontal, ChevronLeft, ChevronRight, IndianRupee } from 'lucide-react';
 import { Tour } from '../types';
 import { CATEGORY_CHIPS } from '../data';
 import SafeImage from './ui/SafeImage';
-import dynamic from 'next/dynamic';
 import { formatINR } from '../utils/currency';
 import { searchDestinations, type SearchFilters } from '../../backend/actions/searchActions';
 
@@ -16,14 +15,7 @@ export function getMoodLabel(id: string): string {
   return 'Hidden Gem';
 }
 
-const DiscoveryMap = dynamic(() => import('./map/DiscoveryMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-secondary-surface animate-pulse flex flex-col items-center justify-center">
-      <span className="text-micro font-mono uppercase tracking-[0.2em] text-muted/60">Loading Atlas Map...</span>
-    </div>
-  )
-});
+
 
 interface ExploreViewProps {
   tours: Tour[];
@@ -48,7 +40,6 @@ export default function ExploreView({
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState(initialCategoryFilter || 'all');
   const [activeTourId, setActiveTourId] = useState<string | null>(null);
-  const [mobileView, setMobileView] = useState<'list' | 'map'>('list');
   const [showFilters, setShowFilters] = useState(false);
   const [priceMin, setPriceMin] = useState<number | undefined>();
   const [priceMax, setPriceMax] = useState<number | undefined>();
@@ -151,22 +142,8 @@ export default function ExploreView({
 
   return (
     <div className="h-[calc(100dvh-var(--nav-bottom-height)-52px)] md:h-[calc(100dvh-76px)] lg:h-[calc(100dvh-84px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
-      {/* Mobile toggle */}
-      <div className={`md:hidden fixed bottom-[calc(var(--nav-bottom-height)-20px+var(--safe-bottom))] bottom-4 left-1/2 -translate-x-1/2 z-[60] bg-white/95 backdrop-blur-md text-night px-4 py-2.5 rounded-full shadow-card gap-3 text-xs font-mono uppercase tracking-wider border border-border/40 ${activeTour && mobileView === 'list' ? 'hidden' : 'flex'}`}>
-        {(['list', 'map'] as const).map(view => {
-          const Icon = view === 'list' ? List : Map;
-          return (
-            <button key={view} onClick={() => setMobileView(view)}
-              className={`flex items-center gap-1.5 btn-ghost min-h-[44px] min-w-[52px] justify-center px-3 ${mobileView === view ? 'bg-gold/10 text-gold font-bold' : 'opacity-60 hover:opacity-100'}`}
-            >
-              <Icon className="w-4 h-4" />{view === 'list' ? 'List' : 'Map'}
-            </button>
-          );
-        })}
-      </div>
-
       {/* Left sidebar */}
-      <div className={`w-full md:w-[33%] flex flex-col border-r border-border bg-surface h-full overflow-hidden shrink-0 min-w-0 ${mobileView === 'list' ? 'flex' : 'hidden md:flex'}`}>
+      <div className="w-full md:w-[50%] flex flex-col border-r border-border bg-surface h-full overflow-hidden shrink-0 min-w-0">
         <div className="p-6 border-b border-border space-y-5 bg-surface">
           <div className="flex items-center justify-between">
             <div>
@@ -367,13 +344,10 @@ export default function ExploreView({
         </div>
       </div>
 
-      {/* Center: Map panel */}
-      <div className={`flex-grow h-full relative min-w-0 overflow-hidden ${mobileView === 'map' ? 'flex' : 'hidden md:flex'} flex-col`}>
-        <DiscoveryMap tours={tours} activeTourId={activeTourId} onActiveTourChange={setActiveTourId} onSelectTour={(t) => t && onTourSelect(t)} />
-      </div>
+
 
       {/* Right: Destination Preview card */}
-      <div className={`hidden lg:flex w-[32%] flex-col border-l border-border bg-surface h-full overflow-y-auto shrink-0 p-6 ${activeTour ? '' : 'items-center justify-center'}`}>
+      <div className={`hidden md:flex w-[50%] flex-col border-l border-border bg-surface h-full overflow-y-auto shrink-0 p-6 ${activeTour ? '' : 'items-center justify-center'}`}>
         {activeTour ? (
           <motion.div key={activeTour.id} className="space-y-6 w-full text-left"
             initial={{ opacity: 0, y: 10 }}

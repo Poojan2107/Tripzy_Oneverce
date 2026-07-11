@@ -100,7 +100,7 @@ export interface Hotel {
   };
 }
 
-export type TabType = 'home' | 'explore' | 'ai-planner' | 'saved';
+export type TabType = 'home' | 'explore' | 'ai-planner' | 'saved' | 'chat';
 
 // ─── V2 Chat Types ───
 

@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useEffect, useState, useCallback, memo } from 'react';
-import { ChevronDown, Sparkles } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import type { ChatMessage } from '../../types';
 import MessageBubble from './MessageBubble';
@@ -17,10 +17,10 @@ interface ConversationProps {
 function groupMessages(messages: ChatMessage[]): ChatMessage[][] {
   const groups: ChatMessage[][] = [];
   for (const msg of messages) {
-    if (groups.length === 0 || groups[groups.length - 1][0].role === msg.role) {
-      groups.push([msg]);
-    } else {
+    if (groups.length > 0 && groups[groups.length - 1][0].role === msg.role) {
       groups[groups.length - 1].push(msg);
+    } else {
+      groups.push([msg]);
     }
   }
   return groups;
@@ -50,6 +50,26 @@ const Conversation = memo(function Conversation({ messages, isStreaming, onSubmi
 
   useEffect(() => {
     if (isNearBottomRef.current) {
+      const lastMsg = messages[messages.length - 1];
+      const isItinerary = lastMsg && lastMsg.role === 'assistant' && (
+        lastMsg.content.trim().replace(/^```json\s*/i, '').trim().startsWith('{')
+      );
+
+      if (isItinerary) {
+        const container = scrollRef.current;
+        if (container) {
+          const bubbles = container.querySelectorAll('.chat-message-bubble');
+          const lastBubble = bubbles[bubbles.length - 1] as HTMLElement;
+          if (lastBubble) {
+            container.scrollTo({
+              top: lastBubble.offsetTop - 16,
+              behavior: 'smooth'
+            });
+            return;
+          }
+        }
+      }
+
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isStreaming]);
@@ -72,71 +92,63 @@ const Conversation = memo(function Conversation({ messages, isStreaming, onSubmi
         role="log"
         aria-live="polite"
         aria-label="Chat messages"
-        className="flex-1 overflow-y-auto scrollbar-thin overscroll-contain pt-[calc(8px+env(safe-area-inset-top,0px)+44px)] pb-4"
+        className="flex-1 overflow-y-auto scrollbar-thin overscroll-contain px-4 sm:px-6 pt-6 pb-4"
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
-        <AnimatePresence mode="popLayout">
-          {groups.map((group, gi) => {
-            const isUser = group[0].role === 'user';
-            return (
-              <motion.div
-                key={group[0].id}
-                initial={{ opacity: prefersReduced ? 1 : 0, y: prefersReduced ? 0 : 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={prefersReduced ? { duration: 0 } : { duration: 0.25, ease: [0.25, 0.1, 0.25, 1] as const }}
-                className={isUser ? 'mb-2 last:mb-0' : 'mb-3 last:mb-0'}
-              >
-                {group.map((msg) => (
-                  <MessageBubble key={msg.id} message={msg} isStreaming={isStreaming} onSubmit={onSubmit} />
-                ))}
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
-
-        {isStreaming && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6"
-          >
-            <TypingIndicator />
-          </motion.div>
-        )}
-
-        {isStreaming && showScrollBtn && (
-          <motion.div
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center py-2"
-          >
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gold/10 border border-gold/20 text-micro font-mono font-bold uppercase tracking-wider text-gold/70">
-              <Sparkles className="w-3 h-3" />
-              AI is generating...
-            </span>
-          </motion.div>
-        )}
-
-        <div ref={bottomRef} />
+        <div className="max-w-[900px] mx-auto w-full space-y-4">
+          <AnimatePresence mode="popLayout">
+            {groups.map((group, gi) => {
+              const isUser = group[0].role === 'user';
+              return (
+                <motion.div
+                  key={group[0].id}
+                  initial={{ opacity: prefersReduced ? 1 : 0, y: prefersReduced ? 0 : 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={prefersReduced ? { duration: 0 } : { duration: 0.2, ease: [0.25, 0.1, 0.25, 1] as const }}
+                  className={isUser ? 'mb-2 last:mb-0' : 'mb-3 last:mb-0'}
+                >
+                  {group.map((msg) => (
+                    <MessageBubble key={msg.id} message={msg} isStreaming={isStreaming} onSubmit={onSubmit} />
+                  ))}
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+ 
+          {isStreaming && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+              className="mb-6"
+            >
+              <TypingIndicator />
+            </motion.div>
+          )}
+ 
+          <div ref={bottomRef} />
+        </div>
       </div>
-
+ 
       <AnimatePresence>
         {showScrollBtn && (
           <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={scrollToBottom}
-            className="absolute bottom-20 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-background border border-border/40 shadow-md flex items-center justify-center cursor-pointer z-10 hover:bg-surface transition-colors min-w-[44px] min-h-[44px]"
+            className="absolute bottom-24 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-background border border-border/40 shadow-md flex items-center justify-center cursor-pointer z-10 hover:bg-surface transition-colors min-w-[44px] min-h-[44px]"
             aria-label="Scroll to bottom"
           >
             <ChevronDown className="w-5 h-5 text-muted" />
           </motion.button>
         )}
       </AnimatePresence>
-
-      <div className="bg-gradient-to-t from-background via-background/90 to-transparent pt-5 pb-[max(8px,env(safe-area-inset-bottom))] px-4 lg:px-6">
-        <PromptBox onSubmit={onSubmit} disabled={disabled} />
+ 
+      <div className="bg-gradient-to-t from-background via-background/95 to-transparent pt-3 pb-[max(12px,env(safe-area-inset-bottom))] px-4 sm:px-6 shrink-0 backdrop-blur-[2px]">
+        <div className="max-w-[900px] mx-auto w-full">
+          <PromptBox onSubmit={onSubmit} disabled={disabled} />
+        </div>
       </div>
     </div>
   );

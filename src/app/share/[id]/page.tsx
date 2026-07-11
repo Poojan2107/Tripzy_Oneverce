@@ -3,7 +3,6 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getSharedItineraryAction } from '../../../backend/actions/shareActions';
 import { Compass, Calendar, MapPin, Sparkles, Navigation, DollarSign } from 'lucide-react';
-import SharedMap from './SharedMap';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -177,9 +176,7 @@ export default async function SharePage(props: PageProps) {
 
         </div>
 
-        <div className="lg:col-span-5 h-[400px] lg:h-[calc(100dvh-69px)] border-t lg:border-t-0 lg:border-l border-border/30 bg-surface overflow-hidden sticky bottom-0 lg:top-[69px]">
-          <SharedMap itinerary={itineraryDays} />
-        </div>
+        <div className="hidden lg:block lg:col-span-5 h-[calc(100dvh-69px)] border-t lg:border-t-0 lg:border-l border-border/30 bg-surface overflow-hidden sticky bottom-0 lg:top-[69px]" />
       </div>
     </div>
   );

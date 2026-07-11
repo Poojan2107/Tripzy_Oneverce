@@ -32,9 +32,6 @@ test.describe('Travebie V2 — Real API Integration', () => {
     // Wait for user message to appear
     await expect(main(page).getByText('Plan a weekend trip to Goa')).toBeVisible({ timeout: 10000 });
 
-    // Wait for AI response to start streaming in
-    await expect(main(page).getByText('Travebie AI').first()).toBeVisible({ timeout: 30000 });
-
     // Wait for streaming to finish (typing indicator disappears)
     await expect(page.getByLabel('AI is typing')).not.toBeVisible({ timeout: 60000 });
 

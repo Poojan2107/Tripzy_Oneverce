@@ -29,6 +29,17 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Bypass service worker entirely on localhost/127.0.0.1 (development HMR/Fast Refresh compatibility)
+  if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
+    return;
+  }
+
+  // Bypass service worker for Next.js internal assets and non-http protocols
+  if (!url.protocol.startsWith("http")) return;
+  if (url.pathname.startsWith("/_next/") || url.pathname.includes("webpack-hmr")) {
+    return;
+  }
+
   // API requests - network first, cache fallback
   if (url.pathname.startsWith("/api/")) {
     event.respondWith(

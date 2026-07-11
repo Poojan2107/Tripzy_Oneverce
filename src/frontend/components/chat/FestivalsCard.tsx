@@ -5,13 +5,10 @@ export default function FestivalsCard({ content }: { content: string }) {
   if (!content) return null;
 
   return (
-    <div className="bg-gradient-to-br from-surface to-[#FDF8F0] border border-pink/20 rounded-2xl p-5 shadow-sm relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-pink/30 via-coral/40 to-pink/30" />
+    <div className="bg-surface border border-pink/20 rounded-2xl p-4 shadow-sm relative overflow-hidden">
       <div className="flex items-center gap-2.5 mb-3">
-        <div className="w-9 h-9 rounded-full bg-pink/10 flex items-center justify-center shrink-0">
-          <Calendar className="w-4 h-4 text-pink" />
-        </div>
-        <h3 className="font-display text-card text-night font-light">Festivals & Events</h3>
+        <Calendar className="w-4 h-4 text-pink shrink-0" />
+        <h3 className="font-display text-card text-night font-light">Festivals</h3>
       </div>
       <div className="space-y-2">
         {content.split('\n').filter(Boolean).map((line, i) => {
@@ -21,7 +18,7 @@ export default function FestivalsCard({ content }: { content: string }) {
           const isHeader = /^\*\*.+\*\*/.test(cleaned) || /^\d+[.)]/.test(cleaned);
           return (
             <div key={i} className={`flex items-start gap-2.5 ${isHeader ? '' : 'pl-4'}`}>
-              <span className="shrink-0 mt-0.5 text-[10px]">{dateMatch ? '🎉' : isHeader ? '📅' : '•'}</span>
+              <span className="w-1 h-1 rounded-full bg-pink/30 mt-2 shrink-0" />
               <div>
                 {dateMatch && (
                   <span className="text-micro text-pink/60 font-mono mr-2">{dateMatch[0].replace('–', ' – ')}</span>

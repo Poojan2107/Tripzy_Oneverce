@@ -56,9 +56,9 @@ test.describe('Travebie V2 — Chat Conversation', () => {
   test('suggested prompt fills and submits', async ({ page }) => {
     await page.goto('/');
     await waitForStable(page);
-    const spiritualBtn = page.locator('button:has-text("Plan a spiritual journey")');
-    await spiritualBtn.click();
-    await expect(main(page).getByText('Spiritual journey through Varanasi and Rishikesh')).toBeVisible({ timeout: 8000 });
+    const surpriseBtn = page.locator('button:has-text("Show me something new")');
+    await surpriseBtn.click();
+    await expect(main(page).getByText('Surprise me with a unique destination')).toBeVisible({ timeout: 8000 });
   });
 
   test('prompt box stays visible after submission', async ({ page }) => {

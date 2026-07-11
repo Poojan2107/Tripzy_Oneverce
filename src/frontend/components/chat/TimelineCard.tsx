@@ -49,7 +49,7 @@ function parseDays(content: string): DayEntry[] {
 }
 
 function DayBlock({ day, idx }: { day: DayEntry; idx: number }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const toggle = useCallback(() => setOpen((v) => !v), []);
 
@@ -118,14 +118,11 @@ const TimelineCard = memo(function TimelineCard({ content }: { content: string }
       <button
         onClick={() => setExpanded(!expanded)}
         aria-expanded={expanded}
-        className="w-full flex items-center justify-between px-5 py-4 cursor-pointer text-left"
+        className="w-full flex items-center justify-between px-4 py-3.5 cursor-pointer text-left"
       >
         <div className="flex items-center gap-2.5">
           <Clock className="w-4 h-4 text-teal" />
           <h3 className="font-display text-card text-night font-light">Itinerary</h3>
-          {days.length > 0 && (
-            <span className="text-micro text-muted/50 font-mono">{days.length} Days</span>
-          )}
         </div>
         <ChevronDown className={`w-4 h-4 text-muted/50 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
       </button>
@@ -139,7 +136,7 @@ const TimelineCard = memo(function TimelineCard({ content }: { content: string }
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5">
+            <div className="px-4 pb-4">
               {days.length > 0 ? (
                 <div className="relative pl-6 space-y-2">
                   <div className="absolute left-[11px] top-[7px] bottom-0 w-px bg-border" />

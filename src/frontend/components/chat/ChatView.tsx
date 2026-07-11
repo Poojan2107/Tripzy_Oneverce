@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import type { Conversation, ChatMessage, Tour } from '../../types';
+import { Compass, Share2, Download, Menu, BookOpen, LogIn, LogOut } from 'lucide-react';
 import ChatContext from './ChatContext';
 import EmptyState from './EmptyState';
 import ConversationView from './Conversation';
@@ -8,6 +9,7 @@ import { detectIntent } from '../../lib/intentDetector';
 import { savePreferences, loadPreferences, clearPreferences } from '../../lib/preferenceStore';
 import type { SavedPreferences } from '../../lib/preferenceStore';
 import { findLocation } from '../../lib/placeData';
+import { useToast } from '../ui/Toast';
 
 interface ChatViewProps {
   tours: Tour[];
@@ -22,6 +24,12 @@ interface ChatViewProps {
   onConversationsChange?: (convs: Conversation[]) => void;
   onActiveConversationChange?: (id: string | null) => void;
   pendingPrompt?: string | null;
+  onClearPendingPrompt?: () => void;
+  onToggleSidebar?: () => void;
+  session?: any;
+  onSignIn?: () => void;
+  onSignOut?: () => void;
+  onShowPassport?: () => void;
 }
 
 const STORAGE_KEY = 'travebie_conversations';
@@ -46,11 +54,30 @@ function saveConversations(convs: Conversation[]) {
   }
 }
 
-function generateTitle(content: string): string | null {
+function generateTitle(content: string, userPrompt?: string): string | null {
   if (!content.trim()) return null;
-  const lower = content.toLowerCase();
 
-  const dest = findLocation(content);
+  // 1. Try parsing JSON response hero.destination first (fastest, most accurate)
+  try {
+    const trimmed = content.trim();
+    if (trimmed.startsWith('{')) {
+      const parsed = JSON.parse(trimmed);
+      if (parsed?.hero?.destination) {
+        const dest = parsed.hero.destination as string;
+        const tripDuration = parsed.hero.tripDuration || '';
+        const durationMatch = tripDuration.match(/(\d+)/);
+        const days = durationMatch ? `${durationMatch[1]}-Day` : '';
+        return [days, dest].filter(Boolean).join(' ').slice(0, 50);
+      }
+    }
+  } catch {
+    // Not JSON, continue to text parsing
+  }
+
+  // 2. Try finding location in user's prompt first (more reliable)
+  const scanText = userPrompt || content;
+  const lower = scanText.toLowerCase();
+  const dest = findLocation(scanText);
   const destination = dest?.name || null;
 
   const intentPatterns: [RegExp, string][] = [
@@ -71,7 +98,7 @@ function generateTitle(content: string): string | null {
     if (re.test(lower)) { intent = label; break; }
   }
 
-  const durationMatch = content.match(/\b(\d+)[- ]day\b/i);
+  const durationMatch = scanText.match(/\b(\d+)[- ]day\b/i);
   const duration = durationMatch?.[1] || null;
 
   const parts: string[] = [];
@@ -81,9 +108,13 @@ function generateTitle(content: string): string | null {
 
   if (parts.length > 0) return parts.join(' ').slice(0, 50);
 
-  const overviewMatch = lower.match(/journey overview/);
+  // 3. Fallback: scan full content for location
+  const destFromContent = findLocation(content);
+  if (destFromContent?.name) return destFromContent.name.slice(0, 50);
+
+  const overviewMatch = content.toLowerCase().match(/journey overview/);
   if (overviewMatch) {
-    const idx = lower.indexOf('journey overview');
+    const idx = content.toLowerCase().indexOf('journey overview');
     const after = content.slice(idx + 16).split('\n')[0]?.trim();
     if (after && after.length < 50) return after.slice(0, 50);
   }
@@ -91,10 +122,100 @@ function generateTitle(content: string): string | null {
   return null;
 }
 
+function mergeItineraryPatch(current: any, patch: any): any {
+  if (!current) return patch;
+  if (!patch) return current;
+
+  const merged = { ...current };
+
+  if (patch.hero) {
+    merged.hero = { ...merged.hero, ...patch.hero };
+  }
+
+  if (patch.overview) {
+    merged.overview = { ...merged.overview, ...patch.overview };
+  }
+
+  if (patch.route) {
+    merged.route = { ...merged.route, ...patch.route };
+  }
+
+  if (patch.days && Array.isArray(patch.days)) {
+    if (!merged.days) merged.days = [];
+    
+    const daysMap = new Map<number, any>();
+    merged.days.forEach((d: any) => {
+      if (d && typeof d.day === 'number') {
+        daysMap.set(d.day, d);
+      }
+    });
+
+    patch.days.forEach((patchDay: any) => {
+      if (!patchDay || typeof patchDay.day !== 'number') return;
+      const existingDay = daysMap.get(patchDay.day);
+      if (existingDay) {
+        const mergedDay = { ...existingDay };
+        
+        if (patchDay.title !== undefined) mergedDay.title = patchDay.title;
+        if (patchDay.weather !== undefined) mergedDay.weather = patchDay.weather;
+
+        if (patchDay.morning) mergedDay.morning = patchDay.morning;
+        if (patchDay.afternoon) mergedDay.afternoon = patchDay.afternoon;
+        if (patchDay.evening) mergedDay.evening = patchDay.evening;
+        if (patchDay.fuelStops) mergedDay.fuelStops = patchDay.fuelStops;
+        if (patchDay.aiTips) mergedDay.aiTips = patchDay.aiTips;
+
+        if (patchDay.restaurants) mergedDay.restaurants = patchDay.restaurants;
+        if (patchDay.hotels) mergedDay.hotels = patchDay.hotels;
+        if (patchDay.places) mergedDay.places = patchDay.places;
+
+        daysMap.set(patchDay.day, mergedDay);
+      } else {
+        daysMap.set(patchDay.day, patchDay);
+      }
+    });
+
+    merged.days = Array.from(daysMap.values()).sort((a: any, b: any) => a.day - b.day);
+  }
+
+  if (patch.expenseCalculator) {
+    merged.expenseCalculator = { ...merged.expenseCalculator, ...patch.expenseCalculator };
+  }
+
+  if (patch.packingChecklist) merged.packingChecklist = patch.packingChecklist;
+  if (patch.localFoods) merged.localFoods = patch.localFoods;
+  if (patch.shoppingPlaces) merged.shoppingPlaces = patch.shoppingPlaces;
+
+  if (patch.emergencyContacts) {
+    merged.emergencyContacts = { ...merged.emergencyContacts, ...patch.emergencyContacts };
+  }
+
+  if (patch.faqs) {
+    merged.faqs = patch.faqs;
+  }
+
+  if (merged.hero?.tripDuration) {
+    const durationMatch = merged.hero.tripDuration.match(/(\d+)\s*Day/i);
+    if (durationMatch) {
+      const daysCount = parseInt(durationMatch[1], 10);
+      if (merged.days.length > daysCount) {
+        merged.days = merged.days.slice(0, daysCount);
+      }
+    }
+  }
+
+  return merged;
+}
+
 export default function ChatView(props: ChatViewProps) {
   const {
     externalConversations, externalActiveId,
     onConversationsChange, onActiveConversationChange,
+    onToggleSidebar,
+    session,
+    onSignIn,
+    onSignOut,
+    onShowPassport,
     ...passThroughProps
   } = props;
 
@@ -119,14 +240,15 @@ export default function ChatView(props: ChatViewProps) {
     ? (id: string | null) => onActiveConversationChange?.(id)
     : setLocalActiveId;
 
-  const pendingPromptRef = useRef(passThroughProps.pendingPrompt);
+  const pendingPromptRef = useRef<string | null>(null);
   useEffect(() => {
     const pp = passThroughProps.pendingPrompt;
     if (pp && pp !== pendingPromptRef.current) {
       pendingPromptRef.current = pp;
       handleSubmit(pp);
+      props.onClearPendingPrompt?.();
     }
-  }, [passThroughProps.pendingPrompt]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [passThroughProps.pendingPrompt, props.onClearPendingPrompt]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load saved preferences from localStorage on mount
   useEffect(() => {
@@ -151,6 +273,7 @@ export default function ChatView(props: ChatViewProps) {
   const showEmpty = messages.length === 0 && !isStreaming;
 
   const hasPrefs = savedPrefs.budgetTier || savedPrefs.travelerType || savedPrefs.destination;
+  const { toast } = useToast();
 
   // Extract and save preferences from a user message
   const extractAndSavePrefs = useCallback((text: string) => {
@@ -201,6 +324,9 @@ export default function ChatView(props: ChatViewProps) {
       };
       setConversations((prev) => [newConv, ...prev]);
       setActiveConversationId(convId);
+      if (!text.startsWith('Surprise me')) {
+        toast('Let\'s plan something unforgettable.', 'info');
+      }
     } else {
       setConversations((prev) =>
         prev.map((c) =>
@@ -224,6 +350,25 @@ export default function ChatView(props: ChatViewProps) {
       content: m.content,
     }));
 
+    // Helper to get latest JSON itinerary from previous messages
+    const getLatestItinerary = (msgs: ChatMessage[]) => {
+      for (let i = msgs.length - 1; i >= 0; i--) {
+        const m = msgs[i];
+        if (m.role === 'assistant') {
+          const trimmed = m.content.trim();
+          const clean = trimmed.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
+          if (clean.startsWith('{')) {
+            try {
+              return JSON.parse(clean);
+            } catch {}
+          }
+        }
+      }
+      return null;
+    };
+    
+    const currentTrip = getLatestItinerary(existingMessages);
+
     // Helper to update assistant content
     const updateContent = (content: string) => {
       setConversations((prev) =>
@@ -244,7 +389,7 @@ export default function ChatView(props: ChatViewProps) {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages, preferences: savedPrefs }),
+        body: JSON.stringify({ sessionId: convId, messages: apiMessages, preferences: savedPrefs, currentTrip }),
       });
 
       const reader = response.body?.getReader();
@@ -272,16 +417,34 @@ export default function ChatView(props: ChatViewProps) {
 
       // Flush remaining content
       if (flushTimer) clearTimeout(flushTimer);
+
+      // Perform local patch merging if it's a follow-up patch JSON
+      try {
+        const trimmed = fullContent.trim();
+        const clean = trimmed.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
+        if (clean.startsWith('{')) {
+          const parsed = JSON.parse(clean);
+          const isFullTrip = parsed.hero && parsed.days && parsed.overview;
+          if (!isFullTrip && currentTrip) {
+            const merged = mergeItineraryPatch(currentTrip, parsed);
+            fullContent = JSON.stringify(merged, null, 2);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to parse or merge itinerary patch:', e);
+      }
+
       updateContent(fullContent);
 
       // Generate smart title from first AI response
       if (convId && existingMessages.length === 0) {
-        const newTitle = generateTitle(fullContent);
+        const newTitle = generateTitle(fullContent, text);
         if (newTitle) {
           setConversations((prev) =>
             prev.map((c) => c.id === convId ? { ...c, title: newTitle } : c)
           );
         }
+        toast('Your journey is ready.', 'success');
       }
     } catch (err) {
       console.error('Chat API error:', err);
@@ -350,8 +513,94 @@ export default function ChatView(props: ChatViewProps) {
 
   return (
     <ChatContext.Provider value={contextValue}>
-      <div className="min-h-0 flex-1 flex paper-grain">
-        {content}
+      <div className="flex-grow flex flex-col h-full max-h-full overflow-hidden relative paper-grain">
+        {/* Top Header */}
+        <header className="sticky top-0 h-16 flex items-center justify-between px-4 sm:px-6 border-b border-border/30 bg-surface/90 backdrop-blur-md z-20 shrink-0 select-none">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Hamburger button (Mobile-only) */}
+            <button
+              onClick={onToggleSidebar}
+              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl hover:bg-secondary-surface text-night border border-border/30 shadow-sm cursor-pointer min-w-[40px] min-h-[40px]"
+              aria-label="Open menu"
+            >
+              <Menu className="w-5 h-5 text-night" />
+            </button>
+
+            {/* Logo */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              <Compass className="w-5 h-5 text-gold animate-spin-slow" />
+              <span className="font-logo text-base sm:text-lg text-night font-bold tracking-tight lowercase">
+                travebie<span className="text-gold">.ai</span>
+              </span>
+            </div>
+            
+            {/* Divider */}
+            <span className="hidden sm:inline-block w-px h-4 bg-border/60 mx-1 shrink-0" />
+
+            {/* Current Trip Title */}
+            <span className="font-display font-medium text-caption text-night truncate max-w-[120px] sm:max-w-[200px] md:max-w-[300px] capitalize shrink-0">
+              {activeConv?.title || 'New Journey'}
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Share and PDF: Desktop only */}
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                toast('Share link copied to clipboard!', 'success');
+              }}
+              className="hidden lg:flex px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-border/40 hover:bg-secondary-surface text-micro font-bold text-muted hover:text-night transition-all duration-200 items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+            >
+              <Share2 className="w-3.5 h-3.5 text-gold" />
+              <span>Share</span>
+            </button>
+
+            <button
+              onClick={() => {
+                toast('Preparing print layout...', 'info');
+                window.print();
+              }}
+              className="hidden lg:flex px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-border/40 hover:bg-secondary-surface text-micro font-bold text-muted hover:text-night transition-all duration-200 items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+            >
+              <Download className="w-3.5 h-3.5 text-coral" />
+              <span>PDF</span>
+            </button>
+
+            {/* Passport (Saved) Button: Mobile & Tablet only */}
+            <button
+              onClick={onShowPassport}
+              className="lg:hidden px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-border/40 hover:bg-secondary-surface text-micro font-bold text-muted hover:text-night transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+              aria-label="Passport"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-teal" />
+              <span>Passport</span>
+            </button>
+
+            {/* Sign In / Out Button: Mobile & Tablet only */}
+            {session ? (
+              <button
+                onClick={onSignOut}
+                className="lg:hidden px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-border/40 hover:bg-secondary-surface text-micro font-bold text-muted hover:text-night transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+              >
+                <LogOut className="w-3.5 h-3.5 text-coral" />
+                <span>Out</span>
+              </button>
+            ) : (
+              <button
+                onClick={onSignIn}
+                className="lg:hidden px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-border/40 hover:bg-secondary-surface text-micro font-bold text-muted hover:text-night transition-all duration-200 flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+              >
+                <LogIn className="w-3.5 h-3.5 text-gold" />
+                <span>In</span>
+              </button>
+            )}
+          </div>
+        </header>
+
+        <div className="flex-1 min-h-0 flex flex-col relative overflow-hidden">
+          {content}
+        </div>
       </div>
     </ChatContext.Provider>
   );

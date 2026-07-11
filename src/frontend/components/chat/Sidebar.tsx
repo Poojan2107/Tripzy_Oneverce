@@ -20,16 +20,18 @@ interface SidebarProps {
   onShowChat: () => void;
   onSignIn: () => void;
   onSignOut: () => void;
+  onBackToHome: () => void;
+  mobileOpen?: boolean;
+  setMobileOpen?: (open: boolean) => void;
 }
 
 export default function Sidebar({
   conversations, activeConversationId, currentMode, wishlistCount,
   session, onNewChat, onSelectConversation, onDeleteConversation,
-  onShowProfile, onShowChat, onSignIn, onSignOut,
+  onShowProfile, onShowChat, onSignIn, onSignOut, onBackToHome,
+  mobileOpen = false, setMobileOpen,
 }: SidebarProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const closeMobile = () => setMobileOpen(false);
+  const closeMobile = () => setMobileOpen?.(false);
 
   const navItems = (
     <>
@@ -38,28 +40,28 @@ export default function Sidebar({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Compass className="w-5 h-5 text-gold animate-spin-slow" />
-            <span className="font-logo text-lg text-white lowercase tracking-tight">travebie</span>
+            <span className="font-logo text-lg text-white lowercase tracking-tight">travebie<span className="text-gold">.ai</span></span>
           </div>
           <button
             onClick={closeMobile}
-            className="lg:hidden w-11 h-11 flex items-center justify-center rounded-lg hover:bg-white/10 text-white/60 hover:text-white cursor-pointer -mr-1"
+            className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer -mr-1"
             aria-label="Close sidebar"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         <button
           onClick={() => { onNewChat(); closeMobile(); }}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-white/10 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer text-caption font-bold tracking-wider"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-white/10 text-white/80 hover:text-white hover:bg-white/5 hover:border-gold/40 transition-all duration-200 cursor-pointer text-caption font-bold tracking-wider shadow-sm"
         >
-          <MessageSquarePlus className="w-4 h-4" />
+          <MessageSquarePlus className="w-4 h-4 text-gold" />
           New Chat
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto scrollbar-thin px-2">
+      <nav className="flex-1 overflow-y-auto scrollbar-thin px-2 py-2">
         <ConversationHistory
           conversations={conversations}
           activeId={activeConversationId}
@@ -69,7 +71,7 @@ export default function Sidebar({
       </nav>
 
       {/* Bottom Actions */}
-      <div className="px-2 pb-4 pt-2 border-t border-white/5 space-y-0.5">
+      <div className="px-3 pb-6 pt-3 border-t border-white/10 space-y-1">
         <button
           onClick={() => { onShowProfile(); closeMobile(); }}
           className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 cursor-pointer ${
@@ -96,9 +98,16 @@ export default function Sidebar({
           }`}
         >
           <User className="w-4 h-4" />
-          <span className="text-caption font-bold tracking-wider">Profile</span>
+          <span className="text-caption font-bold tracking-wider flex-1 text-left">Profile</span>
         </button>
-        <div className="pt-1">
+        <button
+          onClick={() => { onBackToHome(); closeMobile(); }}
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/50 hover:text-white hover:bg-white/5 transition-all duration-200 cursor-pointer"
+        >
+          <Compass className="w-4 h-4 text-gold" />
+          <span className="text-caption font-bold tracking-wider flex-1 text-left">Back to Home</span>
+        </button>
+        <div className="pt-2">
           {session ? (
             <button
               onClick={onSignOut}
@@ -123,20 +132,11 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile hamburger */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-[max(8px,env(safe-area-inset-top))] left-3 z-40 w-11 h-11 flex items-center justify-center rounded-xl bg-surface/90 backdrop-blur-md border border-border/50 shadow-sm text-night cursor-pointer min-w-[44px] min-h-[44px]"
-        aria-label="Open sidebar"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
-
       {/* Mobile backdrop */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            className="fixed inset-0 z-50 bg-night/50 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-50 bg-night/60 backdrop-blur-sm lg:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -149,12 +149,12 @@ export default function Sidebar({
       <AnimatePresence>
         {mobileOpen && (
           <motion.aside
-            className="fixed inset-y-0 left-0 z-50 w-[300px] flex flex-col bg-[#0E1B26] border-r border-white/5 shadow-2xl lg:hidden pt-[env(safe-area-inset-top)]"
+            className="fixed inset-y-0 left-0 z-50 w-[280px] sm:w-[300px] flex flex-col bg-gradient-to-b from-[#091118] via-[#0E1B26] to-[#122230] border-r border-white/10 shadow-2xl lg:hidden pt-[env(safe-area-inset-top)]"
             style={{ willChange: 'transform' }}
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            transition={{ type: 'spring', stiffness: 350, damping: 32 }}
           >
             {navItems}
           </motion.aside>
@@ -162,7 +162,7 @@ export default function Sidebar({
       </AnimatePresence>
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex flex-col w-[280px] xl:w-[300px] shrink-0 min-h-[100dvh] bg-[#0E1B26] border-r border-white/5">
+      <aside className="hidden lg:flex flex-col w-[280px] xl:w-[300px] shrink-0 h-full bg-gradient-to-b from-[#091118] via-[#0E1B26] to-[#122230] border-r border-white/10 shadow-lg">
         {navItems}
       </aside>
     </>

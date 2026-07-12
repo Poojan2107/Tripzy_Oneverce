@@ -5,6 +5,7 @@ import { Sparkles, Compass, CheckCircle2, User, Heart, Users, Search, ArrowLeft,
 import { COMPANION_OPTIONS, DURATION_OPTIONS } from './constants';
 import { TOURS_DATA } from '../../data';
 import { Tour } from '../../types';
+import SafeImage from '../ui/SafeImage';
 
 interface PlannerWizardProps {
   step: number;
@@ -207,10 +208,9 @@ export default function PlannerWizard({
                             : 'border-border/30 hover:border-gold/50 bg-surface'
                         }`}
                       >
-                        <img
+                        <SafeImage
                           src={tour.bannerImage}
                           alt={tour.title}
-                          loading="lazy"
                           className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
                             isSelected ? 'opacity-80' : 'opacity-60'
                           }`}

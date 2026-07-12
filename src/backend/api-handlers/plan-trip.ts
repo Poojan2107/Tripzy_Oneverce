@@ -38,6 +38,30 @@ async function callGeminiWithRetry(
 }
 
 
+function sanitizeServerInput(input: any, maxLength: number): string {
+  if (typeof input !== 'string') return '';
+  // 1. Remove control characters and null bytes
+  let sanitized = input.replace(/[\x00-\x1F\x7F-\x9F]/g, "");
+  
+  // 2. Strong Prompt Injection shield: detect and replace hijack phrases
+  const injectionPatterns = [
+    /ignore (all )?previous instructions/i,
+    /forget (everything )?i told you/i,
+    /you are now a/i,
+    /system prompt/i,
+    /act as a/i,
+    /new instructions/i,
+    /override/i,
+    /system instruction/i,
+  ];
+  
+  if (injectionPatterns.some(pattern => pattern.test(sanitized))) {
+    return "Custom traveler preference";
+  }
+  
+  return sanitized.trim().slice(0, maxLength);
+}
+
 export async function POST(req: Request) {
   let body: any = {};
   try {
@@ -69,10 +93,11 @@ export async function POST(req: Request) {
       experience 
     } = body;
 
-    // Sanitize user-supplied prompt input — strip control chars, truncate, prevent injection
-    const sanitizedInterests = typeof interests === 'string'
-      ? interests.replace(/[\x00-\x1f\x7f-\x9f]/g, '').slice(0, 500)
-      : '';
+    // Sanitize user-supplied prompt input — strip control chars, truncate, prevent injection (SEC-04)
+    const sanitizedDestination = sanitizeServerInput(destination, 100);
+    const sanitizedFromLocation = sanitizeServerInput(fromLocation, 100);
+    const sanitizedInterests = sanitizeServerInput(interests, 150);
+    const sanitizedExperience = sanitizeServerInput(experience, 300);
 
     // 1. Calculate trip duration in days
     let tripDuration = 5;
@@ -106,11 +131,11 @@ export async function POST(req: Request) {
       budget,
       duration: tripDuration,
       travelStyle,
-      interests,
+      interests: sanitizedInterests,
       companion,
       guests,
-      preferredRegion: destination || undefined,
-      experience,
+      preferredRegion: sanitizedDestination || undefined,
+      experience: sanitizedExperience,
       month: travelMonth
     });
 
@@ -119,12 +144,12 @@ export async function POST(req: Request) {
 
     if (scoredDestinations.length > 0) {
       // Find direct text match first if queried
-      if (destination) {
+      if (sanitizedDestination) {
         const exactMatch = scoredDestinations.find(
           (r) =>
-            r.destination.name.toLowerCase().includes(destination.toLowerCase()) ||
-            r.destination.city.toLowerCase().includes(destination.toLowerCase()) ||
-            r.destination.country.toLowerCase().includes(destination.toLowerCase())
+            r.destination.name.toLowerCase().includes(sanitizedDestination.toLowerCase()) ||
+            r.destination.city.toLowerCase().includes(sanitizedDestination.toLowerCase()) ||
+            r.destination.country.toLowerCase().includes(sanitizedDestination.toLowerCase())
         );
         if (exactMatch) {
           finalDest = exactMatch.destination;
@@ -145,7 +170,7 @@ export async function POST(req: Request) {
     // 5. Fallback mock response if no Gemini API Key is configured
     const apiKey = getGeminiApiKey();
     if (!apiKey) {
-      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails, safeBudgetAmount);
+      const offlineResponse = buildOfflineResponse(finalDest, sanitizedDestination, budget, tripDuration, matchDetails, safeBudgetAmount, sanitizedExperience);
       return new Response(JSON.stringify(offlineResponse), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -168,7 +193,7 @@ export async function POST(req: Request) {
       - Baseline Coordinates: Latitude ${centerLat}, Longitude ${centerLng}
       
       Preferences:
-      - Starting Location: ${fromLocation}
+      - Starting Location: ${sanitizedFromLocation}
       - Dates: ${fromDate} to ${toDate}
       - Budget Tier: ${budget}
       - Budget Amount (INR per person per day): ${safeBudgetAmount}
@@ -293,7 +318,7 @@ export async function POST(req: Request) {
       });
     } catch (aiError) {
       console.warn("Gemini API call failed, using offline fallback:", aiError);
-      const offlineResponse = buildOfflineResponse(finalDest, destination, budget, tripDuration, matchDetails, budgetAmount);
+      const offlineResponse = buildOfflineResponse(finalDest, sanitizedDestination, budget, tripDuration, matchDetails, budgetAmount, sanitizedExperience);
       return new Response(JSON.stringify(offlineResponse), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -305,7 +330,8 @@ export async function POST(req: Request) {
     try {
       const fallbackDest = (body as any)?.destination || "India";
       const fallbackBudget = (body as any)?.budget || 'Medium';
-      const offlineResponse = buildOfflineResponse(null, fallbackDest, fallbackBudget, 4, null, undefined);
+      const fallbackExp = (body as any)?.experience || "";
+      const offlineResponse = buildOfflineResponse(null, sanitizeServerInput(fallbackDest, 100), fallbackBudget, 4, null, undefined, sanitizeServerInput(fallbackExp, 300));
       return new Response(JSON.stringify(offlineResponse), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

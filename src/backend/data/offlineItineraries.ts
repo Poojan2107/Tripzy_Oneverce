@@ -546,7 +546,7 @@ export function getOfflineItinerary(destName: string, lat: number, lng: number, 
   return itinerary;
 }
 
-export function buildOfflineResponse(finalDest: any, destination: string, budget: string, tripDuration: number, matchDetails: any, budgetAmount?: number) {
+export function buildOfflineResponse(finalDest: any, destination: string, budget: string, tripDuration: number, matchDetails: any, budgetAmount?: number, experience?: string) {
   const fallbackDestName = finalDest ? finalDest.name : (destination || "Varanasi");
   const fallbackLat = finalDest?.latitude ?? 25.3176;
   const fallbackLng = finalDest?.longitude ?? 82.9739;
@@ -564,8 +564,25 @@ export function buildOfflineResponse(finalDest: any, destination: string, budget
   const baseFood = Math.round(dailyBudget * 0.30);
   const totalCost = Math.round((baseTransit + baseStay + baseFood) * costMultiplier);
 
+  const itinerary = getOfflineItinerary(fallbackDestName, fallbackLat, fallbackLng, budget, safeDuration);
+
+  // Incorporate custom note constraint into the first day of the offline itinerary
+  const cleanNotes = experience ? experience.trim() : "";
+  if (cleanNotes && itinerary && itinerary.length > 0) {
+    itinerary[0].description += ` [Special request focus: "${cleanNotes}"]`;
+    if (!itinerary[0].activities) {
+      itinerary[0].activities = [];
+    }
+    itinerary[0].activities.push(`Custom activity: Focus on your request to "${cleanNotes.slice(0, 60)}${cleanNotes.length > 60 ? '...' : ''}"`);
+  }
+
+  let recommendationReasoning = matchDetails?.reasoning || "Selected based on matching travel styles and budget guides.";
+  if (cleanNotes) {
+    recommendationReasoning += ` Incorporating custom request: "${cleanNotes}".`;
+  }
+
   return {
-    itinerary: getOfflineItinerary(fallbackDestName, fallbackLat, fallbackLng, budget, safeDuration),
+    itinerary,
     costs: {
       transit: Math.round(baseTransit * costMultiplier),
       stay: Math.round(baseStay * costMultiplier),
@@ -586,7 +603,7 @@ export function buildOfflineResponse(finalDest: any, destination: string, budget
     destinationId: finalDest?.slug || finalDest?.id || undefined,
     destinationDbId: finalDest?.id || undefined,
     recommendationScore: matchDetails?.score || 85,
-    recommendationReasoning: matchDetails?.reasoning || "Selected based on matching travel styles and budget guides.",
+    recommendationReasoning,
     matchedFactors: matchDetails?.matchedFactors || {
       budget: true,
       style: true,

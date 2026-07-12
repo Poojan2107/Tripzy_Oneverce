@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getSharedItineraryAction } from '../../../backend/actions/shareActions';
-import { Compass, Calendar, MapPin, Sparkles, Navigation, DollarSign } from 'lucide-react';
+import { Compass, Calendar, MapPin, Sparkles, Navigation, IndianRupee } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -90,8 +90,8 @@ export default async function SharePage(props: PageProps) {
                 <span>{data.duration} Days</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <DollarSign className="w-4 h-4 text-gold" />
-                <span>Budget: ₹{costs.total?.toLocaleString() || 'Flexible'}</span>
+                <IndianRupee className="w-4 h-4 text-gold" />
+                <span>Budget: ₹{costs.total?.toLocaleString('en-IN') || 'Flexible'}</span>
               </div>
             </div>
           </div>
@@ -142,20 +142,20 @@ export default async function SharePage(props: PageProps) {
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="bg-surface border border-border/30 p-3 rounded-xl">
                 <span className="text-micro text-muted block uppercase font-bold">Transit</span>
-                <span className="text-sm font-bold text-night">₹{costs.transit?.toLocaleString() || '0'}</span>
+                <span className="text-sm font-bold text-night">₹{costs.transit?.toLocaleString('en-IN') || '0'}</span>
               </div>
               <div className="bg-surface border border-border/30 p-3 rounded-xl">
                 <span className="text-micro text-muted block uppercase font-bold">Stay</span>
-                <span className="text-sm font-bold text-night">₹{costs.stay?.toLocaleString() || '0'}</span>
+                <span className="text-sm font-bold text-night">₹{costs.stay?.toLocaleString('en-IN') || '0'}</span>
               </div>
               <div className="bg-surface border border-border/30 p-3 rounded-xl">
                 <span className="text-micro text-muted block uppercase font-bold">Food/Acts</span>
-                <span className="text-sm font-bold text-night">₹{costs.food?.toLocaleString() || '0'}</span>
+                <span className="text-sm font-bold text-night">₹{costs.food?.toLocaleString('en-IN') || '0'}</span>
               </div>
             </div>
             <div className="flex justify-between items-center bg-surface border border-gold/20 px-4 py-3 rounded-xl">
               <span className="text-xs font-bold uppercase text-muted">Total Budget Guide</span>
-              <span className="text-lg font-black text-gold">₹{costs.total?.toLocaleString() || 'Flexible'}</span>
+              <span className="text-lg font-black text-gold">₹{costs.total?.toLocaleString('en-IN') || 'Flexible'}</span>
             </div>
           </div>
 

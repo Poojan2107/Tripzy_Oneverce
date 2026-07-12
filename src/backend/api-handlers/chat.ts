@@ -612,13 +612,13 @@ function cleanHistoryForGemini(messages: any[]): any[] {
 
 export async function POST(req: Request) {
   try {
-    console.log("[trace] 1 - start");
+    console.error("[trace] 1 - start");
     if (!(await checkRateLimit(req))) {
       return new Response("Too many requests. Please try again shortly.", {
         status: 429,
       });
     }
-    console.log("[trace] 2 - rate limit passed");
+    console.error("[trace] 2 - rate limit passed");
 
     const parsed = chatRequestSchema.safeParse(await req.json());
     if (!parsed.success) {
@@ -627,7 +627,7 @@ export async function POST(req: Request) {
         headers: { "Content-Type": "application/json" },
       });
     }
-    console.log("[trace] 3 - zod passed");
+    console.error("[trace] 3 - zod passed");
     const { messages, preferences: savedPrefs, sessionId: bodySessionId } = parsed.data;
     let clientCurrentTrip = parsed.data.currentTrip || null;
 
@@ -638,16 +638,16 @@ export async function POST(req: Request) {
         { status: 200, headers: { "Content-Type": "text/plain; charset=utf-8" } }
       );
     }
-    console.log("[trace] 4 - api key ok");
+    console.error("[trace] 4 - api key ok");
 
     const apiMessages = messages.filter((m: any) => m.role !== 'system');
     const lastUserMsg = apiMessages.length > 0 ? apiMessages[apiMessages.length - 1].content : "";
 
     // 1. Session Retrieval
-    console.log("[trace] 5 - before session");
+    console.error("[trace] 5 - before session");
     const sessionId = bodySessionId || `session_${crypto.randomUUID()}`;
     const session = await getSession(sessionId);
-    console.log("[trace] 6 - after session");
+    console.error("[trace] 6 - after session");
 
     // Sync client's current trip if it was passed
     if (clientCurrentTrip) {
@@ -657,9 +657,9 @@ export async function POST(req: Request) {
     const currentTrip = session.currentTrip;
 
     // 2. Intent Detection
-    console.log("[trace] 7 - before detectIntent");
+    console.error("[trace] 7 - before detectIntent");
     const context = detectIntent(apiMessages, !!currentTrip);
-    console.log("[trace] 8 - intent:", context.intent, context.destination);
+    console.error("[trace] 8 - intent:", context.intent, context.destination);
 
     // Merge saved preferences into context
     if (savedPrefs) {
@@ -678,14 +678,14 @@ export async function POST(req: Request) {
     const prunedTrip = currentTrip ? pruneItineraryForContext(currentTrip, context.intent, lastUserMsg) : null;
 
     // 4. Prompt Selection
-    console.log("[trace] 9 - before prompt");
+    console.error("[trace] 9 - before prompt");
     let systemPrompt = "";
     if (context.isFollowUp && currentTrip) {
       systemPrompt = buildFollowUpSystemPrompt(context, session.sessionState, session.conversationSummary || "");
     } else {
       systemPrompt = buildNewTripSystemPrompt(context);
     }
-    console.log("[trace] 10 - prompt built, len:", systemPrompt.length);
+    console.error("[trace] 10 - prompt built, len:", systemPrompt.length);
 
     // 5. Build Content Payload
     // - Keep last 3 exchanges as conversation history
@@ -726,12 +726,12 @@ export async function POST(req: Request) {
         config.responseSchema = chatResponseSchema;
       }
     }
-    console.log("[trace] 11 - before gemini call");
+    console.error("[trace] 11 - before gemini call");
 
     const genAI = new GoogleGenAI({ apiKey });
     let stream;
     try {
-      console.log("[trace] 12a - calling gemini");
+      console.error("[trace] 12a - calling gemini");
       stream = await callGeminiStreamWithTimeout(
         genAI,
         "gemini-2.0-flash",

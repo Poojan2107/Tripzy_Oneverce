@@ -4,6 +4,8 @@ import { parseOverview } from '../../lib/parseOverview';
 import { getDestinationImage } from '../../lib/getDestinationImage';
 import { findLocation } from '../../lib/placeData';
 
+import SafeImage from '../ui/SafeImage';
+
 function extractDestinationName(content: string): string {
   const match = findLocation(content);
   if (match) {
@@ -43,7 +45,7 @@ export default function DestinationHero({ content }: { content: string }) {
     <div className="overflow-hidden rounded-2xl">
       <div className={`h-56 sm:h-72 lg:h-80 bg-gradient-to-br ${img.gradient} relative`}>
         {img.image && (
-          <img
+          <SafeImage
             src={img.image}
             alt={destinationName || 'Destination'}
             className="absolute inset-0 w-full h-full object-cover"

@@ -178,6 +178,11 @@ export function extractIntent(text: string, isFollowUp: boolean): Intent {
     return "ADD_ACTIVITY";
   }
 
+  // UPDATE_DAY — must precede CHANGE_HOTEL/CHANGE_RESTAURANT so "on day N, change hotels" is classified as UPDATE_DAY
+  if (/\b(?:update|change|modify|edit|redo|adjust)\s+day\s+\d+/i.test(low) || /\bon\s+day\s+\d+/i.test(low)) {
+    return "UPDATE_DAY";
+  }
+
   // CHANGE_HOTEL
   if (/\b(?:change|update|replace|different|other|recommend|suggest)\s+(?:[a-z]+\s+)?(?:hotels?|stay|accommodation|resorts?|guesthouse|hostels?)/i.test(low) || /stay\s+somewhere\s+else/i.test(low) || (/\b(?:hotels?|resorts?|hostels?|accommodation)\b/i.test(low) && (low.includes("change") || low.includes("other") || low.includes("different") || low.includes("stay") || low.includes("recommend") || low.includes("suggest")))) {
     return "CHANGE_HOTEL";
@@ -206,11 +211,6 @@ export function extractIntent(text: string, isFollowUp: boolean): Intent {
   // CHANGE_TRAVEL_STYLE
   if (/\b(?:luxury|relaxed|fast-paced|slow-paced|comfort|backpacking|adventure|honeymoon|family|style|theme|vibe)\b/i.test(low)) {
     return "CHANGE_TRAVEL_STYLE";
-  }
-
-  // UPDATE_DAY
-  if (/\b(?:update|change|modify|edit|redo|adjust)\s+day\s+\d+/i.test(low) || /\bon\s+day\s+\d+/i.test(low)) {
-    return "UPDATE_DAY";
   }
 
   // ASK_QUESTION

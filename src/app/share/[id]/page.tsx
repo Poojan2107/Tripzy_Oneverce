@@ -176,7 +176,15 @@ export default async function SharePage(props: PageProps) {
 
         </div>
 
-        <div className="hidden lg:block lg:col-span-5 h-[calc(100dvh-69px)] border-t lg:border-t-0 lg:border-l border-border/30 bg-surface overflow-hidden sticky bottom-0 lg:top-[69px]" />
+        <div className="hidden lg:flex lg:col-span-5 h-[calc(100dvh-69px)] border-t lg:border-t-0 lg:border-l border-border/30 bg-surface overflow-hidden sticky bottom-0 lg:top-[69px] flex-col items-center justify-center p-8 text-center">
+          <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mb-4">
+            <Compass className="w-8 h-8 text-gold" />
+          </div>
+          <h3 className="text-sm font-bold text-night uppercase tracking-wider mb-2">Your Journey Awaits</h3>
+          <p className="text-xs text-muted/60 max-w-xs leading-relaxed">
+            Create your own AI-crafted itinerary with Travebie's smart travel planner.
+          </p>
+        </div>
       </div>
     </div>
   );

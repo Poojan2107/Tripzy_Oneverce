@@ -59,13 +59,13 @@ interface DayPlan {
 
 interface ItineraryData {
   hero: {
-    destination: string;
-    coverImageQuery: string;
-    tripDuration: string;
-    travelMode: string;
-    bestTimeToVisit: string;
-    estimatedBudget: string;
-    tripSummary: string;
+    destination?: string;
+    coverImageQuery?: string;
+    tripDuration?: string;
+    travelMode?: string;
+    bestTimeToVisit?: string;
+    estimatedBudget?: string;
+    tripSummary?: string;
   };
   overview: {
     startLocation: string;
@@ -125,7 +125,7 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [checkedPacking, setCheckedPacking] = useState<Record<string, boolean>>({});
 
-  const destImage = useMemo(() => getDestinationImage(data.hero.destination), [data.hero.destination]);
+  const destImage = useMemo(() => getDestinationImage(data.hero?.destination || ""), [data.hero?.destination]);
   const coverSrc = destImage.image || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80";
 
   const togglePackingItem = (item: string) => {
@@ -160,7 +160,7 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
             <h2 className="font-display text-3xl sm:text-4xl font-light tracking-tight text-white leading-tight text-left">
               {data.hero.destination}
             </h2>
-            {data.hero.destination.includes(',') && (
+            {data.hero.destination?.includes(',') && (
               <span className="text-micro text-white/50 block font-light text-left">
                 {data.hero.destination.split(',').slice(1).join(',').trim()}
               </span>
@@ -188,7 +188,7 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
 
           <div className="flex flex-col sm:flex-row gap-3 pt-3">
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.hero.destination)}`}
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.hero.destination || "")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-3 rounded-xl bg-gold hover:bg-gold/90 text-night font-bold text-micro tracking-wider uppercase flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"

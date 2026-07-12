@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { Shield, ShieldCheck, LogIn, ArrowRight, CheckCircle2, AlertCircle, KeyRound } from 'lucide-react';
 
-const ADMIN_SETUP_KEY = '8bae487b-637a-40ad-bd88-93d2e45e3f5b';
-
 export default function AdminSetupPage() {
   const { data: session, status } = useSession();
   const [setupKey, setSetupKey] = useState('');

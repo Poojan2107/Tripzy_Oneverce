@@ -173,7 +173,7 @@ export async function POST(req: Request) {
       - Budget Tier: ${budget}
       - Budget Amount (INR per person per day): ${safeBudgetAmount}
       - Travel Style: ${travelStyle}
-      - Key Interests: ${sanitizedInterests}
+      -       Key Interests: ---START---${sanitizedInterests}---END---
       - Travelers: ${guests}
       - Travel Pace: ${travelPace}
       

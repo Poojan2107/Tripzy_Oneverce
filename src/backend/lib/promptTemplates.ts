@@ -301,7 +301,6 @@ You MUST respond in conversational Markdown (NOT JSON) to ask the user how many 
 // 2. Follow-up Prompt
 export function buildFollowUpSystemPrompt(
   context: DetectedContext,
-  prunedTrip: any,
   sessionState: any,
   conversationSummary: string
 ): string {
@@ -312,7 +311,6 @@ export function buildFollowUpSystemPrompt(
   ];
 
   const stateStr = sessionState ? JSON.stringify(sessionState, null, 2) : "{}";
-  const tripStr = prunedTrip ? JSON.stringify(prunedTrip, null, 2) : "{}";
 
   const followUpInstruction = `
 ## ITINERARY FOLLOW-UP / EDIT MODE
@@ -326,8 +324,6 @@ The user wants to make a modification or ask a question about their active itine
 - **Conversation Summary**: ${conversationSummary || "None"}
 - **Session State**: 
 ${stateStr}
-- **Active Itinerary (Pruned context)**: 
-${tripStr}
 
 ### Output Rules:
 1. If the user's request changes the itinerary (e.g. adding beaches to Day 2, changing budget, changing hotels):
@@ -377,14 +373,13 @@ ${tripStr}
 // Backwards compatibility function
 export function buildSystemPrompt(context: DetectedContext, currentTrip: any | null = null): string {
   if (context.isFollowUp && currentTrip) {
-    // Generate a simple state and summary mockup for compatibility
     const sessionState = {
       destination: context.destination,
       days: context.duration,
       budget: context.budgetTier || "",
       travelerType: context.travelerType || ""
     };
-    return buildFollowUpSystemPrompt(context, currentTrip, sessionState, "");
+    return buildFollowUpSystemPrompt(context, sessionState, "");
   }
   return buildNewTripSystemPrompt(context);
 }

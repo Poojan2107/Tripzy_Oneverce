@@ -175,7 +175,7 @@ export default function PlannerResult({
         <motion.div className="bg-surface relative overflow-hidden border border-border/70 rounded-lg shadow-md" variants={sectionVariants} custom={0}>
           {tour?.bannerImage && (
             <div className="absolute inset-0 opacity-[0.08]">
-              <SafeImage src={tour.bannerImage} alt="" className="w-full h-full object-cover" />
+              <SafeImage src={tour.bannerImage} alt={`${tour.title || "Destination"} banner image`} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-r from-surface via-surface/90 to-transparent" />
             </div>
           )}

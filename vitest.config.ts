@@ -5,8 +5,15 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
+    testTimeout: 10000,
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     exclude: ['node_modules', '.next'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov'],
+      include: ['src/backend/**'],
+      exclude: ['node_modules', '.next'],
+    },
   },
   resolve: {
     alias: {

@@ -22,7 +22,7 @@ const pacifico = Pacifico({
 });
 
 
-const baseUrl = "https://travebie-oneverce.vercel.app";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://travebie-oneverce.vercel.app");
 
 export const metadata: Metadata = {
   title: {
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
   viewportFit: "cover",
   themeColor: "#F8F5EE",
   interactiveWidget: "resizes-content",

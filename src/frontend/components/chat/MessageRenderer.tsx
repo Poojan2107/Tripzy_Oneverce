@@ -95,19 +95,43 @@ function MessageRenderer({ content, isStreaming = false }: MessageRendererProps)
 
   const isJsonItinerary = useMemo(() => {
     const trimmed = content.trim();
+    if (trimmed.startsWith('[') || trimmed.includes('[⚡ Offline Mode]')) {
+      return trimmed.includes('{');
+    }
     const clean = trimmed.replace(/^```json\s*/i, '').trim();
     return clean.startsWith('{');
   }, [content]);
 
-  const parsedJson = useMemo(() => {
+  const extracted = useMemo(() => {
     if (!isJsonItinerary) return null;
-    const clean = content.trim().replace(/^```json\s*/i, '').replace(/```$/, '').trim();
-    try {
-      return JSON.parse(clean);
-    } catch {
-      return null;
+    const trimmed = content.trim();
+    
+    // 1. Try standard clean JSON
+    const clean = trimmed.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
+    if (clean.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(clean);
+        return { prefix: null, data: parsed };
+      } catch {}
     }
+
+    // 2. Try JSON enclosed inside prefix
+    const startIdx = trimmed.indexOf('{');
+    const endIdx = trimmed.lastIndexOf('}');
+    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+      const jsonCandidate = trimmed.substring(startIdx, endIdx + 1);
+      try {
+        const parsed = JSON.parse(jsonCandidate);
+        const prefix = trimmed.substring(0, startIdx).trim();
+        return { prefix: prefix || null, data: parsed };
+      } catch {}
+    }
+
+    return null;
   }, [content, isJsonItinerary]);
+
+  const parsedJson = extracted ? extracted.data : null;
+  const prefixText = extracted ? extracted.prefix : null;
 
   const sections = useMemo(() => {
     if (isJsonItinerary || !content.trim()) return [];
@@ -166,7 +190,24 @@ function MessageRenderer({ content, isStreaming = false }: MessageRendererProps)
 
   if (isJsonItinerary) {
     if (parsedJson) {
-      return <JsonItineraryDashboard data={parsedJson} />;
+      return (
+        <div className="space-y-6">
+          {prefixText && (
+            <div className="bg-[#FFFDF9] border border-gold/45 rounded-[20px] p-5 shadow-sm text-left flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center border border-gold/25 shrink-0">
+                <Compass className="w-5 h-5 text-gold animate-spin-slow" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[12px] font-bold text-gold tracking-wide uppercase font-mono">⚡ Offline Mode</span>
+                <p className="text-[14px] leading-relaxed text-night/80 font-sans">
+                  {prefixText.replace(/^\[⚡ Offline Mode\]\s*/i, '').trim()}
+                </p>
+              </div>
+            </div>
+          )}
+          <JsonItineraryDashboard data={parsedJson} />
+        </div>
+      );
     }
     if (!isStreaming) {
       return (

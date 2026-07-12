@@ -75,7 +75,7 @@ export async function getSession(sessionId: string): Promise<TripSession> {
       return session;
     }
   } catch (e) {
-    // Expected database timeout/failure fallback
+    console.warn(`[sessionStore] DB fetch failed for ${sessionId}:`, e);
   }
 
   // 2. Try file fallback
@@ -151,6 +151,6 @@ export async function saveSession(session: TripSession): Promise<void> {
       },
     });
   } catch (e) {
-    // Database save failed, log warning but proceed since we saved locally
+    console.warn(`[sessionStore] DB upsert failed for ${session.sessionId}:`, e);
   }
 }

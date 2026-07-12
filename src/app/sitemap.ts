@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://travebie-oneverce.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://travebie-oneverce.vercel.app');
 
 const DESTINATIONS = [
   { slug: 'varanasi-spiritual', name: 'Varanasi' },

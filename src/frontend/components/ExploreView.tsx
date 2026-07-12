@@ -172,7 +172,7 @@ export default function ExploreView({
                 </motion.button>
               )}
             </div>
-            <button onClick={() => setShowFilters(!showFilters)}
+            <button onClick={() => setShowFilters(!showFilters)} aria-label={showFilters ? 'Hide filters' : 'Show filters'}
               className={`shrink-0 w-11 h-11 flex items-center justify-center rounded-lg btn-ghost border transition-all duration-300 ${showFilters ? 'bg-night text-white border-night' : 'border-border text-muted hover:border-gold/50'}`}>
               <SlidersHorizontal className="w-3.5 h-3.5" />
             </button>
@@ -180,7 +180,7 @@ export default function ExploreView({
 
           <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none -mx-6 px-6">
             {CATEGORY_CHIPS.map((chip) => (
-              <motion.button key={chip.id}
+              <motion.button key={chip.id} aria-pressed={activeCategory === chip.id}
                 onClick={() => { setActiveCategory(chip.id); setActiveTourId(null); }}
                 className={`flex-shrink-0 px-4 py-2 border rounded-full text-meta font-mono tracking-wider transition-all duration-300 ${
                   activeCategory === chip.id
@@ -325,17 +325,17 @@ export default function ExploreView({
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-2 pb-4">
-              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1} aria-label="Previous page"
                 className="w-8 h-8 flex items-center justify-center rounded btn-ghost border border-border disabled:opacity-30 disabled:cursor-not-allowed">
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                <button key={p} onClick={() => setPage(p)}
+                <button key={p} onClick={() => setPage(p)} aria-label={`Page ${p}`} aria-current={p === page ? 'page' : undefined}
                   className={`w-8 h-8 flex items-center justify-center rounded text-micro font-mono font-bold ${p === page ? 'bg-night text-white' : 'btn-ghost border border-border text-muted hover:text-night'}`}>
                   {p}
                 </button>
               ))}
-              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages} aria-label="Next page"
                 className="w-8 h-8 flex items-center justify-center rounded btn-ghost border border-border disabled:opacity-30 disabled:cursor-not-allowed">
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>

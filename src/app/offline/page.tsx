@@ -1,5 +1,11 @@
 import { Compass } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Offline — Travebie",
+  description: "You appear to be offline. Some content may still be available from your last visit.",
+};
 
 export default function OfflinePage() {
   return (

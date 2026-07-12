@@ -10,7 +10,7 @@
     "lint": "next typegen && tsc --noEmit",
     "typecheck": "next typegen && tsc --noEmit",
     "prebuild": "node scripts/check-env.mjs",
-    "postinstall": "sh -c 'DATABASE_URL=${DATABASE_URL:-postgresql://dummy:dummy@localhost:5432/dummy} prisma generate'",
+    "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "test": "vitest run",

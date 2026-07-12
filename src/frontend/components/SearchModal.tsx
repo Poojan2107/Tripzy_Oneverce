@@ -294,7 +294,7 @@ export default function SearchModal({ isOpen, onClose, tours, onSelectTour }: Se
                             </div>
                             <p className={`text-xs font-semibold text-night truncate transition-colors ${isFocused ? 'text-teal' : 'group-hover:text-teal'}`}>{tour.title}</p>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <div className="flex items-center gap-1"><Star className="w-2.5 h-2.5 text-gold fill-gold" /><span className="text-micro font-bold text-muted/60">{parseFloat(tour.rating.toFixed(1))}</span></div>
+                              <div className="flex items-center gap-1"><Star className="w-2.5 h-2.5 text-gold fill-gold" /><span className="text-micro font-bold text-muted/60">{(tour.rating ?? 0).toFixed(1)}</span></div>
                               {tour.moods?.length > 0 && <span className="text-micro font-mono text-muted/40 uppercase">{tour.moods.slice(0, 1).join('')}</span>}
                               <span className="text-muted/20">·</span>
                               <span className="text-micro font-mono text-muted/50">{tour.duration}</span>

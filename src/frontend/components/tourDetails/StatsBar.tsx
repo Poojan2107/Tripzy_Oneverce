@@ -8,7 +8,7 @@ const statItems = [
   { key: 'group', icon: User, color: 'text-teal', label: 'Group', get: (t: Tour) => t.groupSize },
   { key: 'difficulty', icon: Zap, color: 'text-sage', label: 'Difficulty', get: (t: Tour) => t.difficulty },
   { key: 'bestTime', icon: Calendar, color: 'text-coral', label: 'Best Time', get: (t: Tour) => t.bestSeason || 'Oct – Mar' },
-  { key: 'rating', icon: Star, color: 'fill-gold text-gold', label: 'Rating', get: (t: Tour) => `${parseFloat(t.rating.toFixed(1))} (${t.reviewsCount} reviews)` },
+  { key: 'rating', icon: Star, color: 'fill-gold text-gold', label: 'Rating', get: (t: Tour) => `${(t.rating ?? 0).toFixed(1)} (${t.reviewsCount} reviews)` },
   { key: 'budget', icon: null, color: 'text-night', label: 'Budget Range', get: (t: Tour) => t.budgetRange || '', conditional: (t: Tour) => !!t.budgetRange },
 ];
 

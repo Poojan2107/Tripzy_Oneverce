@@ -117,7 +117,7 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                       <div className="flex items-center gap-2 text-meta text-muted/60">
                         <span className="flex items-center gap-1">
                           <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-                          <span className="font-semibold text-night">{parseFloat(tour.rating.toFixed(1))}</span>
+                          <span className="font-semibold text-night">{(tour.rating ?? 0).toFixed(1)}</span>
                         </span>
                         <span className="text-border/40">·</span>
                         <span>{tour.reviewsCount} reviews</span>

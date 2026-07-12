@@ -21,7 +21,7 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-gold fill-gold" />
-            <span className="font-bold text-body text-night">{parseFloat(tour.rating.toFixed(1))}</span>
+            <span className="font-bold text-body text-night">{(tour.rating ?? 0).toFixed(1)}</span>
             <span className="text-meta text-muted">({tour.reviewsCount} reviews)</span>
           </div>
           <span className="px-2.5 py-0.5 rounded-sm text-meta font-bold uppercase bg-background border border-border text-night">{tour.difficulty}</span>

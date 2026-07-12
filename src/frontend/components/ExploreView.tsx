@@ -127,7 +127,7 @@ export default function ExploreView({
     if (typeof window !== 'undefined' && window.innerWidth >= 768 && filteredTours.length > 0 && !activeTourId) {
       setActiveTourId(filteredTours[0]?.id || filteredTours[0]?.slug || null);
     }
-  }, []);
+  }, [filteredTours, activeTourId]);
 
   const clearFilters = () => {
     setSearchQuery('');
@@ -141,7 +141,7 @@ export default function ExploreView({
   };
 
   return (
-    <div className="h-[calc(100dvh-var(--nav-bottom-height)-52px)] md:h-[calc(100dvh-76px)] lg:h-[calc(100dvh-84px)] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
+    <div className="h-[calc(100dvh-var(--nav-bottom-height)-52px)] md:h-[calc(100dvh-76px)] lg:h-[calc(100dvh-84px)] md:mt-[76px] lg:mt-[84px] min-h-0 bg-background flex flex-col md:flex-row select-none relative overflow-hidden text-night">
       {/* Left sidebar */}
       <div className="w-full md:w-[50%] flex flex-col border-r border-border bg-surface h-full overflow-hidden shrink-0 min-w-0">
         <div className="p-6 border-b border-border space-y-5 bg-surface">
@@ -395,7 +395,7 @@ export default function ExploreView({
                   </motion.button>
                   <div className="flex items-center gap-1">
                     <Star className="w-3.5 h-3.5 fill-gold text-gold" />
-                    <span className="text-meta font-bold text-night">{parseFloat(activeTour.rating.toFixed(1))}</span>
+                    <span className="text-meta font-bold text-night">{(activeTour.rating ?? 0).toFixed(1)}</span>
                   </div>
                 </div>
               </div>

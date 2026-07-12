@@ -87,6 +87,44 @@ export default function PlannerResult({
     }
   };
 
+  const handleDownloadMarkdown = () => {
+    try {
+      const textParts: string[] = [];
+      textParts.push(`# Journey Odyssey: ${getDestinationPrettyName(destId).toUpperCase()}`);
+      textParts.push(`**Duration:** ${customDuration} Days | **Mode:** ${travelers === 'solo' ? 'Solo' : travelers === 'couple' ? 'Couple' : travelers === 'family' ? 'Family' : 'Group'}`);
+      textParts.push('');
+      textParts.push(`*Curated by Travebie AI Travel Companion*`);
+      textParts.push('---');
+      textParts.push('');
+      itin.forEach((day: any, idx: number) => {
+        textParts.push(`## Day ${idx + 1}: ${day.title}`);
+        textParts.push(`> ${day.description}`);
+        textParts.push('');
+        if (day.activities && day.activities.length > 0) {
+          textParts.push('### Highlights & Activities:');
+          day.activities.forEach((act: string) => {
+            textParts.push(`- ${act}`);
+          });
+        }
+        textParts.push('');
+        textParts.push('---');
+        textParts.push('');
+      });
+
+      const element = document.createElement("a");
+      const file = new Blob([textParts.join('\n')], { type: 'text/markdown' });
+      element.href = URL.createObjectURL(file);
+      element.download = `travebie-${destId || 'itinerary'}.md`;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+      toast("Itinerary downloaded as Markdown!", "info");
+    } catch (e) {
+      console.error(e);
+      toast("Failed to download itinerary file.", "error");
+    }
+  };
+
   if (itineraryResult.error) {
     return (
       <div className="pt-28 pb-32 px-6 w-full max-w-lg mx-auto min-h-[100dvh] bg-background flex items-center justify-center">
@@ -264,7 +302,7 @@ export default function PlannerResult({
                   >
                     <span>Export Journal</span>
                   </motion.button>
-                  <div className="absolute right-0 mt-1 w-32 bg-white border border-border rounded-md shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50 py-1 font-mono text-meta uppercase">
+                  <div className="absolute right-0 mt-1 w-36 bg-white border border-border rounded-md shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200 z-50 py-1 font-mono text-meta uppercase">
                     <button
                       onClick={() => window.print()}
                       className="btn-ghost w-full text-left px-3 py-2 cursor-pointer block font-bold"
@@ -276,6 +314,12 @@ export default function PlannerResult({
                       className="btn-ghost w-full text-left px-3 py-2 cursor-pointer block font-bold"
                     >
                       Copy Text
+                    </button>
+                    <button
+                      onClick={handleDownloadMarkdown}
+                      className="btn-ghost w-full text-left px-3 py-2 cursor-pointer block font-bold"
+                    >
+                      Download MD
                     </button>
                   </div>
                 </div>

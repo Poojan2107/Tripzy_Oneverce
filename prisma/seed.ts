@@ -3,6 +3,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+  if (!process.env.ALLOW_DB_WIPE) {
+    console.error("ERROR: This seed script DELETES ALL EXISTING DATA before seeding.");
+    console.error("Set ALLOW_DB_WIPE=true to confirm you want to proceed.");
+    process.exit(1);
+  }
   console.log("Cleaning database...");
   await prisma.bookmark.deleteMany({});
   await prisma.review.deleteMany({});

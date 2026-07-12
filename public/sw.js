@@ -40,6 +40,9 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // Only cache GET requests (Cache API does not support POST/PUT/DELETE)
+  if (request.method !== "GET") return;
+
   // API requests - network first, cache fallback
   if (url.pathname.startsWith("/api/")) {
     event.respondWith(

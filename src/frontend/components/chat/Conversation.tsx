@@ -52,7 +52,8 @@ const Conversation = memo(function Conversation({ messages, isStreaming, onSubmi
     if (isNearBottomRef.current) {
       const lastMsg = messages[messages.length - 1];
       const isItinerary = lastMsg && lastMsg.role === 'assistant' && (
-        lastMsg.content.trim().replace(/^```json\s*/i, '').trim().startsWith('{')
+        lastMsg.content.trim().replace(/^```json\s*/i, '').trim().startsWith('{') ||
+        (lastMsg.content.includes('[⚡ Offline Mode]') && lastMsg.content.includes('{'))
       );
 
       if (isItinerary) {

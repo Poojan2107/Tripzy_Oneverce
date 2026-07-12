@@ -362,6 +362,14 @@ export default function ChatView(props: ChatViewProps) {
               return JSON.parse(clean);
             } catch {}
           }
+          const startIdx = trimmed.indexOf('{');
+          const endIdx = trimmed.lastIndexOf('}');
+          if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+            const jsonCandidate = trimmed.substring(startIdx, endIdx + 1);
+            try {
+              return JSON.parse(jsonCandidate);
+            } catch {}
+          }
         }
       }
       return null;
@@ -392,6 +400,9 @@ export default function ChatView(props: ChatViewProps) {
         body: JSON.stringify({ sessionId: convId, messages: apiMessages, preferences: savedPrefs, currentTrip }),
       });
 
+      if (!response.ok) {
+        throw new Error(`API error ${response.status}: ${response.statusText}`);
+      }
       const reader = response.body?.getReader();
       if (!reader) throw new Error('No reader');
 

@@ -5,6 +5,7 @@ import { Compass, Search, LogIn, LogOut, ArrowUp, BookOpen, Menu, Sparkles } fro
 import { useSession, signIn, signOut } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 import { trackPageView, trackWishlistSave, trackDestinationClick } from './utils/analytics';
+import { useToast } from './components/ui/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import { TabType, Tour, Conversation } from './types';
@@ -12,7 +13,6 @@ import { TOURS_DATA, INDIA_CHAPTER_SLUGS } from './data';
 import { getAllDestinations } from '../backend/actions/tourActions';
 
 import GlassNavbar from './components/GlassNavbar';
-import BottomNavbar from './components/BottomNavbar';
 import ExploreView from './components/ExploreView';
 import TourDetailsView from './components/TourDetailsView';
 import SearchModal from './components/SearchModal';
@@ -43,6 +43,7 @@ import { useAtmosphere } from './utils/AtmosphereContext';
 export default function App() {
   const { setActiveLocation } = useAtmosphere();
   const { data: session } = useSession();
+  const { toast } = useToast();
 
   const sortToursIndiaFirst = (list: Tour[]) => {
     const india = INDIA_CHAPTER_SLUGS.map(id => list.find(t => t.id === id)).filter(Boolean) as Tour[];
@@ -150,10 +151,12 @@ export default function App() {
           setTours(mapped);
         } else {
           setTours(TOURS_DATA);
+          toast("Could not load destinations from database. Showing demo data.", "info");
         }
       } catch (err) {
         console.error("Failed to query database destinations:", err);
         setTours(TOURS_DATA);
+        toast("Database connection failed. Showing demo data.", "error");
       } finally {
         setLoadingDestinations(false);
       }

@@ -7,6 +7,83 @@ import { buildNewTripSystemPrompt, buildFollowUpSystemPrompt } from "../lib/prom
 import { fetchUrlContent } from "../lib/contentFetcher";
 import { getSession, saveSession, TripSession } from "../lib/sessionStore";
 import { pruneItineraryForContext, mergeItineraryPatch } from "../lib/smartContext";
+import { z } from "zod";
+
+const dayItemSchema = z.object({
+  day: z.number(),
+  title: z.string().optional(),
+  morning: z.array(z.string()).optional(),
+  afternoon: z.array(z.string()).optional(),
+  evening: z.array(z.string()).optional(),
+  places: z.array(z.any()).optional(),
+  restaurants: z.array(z.any()).optional(),
+  hotels: z.array(z.any()).optional(),
+  weather: z.string().optional(),
+  aiTips: z.array(z.string()).optional(),
+}).passthrough();
+
+const tripDataSchema = z.object({
+  hero: z.object({
+    destination: z.string().optional(),
+    coverImageQuery: z.string().optional(),
+    tripDuration: z.string().optional(),
+    travelMode: z.string().optional(),
+    bestTimeToVisit: z.string().optional(),
+    estimatedBudget: z.string().optional(),
+    tripSummary: z.string().optional(),
+  }).passthrough().optional(),
+  overview: z.object({
+    startLocation: z.string().optional(),
+    destination: z.string().optional(),
+    totalDistance: z.string().optional(),
+    totalTravelTime: z.string().optional(),
+    currency: z.string().optional(),
+    languages: z.array(z.string()).optional(),
+    weatherSummary: z.string().optional(),
+    bestSeason: z.string().optional(),
+    tripType: z.string().optional(),
+    difficulty: z.string().optional(),
+    estimatedDailyCost: z.string().optional(),
+    totalCost: z.string().optional(),
+    travelStyle: z.string().optional(),
+  }).passthrough().optional(),
+  route: z.object({
+    mapSummary: z.string().optional(),
+    majorStops: z.array(z.string()).optional(),
+  }).passthrough().optional(),
+  days: z.array(dayItemSchema).optional(),
+  expenseCalculator: z.object({
+    fuel: z.string().optional(),
+    hotel: z.string().optional(),
+    food: z.string().optional(),
+    activities: z.string().optional(),
+    shopping: z.string().optional(),
+    miscellaneous: z.string().optional(),
+    estimatedTotal: z.string().optional(),
+  }).passthrough().optional(),
+  packingChecklist: z.array(z.string()).optional(),
+  localFoods: z.array(z.string()).optional(),
+  shoppingPlaces: z.array(z.string()).optional(),
+  emergencyContacts: z.object({
+    police: z.string().optional(),
+    ambulance: z.string().optional(),
+    touristHelpline: z.string().optional(),
+  }).passthrough().optional(),
+  faqs: z.array(z.object({
+    question: z.string().optional(),
+    answer: z.string().optional(),
+  }).passthrough()).optional(),
+}).passthrough();
+
+const chatRequestSchema = z.object({
+  messages: z.array(z.object({
+    role: z.string(),
+    content: z.string().max(50000),
+  })).min(1),
+  preferences: z.any().optional(),
+  sessionId: z.string().max(200).nullable().optional(),
+  currentTrip: tripDataSchema.nullable().optional(),
+});
 
 async function callGeminiStreamWithTimeout(
   genAI: GoogleGenAI,
@@ -186,6 +263,159 @@ function shouldForceJson(context: any): boolean {
   return true;
 }
 
+// Patch response schema — all fields optional, allows partial JSON patches for follow-ups
+const patchResponseSchema = {
+  type: "object",
+  properties: {
+    hero: {
+      type: "object",
+      properties: {
+        destination: { type: "string" },
+        coverImageQuery: { type: "string" },
+        tripDuration: { type: "string" },
+        travelMode: { type: "string" },
+        bestTimeToVisit: { type: "string" },
+        estimatedBudget: { type: "string" },
+        tripSummary: { type: "string" }
+      }
+    },
+    overview: {
+      type: "object",
+      properties: {
+        startLocation: { type: "string" },
+        destination: { type: "string" },
+        totalDistance: { type: "string" },
+        totalTravelTime: { type: "string" },
+        currency: { type: "string" },
+        languages: { type: "array", items: { type: "string" } },
+        weatherSummary: { type: "string" },
+        bestSeason: { type: "string" },
+        tripType: { type: "string" },
+        difficulty: { type: "string" },
+        estimatedDailyCost: { type: "string" },
+        totalCost: { type: "string" },
+        travelStyle: { type: "string" }
+      }
+    },
+    route: {
+      type: "object",
+      properties: {
+        mapSummary: { type: "string" },
+        majorStops: { type: "array", items: { type: "string" } }
+      }
+    },
+    days: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          day: { type: "integer" },
+          title: { type: "string" },
+          morning: { type: "array", items: { type: "string" } },
+          afternoon: { type: "array", items: { type: "string" } },
+          evening: { type: "array", items: { type: "string" } },
+          places: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                description: { type: "string" },
+                visitDuration: { type: "string" },
+                entryFee: { type: "string" },
+                openingHours: { type: "string" },
+                rating: { type: "string" },
+                coordinates: {
+                  type: "object",
+                  properties: {
+                    lat: { type: "string" },
+                    lng: { type: "string" }
+                  }
+                },
+                imageQueries: { type: "array", items: { type: "string" } },
+                googleMapsSearch: { type: "string" }
+              }
+            }
+          },
+          restaurants: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                reason: { type: "string" }
+              }
+            }
+          },
+          hotels: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                budgetType: { type: "string" },
+                reason: { type: "string" }
+              }
+            }
+          },
+          fuelStops: { type: "array", items: { type: "string" } },
+          weather: { type: "string" },
+          aiTips: { type: "array", items: { type: "string" } }
+        }
+      }
+    },
+    expenseCalculator: {
+      type: "object",
+      properties: {
+        fuel: { type: "string" },
+        hotel: { type: "string" },
+        food: { type: "string" },
+        activities: { type: "string" },
+        shopping: { type: "string" },
+        miscellaneous: { type: "string" },
+        estimatedTotal: { type: "string" }
+      }
+    },
+    packingChecklist: { type: "array", items: { type: "string" } },
+    localFoods: { type: "array", items: { type: "string" } },
+    shoppingPlaces: { type: "array", items: { type: "string" } },
+    emergencyContacts: {
+      type: "object",
+      properties: {
+        police: { type: "string" },
+        ambulance: { type: "string" },
+        touristHelpline: { type: "string" }
+      }
+    },
+    faqs: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          question: { type: "string" },
+          answer: { type: "string" }
+        }
+      }
+    }
+  }
+};
+
+function buildConversationSummaryFallback(session: TripSession): string {
+  const dest = session.sessionState?.destination || session.currentTrip?.hero?.destination || "destination";
+  const days = session.sessionState?.days || "";
+  const budget = session.sessionState?.budget || "";
+  const completed = session.sessionState?.completed || [];
+  const pending = session.sessionState?.pending || [];
+  
+  let summary = `User is planning a trip to ${dest}.`;
+  if (days) summary += ` Duration: ${days} days.`;
+  if (budget) summary += ` Budget: ${budget}.`;
+  if (completed.length > 0) summary += ` Completed: ${completed.join(", ")}.`;
+  if (pending.length > 0) summary += ` Pending: ${pending.join(", ")}.`;
+  
+  return summary;
+}
+
 // Inline helper to update structured session state and conversation summary using Gemini
 async function updateSessionSummaryAndState(
   session: TripSession,
@@ -334,20 +564,21 @@ async function handleSessionPostProcessing(
       session.sessionState = state;
     }
 
-    // 4. Conversation Compression: every 4 turns (8 messages)
+    // 4. Conversation Compression: every 5 turns (10 messages)
     const turnCount = session.recentMessages.length;
-    if (turnCount >= 8) {
+    if (turnCount >= 10) {
       console.log("[post-processing] Triggering conversation compression (turn count:", turnCount / 2, ")...");
       const summaryResult = await updateSessionSummaryAndState(session, lastUserMsg, fullGeneratedText, apiKey);
       if (summaryResult) {
         session.conversationSummary = summaryResult.conversationSummary;
         session.sessionState = summaryResult.sessionState;
+      } else {
+        session.conversationSummary = buildConversationSummaryFallback(session);
       }
-      session.recentMessages = session.recentMessages.slice(-2); // keep only latest exchange
+      session.recentMessages = session.recentMessages.slice(-4); // keep last 2 exchanges
     } else {
-      // Set a generic local placeholder if empty
       if (!session.conversationSummary) {
-        session.conversationSummary = `User is planning a trip to ${session.sessionState?.destination || "destination"}. Current focus is itinerary modifications.`;
+        session.conversationSummary = buildConversationSummaryFallback(session);
       }
     }
 
@@ -381,15 +612,24 @@ function cleanHistoryForGemini(messages: any[]): any[] {
 
 export async function POST(req: Request) {
   try {
+    console.log("[trace] 1 - start");
     if (!(await checkRateLimit(req))) {
       return new Response("Too many requests. Please try again shortly.", {
         status: 429,
       });
     }
+    console.log("[trace] 2 - rate limit passed");
 
-    const body = await req.json();
-    const { messages, preferences: savedPrefs, sessionId: bodySessionId } = body;
-    let clientCurrentTrip = body.currentTrip || null;
+    const parsed = chatRequestSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: "Invalid request body", details: parsed.error.issues }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    console.log("[trace] 3 - zod passed");
+    const { messages, preferences: savedPrefs, sessionId: bodySessionId } = parsed.data;
+    let clientCurrentTrip = parsed.data.currentTrip || null;
 
     const apiKey = getGeminiApiKey();
     if (!apiKey) {
@@ -398,13 +638,16 @@ export async function POST(req: Request) {
         { status: 200, headers: { "Content-Type": "text/plain; charset=utf-8" } }
       );
     }
+    console.log("[trace] 4 - api key ok");
 
     const apiMessages = messages.filter((m: any) => m.role !== 'system');
     const lastUserMsg = apiMessages.length > 0 ? apiMessages[apiMessages.length - 1].content : "";
 
     // 1. Session Retrieval
-    const sessionId = bodySessionId || `session_${Date.now()}`;
+    console.log("[trace] 5 - before session");
+    const sessionId = bodySessionId || `session_${crypto.randomUUID()}`;
     const session = await getSession(sessionId);
+    console.log("[trace] 6 - after session");
 
     // Sync client's current trip if it was passed
     if (clientCurrentTrip) {
@@ -414,7 +657,9 @@ export async function POST(req: Request) {
     const currentTrip = session.currentTrip;
 
     // 2. Intent Detection
+    console.log("[trace] 7 - before detectIntent");
     const context = detectIntent(apiMessages, !!currentTrip);
+    console.log("[trace] 8 - intent:", context.intent, context.destination);
 
     // Merge saved preferences into context
     if (savedPrefs) {
@@ -433,22 +678,36 @@ export async function POST(req: Request) {
     const prunedTrip = currentTrip ? pruneItineraryForContext(currentTrip, context.intent, lastUserMsg) : null;
 
     // 4. Prompt Selection
+    console.log("[trace] 9 - before prompt");
     let systemPrompt = "";
     if (context.isFollowUp && currentTrip) {
-      systemPrompt = buildFollowUpSystemPrompt(context, prunedTrip, session.sessionState, session.conversationSummary || "");
+      systemPrompt = buildFollowUpSystemPrompt(context, session.sessionState, session.conversationSummary || "");
     } else {
       systemPrompt = buildNewTripSystemPrompt(context);
     }
+    console.log("[trace] 10 - prompt built, len:", systemPrompt.length);
 
-    // 5. Build Content Payload: keep only recent messages (up to 4 exchanges = 8 messages)
-    const recentApiMessages = apiMessages.slice(0, -1).slice(-6); // last 3 exchanges
+    // 5. Build Content Payload
+    // - Keep last 3 exchanges as conversation history
+    // - Inject pruned trip as a system-context message (not in system instruction)
+    const recentApiMessages = apiMessages.slice(0, -1).slice(-6);
     const contents = [
       ...cleanHistoryForGemini(recentApiMessages),
-      {
-        role: 'user',
-        parts: [{ text: lastUserMsg }]
-      }
     ];
+
+    // Inject the pruned trip as a separate context message (keeps system prompt lean)
+    if (prunedTrip) {
+      contents.push({
+        role: 'user',
+        parts: [{ text: `[Current Itinerary State]:\n${JSON.stringify(prunedTrip, null, 2)}\n\nUse this as reference. Do not regenerate the full trip unless asked.` }]
+      });
+    }
+
+    // Add the actual user message
+    contents.push({
+      role: 'user',
+      parts: [{ text: lastUserMsg }]
+    });
 
     const forceJson = shouldForceJson(context);
 
@@ -460,15 +719,19 @@ export async function POST(req: Request) {
 
     if (forceJson) {
       config.responseMimeType = "application/json";
-      // Only enforce strict schema for complete new trips, to allow arbitrary JSON patches
-      if (!context.isFollowUp || !currentTrip) {
+      // Always enforce schema: use patch schema for follow-ups, full schema for new trips
+      if (context.isFollowUp && currentTrip) {
+        config.responseSchema = patchResponseSchema;
+      } else {
         config.responseSchema = chatResponseSchema;
       }
     }
+    console.log("[trace] 11 - before gemini call");
 
     const genAI = new GoogleGenAI({ apiKey });
     let stream;
     try {
+      console.log("[trace] 12a - calling gemini");
       stream = await callGeminiStreamWithTimeout(
         genAI,
         "gemini-2.0-flash",
@@ -478,6 +741,7 @@ export async function POST(req: Request) {
     } catch (e) {
       console.error("Gemini stream failed, using simulation fallback:", e);
       const simulated = getSimulatedResponse(messages);
+      const offlinePrefix = "[⚡ Offline Mode] Your AI companion is currently offline. Here's a sample itinerary:\n\n";
       
       // Run background post-processing on the simulated response to write session state
       await handleSessionPostProcessing(sessionId, simulated, lastUserMsg, apiKey);
@@ -485,7 +749,7 @@ export async function POST(req: Request) {
       const encoder = new TextEncoder();
       const simulatedStream = new ReadableStream({
         start(controller) {
-          controller.enqueue(encoder.encode(simulated));
+          controller.enqueue(encoder.encode(offlinePrefix + simulated));
           controller.close();
         },
       });

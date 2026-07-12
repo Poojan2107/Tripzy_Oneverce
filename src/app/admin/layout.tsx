@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { auth } from '@/src/backend/lib/auth';
 
 export const metadata: Metadata = {
   title: 'Admin Panel',
@@ -6,6 +8,10 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  if (!session || session.user?.role !== "ADMIN") {
+    redirect("/");
+  }
   return children;
 }

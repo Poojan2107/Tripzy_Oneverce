@@ -218,6 +218,19 @@ function generateDynamicSimulatedJson(
     });
   }
 
+  const cleanReq = requestText.trim();
+  const isCustomRequest = cleanReq.length > 0 && !/^(hi|hello|hey|thanks|thank you|ok|okay)\b/i.test(cleanReq);
+  
+  if (isCustomRequest && days.length > 0) {
+    days[0].description += ` [Special request focus: "${cleanReq}"]`;
+    days[0].morning.push(`Explore custom preference for: "${cleanReq.slice(0, 60)}${cleanReq.length > 60 ? '...' : ''}"`);
+  }
+
+  let tripSummary = `A beautifully customized ${duration}-day journey through ${place} designed for a ${tier} traveler style. Explore stunning spots, savor delicious regional cuisines, and enjoy local secrets.`;
+  if (isCustomRequest) {
+    tripSummary += ` Custom focus: "${cleanReq.slice(0, 100)}${cleanReq.length > 100 ? '...' : ''}" incorporated.`;
+  }
+
   const jsonPlan = {
     hero: {
       destination: `${place}, India`,
@@ -226,7 +239,7 @@ function generateDynamicSimulatedJson(
       travelMode: isIntl ? "Flight + Chauffeur Cab" : "Train + Local Scooter / Cab",
       bestTimeToVisit: "October–March",
       estimatedBudget,
-      tripSummary: `A beautifully customized ${duration}-day journey through ${place} designed for a ${tier} traveler style. Explore stunning spots, savor delicious regional cuisines, and enjoy local secrets.`
+      tripSummary
     },
     overview: {
       startLocation: isIntl ? "New Delhi (DEL)" : "Nearest major city",

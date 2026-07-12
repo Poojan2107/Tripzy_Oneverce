@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Compass, MapPin, Calendar, User, WandSparkles, ArrowRight, Plane, Car, Bus, 
   Landmark, Utensils, Hotel, Check, Info, ShieldAlert, Sparkles, HelpCircle, 
-  Thermometer, Briefcase, ShoppingBag, Phone, DollarSign, ChevronDown, Clock, Star,
+  Thermometer, Briefcase, ShoppingBag, Phone, IndianRupee, ChevronDown, Clock, Star,
   Heart, Download
 } from 'lucide-react';
 import { getDestinationImage } from '../../lib/getDestinationImage';
@@ -182,7 +182,7 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
               <Thermometer className="w-3.5 h-3.5 text-teal" /> {data.hero.bestTimeToVisit}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-micro font-bold uppercase tracking-wider text-[#4ade80] border border-white/5 font-mono">
-              <DollarSign className="w-3.5 h-3.5 text-[#4ade80]" /> {data.hero.estimatedBudget}
+              <IndianRupee className="w-3.5 h-3.5 text-[#4ade80]" /> {data.hero.estimatedBudget}
             </span>
           </div>
 
@@ -241,13 +241,13 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
-              <DollarSign className="w-3.5 h-3.5 text-teal" /> Currency
+              <IndianRupee className="w-3.5 h-3.5 text-teal" /> Currency
             </span>
             <p className="text-body text-night font-medium">{data.overview.currency}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
-              <DollarSign className="w-3.5 h-3.5 text-emerald-600 animate-pulse" /> Est. Cost
+              <IndianRupee className="w-3.5 h-3.5 text-emerald-600 animate-pulse" /> Est. Cost
             </span>
             <p className="text-body text-night font-medium font-mono text-emerald-600">{data.overview.totalCost || data.hero.estimatedBudget}</p>
           </div>
@@ -275,7 +275,7 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
-              <DollarSign className="w-3.5 h-3.5 text-emerald-500" /> Est. Daily Cost
+              <IndianRupee className="w-3.5 h-3.5 text-emerald-500" /> Est. Daily Cost
             </span>
             <p className="text-body text-night font-medium font-mono truncate">{data.overview.estimatedDailyCost || "N/A"}</p>
           </div>
@@ -428,7 +428,7 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
                                         <Clock className="w-3.5 h-3.5 text-muted/45" /> {place.visitDuration}
                                       </div>
                                       <div className="flex items-center gap-1.5 truncate">
-                                        <DollarSign className="w-3.5 h-3.5 text-muted/45" /> {place.entryFee || 'Free'}
+                                        <IndianRupee className="w-3.5 h-3.5 text-muted/45" /> {place.entryFee || 'Free'}
                                       </div>
                                     </div>
 
@@ -568,7 +568,7 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
       {data.expenseCalculator && (
         <div className="bg-surface border border-border/40 rounded-[20px] p-5 sm:p-6 shadow-soft space-y-5 text-left">
           <div className="flex items-center gap-2 pb-3 border-b border-border/20">
-            <DollarSign className="w-4.5 h-4.5 text-emerald-500" />
+            <IndianRupee className="w-4.5 h-4.5 text-emerald-500" />
             <h3 className="font-display text-lg text-night font-bold">Estimated Cost & Budget</h3>
           </div>
 

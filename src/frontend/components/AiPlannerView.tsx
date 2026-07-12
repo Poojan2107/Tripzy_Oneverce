@@ -376,6 +376,20 @@ const sanitizeUserInput = (input: string) => {
     const foodCost = Math.round(dailyBudget * customDuration * 0.20);
     const totalCost = transitCost + stayCost + foodCost;
 
+    const cleanNotes = notes ? notes.trim() : "";
+    if (cleanNotes && itinerary.length > 0) {
+      itinerary[0].description += ` [Special request focus: "${cleanNotes}"]`;
+      if (!itinerary[0].activities) {
+        itinerary[0].activities = [];
+      }
+      itinerary[0].activities.push(`Custom activity: Focus on your request to "${cleanNotes.slice(0, 60)}${cleanNotes.length > 60 ? '...' : ''}"`);
+    }
+
+    let recommendationReasoning = "Curated from our offline explorer archive.";
+    if (cleanNotes) {
+      recommendationReasoning += ` Incorporating custom preference: "${cleanNotes}".`;
+    }
+
     return {
       itinerary,
       costs: {
@@ -397,7 +411,7 @@ const sanitizeUserInput = (input: string) => {
       ],
       destinationId: selectedTour?.id || destination || undefined,
       recommendationScore: 92,
-      recommendationReasoning: "Curated from our offline explorer archive.",
+      recommendationReasoning,
       isOfflineFallback: true
     };
   };

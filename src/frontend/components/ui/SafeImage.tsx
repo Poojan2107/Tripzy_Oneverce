@@ -11,11 +11,12 @@ interface SafeImageProps {
   height?: number;
   priority?: boolean;
   sizes?: string;
+  unoptimized?: boolean;
 }
 
 const FALLBACK_BG = 'bg-secondary-surface';
 
-export default function SafeImage({ src, alt = '', className = '', fallbackColor, width, height, priority, sizes }: SafeImageProps) {
+export default function SafeImage({ src, alt = '', className = '', fallbackColor, width, height, priority, sizes, unoptimized }: SafeImageProps) {
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -46,6 +47,7 @@ export default function SafeImage({ src, alt = '', className = '', fallbackColor
         onError={() => setFailed(true)}
         loading={priority ? undefined : "lazy"}
         priority={priority}
+        unoptimized={unoptimized}
       />
     );
   }
@@ -61,6 +63,7 @@ export default function SafeImage({ src, alt = '', className = '', fallbackColor
       onError={() => setFailed(true)}
       loading={priority ? undefined : "lazy"}
       priority={priority}
+      unoptimized={unoptimized}
     />
   );
 }

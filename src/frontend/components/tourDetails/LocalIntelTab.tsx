@@ -1,6 +1,7 @@
 import { Sparkles, Leaf, CheckCircle2, AlertCircle, Compass, Star } from 'lucide-react';
 import { Tour } from '../../types';
 import { CulturalContext } from './data';
+import SafeImage from '../ui/SafeImage';
 
 interface LocalIntelTabProps {
   tour: Tour;
@@ -82,7 +83,7 @@ export default function LocalIntelTab({ tour, cultural, dayTrips, accentColor }:
             {tour.reviews.map((r) => (
               <div key={r.id} className="p-5 rounded-md bg-white border border-border/70 shadow-sm">
                 <div className="flex items-center gap-3 mb-3">
-                  <img src={r.avatar} alt={r.author} className="w-8 h-8 rounded-full object-cover border border-border" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                  <SafeImage src={r.avatar} alt={r.author} className="w-8 h-8 rounded-full object-cover border border-border" unoptimized width={32} height={32} />
                   <div>
                     <p className="text-body font-bold text-night">{r.author}</p>
                     <div className="flex items-center gap-0.5">

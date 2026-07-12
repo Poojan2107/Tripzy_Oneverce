@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Star, Calendar, Sparkles } from 'lucide-react';
 import { Tour } from '../../types';
 import { formatINR } from '../../utils/currency';
+import SafeImage from '../ui/SafeImage';
 import { CulturalContext } from './data';
 
 interface SidebarProps {
@@ -69,7 +70,7 @@ export default function Sidebar({ tour, cultural, onPlanClick }: SidebarProps) {
             {tour.reviews.slice(0, 2).map((r) => (
               <div key={r.id} className="space-y-1.5 pb-3 border-b border-border/15 last:border-0 last:pb-0">
                 <div className="flex items-center gap-2">
-                  <img src={r.avatar} alt={r.author} className="w-7 h-7 rounded-full object-cover border border-border" loading="lazy" decoding="async" onError={e => { e.currentTarget.style.opacity = '0' }} />
+                  <SafeImage src={r.avatar} alt={r.author} className="w-7 h-7 rounded-full object-cover border border-border" unoptimized width={28} height={28} />
                   <div>
                     <p className="text-body font-bold text-night">{r.author}</p>
                     <div className="flex items-center gap-0.5">

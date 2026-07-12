@@ -24,7 +24,7 @@ export default function LogisticsTab({ tour, onPlanClick }: LogisticsTabProps) {
           </div>
           <div className="flex items-center gap-1.5">
             <Star className="w-4 h-4 text-gold fill-gold" />
-            <span className="font-bold text-sm text-night">{parseFloat(tour.rating.toFixed(1))}</span>
+            <span className="font-bold text-sm text-night">{(tour.rating ?? 0).toFixed(1)}</span>
             <span className="text-meta text-muted">({tour.reviewsCount} reviews)</span>
           </div>
         </div>

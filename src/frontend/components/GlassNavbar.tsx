@@ -77,7 +77,7 @@ export default function GlassNavbar({
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const isTransparent = !scrolled;
+  const isTransparent = !scrolled && currentTab === 'home';
 
   const getNavContainerClass = () => {
     if (isTransparent) {

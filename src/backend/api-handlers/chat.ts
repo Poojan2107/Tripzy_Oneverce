@@ -782,8 +782,13 @@ export async function POST(req: Request) {
     return new Response(readableStream, {
       headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Chat API Error:", error);
-    return new Response("I'm having trouble connecting right now. Please try again in a moment.", { status: 200 });
+    const msg = error?.message || String(error);
+    const stack = error?.stack || "";
+    return new Response(JSON.stringify({ error: msg, stack: stack?.slice(0, 1000) }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

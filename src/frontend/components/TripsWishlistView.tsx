@@ -243,7 +243,7 @@ export default function TripsWishlistView({
   }, [savedItineraries, displayTours]);
 
   return (
-    <div className="pt-8 md:pt-10 pb-32 px-4 md:px-6 max-w-6xl mx-auto select-none bg-background text-night min-h-[100dvh] text-left animate-page-enter">
+    <div className="pt-24 md:pt-28 pb-32 px-4 md:px-6 max-w-6xl mx-auto select-none bg-background text-night min-h-[100dvh] text-left animate-page-enter">
 
       {!session && (
         <div className="mb-6 p-4 rounded-lg bg-surface border border-border/70 flex items-center justify-between gap-4 shadow-sm">

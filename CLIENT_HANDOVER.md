@@ -1,6 +1,6 @@
-# Travebie — Final Client Handover Package (V17)
+# Travebie — Final Client Handover Package (V18)
 
-Welcome to the official handover package for **Travebie**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform. This version incorporates the final V17 premium visual polish and alignment pass.
+Welcome to the official handover package for **Travebie**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform. This version incorporates the final V18 premium visual polish, modular refactoring, and security alignment pass.
 
 * **Production URL**: [https://travebie-oneverce.vercel.app](https://travebie-oneverce.vercel.app)
 * **Local Development**: `http://localhost:3030`
@@ -11,7 +11,7 @@ Welcome to the official handover package for **Travebie**, a next-generation, st
 
 Travebie is a highly premium, interactive travel web application built to help curious explorers discover India through **12 Handcrafted Chapters**. Departing from standard travel booking catalogs and generic search grids, Travebie focuses on:
 - **Storytelling and Heritage**: Highlighting cultural contexts, regional secrets, and local etiquette.
-- **Passport Identity**: A dedicated **Explorer Passport** showcasing Chapters, Regions, and Journeys — with progress badges, a dynamic timeline, and an interactive footprints map.
+- **Passport Identity**: A dedicated **Explorer Passport** showcasing Chapters, Regions, and Journeys — with progress badges, a dynamic timeline, and collection seals.
 - **AI-Powered Personalization**: A simplified single-page AI Planner crafts immersive, day-by-day itineraries, weather predictions, and travel passes using the Google Gemini API.
 - **Visual Excellence**: Implementing modern glassmorphism, responsive grid systems, and smooth animations using Tailwind CSS v4 and Framer Motion. Fonts: **Nunito Sans** (body) + **Pacifico** (brand display).
 
@@ -21,23 +21,23 @@ Travebie is a highly premium, interactive travel web application built to help c
 
 ### 📖 The Explorer Passport
 - **Dynamic Stats Bar**: Live counts of saved Journeys, Chapters, Regions Explored, and Days Traveled.
-- **Interactive Footprints Map**: Leaflet-powered map with gold pin markers for all saved and wishlisted destinations, with popup cards.
-- **Explorer Badges & Seals**: Progress-tracked gamified stamps (e.g. *First Journey*, *Solo Explorer*, *Heritage Hunter*, *Mountain Nomad*) with progress bars for locked badges.
+- **Explorer Badges & Seals**: Modularized stamp-collection component (`TravelSeals.tsx`) showcasing progress-tracked gamified stamps (e.g. *First Journey*, *Solo Explorer*, *Heritage Hunter*, *Mountain Nomad*) with progress indicators.
 - **Travel Timeline Journal**: Elegant vertical timeline displaying past trips organized by year.
 - **Travel Preferences Card**: Auto-computed companion mode, duration style, and budget bracket from saved logs.
 - **Saved Chapters & Itineraries**: Persistent lists of bookmarked chapters and personalized journey plans.
 - **Google Authentication**: Synchronizes passports across devices using NextAuth.
 
 ### 🗺️ Story Atlas (`/explore`)
-- **Leaflet Map Integration**: A full-screen interactive map plotting the 12 chapters with responsive layouts for mobile, tablet, and desktop devices.
+- **Interactive Story Directory**: A clean explore grid plotting the 12 chapters with responsive layouts for mobile, tablet, and desktop devices.
 - **Category Filtering**: Fast navigation by mood/experience (Nature, Luxury, Food, Spiritual, Heritage, Beaches, Adventure, Photography).
-- **Responsive Layout**: Designed to prevent duplicate footers and layout overflows on full-screen map views.
+- **Responsive Layout**: Added margin offsets to prevent fixed navigation bar overlap on desktop.
 
 ### 🔮 AI Planner — Simplified Single-Page Companion
 - **One-Page Form**: Destination search grid, accompaniment selector, duration picker, and an open-ended custom prompt (maps to Gemini `experience` field).
 - **Gemini API Engine**: Communicates with Google's LLM to generate granular day-by-day itineraries, weather predictions, and photography spots.
 - **Journey Boarding Pass**: A gorgeous ticket-style layout showing estimated costs (Transit, Accommodations, Food) with a dynamic breakdown chart and custom barcodes.
-- **Branded Recovery States**: Protects the user experience with branded error messages and easy retry actions.
+- **Markdown Export**: Added a local Markdown journal downloader (`Download MD`) inside the planner result view to export compiled journals as local text logs instantly.
+- **Branded Recovery States**: Protects the user experience with branded error messages, recovery offline fallbacks incorporating user request notes, and easy retry actions.
 
 ### 🏨 Curated Stays & Affiliate System
 - **Affiliate Links**: Integration with major travel providers (Agoda, Goibibo, MakeMyTrip).
@@ -168,9 +168,9 @@ All partner buttons have telemetry attached via `trackAffiliateClick` inside [Ho
 
 ## 10. Future Enhancements
 
-1. **Offline Map Mode**: Service worker caching of Leaflet map tiles for explorers traveling in low-connectivity areas (e.g. Ladakh passes).
+1. **Offline Map Mode**: Service worker caching of maps or guides for explorers traveling in low-connectivity areas (e.g. Ladakh passes).
 2. **Direct Booking Handshake**: Integrate APIs from MakeMyTrip or Agoda to pull real-time room availability directly in the hotels tab.
-3. **Itinerary Export**: Allow users to export their Boarding Passes and journals to PDF or Apple Wallet passes.
+3. **Apple Wallet Integration**: Allow users to export their Boarding Passes directly to Apple Wallet passes.
 
 ---
 

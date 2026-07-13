@@ -158,31 +158,31 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-[0.2em] text-gold/90">Curated Journey</span>
             <h2 className="font-display text-3xl sm:text-4xl font-light tracking-tight text-white leading-tight text-left">
-              {data.hero.destination}
+              {data.hero?.destination}
             </h2>
-            {data.hero.destination?.includes(',') && (
+            {data.hero?.destination?.includes(',') && (
               <span className="text-micro text-white/50 block font-light text-left">
-                {data.hero.destination.split(',').slice(1).join(',').trim()}
+                {data.hero?.destination?.split(',').slice(1).join(',').trim()}
               </span>
             )}
           </div>
           
           <p className="text-body text-white/90 leading-relaxed font-light italic max-w-2xl text-left border-l-2 border-gold/40 pl-3">
-            "{data.hero.tripSummary}"
+            "{data.hero?.tripSummary}"
           </p>
 
           <div className="flex flex-wrap gap-2.5 pt-1.5">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-micro font-bold uppercase tracking-wider text-white border border-white/5">
-              <Calendar className="w-3.5 h-3.5 text-gold" /> {data.hero.tripDuration}
+              <Calendar className="w-3.5 h-3.5 text-gold" /> {data.hero?.tripDuration}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-micro font-bold uppercase tracking-wider text-white border border-white/5">
-              <Compass className="w-3.5 h-3.5 text-coral" /> {data.hero.travelMode}
+              <Compass className="w-3.5 h-3.5 text-coral" /> {data.hero?.travelMode}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-micro font-bold uppercase tracking-wider text-white border border-white/5">
-              <Thermometer className="w-3.5 h-3.5 text-teal" /> {data.hero.bestTimeToVisit}
+              <Thermometer className="w-3.5 h-3.5 text-teal" /> {data.hero?.bestTimeToVisit}
             </span>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-micro font-bold uppercase tracking-wider text-[#4ade80] border border-white/5 font-mono">
-              <IndianRupee className="w-3.5 h-3.5 text-[#4ade80]" /> {data.hero.estimatedBudget}
+              <IndianRupee className="w-3.5 h-3.5 text-[#4ade80]" /> {data.hero?.estimatedBudget}
             </span>
           </div>
 
@@ -219,37 +219,37 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-teal" /> Route
             </span>
-            <p className="text-body text-night font-medium truncate">{data.overview.startLocation} &rarr; {data.overview.destination}</p>
+            <p className="text-body text-night font-medium truncate">{data.overview?.startLocation || "Unknown"} &rarr; {data.overview?.destination || "Unknown"}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5 text-coral" /> Distance
             </span>
-            <p className="text-body text-night font-medium">{data.overview.totalDistance}</p>
+            <p className="text-body text-night font-medium">{data.overview?.totalDistance || "N/A"}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5 text-gold" /> Travel Time
             </span>
-            <p className="text-body text-night font-medium">{data.overview.totalTravelTime}</p>
+            <p className="text-body text-night font-medium">{data.overview?.totalTravelTime || "N/A"}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <Thermometer className="w-3.5 h-3.5 text-emerald-500" /> Weather
             </span>
-            <p className="text-body text-night font-medium truncate" title={data.overview.weatherSummary}>{data.overview.weatherSummary.split(',')[0] || data.overview.weatherSummary}</p>
+            <p className="text-body text-night font-medium truncate" title={data.overview?.weatherSummary || ""}>{(data.overview?.weatherSummary || "Pleasant").split(',')[0]}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <IndianRupee className="w-3.5 h-3.5 text-teal" /> Currency
             </span>
-            <p className="text-body text-night font-medium">{data.overview.currency}</p>
+            <p className="text-body text-night font-medium">{data.overview?.currency || "INR (₹)"}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <IndianRupee className="w-3.5 h-3.5 text-emerald-600 animate-pulse" /> Est. Cost
             </span>
-            <p className="text-body text-night font-medium font-mono text-emerald-600">{data.overview.totalCost || data.hero.estimatedBudget}</p>
+            <p className="text-body text-night font-medium font-mono text-emerald-600">{data.overview?.totalCost || data.hero?.estimatedBudget || "N/A"}</p>
           </div>
         </div>
 
@@ -259,42 +259,42 @@ export default function JsonItineraryDashboard({ data }: { data: ItineraryData }
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-gold" /> Best Season
             </span>
-            <p className="text-body text-night font-medium truncate" title={data.overview.bestSeason || data.hero.bestTimeToVisit}>{data.overview.bestSeason || data.hero.bestTimeToVisit}</p>
+            <p className="text-body text-night font-medium truncate" title={data.overview?.bestSeason || data.hero?.bestTimeToVisit || ""}>{data.overview?.bestSeason || data.hero?.bestTimeToVisit || "N/A"}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-coral" /> Trip Type
             </span>
-            <p className="text-body text-night font-medium truncate">{data.overview.tripType || "Leisure"}</p>
+            <p className="text-body text-night font-medium truncate">{data.overview?.tripType || "Leisure"}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <Info className="w-3.5 h-3.5 text-teal" /> Difficulty
             </span>
-            <p className="text-body text-night font-medium truncate">{data.overview.difficulty || "Easy"}</p>
+            <p className="text-body text-night font-medium truncate">{data.overview?.difficulty || "Easy"}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <IndianRupee className="w-3.5 h-3.5 text-emerald-500" /> Est. Daily Cost
             </span>
-            <p className="text-body text-night font-medium font-mono truncate">{data.overview.estimatedDailyCost || "N/A"}</p>
+            <p className="text-body text-night font-medium font-mono truncate">{data.overview?.estimatedDailyCost || "N/A"}</p>
           </div>
           <div className="space-y-1">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 flex items-center gap-1.5">
               <WandSparkles className="w-3.5 h-3.5 text-gold" /> Travel Style
             </span>
-            <p className="text-body text-night font-medium truncate">{data.overview.travelStyle || data.hero.travelMode}</p>
+            <p className="text-body text-night font-medium truncate">{data.overview?.travelStyle || data.hero?.travelMode || "N/A"}</p>
           </div>
         </div>
 
         <div className="pt-3 border-t border-border/20 flex flex-col sm:flex-row justify-between gap-3 text-left">
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-micro font-mono font-bold uppercase tracking-wider text-muted/50 mr-1">Languages:</span>
-            {data.overview.languages?.map(lang => (
+            {data.overview?.languages?.map(lang => (
               <span key={lang} className="px-2.5 py-0.5 rounded-lg bg-secondary-surface text-micro font-bold text-night border border-border/30">{lang}</span>
             ))}
           </div>
-          <p className="text-caption text-muted/80 leading-relaxed font-light"><span className="font-mono text-micro font-bold text-muted/50 mr-1">WEATHER DETAIL:</span>{data.overview.weatherSummary}</p>
+          <p className="text-caption text-muted/80 leading-relaxed font-light"><span className="font-mono text-micro font-bold text-muted/50 mr-1">WEATHER DETAIL:</span>{data.overview?.weatherSummary || "Pleasant skies."}</p>
         </div>
       </div>
 

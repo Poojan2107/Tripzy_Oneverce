@@ -149,11 +149,7 @@ function MessageRenderer({ content, isStreaming = false }: MessageRendererProps)
     return { overviewSection: overview, otherSections: others };
   }, [sections]);
 
-  const isStructuredPlan = useMemo(() => {
-    return content.includes('## ');
-  }, [content]);
-
-  const isComplete = !isStreaming || isJsonItinerary || !isStructuredPlan || content.includes('## Pro Tips') || content.includes('## Emergency Contacts') || content.includes('## Things to Avoid');
+  const isComplete = !isStreaming;
 
   // Capture whether the content was already complete on the very first render.
   // This distinguishes "loaded from conversation history" from "just finished streaming".

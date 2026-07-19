@@ -1,0 +1,22 @@
+# Files excluded from the cofounder/client zip
+# Keep this list in sync with scripts/make-handover-zip.ps1
+
+node_modules/
+.next/
+.git/
+.vercel/
+.sessions/
+scratch/
+test-results/
+coverage/
+dist/
+build/
+
+.env
+.env.*
+!.env.example
+
+*.log
+*.tsbuildinfo
+prisma/dev.db
+prisma/dev.db-journal

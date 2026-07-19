@@ -4,6 +4,19 @@
 
 Tripzy is a premium travel planning platform built exclusively for India. It combines real-time AI itinerary generation with a curated editorial destination library, giving travelers a concierge-grade planning experience across 12 iconic Indian journeys.
 
+> **Handover:** Cofounders start with [`COFOUNDER_HANDOVER.md`](./COFOUNDER_HANDOVER.md). Env template: [`.env.example`](./.env.example). Dev server: `http://localhost:3030`.
+
+---
+
+## Quick start
+
+```bash
+npm install
+cp .env.example .env   # fill required keys
+npx prisma db push
+npm run dev            # http://localhost:3030
+```
+
 ---
 
 ## Product Overview
@@ -48,7 +61,7 @@ Leaflet-powered geographical explorer rendering all 12 Indian Chapters as intera
 | Icons | Lucide React |
 | AI | Google Gemini via Vercel AI SDK |
 | ORM | Prisma 6 |
-| Database | SQLite (dev) / PostgreSQL (production) |
+| Database | PostgreSQL (Neon) via Prisma |
 | Auth | NextAuth.js v5 |
 | Rate Limiting | Upstash Redis |
 | Maps | Leaflet |
@@ -122,25 +135,7 @@ The Prisma schema defines the following core entities:
 
 ## Environment Configuration
 
-```env
-# Database
-DATABASE_URL="file:./dev.db"
-
-# Google Gemini AI
-GEMINI_API_KEY="..."
-
-# Upstash Redis — optional, enables API rate limiting
-UPSTASH_REDIS_REST_URL="..."
-UPSTASH_REDIS_REST_TOKEN="..."
-
-# NextAuth
-AUTH_SECRET="..."
-NEXTAUTH_URL="https://your-domain.com"
-
-# Google OAuth — optional
-GOOGLE_CLIENT_ID="..."
-GOOGLE_CLIENT_SECRET="..."
-```
+Copy `.env.example` → `.env`. Required keys include `DATABASE_URL` (Neon Postgres), `GOOGLE_GENERATIVE_AI_API_KEY`, `AUTH_SECRET`, `NEXTAUTH_URL` (`http://localhost:3030` locally), Google OAuth, and `ADMIN_SETUP_KEY`. Full checklist: `COFOUNDER_HANDOVER.md`.
 
 ---
 

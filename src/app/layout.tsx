@@ -22,7 +22,7 @@ const pacifico = Pacifico({
 });
 
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://tripzy-oneverce.vercel.app");
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://travebie-oneverce.vercel.app");
 
 export const metadata: Metadata = {
   title: {

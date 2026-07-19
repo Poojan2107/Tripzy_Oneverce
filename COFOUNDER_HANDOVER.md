@@ -1,35 +1,35 @@
-# Cofounder Handover — Tripzy (before client delivery)
+# Cofounder Handover - Tripzy (before client delivery)
 
 **Read this first.** This package is code-complete for launch. Your job is to place secrets, wire external services, smoke-test, then hand the client the running app + `CLIENT_HANDOVER.md`.
 
 | Item | Value |
 |------|--------|
-| Product | Tripzy / Travebie — AI travel companion for India |
+| Product | Tripzy / Travebie - AI travel companion for India |
 | Package | `travebie` (Next.js 16) |
 | Local URL | `http://localhost:3030` |
-| Vercel project | `tripzy-oneverce` |
-| Prod URL | `https://tripzy-oneverce.vercel.app` |
+| Vercel project | `travebie-oneverce` |
+| Prod URL | `https://travebie-oneverce.vercel.app` |
 | Database | Neon PostgreSQL (Prisma) |
 | Auth | NextAuth v5 + Google OAuth |
 | AI | Google Gemini |
 
 ---
 
-## What’s already done (engineering)
+## What's already done (engineering)
 
 - Full app: Explore chapters, AI planner, chat, passport, admin CRUD, maps
 - Prisma schema + seed data (12 destinations / chapters)
 - Auth, admin setup flow (`/admin/setup`), health endpoints (`/api/health`, `/api/ready`)
 - CI workflow, typecheck, Vercel project linked
-- Env template corrected (`.env.example`) — Postgres, port **3030**, UploadThing, Sentry, Upstash
-- Canonical URL fallbacks aligned to **tripzy-oneverce** (was mixed with travebie)
+- Env template corrected (`.env.example`) - Postgres, port **3030**, UploadThing, Sentry, Upstash
+- Canonical URL fallbacks aligned to live prod **https://travebie-oneverce.vercel.app**
 - Local `.env` `NEXTAUTH_URL` fixed to port 3030 (not shipped in this zip)
 
 **Not shipped in this zip (on purpose):** `node_modules`, `.next`, `.env*`, `.vercel`, secrets, build caches.
 
 ---
 
-## What’s left for YOU (ops) — do in order
+## What's left for YOU (ops) - do in order
 
 ### 1. Unzip & install
 
@@ -46,9 +46,9 @@ cp .env.example .env
 | `DATABASE_URL` | Neon **pooled** Postgres URL |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini key from Google AI Studio |
 | `AUTH_SECRET` / `NEXTAUTH_SECRET` | Same random secret (`openssl rand -base64 32`) |
-| `NEXTAUTH_URL` | Local: `http://localhost:3030` · Prod: `https://tripzy-oneverce.vercel.app` |
+| `NEXTAUTH_URL` | Local: `http://localhost:3030` / Prod: `https://travebie-oneverce.vercel.app` |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google Cloud OAuth credentials |
-| `ADMIN_SETUP_KEY` | Long random string (≥16 chars) |
+| `ADMIN_SETUP_KEY` | Long random string (16+ chars) |
 | `NEXT_PUBLIC_BASE_URL` | Same as public site URL |
 
 Optional but recommended:
@@ -65,7 +65,7 @@ Keep `TESTING_MODE=false` everywhere in production.
 
 ```bash
 npx prisma db push
-# Only if you need fresh seed (DESTRUCTIVE — wipes data):
+# Only if you need fresh seed (DESTRUCTIVE - wipes data):
 # ALLOW_DB_WIPE=true npm run db:seed
 ```
 
@@ -80,26 +80,26 @@ Add **both** environments:
 - Redirect: `http://localhost:3030/api/auth/callback/google`
 
 **Production**
-- Origin: `https://tripzy-oneverce.vercel.app`
-- Redirect: `https://tripzy-oneverce.vercel.app/api/auth/callback/google`
+- Origin: `https://travebie-oneverce.vercel.app`
+- Redirect: `https://travebie-oneverce.vercel.app/api/auth/callback/google`
 
 If the client uses a custom domain later, add those origins/redirects too and update `NEXTAUTH_URL` + `NEXT_PUBLIC_BASE_URL`.
 
 ### 5. Promote first admin
 
-1. `npm run dev` → open `http://localhost:3030`
+1. `npm run dev` then open `http://localhost:3030`
 2. Sign in once with Google (creates the user row)
-3. Go to `/admin/setup` and enter `ADMIN_SETUP_KEY`  
+3. Go to `/admin/setup` and enter `ADMIN_SETUP_KEY`
    **or** run: `node scripts/seed-admin-local.mjs cofounder@email.com`
 
 ### 6. Mirror the same env vars on Vercel
 
-In Vercel → Project `tripzy-oneverce` → Settings → Environment Variables, set all **required** keys for Production (and Preview if needed). Redeploy after saving.
+In Vercel -> Project `travebie-oneverce` -> Settings -> Environment Variables, set all **required** keys for Production (and Preview if needed). Redeploy after saving.
 
 Especially set:
 
-- `NEXTAUTH_URL=https://tripzy-oneverce.vercel.app`
-- `NEXT_PUBLIC_BASE_URL=https://tripzy-oneverce.vercel.app`
+- `NEXTAUTH_URL=https://travebie-oneverce.vercel.app`
+- `NEXT_PUBLIC_BASE_URL=https://travebie-oneverce.vercel.app`
 - Gemini + Google OAuth + `ADMIN_SETUP_KEY` + `DATABASE_URL` + auth secrets
 - UploadThing / Sentry if using them
 
@@ -118,7 +118,7 @@ Especially set:
 
 Give them:
 
-1. Live URL: `https://tripzy-oneverce.vercel.app`
+1. Live URL: `https://travebie-oneverce.vercel.app`
 2. `CLIENT_HANDOVER.md` (product + ops overview)
 3. Admin access (their Google email promoted)
 4. This note on what **they** own going forward: Gemini billing, Neon, Google OAuth app, Vercel, optional UploadThing/Sentry
@@ -129,7 +129,7 @@ Do **not** send them this zip with your private `.env` / keys. They get their ow
 
 ## Explicitly out of scope (not blockers)
 
-These are product “coming soon” / future — not required for handover:
+These are product "coming soon" / future - not required for handover:
 
 - In-app hotel booking (affiliate outbound links only today)
 - Chat attachments & voice input
@@ -164,4 +164,4 @@ node scripts/seed-admin-local.mjs you@email.com
 
 ---
 
-*Prepared for cofounder → client handover. Code is ready; secrets and OAuth wiring are the remaining human steps.*
+*Prepared for cofounder -> client handover. Code is ready; secrets and OAuth wiring are the remaining human steps.*

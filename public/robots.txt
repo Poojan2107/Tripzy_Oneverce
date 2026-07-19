@@ -3,4 +3,4 @@ Allow: /
 Disallow: /api/
 Disallow: /admin
 
-Sitemap: https://tripzy-oneverce.vercel.app/sitemap.xml
+Sitemap: https://travebie-oneverce.vercel.app/sitemap.xml

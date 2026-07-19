@@ -2,7 +2,7 @@
 
 Welcome to the official handover package for **Travebie**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform. This version incorporates the final V18 premium visual polish, modular refactoring, and security alignment pass.
 
-* **Production URL**: [https://tripzy-oneverce.vercel.app](https://tripzy-oneverce.vercel.app)
+* **Production URL**: [https://travebie-oneverce.vercel.app](https://travebie-oneverce.vercel.app)
 * **Local Development**: `http://localhost:3030`
 * **Cofounder ops guide**: See `COFOUNDER_HANDOVER.md` before client delivery.
 
@@ -108,7 +108,7 @@ Define the following environment keys in your production environment:
 | `GEMINI_API_KEY` | Google Generative AI API Token. | Get from Google AI Studio |
 | `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL for rate limits. | `https://your-db.upstash.io` |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis authorization token. | Get from Upstash Console |
-| `NEXTAUTH_URL` | Canonical URL of the application. | `https://tripzy-oneverce.vercel.app` |
+| `NEXTAUTH_URL` | Canonical URL of the application. | `https://travebie-oneverce.vercel.app` |
 | `AUTH_SECRET` | Secret key used for session encryption. | Generate with `openssl rand -base64 32` |
 | `GOOGLE_CLIENT_ID` | Google OAuth Client ID. | Google Cloud Platform Console |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret. | Google Cloud Platform Console |

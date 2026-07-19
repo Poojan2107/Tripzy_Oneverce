@@ -68,7 +68,7 @@ export async function POST(request: Request) {
 
     const origin = request.headers.get("origin");
     const referer = request.headers.get("referer");
-    const allowedHost = process.env.NEXTAUTH_URL || "https://tripzy-oneverce.vercel.app";
+    const allowedHost = process.env.NEXTAUTH_URL || "https://travebie-oneverce.vercel.app";
     if (origin && !origin.startsWith(allowedHost.replace(/\/$/, '')) && referer && !referer.startsWith(allowedHost.replace(/\/$/, ''))) {
       return new Response(JSON.stringify({ error: "Forbidden." }), {
         status: 403,

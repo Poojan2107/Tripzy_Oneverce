@@ -1,6 +1,6 @@
 # Launch Checklist — Tripzy
 
-Canonical prod host: **https://tripzy-oneverce.vercel.app**  
+Canonical prod host: **https://travebie-oneverce.vercel.app**  
 Local: **http://localhost:3030**
 
 See `COFOUNDER_HANDOVER.md` for the full step-by-step before client delivery.
@@ -10,8 +10,8 @@ See `COFOUNDER_HANDOVER.md` for the full step-by-step before client delivery.
 ### Environment Variables (Vercel Dashboard)
 - [ ] `DATABASE_URL` (Neon pooled)
 - [ ] `AUTH_SECRET` / `NEXTAUTH_SECRET` (same value, no corrupted newlines)
-- [ ] `NEXTAUTH_URL` = `https://tripzy-oneverce.vercel.app`
-- [ ] `NEXT_PUBLIC_BASE_URL` = `https://tripzy-oneverce.vercel.app`
+- [ ] `NEXTAUTH_URL` = `https://travebie-oneverce.vercel.app`
+- [ ] `NEXT_PUBLIC_BASE_URL` = `https://travebie-oneverce.vercel.app`
 - [ ] `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
 - [ ] `GOOGLE_GENERATIVE_AI_API_KEY`
 - [ ] `ADMIN_SETUP_KEY` (≥ 16 characters)
@@ -23,8 +23,8 @@ See `COFOUNDER_HANDOVER.md` for the full step-by-step before client delivery.
 ### Google OAuth Console
 - [ ] Local origin: `http://localhost:3030`
 - [ ] Local redirect: `http://localhost:3030/api/auth/callback/google`
-- [ ] Prod origin: `https://tripzy-oneverce.vercel.app`
-- [ ] Prod redirect: `https://tripzy-oneverce.vercel.app/api/auth/callback/google`
+- [ ] Prod origin: `https://travebie-oneverce.vercel.app`
+- [ ] Prod redirect: `https://travebie-oneverce.vercel.app/api/auth/callback/google`
 
 ### Admin
 - [ ] Promote first admin via `/admin/setup` or `node scripts/seed-admin-local.mjs <email>`

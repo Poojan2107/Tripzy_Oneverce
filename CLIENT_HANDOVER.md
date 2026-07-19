@@ -2,8 +2,9 @@
 
 Welcome to the official handover package for **Travebie**, a next-generation, storytelling-first AI Travel Companion for India. This document serves as the guide for the engineering, product, and operations teams to deploy, manage, and extend the platform. This version incorporates the final V18 premium visual polish, modular refactoring, and security alignment pass.
 
-* **Production URL**: [https://travebie-oneverce.vercel.app](https://travebie-oneverce.vercel.app)
+* **Production URL**: [https://tripzy-oneverce.vercel.app](https://tripzy-oneverce.vercel.app)
 * **Local Development**: `http://localhost:3030`
+* **Cofounder ops guide**: See `COFOUNDER_HANDOVER.md` before client delivery.
 
 ---
 
@@ -91,11 +92,10 @@ graph TD
 1. Create a new project in the Vercel Dashboard and link the repository.
 2. Configure the **Environment Variables** (see Section 5).
 3. Set up a PostgreSQL database (e.g., Vercel Postgres or Supabase).
-4. Run the production build. The `postinstall` script in `package.json` will automatically generate the Prisma client, migrate the database schemas, and seed standard data:
+4. Run the production build. The `postinstall` script generates the Prisma client (`prisma generate`). Apply schema separately with `npx prisma db push` (seed only when needed: `ALLOW_DB_WIPE=true npm run db:seed`).
    ```json
-   "postinstall": "prisma generate && prisma db push --accept-data-loss && prisma db seed"
+   "postinstall": "prisma generate"
    ```
-
 ---
 
 ## 5. Environment Variables
@@ -108,7 +108,7 @@ Define the following environment keys in your production environment:
 | `GEMINI_API_KEY` | Google Generative AI API Token. | Get from Google AI Studio |
 | `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL for rate limits. | `https://your-db.upstash.io` |
 | `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis authorization token. | Get from Upstash Console |
-| `NEXTAUTH_URL` | Canonical URL of the application. | `https://travebie-oneverce.vercel.app` |
+| `NEXTAUTH_URL` | Canonical URL of the application. | `https://tripzy-oneverce.vercel.app` |
 | `AUTH_SECRET` | Secret key used for session encryption. | Generate with `openssl rand -base64 32` |
 | `GOOGLE_CLIENT_ID` | Google OAuth Client ID. | Google Cloud Platform Console |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth Client Secret. | Google Cloud Platform Console |

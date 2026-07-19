@@ -1,67 +1,45 @@
-# Launch Checklist — Travebie V14
+# Launch Checklist — Tripzy
+
+Canonical prod host: **https://tripzy-oneverce.vercel.app**  
+Local: **http://localhost:3030**
+
+See `COFOUNDER_HANDOVER.md` for the full step-by-step before client delivery.
 
 ## Pre-Launch (Must Complete)
 
 ### Environment Variables (Vercel Dashboard)
-- [ ] Set `NEXT_PUBLIC_SENTRY_DSN`
-- [ ] Set `SENTRY_DSN`
-- [ ] Set `SENTRY_ORG`
-- [ ] Set `SENTRY_PROJECT`
-- [ ] Set `SENTRY_AUTH_TOKEN`
-- [ ] Verify `DATABASE_URL` is correct (NeonDB pooled)
-- [ ] Verify `AUTH_SECRET` is clean (no `\r\n` corruption)
-- [ ] Verify `GOOGLE_GENERATIVE_AI_API_KEY` is valid
-- [ ] Verify `ADMIN_SETUP_KEY` is ≥ 16 characters
-- [ ] Verify `NEXTAUTH_URL` points to `https://travebie-oneverce.vercel.app`
-- [ ] Verify `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+- [ ] `DATABASE_URL` (Neon pooled)
+- [ ] `AUTH_SECRET` / `NEXTAUTH_SECRET` (same value, no corrupted newlines)
+- [ ] `NEXTAUTH_URL` = `https://tripzy-oneverce.vercel.app`
+- [ ] `NEXT_PUBLIC_BASE_URL` = `https://tripzy-oneverce.vercel.app`
+- [ ] `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
+- [ ] `GOOGLE_GENERATIVE_AI_API_KEY`
+- [ ] `ADMIN_SETUP_KEY` (≥ 16 characters)
+- [ ] `TESTING_MODE` = `false`
+- [ ] `UPLOADTHING_TOKEN` (recommended for admin uploads)
+- [ ] Sentry vars (optional): `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`
+- [ ] Upstash (optional): `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
 
 ### Google OAuth Console
-- [ ] Authorized JavaScript origins: `https://travebie-oneverce.vercel.app`
-- [ ] Authorized redirect URIs: `https://travebie-oneverce.vercel.app/api/auth/callback/google`
+- [ ] Local origin: `http://localhost:3030`
+- [ ] Local redirect: `http://localhost:3030/api/auth/callback/google`
+- [ ] Prod origin: `https://tripzy-oneverce.vercel.app`
+- [ ] Prod redirect: `https://tripzy-oneverce.vercel.app/api/auth/callback/google`
 
-### Build Verification
-- [ ] `npm run build` — 0 errors, 0 warnings
-- [ ] `npm run typecheck` — 0 errors
-- [ ] Middleware active (routes protected by security headers)
+### Admin
+- [ ] Promote first admin via `/admin/setup` or `node scripts/seed-admin-local.mjs <email>`
 
-### Smoke Tests
-- [ ] Home page loads (200)
-- [ ] AI planner generates itinerary (online + offline)
-- [ ] Chat assistant responds
-- [ ] Admin setup flow works
-- [ ] Google OAuth sign-in works
-- [ ] Bookmarks persist (local storage + sync)
-- [ ] Health endpoint returns 200 (`/api/health`)
-- [ ] Readiness endpoint returns 200 (`/api/ready`)
+### Build / Smoke
+- [ ] `npm run typecheck`
+- [ ] `npm run build`
+- [ ] Home, AI planner, chat, OAuth, `/api/health`, `/api/ready`, admin
 
 ## Post-Launch (First Sprint)
+- [ ] Neon Point-in-Time / backups
+- [ ] Branch protection on GitHub
+- [ ] Custom domain (if client provides) + update OAuth + `NEXTAUTH_URL` + `NEXT_PUBLIC_BASE_URL`
+- [ ] Affiliate tracked links (optional monetization)
 
-### Security
-- [ ] Add `connection_limit` parameter to DATABASE_URL
-- [ ] Add ESLint with security plugin
-- [ ] Reduce Sentry tracesSampleRate to 0.05/0.01
-
-### Performance
-- [ ] Migrate TourHero.tsx banner to `next/image`
-- [ ] Migrate remaining 19 `<img>` tags
-- [ ] Install `@next/bundle-analyzer` and audit bundles
-
-### Database
-- [ ] Add indexes on `Account.userId` and `Session.userId`
-- [ ] Consider removing unused `password` field from User model
-
-### Observability
-- [ ] Create structured logger utility
-- [ ] Add request correlation IDs via middleware
-- [ ] Add `Sentry.setUser()` in authorized sessions
-
-### Process
-- [ ] Enable branch protection on GitHub
-- [ ] Configure Vercel preview deployments
-- [ ] Set up database backup schedule (NeonDB Point-in-Time)
-- [ ] Document incident response runbook
-
-## Rollback Plan
-- Vercel: Deploy previous commit via dashboard
-- Database: NeonDB Point-in-Time restore
-- Domain: DNS change to previous deployment
+## Rollback
+- Vercel: redeploy previous deployment
+- Database: Neon PITR restore

@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { getGeminiApiKey } from "../lib/gemini";
+import { getGeminiApiKey, GEMINI_FALLBACK_MODELS } from "../lib/gemini";
 import { checkRateLimit } from "../lib/rate-limit";
 import { getSimulatedResponse } from "../lib/simulatedResponse";
 import { detectIntent, Intent } from "../lib/intentDetector";
@@ -97,29 +97,42 @@ const tripDataSchema = z.object({
 const chatRequestSchema = z.object({
   messages: z.array(z.object({
     role: z.string(),
-    content: z.string().max(20000),
+    content: z.string().max(100000),
   })).min(1),
   preferences: z.any().optional(),
   sessionId: z.string().max(200).nullable().optional(),
-  currentTrip: tripDataSchema.nullable().optional(),
+  currentTrip: z.any().nullable().optional(),
 });
 
 async function callGeminiStreamWithTimeout(
   genAI: GoogleGenAI,
-  model: string,
+  models: string | string[],
   contents: any,
   config: any,
-  timeoutMs = 8000
+  timeoutMs = 25000
 ) {
-  const streamPromise = genAI.models.generateContentStream({
-    model,
-    contents,
-    config,
-  });
-  const timeoutPromise = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error(`Gemini stream timed out after ${timeoutMs}ms`)), timeoutMs)
-  );
-  return Promise.race([streamPromise, timeoutPromise]);
+  const modelList = Array.isArray(models) ? models : [models];
+  let lastError: any = null;
+
+  for (const model of modelList) {
+    try {
+      const streamPromise = genAI.models.generateContentStream({
+        model,
+        contents,
+        config,
+      });
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error(`Gemini stream timed out after ${timeoutMs}ms for ${model}`)), timeoutMs)
+      );
+      const stream = await Promise.race([streamPromise, timeoutPromise]);
+      return stream;
+    } catch (err: any) {
+      lastError = err;
+      console.warn(`[Gemini stream] Model '${model}' failed: ${err?.message || err}. Trying next fallback model...`);
+    }
+  }
+
+  throw lastError || new Error("All Gemini models failed");
 }
 
 const chatResponseSchema = {
@@ -274,6 +287,9 @@ function shouldForceJson(context: any): boolean {
   if (context.intent === "GENERAL_CHAT" || context.intent === "ASK_QUESTION") {
     return false;
   }
+  if (context.isFollowUp && (context.intent === "OTHER" || context.intent === "GENERAL_CHAT")) {
+    return false;
+  }
   return true;
 }
 
@@ -420,13 +436,13 @@ function buildConversationSummaryFallback(session: TripSession): string {
   const budget = session.sessionState?.budget || "";
   const completed = session.sessionState?.completed || [];
   const pending = session.sessionState?.pending || [];
-  
+
   let summary = `User is planning a trip to ${dest}.`;
   if (days) summary += ` Duration: ${days} days.`;
   if (budget) summary += ` Budget: ${budget}.`;
   if (completed.length > 0) summary += ` Completed: ${completed.join(", ")}.`;
   if (pending.length > 0) summary += ` Pending: ${pending.join(", ")}.`;
-  
+
   return summary;
 }
 
@@ -558,7 +574,7 @@ async function handleSessionPostProcessing(
       // Local completion tracking
       const messages = session.recentMessages;
       const context = detectIntent(messages, true);
-      
+
       if (context.intent === "NEW_TRIP") {
         state.completed = ["Itinerary"];
         state.pending = ["Hotels", "Restaurants", "Activities", "Packing"];
@@ -609,13 +625,14 @@ function cleanHistoryForGemini(messages: any[]): any[] {
     if (clean.startsWith('{')) {
       try {
         const parsed = JSON.parse(clean);
-        if (parsed.hero && parsed.days) {
+        if (parsed.hero || parsed.itinerary || parsed.days) {
+          const destName = parsed.hero?.destination || parsed.destination || "destination";
           return {
             role: m.role === 'assistant' || m.role === 'model' ? 'model' : 'user',
-            parts: [{ text: `[Generated trip plan for ${parsed.hero.destination || "destination"}]` }]
+            parts: [{ text: `[Generated trip plan for ${destName}]` }]
           };
         }
-      } catch {}
+      } catch { }
     }
     return {
       role: m.role === 'assistant' || m.role === 'model' ? 'model' : 'user',
@@ -723,8 +740,8 @@ export async function POST(req: Request) {
 
     if (forceJson) {
       config.responseMimeType = "application/json";
-      // Always enforce schema: use patch schema for follow-ups, full schema for new trips
-      if (context.isFollowUp && currentTrip) {
+      // Use patch schema for follow-ups; full schema ONLY for fresh NEW_TRIP
+      if ((context.isFollowUp || currentTrip) && context.intent !== "NEW_TRIP") {
         config.responseSchema = patchResponseSchema;
       } else {
         config.responseSchema = chatResponseSchema;
@@ -735,7 +752,7 @@ export async function POST(req: Request) {
     try {
       stream = await callGeminiStreamWithTimeout(
         genAI,
-        "gemini-2.0-flash",
+        GEMINI_FALLBACK_MODELS,
         contents,
         config
       );
@@ -743,7 +760,7 @@ export async function POST(req: Request) {
       console.error("Gemini stream failed, using simulation fallback:", e);
       const simulated = getSimulatedResponse(messages);
       const offlinePrefix = "[⚡ Offline Mode] Your AI companion is currently offline. Here's a sample itinerary:\n\n";
-      
+
       // Run background post-processing on the simulated response to write session state
       await handleSessionPostProcessing(sessionId, simulated, lastUserMsg, apiKey);
 

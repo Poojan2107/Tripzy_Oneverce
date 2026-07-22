@@ -354,20 +354,16 @@ export default function ChatView(props: ChatViewProps) {
     const getLatestItinerary = (msgs: ChatMessage[]) => {
       for (let i = msgs.length - 1; i >= 0; i--) {
         const m = msgs[i];
-        if (m.role === 'assistant') {
-          const trimmed = m.content.trim();
-          const clean = trimmed.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
-          if (clean.startsWith('{')) {
+        if (m.role === 'assistant' && m.content) {
+          const startIdx = m.content.indexOf('{');
+          const endIdx = m.content.lastIndexOf('}');
+          if (startIdx !== -1 && endIdx > startIdx) {
+            const jsonCandidate = m.content.substring(startIdx, endIdx + 1);
             try {
-              return JSON.parse(clean);
-            } catch {}
-          }
-          const startIdx = trimmed.indexOf('{');
-          const endIdx = trimmed.lastIndexOf('}');
-          if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
-            const jsonCandidate = trimmed.substring(startIdx, endIdx + 1);
-            try {
-              return JSON.parse(jsonCandidate);
+              const parsed = JSON.parse(jsonCandidate);
+              if (parsed && typeof parsed === 'object' && (parsed.hero || parsed.itinerary || parsed.days || parsed.overview)) {
+                return parsed;
+              }
             } catch {}
           }
         }

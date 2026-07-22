@@ -1,40 +1,52 @@
 import { rankDestinations } from "../services/recommender";
-import { getGeminiApiKey } from "../lib/gemini";
+import { getGeminiApiKey, GEMINI_FALLBACK_MODELS } from "../lib/gemini";
 import { checkRateLimit } from "../lib/rate-limit";
 import { GoogleGenAI } from "@google/genai";
 import { buildOfflineResponse } from "../data/offlineItineraries";
 
 async function callGeminiWithRetry(
   genAI: GoogleGenAI,
-  model: string,
+  models: string | string[],
   contents: any,
   config: any,
-  retries = 2
+  retries = 1
 ): Promise<any> {
+  const modelList = Array.isArray(models) ? models : [models];
   const TIMEOUT_MS = 30000;
-  for (let attempt = 0; attempt <= retries; attempt++) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    try {
-      const response = await genAI.models.generateContent({
-        model,
-        contents,
-        config,
-      });
-      clearTimeout(timeout);
-      return response;
-    } catch (err: any) {
-      clearTimeout(timeout);
-      // 429 rate limit or timeout — no point retrying, fall through to offline immediately
-      const is429 = err?.status === 429 || err?.message?.includes('429') || err?.message?.includes('quota');
-      const isAbort = err?.name === 'AbortError';
-      if (is429 || isAbort || attempt >= retries) {
-        throw err;
+  let lastError: any = null;
+
+  for (const model of modelList) {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+      try {
+        const response = await genAI.models.generateContent({
+          model,
+          contents,
+          config,
+        });
+        clearTimeout(timeout);
+        return response;
+      } catch (err: any) {
+        clearTimeout(timeout);
+        lastError = err;
+        const is429 = err?.status === 429 || err?.message?.includes('429') || err?.message?.includes('quota');
+        const is404 = err?.status === 404 || err?.message?.includes('404') || err?.message?.includes('not found');
+        const isAbort = err?.name === 'AbortError';
+
+        if (is429 || is404) {
+          console.warn(`[Gemini plan-trip] Model '${model}' failed with rate limit/quota or not found. Trying next fallback model...`);
+          break; // Break inner retry loop, try next model in modelList
+        }
+        if (isAbort || attempt >= retries) {
+          break;
+        }
+        await new Promise((r) => setTimeout(r, 500 * (attempt + 1)));
       }
-      // Brief backoff before next attempt
-      await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
     }
   }
+
+  throw lastError || new Error("All Gemini fallback models failed");
 }
 
 
@@ -221,7 +233,7 @@ export async function POST(req: Request) {
 
     try {
       const genAI = new GoogleGenAI({ apiKey });
-      const response = await callGeminiWithRetry(genAI, "gemini-2.0-flash", prompt, {
+      const response = await callGeminiWithRetry(genAI, GEMINI_FALLBACK_MODELS, prompt, {
         responseMimeType: "application/json",
         responseSchema: {
             type: "object",

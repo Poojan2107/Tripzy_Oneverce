@@ -51,4 +51,5 @@ scripts/*_AUDIT.md
 .sessions/
 scratch/
 test-results/
+*.zip
 

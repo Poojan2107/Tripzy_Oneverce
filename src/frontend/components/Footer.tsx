@@ -63,7 +63,14 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-meta font-mono text-white/25">
           <span>&copy; {year} travebie.ai — all journeys reserved</span>
-          <span className="flex items-center gap-1.5">crafted with <Heart className="w-3.5 h-3.5 text-coral inline stroke-[2.5]" /> for explorers</span>
+          <span className="flex items-center gap-2 text-white/40">
+            <img
+              src="/images/oneverce-icon.png"
+              alt="Oneverce Solution Logo"
+              className="h-6 w-auto object-contain inline-block filter drop-shadow-md brightness-110"
+            />
+            <span>Created By <span className="font-semibold text-white/70">Oneverce Solution</span></span>
+          </span>
         </div>
       </div>
     </footer>

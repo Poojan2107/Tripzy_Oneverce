@@ -1,7 +1,25 @@
 "use server";
 
 import { GoogleGenAI } from "@google/genai";
-import { getGeminiApiKey } from "./gemini";
+import { getGeminiApiKey, GEMINI_FALLBACK_MODELS } from "./gemini";
+
+async function generateWithModelFallback(ai: GoogleGenAI, contents: string, config: any): Promise<string> {
+  let lastError: any = null;
+  for (const model of GEMINI_FALLBACK_MODELS) {
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents,
+        config,
+      });
+      return response.text ?? "";
+    } catch (err: any) {
+      lastError = err;
+      console.warn(`[generate.ts] Model '${model}' failed: ${err?.message || err}. Trying fallback...`);
+    }
+  }
+  throw lastError || new Error("All Gemini fallback models failed");
+}
 
 export async function generateDestinationDescription(name: string, city: string, country: string, keywords: string): Promise<string> {
   const apiKey = getGeminiApiKey();
@@ -26,15 +44,10 @@ Write a rich, evocative destination description for "${name}" in ${city}, ${coun
 Write only the description, no preamble or title.`;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: prompt,
-      config: {
-        temperature: 0.8,
-        maxOutputTokens: 600,
-      },
+    return await generateWithModelFallback(ai, prompt, {
+      temperature: 0.8,
+      maxOutputTokens: 600,
     });
-    return response.text ?? "";
   } catch (error) {
     console.error("AI description generation failed:", error);
     return "Failed to generate description. Please try again.";
@@ -63,15 +76,10 @@ Write a compelling experience description for "${name}".
 Write only the description, no preamble or title.`;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: prompt,
-      config: {
-        temperature: 0.8,
-        maxOutputTokens: 400,
-      },
+    return await generateWithModelFallback(ai, prompt, {
+      temperature: 0.8,
+      maxOutputTokens: 400,
     });
-    return response.text ?? "";
   } catch (error) {
     console.error("AI description generation failed:", error);
     return "Failed to generate description. Please try again.";

@@ -4,8 +4,8 @@ import AdminView from '../../frontend/components/AdminView';
 import { Tour } from '../../frontend/types';
 import { TOURS_DATA } from '../../frontend/data';
 import { getAllDestinations } from '../../backend/actions/tourActions';
-import { useSession } from 'next-auth/react';
-import { ShieldAlert } from 'lucide-react';
+import { useSession, signIn } from 'next-auth/react';
+import { ShieldAlert, LogIn, KeyRound } from 'lucide-react';
 
 export default function AdminPage() {
   const { data: session, status } = useSession();
@@ -83,16 +83,38 @@ export default function AdminPage() {
         <div className="w-16 h-16 rounded-full bg-rose-50 flex items-center justify-center text-rose-500 mx-auto border border-rose-200">
           <ShieldAlert className="w-8 h-8" />
         </div>
-        <h1 className="text-4xl font-light font-display lowercase">access denied</h1>
-        <p className="text-xs text-stone max-w-xs mx-auto leading-relaxed">
-          The section of Travebie India you are trying to reach is restricted to administrators.
+        <h1 className="text-4xl font-light font-display lowercase">access restricted</h1>
+        <p className="text-xs text-stone max-w-sm mx-auto leading-relaxed font-light">
+          {!session
+            ? "Sign in with an administrator account to access the Travebie control panel."
+            : `Signed in as ${session.user?.email || "user"}. This account does not have administrator privileges yet.`}
         </p>
-        <a
-          href="/"
-          className="px-7 py-3 rounded-full bg-night text-white hover:bg-ink text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 inline-block"
-        >
-          return to home
-        </a>
+
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          {!session ? (
+            <button
+              onClick={() => signIn('google', { callbackUrl: '/admin' })}
+              className="px-6 py-3 rounded-full bg-night text-white hover:bg-gold text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 inline-flex items-center gap-2 cursor-pointer"
+            >
+              <LogIn className="w-4 h-4" />
+              Sign in with Google
+            </button>
+          ) : (
+            <a
+              href="/admin/setup"
+              className="px-6 py-3 rounded-full bg-gold text-white hover:bg-gold/80 text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 inline-flex items-center gap-2"
+            >
+              <KeyRound className="w-4 h-4" />
+              Claim Admin Role
+            </a>
+          )}
+          <a
+            href="/"
+            className="px-6 py-3 rounded-full bg-stone/10 text-stone hover:bg-stone/20 text-micro font-bold uppercase tracking-[0.18em] transition-all duration-300 inline-block"
+          >
+            Return to Home
+          </a>
+        </div>
       </div>
     );
   }

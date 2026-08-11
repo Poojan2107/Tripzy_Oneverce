@@ -66,11 +66,24 @@ export async function POST(request: Request) {
       });
     }
 
-    const origin = request.headers.get("origin");
-    const referer = request.headers.get("referer");
-    const allowedHost = process.env.NEXTAUTH_URL || "https://travebie-oneverce.vercel.app";
-    if (origin && !origin.startsWith(allowedHost.replace(/\/$/, '')) && referer && !referer.startsWith(allowedHost.replace(/\/$/, ''))) {
-      return new Response(JSON.stringify({ error: "Forbidden." }), {
+    const origin = request.headers.get("origin") || "";
+    const referer = request.headers.get("referer") || "";
+    const allowedHosts = [
+      process.env.NEXTAUTH_URL,
+      "https://travebie.com",
+      "https://www.travebie.com",
+      "https://tripzy-oneverce.vercel.app",
+      "http://localhost:3030",
+      "http://localhost:3000",
+    ].filter(Boolean) as string[];
+
+    const isAllowed = !origin && !referer ? true : allowedHosts.some(host => {
+      const cleanHost = host.replace(/\/$/, '');
+      return (origin && origin.startsWith(cleanHost)) || (referer && referer.startsWith(cleanHost));
+    });
+
+    if (!isAllowed) {
+      return new Response(JSON.stringify({ error: "Forbidden origin." }), {
         status: 403,
         headers: { "Content-Type": "application/json" },
       });

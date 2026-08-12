@@ -30,7 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}/trips`,
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.9,
+      priority: 0.85,
     },
     {
       url: `${BASE_URL}/contact`,
@@ -42,29 +42,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${BASE_URL}/terms`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.4,
+      priority: 0.5,
     },
     {
       url: `${BASE_URL}/privacy`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.4,
+      priority: 0.5,
     },
   ];
-
-  let slugs = FALLBACK_DESTINATIONS;
 
   try {
     const destinations = await db.destination.findMany({
       where: { status: 'PUBLISHED' },
-      select: { slug: true, updatedAt: true },
+      select: { slug: true, updatedAt: true, images: true },
     });
     if (destinations && destinations.length > 0) {
-      const destinationPages: MetadataRoute.Sitemap = destinations.map((d: { slug: string; updatedAt: Date | null }) => ({
+      const destinationPages: MetadataRoute.Sitemap = destinations.map((d: any) => ({
         url: `${BASE_URL}/destination/${d.slug}`,
         lastModified: d.updatedAt || new Date(),
         changeFrequency: 'weekly',
-        priority: 0.85,
+        priority: 0.9,
       }));
       return [...staticPages, ...destinationPages];
     }
@@ -72,11 +70,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn('[sitemap] Failed to fetch database destinations, using fallback list:', e);
   }
 
-  const destinationPages: MetadataRoute.Sitemap = slugs.map((slug) => ({
+  const destinationPages: MetadataRoute.Sitemap = FALLBACK_DESTINATIONS.map((slug) => ({
     url: `${BASE_URL}/destination/${slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
-    priority: 0.85,
+    priority: 0.9,
   }));
 
   return [...staticPages, ...destinationPages];

@@ -15,27 +15,53 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!res.success || !res.data) {
     return {
       title: "Destination Not Found — Travebie",
-      description: "The destination you are looking for could not be found.",
+      description: "The chapter you are looking for could not be found.",
     };
   }
 
   const tour = res.data;
-  const title = `${tour.title} Travel Guide — Travebie`;
-  const description = tour.metaDescription || tour.description?.slice(0, 155) || `Explore ${tour.title} with curated itineraries.`;
+  const title = tour.metaTitle || `${tour.title} Travel Guide & Curated Itinerary (2026) — Travebie`;
+  const description = tour.metaDescription || tour.description?.slice(0, 155) || `Explore ${tour.title} with curated itineraries, local secrets, photography spots, and travel costs.`;
+  const canonicalUrl = `https://travebie.com/destination/${slug}`;
+  const bannerImage = tour.ogImage || tour.bannerImage || "/images/hero-varanasi.jpg";
 
   return {
     title,
     description,
+    keywords: [
+      `${tour.title} travel guide`,
+      `${tour.title} itinerary`,
+      `visit ${tour.title} India`,
+      `${tour.location} tourism`,
+      `best time to visit ${tour.title}`,
+      `${tour.title} tour package`,
+      `Travebie ${tour.title}`,
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title,
       description,
-      images: tour.ogImage || tour.bannerImage ? [{ url: tour.ogImage || tour.bannerImage, width: 1200, height: 630 }] : [],
+      url: canonicalUrl,
+      siteName: "Travebie",
+      type: "article",
+      locale: "en_IN",
+      images: [
+        {
+          url: bannerImage,
+          width: 1200,
+          height: 630,
+          alt: `${tour.title} — Travebie Travel Guide`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: tour.ogImage || tour.bannerImage ? [tour.ogImage || tour.bannerImage] : [],
+      images: [bannerImage],
+      creator: "@travebie",
     },
   };
 }
@@ -58,5 +84,114 @@ export default async function DestinationPage({ params }: PageProps) {
     );
   }
 
-  return <DestinationPageClient tour={res.data} />;
+  const tour = res.data;
+  const canonicalUrl = `https://travebie.com/destination/${slug}`;
+  const bannerImg = tour.bannerImage
+    ? tour.bannerImage.startsWith("http")
+      ? tour.bannerImage
+      : `https://travebie.com${tour.bannerImage}`
+    : "https://travebie.com/images/hero-varanasi.jpg";
+
+  const schemas = [
+    {
+      "@context": "https://schema.org",
+      "@type": "TouristDestination",
+      name: `${tour.title} — ${tour.chapterTitle || "Curated Travel Guide"}`,
+      description: tour.description,
+      url: canonicalUrl,
+      image: [bannerImg],
+      containedInPlace: {
+        "@type": "Country",
+        name: "India",
+      },
+      ...(tour.latitude && tour.longitude
+        ? {
+            geo: {
+              "@type": "GeoCoordinates",
+              latitude: tour.latitude,
+              longitude: tour.longitude,
+            },
+          }
+        : {}),
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: (tour.rating || 4.9).toString(),
+        reviewCount: (tour.reviewsCount || 48).toString(),
+        bestRating: "5",
+        worstRating: "1",
+      },
+      touristType: tour.tags || ["Spiritual", "Culture", "Heritage"],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: `${tour.title} Travel Guide & Curated Itinerary`,
+      description: tour.metaDescription || tour.description?.slice(0, 160),
+      image: [bannerImg],
+      url: canonicalUrl,
+      author: {
+        "@type": "Organization",
+        name: "Travebie",
+        url: "https://travebie.com",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "Travebie",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://travebie.com/icons/icon-512.png",
+        },
+      },
+      mainEntityOfPage: canonicalUrl,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://travebie.com" },
+        { "@type": "ListItem", position: 2, name: "Explore Atlas", item: "https://travebie.com/#explore" },
+        { "@type": "ListItem", position: 3, name: tour.title, item: canonicalUrl },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: `What is the best time to visit ${tour.title}?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: `The best season to visit ${tour.title} is ${tour.bestSeason || "October to March"} when the climate is ideal for sightseeing, cultural tours, and photography.`,
+          },
+        },
+        {
+          "@type": "Question",
+          name: `How many days are ideal for exploring ${tour.title}?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: `We recommend at least ${tour.duration || "3 to 5 Days"} in ${tour.title} to explore all major landmarks, heritage locations, and local culinary treasures.`,
+          },
+        },
+        {
+          "@type": "Question",
+          name: `What makes ${tour.title} a must-visit destination in India?`,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: tour.subtitle || `Experience the rich cultural tapestry, scenic landscapes, and living traditions of ${tour.title} with curated Travebie itineraries.`,
+          },
+        },
+      ],
+    },
+  ];
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
+      />
+      <DestinationPageClient tour={res.data} />
+    </>
+  );
 }

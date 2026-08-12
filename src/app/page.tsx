@@ -2,13 +2,65 @@ import type { Metadata } from "next";
 import App from "../frontend/App";
 
 export const metadata: Metadata = {
+  title: "Travebie — #1 AI Travel Companion & Itinerary Planner for India",
+  description: "Explore India through 12 living chapters. Plan personalized day-wise itineraries with AI, uncover hidden gems, best photo spots, and real-time INR budgets.",
   alternates: {
     canonical: "/",
   },
+  openGraph: {
+    title: "Travebie — #1 AI Travel Companion & Itinerary Planner for India",
+    description: "Explore India through 12 living chapters. Plan personalized day-wise itineraries with AI, uncover hidden gems, best photo spots, and real-time INR budgets.",
+    url: "https://travebie.com",
+  },
+};
+
+const homeFaqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How does the Travebie AI Travel Planner create custom India itineraries?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Travebie uses advanced AI to analyze your travel style (solo, couple, culture, nature, luxury, adventure), group size, pace, and budget. It crafts custom day-wise schedules complete with local insider secrets, photography spots, and estimated costs in ₹ INR.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What destinations in India are curated in the Travebie Atlas?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Travebie currently features 12 living chapters across India, including Varanasi, Udaipur, Kerala, Ladakh, Jaisalmer, Goa, Hampi, Kashmir, Munnar, Kutch, Cherrapunji, and the Andaman Islands.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is Travebie free to use for planning travel in India?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, Travebie is completely free to use. You can generate unlimited custom itineraries, chat with the AI Travel Companion, and save chapters to your digital Passport.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does Travebie provide cost estimates in Indian Rupees (INR)?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, every day in your generated itinerary includes comprehensive cost breakdowns in ₹ INR for accommodation, local transit, food, and activities.",
+      },
+    },
+  ],
 };
 
 export default function Home() {
   return (
-    <App />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqSchema) }}
+      />
+      <App />
+    </>
   );
 }

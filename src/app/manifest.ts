@@ -2,11 +2,15 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Travebie — AI Travel Companion for India',
+    name: 'Travebie — #1 AI Travel Companion for India',
     short_name: 'Travebie',
-    description: 'Discover India through 12 handcrafted chapters. AI-powered itinerary planner for the curious explorer.',
+    description: 'Discover India through 12 living chapters. AI-powered travel planner generating bespoke day-wise itineraries, photography spots, and real-time INR budgets.',
     start_url: '/',
+    id: '/',
     display: 'standalone',
+    orientation: 'portrait',
+    lang: 'en-IN',
+    categories: ['travel', 'lifestyle', 'navigation'],
     background_color: '#F8F4EE',
     theme_color: '#F4B63D',
     icons: [

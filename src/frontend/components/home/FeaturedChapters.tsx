@@ -71,10 +71,10 @@ export default function FeaturedChapters({ tours, wishlistIds, loadingDestinatio
                 className="h-full"
               >
                 <TiltCard className="h-full">
-                  <div onClick={() => onSelectTour(tour)} className="group cursor-pointer text-left flex flex-col justify-between h-full bg-surface border border-border/40 rounded-2xl p-5 hover:shadow-md transition-shadow duration-300">
+                  <div className="text-left flex flex-col justify-between h-full bg-surface border border-border/40 rounded-2xl p-5 hover:shadow-md transition-shadow duration-300">
                     {/* Image container with editorial overlay */}
                     <div className="relative h-[280px] sm:h-[320px] md:h-[340px] rounded-xl overflow-hidden bg-secondary-surface mb-4 w-full shrink-0">
-                      <Image src={tour.bannerImage} alt={tour.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="(max-width: 768px) 100vw, 50vw" />
+                      <Image src={tour.bannerImage} alt={tour.title} fill className="object-cover transition-transform duration-700" sizes="(max-width: 768px) 100vw, 50vw" />
  
                       {/* Dark gradient overlay at bottom for text legibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />

@@ -10,7 +10,7 @@ interface TravelerStoriesProps {
   onSelectTour: (tour: Tour) => void;
 }
 
-function StoryCard({ story, index, onClick }: { story: any; index: number; onClick: () => void }) {
+function StoryCard({ story, index }: { story: any; index: number }) {
   const tilt = useMemo(() => {
     // Generate stable values based on the story title and index to avoid hydration warnings
     const seed = (story.title || "") + "-" + index;
@@ -32,23 +32,22 @@ function StoryCard({ story, index, onClick }: { story: any; index: number; onCli
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-30px" }}
       transition={{ delay: index * 0.08, type: "spring", stiffness: 100, damping: 20 }}
-      whileHover={{ y: -6 }}
-      className="group cursor-pointer shrink-0 w-[290px] md:w-auto"
-      onClick={onClick}
+      whileHover={{ y: -4 }}
+      className="shrink-0 w-[290px] md:w-auto"
     >
       <motion.div
         className="bg-surface border border-border shadow-md rounded-lg p-5 pb-6"
         style={{ transform: `rotate(${tilt.rotate}deg)`, marginTop: `${tilt.y}px` }}
-        whileHover={{ rotate: 0, y: -8 }}
+        whileHover={{ rotate: 0, y: -4 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         suppressHydrationWarning
       >
         <div className="relative aspect-[4/3] rounded-md overflow-hidden bg-secondary-surface mb-4">
-          <SafeImage src={story.image} alt={story.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <SafeImage src={story.image} alt={story.title} className="w-full h-full object-cover" />
         </div>
         <div className="space-y-2 px-0.5">
           <span className="text-meta font-mono text-coral block mb-1">{story.location}</span>
-          <h3 className="font-display text-card text-night font-light lowercase leading-tight group-hover:text-coral transition-colors line-clamp-2">{story.title}</h3>
+          <h3 className="font-display text-card text-night font-light lowercase leading-tight line-clamp-2">{story.title}</h3>
           <p className="text-body text-muted/80 font-light leading-relaxed line-clamp-3">{story.excerpt}</p>
           <div className="flex items-center gap-2 pt-3 border-t border-border mt-3">
             <div className="relative w-6 h-6 rounded-full overflow-hidden shrink-0">
@@ -63,14 +62,7 @@ function StoryCard({ story, index, onClick }: { story: any; index: number; onCli
   );
 }
  
-export default function TravelerStories({ tours, onSelectTour }: TravelerStoriesProps) {
-  const findTourForStory = (story: any) => {
-    return tours.find(t =>
-      story.title.toLowerCase().includes(t.title.toLowerCase()) ||
-      (t.location || '').toLowerCase().includes(typeof story.location === 'string' ? story.location.split(',')[0]?.toLowerCase() || '' : '')
-    );
-  };
- 
+export default function TravelerStories({ tours }: { tours: Tour[]; onSelectTour?: (tour: Tour) => void }) {
   const dynamicStories = useMemo(() => {
     const allReviews = tours.flatMap((t) =>
       (t.reviews || []).map((r) => ({
@@ -113,7 +105,6 @@ export default function TravelerStories({ tours, onSelectTour }: TravelerStories
               key={story.title + "-" + i}
               story={story}
               index={i}
-              onClick={() => { const matched = findTourForStory(story); if (matched) onSelectTour(matched); }}
             />
           ))}
         </div>
@@ -125,7 +116,6 @@ export default function TravelerStories({ tours, onSelectTour }: TravelerStories
                <StoryCard
                 story={story}
                 index={i}
-                onClick={() => { const matched = findTourForStory(story); if (matched) onSelectTour(matched); }}
               />
             </div>
           ))}

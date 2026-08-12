@@ -43,12 +43,11 @@ const TAG_ACCENTS: Record<string, string> = {
 };
 
 function CarouselCard({
-  slide, isActive, position, onClick, onNavigate,
+  slide, isActive, position, onNavigate,
 }: {
   slide: CarouselSlide;
   isActive: boolean;
   position: 'left' | 'center' | 'right' | 'hidden';
-  onClick: () => void;
   onNavigate: (dir: 'prev' | 'next') => void;
 }) {
   const accentColor = TAG_ACCENTS[slide.tag] || TAG_ACCENTS.Nature;
@@ -100,7 +99,9 @@ function CarouselCard({
 
   return (
     <motion.div
-      className="absolute w-[min(320px,80vw)] h-[430px] rounded-xl overflow-hidden cursor-pointer origin-center border"
+      className={`absolute w-[min(320px,80vw)] h-[430px] rounded-xl overflow-hidden origin-center border ${
+        isActive ? 'cursor-default' : 'cursor-pointer'
+      }`}
       variants={variants}
       animate={position}
       transition={transitionConfig}
@@ -117,11 +118,11 @@ function CarouselCard({
               opacity: 0.75 
             }
       }
-      whileTap={isActive ? { scale: 1.08 } : undefined}
+      whileTap={isActive ? undefined : { scale: 0.95 }}
       style={{
         pointerEvents: position === 'hidden' ? 'none' : 'auto',
       }}
-      onClick={isActive ? onClick : () => position === 'left' ? onNavigate('next') : onNavigate('prev')}
+      onClick={isActive ? undefined : () => position === 'left' ? onNavigate('next') : onNavigate('prev')}
     >
       <div className="w-full h-full flex flex-col relative bg-surface/85 backdrop-blur-md">
           <div className="h-[58%] w-full overflow-hidden relative bg-secondary-surface">
@@ -202,11 +203,6 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
   const progressRef = useRef<ReturnType<typeof setInterval>>(null);
 
   const activeSlide = HERO_CAROUSEL_ITEMS[activeIndex];
-
-  const handleSelectActiveTour = () => {
-    const matched = tours.find(t => t.id === activeSlide.id);
-    matched ? onSelectTour(matched) : onGoToExplore();
-  };
 
   const goTo = useCallback((dir: 'prev' | 'next') => {
     setActiveIndex(prev => {
@@ -398,7 +394,6 @@ export default function HeroCarousel({ tours, onGoToPlanner, onGoToExplore, onSe
                     slide={item}
                     isActive={getPosition(idx) === 'center'}
                     position={getPosition(idx)}
-                    onClick={handleSelectActiveTour}
                     onNavigate={goTo}
                   />
                 ))}

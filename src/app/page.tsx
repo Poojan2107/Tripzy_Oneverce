@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import App from "../frontend/App";
-import ProjectHoldNotice from "./components/ProjectHoldNotice";
 
 export const metadata: Metadata = {
-  title: "Project On Hold — ONEVERCE SOLUTIONS",
-  description: "This project is currently on hold pending final payment settlement.",
-  robots: {
-    index: false,
-    follow: false,
+  title: "Travebie — #1 AI Travel Companion & Itinerary Planner for India",
+  description: "Explore India through 12 living chapters. Plan personalized day-wise itineraries with AI, uncover hidden gems, best photo spots, and real-time INR budgets.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Travebie — #1 AI Travel Companion & Itinerary Planner for India",
+    description: "Explore India through 12 living chapters. Plan personalized day-wise itineraries with AI, uncover hidden gems, best photo spots, and real-time INR budgets.",
+    url: "https://travebie.com",
   },
 };
 
@@ -52,18 +55,12 @@ const homeFaqSchema = {
 
 export default function Home() {
   return (
-    <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-black">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqSchema) }}
       />
-      {/* Locked Hero Section in Background (Frozen at Hero, No Scroll) */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden">
-        <App />
-      </div>
-
-      {/* Single Scrollable Hold Notice Overlay */}
-      <ProjectHoldNotice />
-    </div>
+      <App />
+    </>
   );
 }

@@ -2,15 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const isLocked = process.env.PROJECT_LOCKED === "true";
-  const { pathname } = request.nextUrl;
-
-  if (isLocked && pathname !== "/hold" && !pathname.startsWith("/api/health")) {
-    const holdUrl = request.nextUrl.clone();
-    holdUrl.pathname = "/hold";
-    return NextResponse.rewrite(holdUrl);
-  }
-
   const response = NextResponse.next();
 
   const csp = [
